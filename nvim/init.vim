@@ -515,7 +515,6 @@ func! CompileRunGcc()
     exec "MarkdownPreview"
   endif
 endfunc
-source ~/.vim/snippits.vim
 
 " ===
 " === Python-syntax
