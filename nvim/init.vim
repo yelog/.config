@@ -61,10 +61,10 @@ map sj :set splitbelow<CR>:split<CR>
 map sV <C-w>t<C-w>H
 map sH <C-w>t<C-w>K
 " 切换分屏焦点
-map <LEADER>l <C-w>l
-map <LEADER>h <C-w>h
-map <LEADER>j <C-w>j
-map <LEADER>k <C-w>k
+noremap <leader>l <C-w>l
+noremap <leader>h <C-w>h
+noremap <leader>j <C-w>j
+noremap <leader>k <C-w>k
 " 分屏大小
 map <up> :res -5<CR>
 map <down> :res +5<CR>
@@ -171,7 +171,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 " File navigation
 "Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 "Plug 'Xuyuanp/nerdtree-git-plugin'
-Plug 'junegunn/fzf.vim'
+"Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'kevinhwang91/rnvimr'
 Plug 'airblade/vim-rooter'
@@ -239,7 +239,7 @@ Plug 'connorholyday/vim-snazzy'
 
 " Git
 "Plug 'theniceboy/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
-Plug 'fszymanski/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
+"Plug 'fszymanski/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
 "Plug 'mhinz/vim-signify'
 Plug 'airblade/vim-gitgutter'
 Plug 'cohama/agit.vim'
@@ -307,41 +307,41 @@ colorscheme snazzy
 " ===
 " === FZF
 " ===
-set rtp+=/usr/local/bin/fzf
-"set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
-"set rtp+=/home/david/.linuxbrew/opt/fzf
-nnoremap <c-p> :Leaderf file<CR>
-" noremap <silent> <C-p> :Files<CR>
-noremap <silent> <C-f> :Rg<CR>
-noremap <silent> <C-h> :History<CR>
-"noremap <C-t> :BTags<CR>
-noremap <silent> <C-l> :Lines<CR>
-noremap <silent> <C-w> :Buffers<CR>
-noremap <leader>; :History:<CR>
-
-let g:fzf_preview_window = 'right:60%'
-let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
-
-function! s:list_buffers()
-  redir => list
-  silent ls
-  redir END
-  return split(list, "\n")
-endfunction
-
-function! s:delete_buffers(lines)
-  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
-endfunction
-
-command! BD call fzf#run(fzf#wrap({
-  \ 'source': s:list_buffers(),
-  \ 'sink*': { lines -> s:delete_buffers(lines) },
-  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
-\ }))
-
-noremap <c-d> :BD<CR>
-
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+"set rtp+=/usr/local/bin/fzf
+""set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
+""set rtp+=/home/david/.linuxbrew/opt/fzf
+"nnoremap <c-p> :Leaderf file<CR>
+"" noremap <silent> <C-p> :Files<CR>
+"noremap <silent> <C-f> :Rg<CR>
+"noremap <silent> <C-h> :History<CR>
+""noremap <C-t> :BTags<CR>
+"noremap <silent> <C-l> :Lines<CR>
+"noremap <silent> <C-w> :Buffers<CR>
+"noremap <leader>; :History:<CR>
+"
+"let g:fzf_preview_window = 'right:60%'
+"let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+"
+"function! s:list_buffers()
+"  redir => list
+"  silent ls
+"  redir END
+"  return split(list, "\n")
+"endfunction
+"
+"function! s:delete_buffers(lines)
+"  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+"endfunction
+"
+"command! BD call fzf#run(fzf#wrap({
+"  \ 'source': s:list_buffers(),
+"  \ 'sink*': { lines -> s:delete_buffers(lines) },
+"  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+"\ }))
+"
+"noremap <c-d> :BD<CR>
+"
+"let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 
 " ===
 " === ale
