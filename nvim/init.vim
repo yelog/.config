@@ -49,9 +49,6 @@ set hidden
 set updatetime=100      " 响应快一些
 set shortmess+=c        " 补全少一些没用的东西
 
-
-
-
 " 分屏
 map s <nop>
 map sl :set splitright<CR>:vsplit<CR>
@@ -231,10 +228,10 @@ Plug 'nvim-treesitter/playground'
 
 " Pretty Dress
 Plug 'bpietravalle/vim-bolt'
-"Plug 'theniceboy/nvim-deus'
+Plug 'theniceboy/nvim-deus'
 "Plug 'ajmwagar/vim-deus'
 "Plug 'crusoexia/vim-monokai'
-Plug 'connorholyday/vim-snazzy'
+"Plug 'connorholyday/vim-snazzy'
 
 
 " Git
@@ -250,10 +247,55 @@ Plug 'junegunn/vim-peekaboo'
 " Plug 'SirVer/ultisnips'
 Plug 'theniceboy/vim-snippets'
 
+
+Plug 'easymotion/vim-easymotion'
+
+Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/incsearch-easymotion.vim'
 " Initialize plugin system
 call plug#end()
 
+" ===
+" === vim-easymotion
+" ===
+let g:EasyMotion_do_mapping = 0
+let g:EasyMotion_do_shade = 0
+let g:EasyMotion_smartcase = 1
+map , <Plug>(easymotion-prefix)
+map ,j <Plug>(easymotion-j)
+map ,k <Plug>(easymotion-k)
+map ,l <Plug>(easymotion-lineforward)
+map ,h <Plug>(easymotion-linebackward)
+map ,f <Plug>(easymotion-bd-f)
+map ,w <Plug>(easymotion-bd-w)
+"map  / <Plug>(easymotion-sn)
+"omap / <Plug>(easymotion-tn)
+" You can use other keymappings like <C-l> instead of <CR> if you want to
+" use these mappings as default search and sometimes want to move cursor with
+" EasyMotion.
+function! s:incsearch_config(...) abort
+  return incsearch#util#deepextend(deepcopy({
+  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+  \   'keymap': {
+  \     "\<CR>": '<Over>(easymotion)'
+  \   },
+  \   'is_expr': 0
+  \ }), get(a:, 1, {}))
+endfunction
 
+noremap <silent><expr> /  incsearch#go(<SID>incsearch_config())
+noremap <silent><expr> ?  incsearch#go(<SID>incsearch_config({'command': '?'}))
+noremap <silent><expr> g/ incsearch#go(<SID>incsearch_config({'is_stay': 1}))
+"nmap ' <Plug>(easymotion-overwin-f2)
+"map E <Plug>(easymotion-j)
+"map U <Plug>(easymotion-k)
+"nmap ' <Plug>(easymotion-overwin-f)
+"map \; <Plug>(easymotion-prefix)
+"nmap ' <Plug>(easymotion-overwin-f2)
+"map 'l <Plug>(easymotion-bd-jk)
+"nmap 'l <Plug>(easymotion-overwin-line)
+"map  'w <Plug>(easymotion-bd-w)
+"nmap 'w <Plug>(easymotion-overwin-w)
 
 " ===
 " === Dress up my vim
@@ -265,12 +307,13 @@ call plug#end()
 "let g:oceanic_next_terminal_bold = 1
 "let g:oceanic_next_terminal_italic = 1
 "let g:one_allow_italics = 1
-"color deus
+color deus
+hi Normal ctermfg=252 ctermbg=none
 
 "color monokai
 
 
-colorscheme snazzy
+"colorscheme snazzy
 "let g:SnazzyTransparent = 1
 
 "" ===
@@ -546,7 +589,7 @@ map <LEADER>gy :Goyo<CR>
 let g:SignatureMap = {
         \ 'Leader'             :  "m",
         \ 'PlaceNextMark'      :  "m,",
-        \ 'ToggleMarkAtLine'   :  "m.",
+        \ 'ToggleMarkAtLine'   :  "mm",
         \ 'PurgeMarksAtLine'   :  "dm-",
         \ 'DeleteMark'         :  "dm",
         \ 'PurgeMarks'         :  "dm/",

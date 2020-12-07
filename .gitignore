@@ -6,6 +6,7 @@
 !/ranger/
 !/tmux/
 !/nvim/
+!/zsh/
 !README.md
 !.gitignore
 
