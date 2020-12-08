@@ -1,4 +1,5 @@
 let mapleader=" "
+noremap ; :
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set termencoding=utf-8
 set encoding=utf-8
@@ -84,6 +85,10 @@ noremap J 5j
 noremap K 5k
 noremap n nzz
 noremap N Nzz
+noremap * *zz
+noremap # #zz
+
+noremap  <expr>0     col('.') == 1 ? '^': '0'
 
 " Search
 noremap <LEADER><CR> :nohlsearch<CR>
@@ -100,6 +105,8 @@ noremap <C-x> ea<C-x>s
 " Indentation
 nnoremap < <<
 nnoremap > >>
+vnoremap < <gv
+vnoremap > >gv
 
 " Space to Tab
 nnoremap <LEADER>tt :%s/    /\t/g
@@ -124,9 +131,6 @@ cnoremap <C-f> <Right>
 cnoremap <M-b> <S-Left>
 cnoremap <M-w> <S-Right>
 
-
-noremap <C-c> zz
-
 " find and replace
 noremap \s :%s//g<left><left>
 
@@ -138,8 +142,6 @@ noremap <LEADER>sw :set wrap<CR>
 nnoremap Y y$
 " 选中模式下
 vnoremap Y "+y
-
-
 
 " ===
 " === Markdown Settings
@@ -172,7 +174,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 Plug 'kevinhwang91/rnvimr'
 Plug 'airblade/vim-rooter'
-Plug 'pechorin/any-jump.vim'
+"Plug 'pechorin/any-jump.vim'
 
 " Taglist
 Plug 'majutsushi/tagbar', { 'on': 'TagbarOpenAutoClose' }
@@ -186,7 +188,6 @@ Plug 'mbbill/undotree/'
 " Other visual enhancement
 Plug 'nathanaelkane/vim-indent-guides'
 Plug 'itchyny/vim-cursorword'
-
 " HTML, CSS, JavaScript, PHP, JSON, etc.
 Plug 'elzr/vim-json'
 Plug 'neoclide/jsonc.vim'
@@ -203,7 +204,9 @@ Plug 'vim-scripts/indentpython.vim'
 " Markdown
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install_sync() }, 'for' :['markdown', 'vim-plug'] }
 Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
-Plug 'vimwiki/vimwiki'
+Plug 'mzlogin/vim-markdown-toc', { 'for': ['gitignore', 'markdown', 'vim-plug'] }
+Plug 'dkarter/bullets.vim'
+"Plug 'vimwiki/vimwiki'
 
 " Bookmarks
 Plug 'kshenoy/vim-signature'
@@ -252,7 +255,14 @@ Plug 'easymotion/vim-easymotion'
 
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
-" Initialize plugin system
+
+Plug 'skywind3000/asynctasks.vim'
+Plug 'skywind3000/asyncrun.vim'
+
+" Find & Replace
+Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
+
+
 call plug#end()
 
 " ===
@@ -353,7 +363,7 @@ hi Normal ctermfg=252 ctermbg=none
 "set rtp+=/usr/local/bin/fzf
 ""set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
 ""set rtp+=/home/david/.linuxbrew/opt/fzf
-"nnoremap <c-p> :Leaderf file<CR>
+nnoremap <c-p> :Leaderf file<CR>
 "" noremap <silent> <C-p> :Files<CR>
 "noremap <silent> <C-f> :Rg<CR>
 "noremap <silent> <C-h> :History<CR>
@@ -473,18 +483,16 @@ nmap <leader>f  <Plug>(coc-format-selected)
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
+nmap ts <Plug>(coc-translator-p)
 
 " Remap for do codeAction of selected region
-function! s:cocActionsOpenFromSelected(type) abort
-  execute 'CocCommand actions.open ' . a:type
-endfunction
-xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
-nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
-
-
-
-
-
+"function! s:cocActionsOpenFromSelected(type) abort
+"  execute 'CocCommand actions.open ' . a:type
+"endfunction
+"xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
+"nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
+nmap tt :CocCommand explorer<CR>
+nnoremap <c-c> :CocCommand<CR>
 
 " ===
 " === Taglist
@@ -517,6 +525,27 @@ let g:mkdp_markdown_css = ''
 let g:mkdp_highlight_css = ''
 let g:mkdp_port = ''
 let g:mkdp_page_title = '「${name}」'
+
+
+" ===
+" === Bullets.vim
+" ===
+" let g:bullets_set_mappings = 0
+let g:bullets_enabled_file_types = [
+	\ 'markdown',
+	\ 'text',
+	\ 'gitcommit',
+	\ 'scratch'
+	\]
+
+" ===
+" === vim-markdown-toc
+" ===
+"let g:vmt_auto_update_on_save = 0
+"let g:vmt_dont_insert_fence = 1
+let g:vmt_cycle_list_item_markers = 1
+let g:vmt_fence_text = 'TOC'
+let g:vmt_fence_closing_text = '/TOC'
 
 " coc-snippets
 imap <C-h> <Plug>(coc-snippets-expand)
@@ -652,3 +681,38 @@ require'nvim-treesitter.configs'.setup {
   },
 }
 EOF
+
+"" ===
+"" === any-jump
+"" ===
+"" Normal mode: Jump to definition under cursore
+"nnoremap si :AnyJump<CR>
+"" Visual mode: jump to selected text in visual mode
+"xnoremap si :AnyJumpVisual<CR>
+"" Normal mode: open previous opened file (after jump)
+"nnoremap <leader>ab :AnyJumpBack<CR>
+"" Normal mode: open last closed search window again
+"nnoremap <leader>al :AnyJumpLastResults<CR>
+"let g:any_jump_window_width_ratio  = 0.8
+"let g:any_jump_window_height_ratio = 0.9
+
+
+" ===
+" === AsyncRun
+" ===
+noremap gp :AsyncRun git push<CR>
+
+
+" ===
+" === AsyncTasks
+" ===
+let g:asyncrun_open = 6
+
+
+" ===
+" === Far.vim
+" ===
+noremap <LEADER>f :F  **/*<left><left><left><left><left>
+let g:far#mapping = {
+		\ "replace_undo" : ["l"],
+		\ }
