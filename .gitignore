@@ -12,3 +12,4 @@
 
 /nvim/plugged/
 /ranger/plugins/
+!/ranger/plugins/ranger_devicons
