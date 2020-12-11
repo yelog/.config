@@ -172,6 +172,7 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 "Plug 'Xuyuanp/nerdtree-git-plugin'
 "Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+" ranger in neovim
 Plug 'kevinhwang91/rnvimr'
 Plug 'airblade/vim-rooter'
 "Plug 'pechorin/any-jump.vim'
@@ -221,7 +222,7 @@ Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
 
 " Dependencies
 Plug 'MarcWeber/vim-addon-mw-utils'
-Plug 'kana/vim-textobj-user'
+"Plug 'kana/vim-textobj-user'
 Plug 'fadein/vim-FIGlet'
 
 " Treesitter
@@ -231,7 +232,9 @@ Plug 'nvim-treesitter/playground'
 
 " Pretty Dress
 Plug 'bpietravalle/vim-bolt'
-Plug 'theniceboy/nvim-deus'
+"Plug 'doums/darcula'
+Plug 'blueshirts/darcula'
+"Plug 'theniceboy/nvim-deus'
 "Plug 'ajmwagar/vim-deus'
 "Plug 'crusoexia/vim-monokai'
 "Plug 'connorholyday/vim-snazzy'
@@ -244,6 +247,7 @@ Plug 'theniceboy/nvim-deus'
 Plug 'airblade/vim-gitgutter'
 Plug 'cohama/agit.vim'
 
+" see the " paste and @ recored
 Plug 'junegunn/vim-peekaboo'
 
 " Snippets
@@ -251,8 +255,8 @@ Plug 'junegunn/vim-peekaboo'
 Plug 'theniceboy/vim-snippets'
 
 
+" quick move
 Plug 'easymotion/vim-easymotion'
-
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
 
@@ -262,50 +266,17 @@ Plug 'skywind3000/asyncrun.vim'
 " Find & Replace
 Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
 
+" switch ture/false
+Plug 'AndrewRadev/switch.vim'
+
+" todo smart to switch input method
+" need install im-select (mac-only)
+" curl -Ls https://raw.githubusercontent.com/daipeihust/im-select/master/install_mac.sh | sh
+Plug 'ybian/smartim'
 
 call plug#end()
 
-" ===
-" === vim-easymotion
-" ===
-let g:EasyMotion_do_mapping = 0
-let g:EasyMotion_do_shade = 0
-let g:EasyMotion_smartcase = 1
-map , <Plug>(easymotion-prefix)
-map ,j <Plug>(easymotion-j)
-map ,k <Plug>(easymotion-k)
-map ,l <Plug>(easymotion-lineforward)
-map ,h <Plug>(easymotion-linebackward)
-map ,f <Plug>(easymotion-bd-f)
-map ,w <Plug>(easymotion-bd-w)
-"map  / <Plug>(easymotion-sn)
-"omap / <Plug>(easymotion-tn)
-" You can use other keymappings like <C-l> instead of <CR> if you want to
-" use these mappings as default search and sometimes want to move cursor with
-" EasyMotion.
-function! s:incsearch_config(...) abort
-  return incsearch#util#deepextend(deepcopy({
-  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
-  \   'keymap': {
-  \     "\<CR>": '<Over>(easymotion)'
-  \   },
-  \   'is_expr': 0
-  \ }), get(a:, 1, {}))
-endfunction
 
-noremap <silent><expr> /  incsearch#go(<SID>incsearch_config())
-noremap <silent><expr> ?  incsearch#go(<SID>incsearch_config({'command': '?'}))
-noremap <silent><expr> g/ incsearch#go(<SID>incsearch_config({'is_stay': 1}))
-"nmap ' <Plug>(easymotion-overwin-f2)
-"map E <Plug>(easymotion-j)
-"map U <Plug>(easymotion-k)
-"nmap ' <Plug>(easymotion-overwin-f)
-"map \; <Plug>(easymotion-prefix)
-"nmap ' <Plug>(easymotion-overwin-f2)
-"map 'l <Plug>(easymotion-bd-jk)
-"nmap 'l <Plug>(easymotion-overwin-line)
-"map  'w <Plug>(easymotion-bd-w)
-"nmap 'w <Plug>(easymotion-overwin-w)
 
 " ===
 " === Dress up my vim
@@ -317,11 +288,12 @@ noremap <silent><expr> g/ incsearch#go(<SID>incsearch_config({'is_stay': 1}))
 "let g:oceanic_next_terminal_bold = 1
 "let g:oceanic_next_terminal_italic = 1
 "let g:one_allow_italics = 1
-color deus
-hi Normal ctermfg=252 ctermbg=none
 
+"color deus
+"hi Normal ctermfg=252 ctermbg=none
 "color monokai
 
+colorscheme darcula
 
 "colorscheme snazzy
 "let g:SnazzyTransparent = 1
@@ -659,7 +631,7 @@ let g:gitgutter_override_sign_column_highlight = 0
 let g:gitgutter_preview_win_floating = 1
 let g:gitgutter_sign_added = '▎'
 let g:gitgutter_sign_modified = '░'
-let g:gitgutter_sign_removed = '▏'
+let g:gitgutter_sign_removed = '▶'
 let g:gitgutter_sign_removed_first_line = '▔'
 let g:gitgutter_sign_modified_removed = '▒'
 " autocmd BufWritePost * GitGutter
@@ -716,3 +688,116 @@ noremap <LEADER>f :F  **/*<left><left><left><left><left>
 let g:far#mapping = {
 		\ "replace_undo" : ["l"],
 		\ }
+
+" ===
+" === rnvimr
+" ===
+let g:rnvimr_ex_enable = 1
+let g:rnvimr_pick_enable = 1
+let g:rnvimr_draw_border = 0
+" let g:rnvimr_bw_enable = 1
+highlight link RnvimrNormal CursorLine
+nnoremap <silent> <leader>e :RnvimrToggle<CR><C-\><C-n>:RnvimrResize 0<CR>
+let g:rnvimr_action = {
+            \ '<C-t>': 'NvimEdit tabedit',
+            \ '<C-x>': 'NvimEdit split',
+            \ '<C-v>': 'NvimEdit vsplit',
+            \ 'gw': 'JumpNvimCwd',
+            \ 'yw': 'EmitRangerCwd'
+            \ }
+let g:rnvimr_layout = { 'relative': 'editor',
+            \ 'width': &columns,
+            \ 'height': &lines,
+            \ 'col': 0,
+            \ 'row': 0,
+            \ 'style': 'minimal' }
+let g:rnvimr_presets = [{'width': 1.0, 'height': 1.0}]
+
+
+" ===
+" === smartim
+" ===
+let g:smartim_default='com.apple.keylayout.ABC'
+" fix slow in mutiple_cursor mode
+function! Multiple_cursors_before()
+  let g:smartim_disable = 1
+endfunction
+function! Multiple_cursors_after()
+  unlet g:smartim_disable
+endfunction
+
+
+
+" ===
+" === vim-easymotion
+" ===
+let g:EasyMotion_do_mapping = 0
+let g:EasyMotion_do_shade = 0
+let g:EasyMotion_smartcase = 1
+map , <Plug>(easymotion-prefix)
+map ,j <Plug>(easymotion-j)
+map ,k <Plug>(easymotion-k)
+map ,l <Plug>(easymotion-lineforward)
+map ,h <Plug>(easymotion-linebackward)
+map ,f <Plug>(easymotion-bd-f)
+map ,w <Plug>(easymotion-bd-w)
+map  ' <Plug>(easymotion-sn)
+omap ' <Plug>(easymotion-tn)
+" You can use other keymappings like <C-l> instead of <CR> if you want to
+" use these mappings as default search and sometimes want to move cursor with
+" EasyMotion.
+function! s:incsearch_config(...) abort
+  return incsearch#util#deepextend(deepcopy({
+  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+  \   'keymap': {
+  \     "\<CR>": '<Over>(easymotion)'
+  \   },
+  \   'is_expr': 0
+  \ }), get(a:, 1, {}))
+endfunction
+
+"noremap <silent><expr> /  incsearch#go(<SID>incsearch_config())
+"noremap <silent><expr> ?  incsearch#go(<SID>incsearch_config({'command': '?'}))
+"noremap <silent><expr> g/ incsearch#go(<SID>incsearch_config({'is_stay': 1}))
+"nmap ' <Plug>(easymotion-overwin-f2)
+"map E <Plug>(easymotion-j)
+"map U <Plug>(easymotion-k)
+"nmap ' <Plug>(easymotion-overwin-f)
+"map \; <Plug>(easymotion-prefix)
+"nmap ' <Plug>(easymotion-overwin-f2)
+"map 'l <Plug>(easymotion-bd-jk)
+"nmap 'l <Plug>(easymotion-overwin-line)
+"map  'w <Plug>(easymotion-bd-w)
+"nmap 'w <Plug>(easymotion-overwin-w)
+
+
+vnoremap <silent> ic :<C-U>call <SID>MdCodeBlockTextObj('i')<CR>
+onoremap <silent> ic :<C-U>call <SID>MdCodeBlockTextObj('i')<CR>
+
+vnoremap <silent> ac :<C-U>call <SID>MdCodeBlockTextObj('a')<CR>
+onoremap <silent> ac :<C-U>call <SID>MdCodeBlockTextObj('a')<CR>
+
+function! s:MdCodeBlockTextObj(type) abort
+  " the parameter type specify whether it is inner text objects or around
+  " text objects.
+
+  " Move the cursor to the end of line in case that cursor is on the opening
+  " of a code block. Actually, there are still issues if the cursor is on the
+  " closing of a code block. In this case, the start row of code blocks would
+  " be wrong. Unless we can match code blocks, it is not easy to fix this.
+  normal! $
+  let start_row = searchpos('\s*```', 'bnW')[0]
+  let end_row = searchpos('\s*```', 'nW')[0]
+
+  let buf_num = bufnr()
+  " For inner code blocks, remove the start and end line containing backticks.
+  if a:type ==# 'i'
+    let start_row += 1
+    let end_row -= 1
+  endif
+  " echo a:type start_row end_row
+
+  call setpos("'<", [buf_num, start_row, 1, 0])
+  call setpos("'>", [buf_num, end_row, 1, 0])
+  execute 'normal! `<V`>'
+endfunction
