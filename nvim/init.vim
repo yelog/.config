@@ -73,6 +73,8 @@ map <right> :vertical resize+5<CR>
 map tk :tabe<CR>
 map th :-tabnext<CR>
 map tl :+tabnext<CR>
+map tmh :-tabmove<CR>
+map tml :+tabmove<CR>
 
 
 " 保存 退出 刷新配置文件
@@ -100,7 +102,7 @@ noremap <LEADER>/ :set splitbelow<CR>:split<CR>:res +10<CR>:term<CR>
 
 " spelling check with <space>sc
 map <LEADER>sc :set spell!<CR>
-noremap <C-x> ea<C-x>s
+"noremap <C-x> ea<C-x>s
 
 " Indentation
 nnoremap < <<
@@ -177,14 +179,22 @@ Plug 'kevinhwang91/rnvimr'
 Plug 'airblade/vim-rooter'
 "Plug 'pechorin/any-jump.vim'
 
+" 首屏
+"Plug 'glepnir/dashboard-nvim'
+Plug 'liuchengxu/vim-clap'
+
 " Taglist
 Plug 'majutsushi/tagbar', { 'on': 'TagbarOpenAutoClose' }
+
+Plug 'prabirshrestha/async.vim'
+"Plug 'prabirshrestha/asyncomplete.vim'
+Plug 'wellle/tmux-complete.vim'
 
 " Error checking
 Plug 'w0rp/ale'
 
 " Undo Tree
-Plug 'mbbill/undotree/'
+Plug 'mbbill/undotree'
 
 " Other visual enhancement
 Plug 'nathanaelkane/vim-indent-guides'
@@ -192,21 +202,25 @@ Plug 'itchyny/vim-cursorword'
 " HTML, CSS, JavaScript, PHP, JSON, etc.
 Plug 'elzr/vim-json'
 Plug 'neoclide/jsonc.vim'
-Plug 'hail2u/vim-css3-syntax'
+"Plug 'hail2u/vim-css3-syntax'
 Plug 'alvan/vim-closetag'
-Plug 'spf13/PIV', { 'for' :['php', 'vim-plug'] }
+"Plug 'spf13/PIV', { 'for' :['php', 'vim-plug'] }
 Plug 'gko/vim-coloresque', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
-Plug 'pangloss/vim-javascript', { 'for' :['javascript', 'vim-plug'] }
+"Plug 'pangloss/vim-javascript', { 'for' :['javascript', 'vim-plug'] }
+Plug 'yuezk/vim-js', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
+" Plug 'posva/vim-vue'
 Plug 'mattn/emmet-vim'
 
 " Python
 Plug 'vim-scripts/indentpython.vim'
 
 " Markdown
-Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install_sync() }, 'for' :['markdown', 'vim-plug'] }
+Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
+"Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install_sync() }, 'for' :['markdown', 'vim-plug'] }
 Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
 Plug 'mzlogin/vim-markdown-toc', { 'for': ['gitignore', 'markdown', 'vim-plug'] }
 Plug 'dkarter/bullets.vim'
+Plug 'plasticboy/vim-markdown'
 "Plug 'vimwiki/vimwiki'
 
 " Bookmarks
@@ -216,14 +230,17 @@ Plug 'kshenoy/vim-signature'
 Plug 'terryma/vim-multiple-cursors'
 Plug 'junegunn/goyo.vim' " distraction free writing mode
 Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
+Plug 'jiangmiao/auto-pairs'
 Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
 Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip
 Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
+Plug 'tpope/vim-capslock'	" Ctrl+L (insert) to toggle capslock
 
-" Dependencies
-Plug 'MarcWeber/vim-addon-mw-utils'
-"Plug 'kana/vim-textobj-user'
-Plug 'fadein/vim-FIGlet'
+" Other visual enhancement
+Plug 'luochen1990/rainbow'
+Plug 'mg979/vim-xtabline'
+Plug 'ryanoasis/vim-devicons'
+Plug 'wincent/terminus'
 
 " Treesitter
 Plug 'nvim-treesitter/nvim-treesitter'
@@ -239,13 +256,29 @@ Plug 'blueshirts/darcula'
 "Plug 'crusoexia/vim-monokai'
 "Plug 'connorholyday/vim-snazzy'
 
+" Status line
+"Plug 'theniceboy/eleline.vim'
+"Plug 'ojroques/vim-scrollstatus'
+Plug 'glepnir/spaceline.vim'
+
+" General Highlighter
+Plug 'RRethy/vim-hexokinase', { 'do': 'make hexokinase' }
+Plug 'RRethy/vim-illuminate'
+
+" Taglist
+Plug 'liuchengxu/vista.vim'
+
 
 " Git
 "Plug 'theniceboy/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
-"Plug 'fszymanski/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
+Plug 'fszymanski/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
 "Plug 'mhinz/vim-signify'
 Plug 'airblade/vim-gitgutter'
 Plug 'cohama/agit.vim'
+
+" Autoformat
+Plug 'google/vim-maktaba'
+Plug 'google/vim-codefmt'
 
 " see the " paste and @ recored
 Plug 'junegunn/vim-peekaboo'
@@ -273,6 +306,7 @@ Plug 'AndrewRadev/switch.vim'
 " need install im-select (mac-only)
 " curl -Ls https://raw.githubusercontent.com/daipeihust/im-select/master/install_mac.sh | sh
 Plug 'ybian/smartim'
+
 
 call plug#end()
 
@@ -338,8 +372,8 @@ colorscheme darcula
 nnoremap <c-p> :Leaderf file<CR>
 "" noremap <silent> <C-p> :Files<CR>
 "noremap <silent> <C-f> :Rg<CR>
-"noremap <silent> <C-h> :History<CR>
-""noremap <C-t> :BTags<CR>
+noremap <silent> <C-h> :History<CR>
+"noremap <C-t> :BTags<CR>
 "noremap <silent> <C-l> :Lines<CR>
 "noremap <silent> <C-w> :Buffers<CR>
 "noremap <leader>; :History:<CR>
@@ -450,8 +484,8 @@ function! s:show_documentation()
 endfunction
 
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+"xmap <leader>f  <Plug>(coc-format-selected)
+"nmap <leader>f  <Plug>(coc-format-selected)
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
@@ -473,31 +507,15 @@ map <silent> T :TagbarOpenAutoClose<CR>
 
 
 " ===
-" === MarkdownPreview
+" === vim-instant-markdown
 " ===
-let g:mkdp_auto_start = 0
-let g:mkdp_auto_close = 1
-let g:mkdp_refresh_slow = 0
-let g:mkdp_command_for_global = 0
-let g:mkdp_open_to_the_world = 0
-let g:mkdp_open_ip = ''
-let g:mkdp_browser = 'Google Chrome'
-let g:mkdp_echo_preview_url = 0
-let g:mkdp_browserfunc = ''
-let g:mkdp_preview_options = {
-    \ 'mkit': {},
-    \ 'katex': {},
-    \ 'uml': {},
-    \ 'maid': {},
-    \ 'disable_sync_scroll': 0,
-    \ 'sync_scroll_type': 'middle',
-    \ 'hide_yaml_meta': 1
-    \ }
-let g:mkdp_markdown_css = ''
-let g:mkdp_highlight_css = ''
-let g:mkdp_port = ''
-let g:mkdp_page_title = '「${name}」'
-
+let g:instant_markdown_slow = 0
+let g:instant_markdown_autostart = 0
+" let g:instant_markdown_open_to_the_world = 1
+" let g:instant_markdown_allow_unsafe_content = 1
+" let g:instant_markdown_allow_external_content = 0
+" let g:instant_markdown_mathjax = 1
+let g:instant_markdown_autoscroll = 1
 
 " ===
 " === Bullets.vim
@@ -534,30 +552,46 @@ let g:snips_author = 'Chris Yang'
 map <LEADER>tm :TableModeToggle<CR>
 
 " Compile function
-map r :call CompileRunGcc()<CR>
+noremap r :call CompileRunGcc()<CR>
 func! CompileRunGcc()
-  exec "w"
-  if &filetype == 'c'
-    exec "!g++ % -o %<"
-    exec "!time ./%<"
-  elseif &filetype == 'cpp'
-    exec "!g++ % -o %<"
-    exec "!time ./%<"
-  elseif &filetype == 'java'
-    exec "!javac %"
-    exec "!time java %<"
-  elseif &filetype == 'sh'
-    :!time bash %
-  elseif &filetype == 'python'
-    silent! exec "!clear"
-    exec "!time python3 %"
-  elseif &filetype == 'html'
-    exec "!firefox % &"
-  elseif &filetype == 'markdown'
-    exec "MarkdownPreview"
-  elseif &filetype == 'vimwiki'
-    exec "MarkdownPreview"
-  endif
+	exec "w"
+	if &filetype == 'c'
+		exec "!g++ % -o %<"
+		exec "!time ./%<"
+	elseif &filetype == 'cpp'
+		set splitbelow
+		exec "!g++ -std=c++11 % -Wall -o %<"
+		:sp
+		:res -15
+		:term ./%<
+	elseif &filetype == 'java'
+		exec "!javac %"
+		exec "!time java %<"
+	elseif &filetype == 'sh'
+		:!time bash %
+	elseif &filetype == 'python'
+		set splitbelow
+		:sp
+		:term python3 %
+	elseif &filetype == 'html'
+		silent! exec "!".g:mkdp_browser." % &"
+	elseif &filetype == 'markdown'
+		exec "InstantMarkdownPreview"
+	elseif &filetype == 'tex'
+		silent! exec "VimtexStop"
+		silent! exec "VimtexCompile"
+	elseif &filetype == 'dart'
+		exec "CocCommand flutter.run -d ".g:flutter_default_device." ".g:flutter_run_args
+		silent! exec "CocCommand flutter.dev.openDevLog"
+	elseif &filetype == 'javascript'
+		set splitbelow
+		:sp
+		:term export DEBUG="INFO,ERROR,WARNING"; node --trace-warnings .
+	elseif &filetype == 'go'
+		set splitbelow
+		:sp
+		:term go run .
+	endif
 endfunc
 
 " ===
@@ -615,8 +649,20 @@ let g:SignatureMap = {
 " ===
 " === Undotree
 " ===
-let g:undotree_DiffAutoOpen = 0
-"map L :UndotreeToggle<CR>
+noremap L :UndotreeToggle<CR>
+let g:undotree_DiffAutoOpen = 1
+let g:undotree_SetFocusWhenToggle = 1
+let g:undotree_ShortIndicators = 1
+let g:undotree_WindowLayout = 2
+let g:undotree_DiffpanelHeight = 8
+let g:undotree_SplitWidth = 24
+function g:Undotree_CustomMap()
+	nmap <buffer> u <plug>UndotreeNextState
+	nmap <buffer> e <plug>UndotreePreviousState
+	nmap <buffer> U 5<plug>UndotreeNextState
+	nmap <buffer> E 5<plug>UndotreePreviousState
+endfunc
+
 
 " Open up lazygit
 noremap \g :Git
@@ -684,7 +730,7 @@ let g:asyncrun_open = 6
 " ===
 " === Far.vim
 " ===
-noremap <LEADER>f :F  **/*<left><left><left><left><left>
+"noremap <LEADER>f :F  **/*<left><left><left><left><left>
 let g:far#mapping = {
 		\ "replace_undo" : ["l"],
 		\ }
@@ -725,8 +771,6 @@ endfunction
 function! Multiple_cursors_after()
   unlet g:smartim_disable
 endfunction
-
-
 
 " ===
 " === vim-easymotion
@@ -801,3 +845,66 @@ function! s:MdCodeBlockTextObj(type) abort
   call setpos("'>", [buf_num, end_row, 1, 0])
   execute 'normal! `<V`>'
 endfunction
+
+" ===
+" === dashboard
+" ===
+"let g:mapleader="\<Space>"
+"let g:dashboard_default_executive ='clap'
+"nmap <Leader>ss :<C-u>SessionSave<CR>
+"nmap <Leader>sl :<C-u>SessionLoad<CR>
+"nnoremap <silent> <Leader>fh :DashboardFindHistory<CR>
+"nnoremap <silent> <Leader>ff :DashboardFindFile<CR>
+"nnoremap <silent> <Leader>tc :DashboardChangeColorscheme<CR>
+"nnoremap <silent> <Leader>fa :DashboardFindWord<CR>
+"nnoremap <silent> <Leader>fb :DashboardJumpMark<CR>
+"nnoremap <silent> <Leader>cn :DashboardNewFile<CR>
+
+" ===
+" === eleline.vim
+" ===
+let g:airline_powerline_fonts = 0
+let g:scrollstatus_size = 15
+
+" ===
+" === vim-illuminate
+" ===
+let g:Illuminate_delay = 750
+hi illuminatedWord cterm=undercurl gui=undercurl
+
+" ===
+" === Vista.vim
+" ===
+noremap <LEADER>v :Vista!!<CR>
+noremap <c-t> :silent! Vista finder coc<CR>
+let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+let g:vista_default_executive = 'coc'
+let g:vista_fzf_preview = ['right:50%']
+let g:vista#renderer#enable_icon = 1
+let g:vista#renderer#icons = {
+\   "function": "\uf794",
+\   "variable": "\uf71b",
+\  }
+" function! NearestMethodOrFunction() abort
+" 	return get(b:, 'vista_nearest_method_or_function', '')
+" endfunction
+" set statusline+=%{NearestMethodOrFunction()}
+" autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
+
+
+" ===
+" === AutoFormat
+" ===
+augroup autoformat_settings
+	" autocmd FileType bzl AutoFormatBuffer buildifier
+	" autocmd FileType c,cpp,proto,javascript,arduino AutoFormatBuffer clang-format
+	" autocmd FileType dart AutoFormatBuffer dartfmt
+	" autocmd FileType go AutoFormatBuffer gofmt
+	" autocmd FileType gn AutoFormatBuffer gn
+	" autocmd FileType html,css,sass,scss,less,json AutoFormatBuffer js-beautify
+	autocmd FileType java AutoFormatBuffer google-java-format
+	" autocmd FileType python AutoFormatBuffer yapf
+	" Alternative: autocmd FileType python AutoFormatBuffer autopep8
+	" autocmd FileType rust AutoFormatBuffer rustfmt
+	" autocmd FileType vue AutoFormatBuffer prettier
+augroup END
