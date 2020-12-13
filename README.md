@@ -6,6 +6,35 @@ git clone --recursive https://github.com/yelog/.config.git ~/.config
 ```
 
 ## Import stuff
+### neovim
+```bash
+# Download source code
+git clone https://github.com/neovim/neovim.git
+# install cmake and dependency
+yum install -y cmake gcc-c++ libtool unzip
+# compile with cmake
+make CMAKE_BUILD_TYPE=Release
+# install
+make install
+# vim-plug
+sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
+       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+```
+
+### lazygit
+```bash
+yum install dnf
+dnf install 'dnf-command(copr)'
+dnf copr enable atim/lazygit -y
+dnf install -y lazygit
+```
+
+### neofetch
+```bash
+dnf copr enable konimex/neofetch
+dnf install neofetch
+```
+
 ### zsh
 [github](https://github.com/ohmyzsh/ohmyzsh.git)
 ```bash
@@ -39,3 +68,16 @@ pip install ranger-fm
 ```bash
 ln ~/.config/tmux/tmux.conf ~/.tmux.conf
 ```
+
+### rainbarf
+```bash
+# Download source code
+git clone https://github.com/creaktive/rainbarf.git
+# install dependency
+yum install -y perl-Module-Build perl-Test-Simple
+# install
+perl Build.PL
+./Build test
+./Build install
+```
+

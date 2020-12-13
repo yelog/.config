@@ -243,8 +243,8 @@ Plug 'ryanoasis/vim-devicons'
 Plug 'wincent/terminus'
 
 " Treesitter
-Plug 'nvim-treesitter/nvim-treesitter'
-Plug 'nvim-treesitter/playground'
+"Plug 'nvim-treesitter/nvim-treesitter'
+"Plug 'nvim-treesitter/playground'
 
 
 " Pretty Dress
@@ -690,15 +690,15 @@ nnoremap <LEADER>g= :GitGutterNextHunk<CR>
 " === nvim-treesitter
 " ===
 
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = {"typescript", "dart", "java"},     -- one of "all", "language", or a list of languages
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    disable = { "c", "rust" },  -- list of language that will be disabled
-  },
-}
-EOF
+"lua <<EOF
+"require'nvim-treesitter.configs'.setup {
+"  ensure_installed = {"typescript", "dart", "java"},     -- one of "all", "language", or a list of languages
+"  highlight = {
+"    enable = true,              -- false will disable the whole extension
+"    disable = { "c", "rust" },  -- list of language that will be disabled
+"  },
+"}
+"EOF
 
 "" ===
 "" === any-jump
