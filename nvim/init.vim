@@ -3,6 +3,8 @@ noremap ; :
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set termencoding=utf-8
 set encoding=utf-8
+set exrc
+set secure
 set nu				                    " 显示行号
 syntax on
 set ruler			                    " 打开状态标尺
@@ -14,7 +16,7 @@ set incsearch			                " 输入搜索内容时就显示搜索结果
 set autochdir			                " 自动切换当前目录为当前文件所在的目录
 set cmdheight=1             	    " 设定命令行的行数为 1
 set laststatus=2            	    " 显示状态栏 默认值为 1, 无法显示状态栏
-set completeopt=longest,menu
+set completeopt=longest,noinsert,menuone,noselect,preview
 set relativenumber		            " 设置相对行号
 set wrap			                    " 超出换行
 set wildmenu			                " 自动补全 并且提示后选项
@@ -26,13 +28,13 @@ filetype plugin on
 filetype plugin indent on
 set mouse=a                       " 支持鼠标
 let &t_ut=''                      " 修复配色错误的问题
+set noexpandtab
 set expandtab
 set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set tw=0
 set indentexpr=
-set backspace=indent,eol,start
 set list                        " 回车、空格等不可见字符
 set listchars=tab:\|\ ,trail:▫
 set foldmethod=indent             " 折叠代码
@@ -44,11 +46,19 @@ let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 set laststatus=2                  " 底部状态栏为2
 " 记录上次光标位置
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-set scrolloff=5
+set scrolloff=4
+set notimeout
+set viewoptions=cursor,folds,slash,unix
+set ttyfast "should make scrolling faster
+set lazyredraw "same as above
+set visualbell
 
 set hidden
 set updatetime=100      " 响应快一些
+set colorcolumn=100
 set shortmess+=c        " 补全少一些没用的东西
+set virtualedit=block
+
 
 " 分屏
 map s <nop>
@@ -58,6 +68,9 @@ map sk :set nosplitbelow<CR>:split<CR>
 map sj :set splitbelow<CR>:split<CR>
 map sV <C-w>t<C-w>H
 map sH <C-w>t<C-w>K
+" Rotate screens
+noremap srh <C-w>b<C-w>K
+noremap srv <C-w>b<C-w>H
 " 切换分屏焦点
 noremap <leader>l <C-w>l
 noremap <leader>h <C-w>h
@@ -145,6 +158,8 @@ nnoremap Y y$
 " 选中模式下
 vnoremap Y "+y
 
+vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
+
 " ===
 " === Markdown Settings
 " ===
@@ -153,9 +168,31 @@ source ~/.config/nvim/md-snippets.vim
 " auto spell
 "autocmd BufRead,BufNewFile *.md setlocal spell
 
-
 let g:python_host_prog='/usr/bin/python2'
 let g:python3_host_prog='/usr/bin/python3'
+
+" ===
+" === Terminal Behaviors
+" ===
+let g:neoterm_autoscroll = 1
+autocmd TermOpen term://* startinsert
+tnoremap <C-N> <C-\><C-N>
+tnoremap <C-O> <C-\><C-N><C-O>
+let g:terminal_color_0  = '#000000'
+let g:terminal_color_1  = '#FF5555'
+let g:terminal_color_2  = '#50FA7B'
+let g:terminal_color_3  = '#F1FA8C'
+let g:terminal_color_4  = '#BD93F9'
+let g:terminal_color_5  = '#FF79C6'
+let g:terminal_color_6  = '#8BE9FD'
+let g:terminal_color_7  = '#BFBFBF'
+let g:terminal_color_8  = '#4D4D4D'
+let g:terminal_color_9  = '#FF6E67'
+let g:terminal_color_10 = '#5AF78E'
+let g:terminal_color_11 = '#F4F99D'
+let g:terminal_color_12 = '#CAA9FA'
+let g:terminal_color_13 = '#FF92D0'
+let g:terminal_color_14 = '#9AEDFE'
 
 " Specify a directory for plugins
 " " - For Neovim: stdpath('data') . '/plugged'
@@ -168,27 +205,26 @@ Plug 'vim-airline/vim-airline'
 
 " Auto Complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
+Plug 'wellle/tmux-complete.vim'
 
 " File navigation
 "Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
 "Plug 'Xuyuanp/nerdtree-git-plugin'
-"Plug 'junegunn/fzf.vim'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 " ranger in neovim
 Plug 'kevinhwang91/rnvimr'
-Plug 'airblade/vim-rooter'
+"Plug 'airblade/vim-rooter'
 "Plug 'pechorin/any-jump.vim'
 
 " 首屏
-"Plug 'glepnir/dashboard-nvim'
-Plug 'liuchengxu/vim-clap'
+Plug 'glepnir/dashboard-nvim'
+"Plug 'liuchengxu/vim-clap'
 
 " Taglist
 Plug 'majutsushi/tagbar', { 'on': 'TagbarOpenAutoClose' }
 
-Plug 'prabirshrestha/async.vim'
-"Plug 'prabirshrestha/asyncomplete.vim'
-Plug 'wellle/tmux-complete.vim'
 
 " Error checking
 Plug 'w0rp/ale'
@@ -197,7 +233,6 @@ Plug 'w0rp/ale'
 Plug 'mbbill/undotree'
 
 " Other visual enhancement
-Plug 'nathanaelkane/vim-indent-guides'
 Plug 'itchyny/vim-cursorword'
 " HTML, CSS, JavaScript, PHP, JSON, etc.
 Plug 'elzr/vim-json'
@@ -208,7 +243,7 @@ Plug 'alvan/vim-closetag'
 Plug 'gko/vim-coloresque', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
 "Plug 'pangloss/vim-javascript', { 'for' :['javascript', 'vim-plug'] }
 Plug 'yuezk/vim-js', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
-" Plug 'posva/vim-vue'
+"Plug 'posva/vim- vue'
 Plug 'mattn/emmet-vim'
 
 " Python
@@ -231,27 +266,26 @@ Plug 'terryma/vim-multiple-cursors'
 Plug 'junegunn/goyo.vim' " distraction free writing mode
 Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
 Plug 'jiangmiao/auto-pairs'
-Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
+"Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
 Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip
 Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
-Plug 'tpope/vim-capslock'	" Ctrl+L (insert) to toggle capslock
+"Plug 'tpope/vim-capslock'	" Ctrl+L (insert) to toggle capslock
 
 " Other visual enhancement
-Plug 'luochen1990/rainbow'
-Plug 'mg979/vim-xtabline'
+"Plug 'luochen1990/rainbow'
+"Plug 'mg979/vim-xtabline'
 Plug 'ryanoasis/vim-devicons'
-Plug 'wincent/terminus'
+"Plug 'wincent/terminus'
 
 " Treesitter
-"Plug 'nvim-treesitter/nvim-treesitter'
-"Plug 'nvim-treesitter/playground'
+Plug 'nvim-treesitter/nvim-treesitter'
+Plug 'nvim-treesitter/playground'
 
 
 " Pretty Dress
 Plug 'bpietravalle/vim-bolt'
-"Plug 'doums/darcula'
 Plug 'blueshirts/darcula'
-"Plug 'theniceboy/nvim-deus'
+Plug 'theniceboy/nvim-deus'
 "Plug 'ajmwagar/vim-deus'
 "Plug 'crusoexia/vim-monokai'
 "Plug 'connorholyday/vim-snazzy'
@@ -262,8 +296,8 @@ Plug 'blueshirts/darcula'
 Plug 'glepnir/spaceline.vim'
 
 " General Highlighter
-Plug 'RRethy/vim-hexokinase', { 'do': 'make hexokinase' }
-Plug 'RRethy/vim-illuminate'
+"Plug 'RRethy/vim-hexokinase', { 'do': 'make hexokinase' }
+"Plug 'RRethy/vim-illuminate'
 
 " Taglist
 Plug 'liuchengxu/vista.vim'
@@ -275,10 +309,6 @@ Plug 'fszymanski/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
 "Plug 'mhinz/vim-signify'
 Plug 'airblade/vim-gitgutter'
 Plug 'cohama/agit.vim'
-
-" Autoformat
-Plug 'google/vim-maktaba'
-Plug 'google/vim-codefmt'
 
 " see the " paste and @ recored
 Plug 'junegunn/vim-peekaboo'
@@ -293,11 +323,11 @@ Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
 
-Plug 'skywind3000/asynctasks.vim'
-Plug 'skywind3000/asyncrun.vim'
+"Plug 'skywind3000/asynctasks.vim'
+"Plug 'skywind3000/asyncrun.vim'
 
 " Find & Replace
-Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
+"Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
 
 " switch ture/false
 Plug 'AndrewRadev/switch.vim'
@@ -307,6 +337,11 @@ Plug 'AndrewRadev/switch.vim'
 " curl -Ls https://raw.githubusercontent.com/daipeihust/im-select/master/install_mac.sh | sh
 Plug 'ybian/smartim'
 
+" autosave
+Plug '907th/vim-auto-save'
+
+" display available keybindings in popup
+Plug 'liuchengxu/vim-which-key'
 
 call plug#end()
 
@@ -323,11 +358,13 @@ call plug#end()
 "let g:oceanic_next_terminal_italic = 1
 "let g:one_allow_italics = 1
 
-"color deus
+color deus
+hi NonText ctermfg=gray guifg=grey10
+" 透明背景
 "hi Normal ctermfg=252 ctermbg=none
 "color monokai
 
-colorscheme darcula
+"colorscheme darcula
 
 "colorscheme snazzy
 "let g:SnazzyTransparent = 1
@@ -362,45 +399,63 @@ colorscheme darcula
 "    \ "Clean"     : "✔︎",
 "    \ "Unknown"   : "?"
 "    \ }
+" ===
+" === Leaderf
+" ===
+let g:Lf_WindowPosition = 'popup'
+nnoremap <c-p> :Leaderf file<CR>
+nnoremap <c-e> :Leaderf mru<CR>
+let g:Lf_PreviewInPopup = 1
+let g:Lf_PreviewCode = 1
+let g:Lf_ShowHidden = 1
+let g:Lf_ShowDevIcons = 1
+let g:Lf_UseVersionControlTool = 0
+let g:Lf_IgnoreCurrentBufferName = 1
+let g:Lf_WildIgnore = {
+        \ 'dir': ['.git', 'vendor', 'node_modules'],
+        \ 'file': ['__vim_project_root']
+        \}
+let g:Lf_UseMemoryCache = 0
+let g:Lf_UseCache = 0
 
 " ===
 " === FZF
 " ===
-"set rtp+=/usr/local/bin/fzf
+set rtp+=/usr/local/bin/fzf
 ""set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
 ""set rtp+=/home/david/.linuxbrew/opt/fzf
-nnoremap <c-p> :Leaderf file<CR>
-"" noremap <silent> <C-p> :Files<CR>
+noremap <silent> <C-f> :Files<CR>
 "noremap <silent> <C-f> :Rg<CR>
 noremap <silent> <C-h> :History<CR>
 "noremap <C-t> :BTags<CR>
-"noremap <silent> <C-l> :Lines<CR>
-"noremap <silent> <C-w> :Buffers<CR>
-"noremap <leader>; :History:<CR>
-"
-"let g:fzf_preview_window = 'right:60%'
-"let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
-"
-"function! s:list_buffers()
-"  redir => list
-"  silent ls
-"  redir END
-"  return split(list, "\n")
-"endfunction
-"
-"function! s:delete_buffers(lines)
-"  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
-"endfunction
-"
-"command! BD call fzf#run(fzf#wrap({
-"  \ 'source': s:list_buffers(),
-"  \ 'sink*': { lines -> s:delete_buffers(lines) },
-"  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
-"\ }))
-"
+noremap <silent> <C-l> :Lines<CR>
+noremap <silent> <C-w> :Buffers<CR>
+noremap <leader>; :History:<CR>
+
+let g:fzf_preview_window = 'right:60%'
+let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
+
+function! s:list_buffers()
+  redir => list
+  silent ls
+  redir END
+  return split(list, "\n")
+endfunction
+
+function! s:delete_buffers(lines)
+  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
+endfunction
+
+command! BD call fzf#run(fzf#wrap({
+  \ 'source': s:list_buffers(),
+  \ 'sink*': { lines -> s:delete_buffers(lines) },
+  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+\ }))
+
 "noremap <c-d> :BD<CR>
-"
-"let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+
+let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
+
 
 " ===
 " === ale
@@ -499,6 +554,10 @@ nmap ts <Plug>(coc-translator-p)
 "nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
 nmap tt :CocCommand explorer<CR>
 nnoremap <c-c> :CocCommand<CR>
+" coctodolist
+nnoremap <leader>tn :CocCommand todolist.create<CR>
+nnoremap <leader>tl :CocList todolist<CR>
+nnoremap <leader>tu :CocCommand todolist.download<CR>:CocCommand todolist.upload<CR>
 
 " ===
 " === Taglist
@@ -551,6 +610,7 @@ let g:snips_author = 'Chris Yang'
 " ===
 map <LEADER>tm :TableModeToggle<CR>
 
+
 " Compile function
 noremap r :call CompileRunGcc()<CR>
 func! CompileRunGcc()
@@ -599,17 +659,6 @@ endfunc
 " ===
 let g:python_highlight_all = 1
 " let g:python_slow_sync = 0
-
-
-" ===
-" === vim-indent-guide
-" ===
-let g:indent_guides_guide_size = 1
-let g:indent_guides_start_level = 2
-let g:indent_guides_enable_on_vim_startup = 1
-let g:indent_guides_color_change_percent = 1
-silent! unmap <LEADER>ig
-autocmd WinEnter * silent! unmap <LEADER>ig
 
 
 " ===
@@ -689,16 +738,15 @@ nnoremap <LEADER>g= :GitGutterNextHunk<CR>
 " ===
 " === nvim-treesitter
 " ===
-
-"lua <<EOF
-"require'nvim-treesitter.configs'.setup {
-"  ensure_installed = {"typescript", "dart", "java"},     -- one of "all", "language", or a list of languages
-"  highlight = {
-"    enable = true,              -- false will disable the whole extension
-"    disable = { "c", "rust" },  -- list of language that will be disabled
-"  },
-"}
-"EOF
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = {"typescript", "dart", "java"},     -- one of "all", "language", or a list of languages
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    disable = { "c", "rust" },  -- list of language that will be disabled
+  },
+}
+EOF
 
 "" ===
 "" === any-jump
@@ -731,16 +779,17 @@ let g:asyncrun_open = 6
 " === Far.vim
 " ===
 "noremap <LEADER>f :F  **/*<left><left><left><left><left>
-let g:far#mapping = {
-		\ "replace_undo" : ["l"],
-		\ }
+"let g:far#mapping = {
+"		\ "replace_undo" : ["l"],
+"		\ }
 
 " ===
 " === rnvimr
 " ===
-let g:rnvimr_ex_enable = 1
-let g:rnvimr_pick_enable = 1
+let g:rnvimr_enable_ex = 1
+let g:rnvimr_enable_picker = 1
 let g:rnvimr_draw_border = 0
+let g:rnvimr_hide_gitignore = 0
 " let g:rnvimr_bw_enable = 1
 highlight link RnvimrNormal CursorLine
 nnoremap <silent> <leader>e :RnvimrToggle<CR><C-\><C-n>:RnvimrResize 0<CR>
@@ -873,7 +922,8 @@ let g:Illuminate_delay = 750
 hi illuminatedWord cterm=undercurl gui=undercurl
 
 " ===
-" === Vista.vim
+  " === Vista.vim
+" === taglist
 " ===
 noremap <LEADER>v :Vista!!<CR>
 noremap <c-t> :silent! Vista finder coc<CR>
@@ -891,20 +941,35 @@ let g:vista#renderer#icons = {
 " set statusline+=%{NearestMethodOrFunction()}
 " autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
 
+" ===
+" === vim-auto-save
+" ===
+let g:auto_save = 1  " enable AutoSave on Vim startup
+"let g:auto_save_silent = 1  " do not display the auto-save notification
+"let g:auto_save = 0
+"augroup ft_markdown
+"  au!
+"  au FileType markdown let b:auto_save = 1
+"  au FileType java let b:auto_save = 1
+"augroup END
 
 " ===
-" === AutoFormat
+" === vim-which-key
 " ===
-augroup autoformat_settings
-	" autocmd FileType bzl AutoFormatBuffer buildifier
-	" autocmd FileType c,cpp,proto,javascript,arduino AutoFormatBuffer clang-format
-	" autocmd FileType dart AutoFormatBuffer dartfmt
-	" autocmd FileType go AutoFormatBuffer gofmt
-	" autocmd FileType gn AutoFormatBuffer gn
-	" autocmd FileType html,css,sass,scss,less,json AutoFormatBuffer js-beautify
-	autocmd FileType java AutoFormatBuffer google-java-format
-	" autocmd FileType python AutoFormatBuffer yapf
-	" Alternative: autocmd FileType python AutoFormatBuffer autopep8
-	" autocmd FileType rust AutoFormatBuffer rustfmt
-	" autocmd FileType vue AutoFormatBuffer prettier
-augroup END
+nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+nnoremap <silent> , :WhichKey ','<CR>
+
+" ===
+" === undotree
+" ===
+silent !mkdir -p ~/.config/nvim/tmp/backup
+silent !mkdir -p ~/.config/nvim/tmp/undo
+"silent !mkdir -p ~/.config/nvim/tmp/sessions
+set backupdir=~/.config/nvim/tmp/backup,.
+set directory=~/.config/nvim/tmp/backup,.
+if has('persistent_undo')
+	set undofile
+	set undodir=~/.config/nvim/tmp/undo,.
+endif
+
+

@@ -79,7 +79,7 @@
   "typescript.suggestionActions.enabled": true,
   "typescript.format.enabled": true,
   "explorer.width": 38,
-  "explorer.quitOnOpen": true,
+  "explorer.quitOnOpen": false,
   "explorer.sources": [
 		{
 			"name": "buffer",
