@@ -59,7 +59,6 @@ set colorcolumn=100
 set shortmess+=c        " 补全少一些没用的东西
 set virtualedit=block
 
-
 " 分屏
 map s <nop>
 map sl :set splitright<CR>:vsplit<CR>
@@ -168,6 +167,15 @@ source ~/.config/nvim/md-snippets.vim
 " auto spell
 "autocmd BufRead,BufNewFile *.md setlocal spell
 
+" 同时打开多个文件
+"function! MultipleEdit(p_list)
+  "for p in a:p_list
+    "for c in glob(p, 0, 1)
+      "execute 'edit ' . c
+    "endfor
+  "endfor
+"endfunction
+"command! -bar -bang -nargs=+ -complete=file Edit call MultipleEdit([<f-args>])
 
 let g:python_host_prog='/usr/bin/python2'
 let g:python3_host_prog='/usr/bin/python3'
@@ -223,13 +231,6 @@ Plug 'kevinhwang91/rnvimr'
 Plug 'glepnir/dashboard-nvim'
 "Plug 'liuchengxu/vim-clap'
 
-" Taglist
-Plug 'majutsushi/tagbar', { 'on': 'TagbarOpenAutoClose' }
-
-
-" Error checking
-Plug 'w0rp/ale'
-
 " Undo Tree
 Plug 'mbbill/undotree'
 
@@ -264,7 +265,7 @@ Plug 'kshenoy/vim-signature'
 
 " Other useful utilities
 Plug 'terryma/vim-multiple-cursors'
-Plug 'junegunn/goyo.vim' " distraction free writing mode
+"Plug 'junegunn/goyo.vim' " distraction free writing mode
 Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
 Plug 'jiangmiao/auto-pairs'
 "Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
@@ -285,7 +286,7 @@ Plug 'nvim-treesitter/playground'
 
 " Pretty Dress
 Plug 'bpietravalle/vim-bolt'
-Plug 'blueshirts/darcula'
+"Plug 'blueshirts/darcula'
 Plug 'theniceboy/nvim-deus'
 "Plug 'ajmwagar/vim-deus'
 "Plug 'crusoexia/vim-monokai'
@@ -323,12 +324,16 @@ Plug 'theniceboy/vim-snippets'
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
+Plug 'rhysd/clever-f.vim'
 
 "Plug 'skywind3000/asynctasks.vim'
 "Plug 'skywind3000/asyncrun.vim'
 
 " Find & Replace
 "Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
+
+" Vim Applications
+Plug 'itchyny/calendar.vim'
 
 " switch ture/false
 Plug 'AndrewRadev/switch.vim'
@@ -456,13 +461,6 @@ command! BD call fzf#run(fzf#wrap({
 "noremap <c-d> :BD<CR>
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
-
-
-" ===
-" === ale
-" ===
-let b:ale_linters = ['pylint']
-let b:ale_fixers = ['autopep8', 'yapf']
 
 " ===
 " === coc.nvim
@@ -974,3 +972,12 @@ if has('persistent_undo')
 endif
 
 
+let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "ip", "it"]
+
+" ===
+" === vim-calendar
+" ===
+"noremap \c :Calendar -position=here<CR>
+noremap \\ :Calendar -view=clock -position=here<CR>
+let g:calendar_google_calendar = 1
+let g:calendar_google_task = 1
