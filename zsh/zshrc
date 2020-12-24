@@ -16,6 +16,7 @@ export ZSH=/Users/y/.oh-my-zsh
 # See https://github.com/robbyrussell/oh-my-zsh/wiki/Themes
 #ZSH_THEME="robbyrussell"
 ZSH_THEME="powerlevel10k/powerlevel10k"
+
 #ZSH_THEME="awesomepanda"
 
 # Set list of themes to load

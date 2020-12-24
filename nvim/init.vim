@@ -1,6 +1,6 @@
 let mapleader=" "
 noremap ; :
-set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+"set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set termencoding=utf-8
 set encoding=utf-8
 set exrc
@@ -101,13 +101,16 @@ noremap n nzz
 noremap N Nzz
 noremap * *zz
 noremap # #zz
+" Ctrl + U or E will move up/down the view port without moving the cursor
+noremap <C-U> 5<C-y>
+noremap <C-D> 5<C-e>
 
 noremap  <expr>0     col('.') == 1 ? '^': '0'
 
 " Search
 noremap <LEADER><CR> :nohlsearch<CR>
 " Press space twice to jump to the next '<++>' and edit it
-noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
+autocmd FileType markdown noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
 
 " Opening a terminal window
 noremap <LEADER>/ :set splitbelow<CR>:split<CR>:res +10<CR>:term<CR>
@@ -217,8 +220,6 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'wellle/tmux-complete.vim'
 
 " File navigation
-"Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-"Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
@@ -234,22 +235,26 @@ Plug 'glepnir/dashboard-nvim'
 " Undo Tree
 Plug 'mbbill/undotree'
 
-" Other visual enhancement
-Plug 'itchyny/vim-cursorword'
+
+" Pretty Dress
+Plug 'bpietravalle/vim-bolt'
+"Plug 'blueshirts/darcula'
+Plug 'theniceboy/nvim-deus'
+Plug 'ryanoasis/vim-devicons'
+" Status line
+"Plug 'theniceboy/eleline.vim'
+"Plug 'ojroques/vim-scrollstatus'
+Plug 'glepnir/spaceline.vim'
+
+" highlight
 " HTML, CSS, JavaScript, PHP, JSON, etc.
 Plug 'elzr/vim-json'
 Plug 'neoclide/jsonc.vim'
-"Plug 'hail2u/vim-css3-syntax'
-Plug 'alvan/vim-closetag'
-"Plug 'spf13/PIV', { 'for' :['php', 'vim-plug'] }
 Plug 'gko/vim-coloresque', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
 "Plug 'pangloss/vim-javascript', { 'for' :['javascript', 'vim-plug'] }
 Plug 'yuezk/vim-js', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
 "Plug 'posva/vim- vue'
 Plug 'mattn/emmet-vim'
-
-" Python
-Plug 'vim-scripts/indentpython.vim'
 
 " Markdown
 Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
@@ -262,9 +267,18 @@ Plug 'plasticboy/vim-markdown'
 
 " Bookmarks
 Plug 'kshenoy/vim-signature'
+" Taglist
+Plug 'liuchengxu/vista.vim'
+" see the " paste and @ recored
+"Plug 'junegunn/vim-peekaboo'
+" display available keybindings in popup
+"Plug 'liuchengxu/vim-which-key'
+"Plug 'hecal3/vim-leader-guide'
 
-" Other useful utilities
+" edit/show/move enhancement
 Plug 'terryma/vim-multiple-cursors'
+Plug 'itchyny/vim-cursorword'
+Plug 'alvan/vim-closetag'
 "Plug 'junegunn/goyo.vim' " distraction free writing mode
 Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
 Plug 'jiangmiao/auto-pairs'
@@ -272,38 +286,14 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip
 Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
 "Plug 'tpope/vim-capslock'	" Ctrl+L (insert) to toggle capslock
-
-" Other visual enhancement
-"Plug 'luochen1990/rainbow'
-"Plug 'mg979/vim-xtabline'
-Plug 'ryanoasis/vim-devicons'
-"Plug 'wincent/terminus'
+Plug 'easymotion/vim-easymotion'
+Plug 'haya14busa/incsearch.vim'
+Plug 'haya14busa/incsearch-easymotion.vim'
+Plug 'rhysd/clever-f.vim'
 
 " Treesitter
 Plug 'nvim-treesitter/nvim-treesitter'
 Plug 'nvim-treesitter/playground'
-
-
-" Pretty Dress
-Plug 'bpietravalle/vim-bolt'
-"Plug 'blueshirts/darcula'
-Plug 'theniceboy/nvim-deus'
-"Plug 'ajmwagar/vim-deus'
-"Plug 'crusoexia/vim-monokai'
-"Plug 'connorholyday/vim-snazzy'
-
-" Status line
-"Plug 'theniceboy/eleline.vim'
-"Plug 'ojroques/vim-scrollstatus'
-Plug 'glepnir/spaceline.vim'
-
-" General Highlighter
-"Plug 'RRethy/vim-hexokinase', { 'do': 'make hexokinase' }
-"Plug 'RRethy/vim-illuminate'
-
-" Taglist
-Plug 'liuchengxu/vista.vim'
-
 
 " Git
 "Plug 'theniceboy/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
@@ -312,31 +302,9 @@ Plug 'fszymanski/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
 Plug 'airblade/vim-gitgutter'
 Plug 'cohama/agit.vim'
 
-" see the " paste and @ recored
-Plug 'junegunn/vim-peekaboo'
-
 " Snippets
 " Plug 'SirVer/ultisnips'
 Plug 'theniceboy/vim-snippets'
-
-
-" quick move
-Plug 'easymotion/vim-easymotion'
-Plug 'haya14busa/incsearch.vim'
-Plug 'haya14busa/incsearch-easymotion.vim'
-Plug 'rhysd/clever-f.vim'
-
-"Plug 'skywind3000/asynctasks.vim'
-"Plug 'skywind3000/asyncrun.vim'
-
-" Find & Replace
-"Plug 'brooth/far.vim', { 'on': ['F', 'Far', 'Fardo'] }
-
-" Vim Applications
-Plug 'itchyny/calendar.vim'
-
-" switch ture/false
-Plug 'AndrewRadev/switch.vim'
 
 " todo smart to switch input method
 " need install im-select (mac-only)
@@ -346,8 +314,9 @@ Plug 'ybian/smartim'
 " autosave
 Plug '907th/vim-auto-save'
 
-" display available keybindings in popup
-Plug 'liuchengxu/vim-which-key'
+" Comrade
+"Plug 'beeender/Comrade'
+"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins', 'for' : 'java' }
 
 call plug#end()
 
@@ -435,7 +404,6 @@ noremap <silent> <C-f> :Files<CR>
 noremap <silent> <C-h> :History<CR>
 "noremap <C-t> :BTags<CR>
 noremap <silent> <C-l> :Lines<CR>
-noremap <silent> <C-w> :Buffers<CR>
 noremap <leader>; :History:<CR>
 
 let g:fzf_preview_window = 'right:60%'
@@ -452,13 +420,14 @@ function! s:delete_buffers(lines)
   execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
 endfunction
 
-command! BD call fzf#run(fzf#wrap({
-  \ 'source': s:list_buffers(),
-  \ 'sink*': { lines -> s:delete_buffers(lines) },
-  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
-\ }))
-
+"command! BD call fzf#run(fzf#wrap({
+"  \ 'source': s:list_buffers(),
+"  \ 'sink*': { lines -> s:delete_buffers(lines) },
+"  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+"\ }))
+"
 "noremap <c-d> :BD<CR>
+noremap <silent> <C-w> :Buffers<CR>
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 
@@ -488,6 +457,7 @@ let g:coc_global_extensions = [
 	\ 'coc-tsserver',
 	\ 'coc-vetur',
 	\ 'coc-vimlsp',
+  \ 'coc-picgo',
 	\ 'coc-yaml',
 	\ 'coc-yank']
 
@@ -775,14 +745,6 @@ let g:asyncrun_open = 6
 
 
 " ===
-" === Far.vim
-" ===
-"noremap <LEADER>f :F  **/*<left><left><left><left><left>
-"let g:far#mapping = {
-"		\ "replace_undo" : ["l"],
-"		\ }
-
-" ===
 " === rnvimr
 " ===
 let g:rnvimr_enable_ex = 1
@@ -898,7 +860,7 @@ endfunction
 " === dashboard
 " ===
 "let g:mapleader="\<Space>"
-"let g:dashboard_default_executive ='clap'
+let g:dashboard_default_executive ='fzf'
 "nmap <Leader>ss :<C-u>SessionSave<CR>
 "nmap <Leader>sl :<C-u>SessionLoad<CR>
 "nnoremap <silent> <Leader>fh :DashboardFindHistory<CR>
@@ -921,7 +883,7 @@ let g:Illuminate_delay = 750
 hi illuminatedWord cterm=undercurl gui=undercurl
 
 " ===
-  " === Vista.vim
+" === Vista.vim
 " === taglist
 " ===
 noremap <LEADER>v :Vista!!<CR>
@@ -943,7 +905,8 @@ let g:vista#renderer#icons = {
 " ===
 " === vim-auto-save
 " ===
-let g:auto_save = 1  " enable AutoSave on Vim startup
+noremap <LEADER>as :AutoSaveToggle<CR>
+let g:auto_save = 0  " enable AutoSave on Vim startup
 "let g:auto_save_silent = 1  " do not display the auto-save notification
 "let g:auto_save = 0
 "augroup ft_markdown
@@ -955,8 +918,10 @@ let g:auto_save = 1  " enable AutoSave on Vim startup
 " ===
 " === vim-which-key
 " ===
-nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
-nnoremap <silent> , :WhichKey ','<CR>
+"nnoremap <silent> <LEADER>      :WhichKey '<Space>'<CR>
+"nnoremap <silent> <localleader> :WhichKey  ','<CR>
+
+
 
 " ===
 " === undotree
@@ -972,12 +937,14 @@ if has('persistent_undo')
 endif
 
 
+" ===
+" === wildfire
+" ===
 let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "ip", "it"]
 
 " ===
-" === vim-calendar
+" === comrade
 " ===
-"noremap \c :Calendar -position=here<CR>
-noremap \\ :Calendar -view=clock -position=here<CR>
-let g:calendar_google_calendar = 1
-let g:calendar_google_task = 1
+"autocmd FileType java exec "CocDisable"
+"" Use deoplete.
+"let g:deoplete#enable_at_startup = 1
