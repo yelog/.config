@@ -104,7 +104,26 @@ noremap # #zz
 " Ctrl + U or E will move up/down the view port without moving the cursor
 noremap <C-U> 5<C-y>
 noremap <C-D> 5<C-e>
+nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
+nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
+nnoremap <leader>` viw<esc>a`<esc>hbi`<esc>lel
+nnoremap <leader>{ viw<esc>a}<esc>hbi{<esc>lel
+nnoremap <leader>} viw<esc>a}<esc>hbi{<esc>lel
+nnoremap <leader>[ viw<esc>a]<esc>hbi[<esc>lel
+nnoremap <leader>] viw<esc>a]<esc>hbi[<esc>lel
+nnoremap <leader>( viw<esc>a)<esc>hbi(<esc>lel
+nnoremap <leader>) viw<esc>a)<esc>hbi(<esc>lel
+vnoremap <leader>" xi""<esc>hp
+vnoremap <leader>' xi''<esc>hp
+vnoremap <leader>` xi``<esc>hp
+vnoremap <leader>{ xi{}<esc>hp
+vnoremap <leader>} xi{}<esc>hp
+vnoremap <leader>[ xi[]<esc>hp
+vnoremap <leader>] xi[]<esc>hp
+vnoremap <leader>) xi()<esc>hp
+vnoremap <leader>( xi()<esc>hp
 
+" 0 toggle ^ or 0
 noremap  <expr>0     col('.') == 1 ? '^': '0'
 
 " Search
@@ -114,6 +133,18 @@ autocmd FileType markdown noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>
 
 " Opening a terminal window
 noremap <LEADER>/ :set splitbelow<CR>:split<CR>:res +10<CR>:term<CR>
+
+" search selected text in visual mode
+vnoremap <silent> * :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy/<C-R><C-R>=substitute(
+  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
+vnoremap <silent> # :<C-U>
+  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+  \gvy?<C-R><C-R>=substitute(
+  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+  \gV:call setreg('"', old_reg, old_regtype)<CR>
 
 " spelling check with <space>sc
 map <LEADER>sc :set spell!<CR>
@@ -141,7 +172,7 @@ inoremap <C-a> <ESC>A
 " ===
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
-cnoremap <C-p> <Up>
+cnoremap <C-p> <Unp>
 cnoremap <C-n> <Down>
 cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
@@ -152,13 +183,15 @@ cnoremap <M-w> <S-Right>
 noremap \s :%s//g<left><left>
 
 " set wrap
-noremap <LEADER>sw :set wrap<CR>
+noremap <LEADER>sw :set wrap!<CR>
 
 " 剪贴板
 " 普通模式下复制到行尾
 nnoremap Y y$
 " 选中模式下
 vnoremap Y "+y
+
+nnoremap <c-p> "0p
 
 vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
 
@@ -206,6 +239,8 @@ let g:terminal_color_12 = '#CAA9FA'
 let g:terminal_color_13 = '#FF92D0'
 let g:terminal_color_14 = '#9AEDFE'
 
+
+source ~/.config/nvim/cursor.vim
 " Specify a directory for plugins
 " " - For Neovim: stdpath('data') . '/plugged'
 " " - Avoid using standard Vim directory names like 'plugin'
@@ -213,7 +248,6 @@ call plug#begin('~/.config/nvim/plugged')
 
 " Make sure you use single quotes
 
-Plug 'vim-airline/vim-airline'
 
 " Auto Complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
@@ -238,13 +272,14 @@ Plug 'mbbill/undotree'
 
 " Pretty Dress
 Plug 'bpietravalle/vim-bolt'
-"Plug 'blueshirts/darcula'
+Plug 'blueshirts/darcula'
 Plug 'theniceboy/nvim-deus'
 Plug 'ryanoasis/vim-devicons'
 " Status line
 "Plug 'theniceboy/eleline.vim'
 "Plug 'ojroques/vim-scrollstatus'
 Plug 'glepnir/spaceline.vim'
+Plug 'vim-airline/vim-airline'
 
 " highlight
 " HTML, CSS, JavaScript, PHP, JSON, etc.
@@ -283,7 +318,7 @@ Plug 'alvan/vim-closetag'
 Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
 Plug 'jiangmiao/auto-pairs'
 "Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
-Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip
+Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip; in normal mode, type enter to select {[ and on.
 Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
 "Plug 'tpope/vim-capslock'	" Ctrl+L (insert) to toggle capslock
 Plug 'easymotion/vim-easymotion'
@@ -292,8 +327,8 @@ Plug 'haya14busa/incsearch-easymotion.vim'
 Plug 'rhysd/clever-f.vim'
 
 " Treesitter
-Plug 'nvim-treesitter/nvim-treesitter'
-Plug 'nvim-treesitter/playground'
+"Plug 'nvim-treesitter/nvim-treesitter'
+"Plug 'nvim-treesitter/playground'
 
 " Git
 "Plug 'theniceboy/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
@@ -301,6 +336,7 @@ Plug 'fszymanski/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
 "Plug 'mhinz/vim-signify'
 Plug 'airblade/vim-gitgutter'
 Plug 'cohama/agit.vim'
+Plug 'tpope/vim-fugitive'
 
 " Snippets
 " Plug 'SirVer/ultisnips'
@@ -378,7 +414,7 @@ hi NonText ctermfg=gray guifg=grey10
 " === Leaderf
 " ===
 let g:Lf_WindowPosition = 'popup'
-nnoremap <c-p> :Leaderf file<CR>
+"nnoremap <c-p> :Leaderf file<CR>
 nnoremap <c-e> :Leaderf mru<CR>
 let g:Lf_PreviewInPopup = 1
 let g:Lf_PreviewCode = 1
@@ -399,7 +435,8 @@ let g:Lf_UseCache = 0
 set rtp+=/usr/local/bin/fzf
 ""set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
 ""set rtp+=/home/david/.linuxbrew/opt/fzf
-noremap <silent> <C-f> :Files<CR>
+"noremap <silent> <C-f> :Files<CR>
+map <expr> <C-f> fugitive#head() != '' ? ':GFiles --cached --others --exclude-standard<CR>' : ':Files<CR>'
 "noremap <silent> <C-f> :Rg<CR>
 noremap <silent> <C-h> :History<CR>
 "noremap <C-t> :BTags<CR>
@@ -707,15 +744,15 @@ nnoremap <LEADER>g= :GitGutterNextHunk<CR>
 " ===
 " === nvim-treesitter
 " ===
-lua <<EOF
-require'nvim-treesitter.configs'.setup {
-  ensure_installed = {"typescript", "dart", "java"},     -- one of "all", "language", or a list of languages
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    disable = { "c", "rust" },  -- list of language that will be disabled
-  },
-}
-EOF
+"lua <<EOF
+"require'nvim-treesitter.configs'.setup {
+"  ensure_installed = {"typescript", "dart", "java"},     -- one of "all", "language", or a list of languages
+"  highlight = {
+"    enable = true,              -- false will disable the whole extension
+"    disable = { "c", "rust" },  -- list of language that will be disabled
+"  },
+"}
+"EOF
 
 "" ===
 "" === any-jump
