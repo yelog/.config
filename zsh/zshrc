@@ -110,7 +110,7 @@ source $ZSH/oh-my-zsh.sh
 # alias zshconfig="mate ~/.zshrc"
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 #source ~/.bash_profile
-#source ~/.bashrc
+source ~/.bashrc
 bindkey "[D" backward-word
 bindkey "[C" forward-word
 setopt no_nomatch
@@ -192,41 +192,6 @@ function man()
 # add route
 # sudo route add 10.0.0.0/8 10.176.120.254
 
-export PATH=/Users/y/software/flutter/bin:$PATH:/Users/y/Library/Python/2.7/bin
-#设置 jdk11
-export JAVA_11_HOME=/Library/Java/JavaVirtualMachines/adoptopenjdk-11.0.2.jdk/Contents/Home
-#设置 jdk8
-export JAVA_8_HOME=/Library/Java/JavaVirtualMachines/jdk1.8.0_171.jdk/Contents/Home
-#设置 jdk10
-export JAVA_10_HOME=/Library/Java/JavaVirtualMachines/jdk-10.0.2.jdk/Contents/Home
-
-#默认 jdk11
-export JAVA_HOME=$JAVA_8_HOME
-
-#alias 命令动态切换JDK版本
-alias j8="export JAVA_HOME=$JAVA_8_HOME"
-alias j10="export JAVA_HOME=$JAVA_10_HOME"
-alias j11="export JAVA_HOME=$JAVA_11_HOME"
-
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-export LANG=en_US.UTF-8
-
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-## 2020年8月
-__conda_setup="$('/Users/y/software/miniconda3/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/Users/y/software/miniconda3/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/Users/y/software/miniconda3/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/Users/y/software/miniconda3/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
-# <<< conda initialize <<<
 
 export EDITOR=nvim
-e
+export FZF_DEFAULT_OPTS=--reverse
