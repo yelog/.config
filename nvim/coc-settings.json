@@ -63,16 +63,16 @@
     "$HOME/.config/nvim/Ultisnips/",
     "$HOME/.config/nvim/plugged/vim-snippets/UltiSnips/"
   ],
-  "coc.preferences.formatOnSaveFiletypes": [
-    "javascript",
-    "typescript",
-    "html",
-    "css",
-    "json",
-    "python",
-    "vue",
-    "svelte"
-  ],
+  /*"coc.preferences.formatOnSaveFiletypes": [*/
+    /*"javascript",*/
+    /*"typescript",*/
+    /*"html",*/
+    /*"css",*/
+    /*"json",*/
+    /*"python",*/
+    /*"vue",*/
+    /*"svelte"*/
+  /*],*/
   "yaml.format.enable": true,
   "signature.target": "float",
   "yank.enableCompletion": false,
@@ -114,7 +114,6 @@
   "javascript.suggest.names": true,
   "javascript.suggestionActions.enabled": true,
   "json.format.enable": true,
-  "eslint.autoFixOnSave": false,
   "prettier.printWidth": 100,
   "prettier.eslintIntegration": true,
   "prettier.disableLanguages": [],
@@ -126,6 +125,9 @@
   "todolist.promptForReminder": false,
   "coc-actions.hideCursor": false,
   "coc-actions.showActionKind": true,
+  "eslint.format.enable": true,
+  "eslint.probe": ["vue", "javascript"],
+  "eslint.autoFixOnSave": true,
   "diagnostic-languageserver.filetypes": {
     "vim": "vint",
     "email": "languagetool",

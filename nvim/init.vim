@@ -82,12 +82,16 @@ map <left> :vertical resize-5<CR>
 map <right> :vertical resize+5<CR>
 
 " 标签页
-map tk :tabe<CR>
-map th :-tabnext<CR>
-map tl :+tabnext<CR>
+map ti :tabe<CR>
+"map th :-tabnext<CR>
+map th gT
+"map tl :+tabnext<CR>
+map tl gt
 map tmh :-tabmove<CR>
 map tml :+tabmove<CR>
 
+noremap <c-h> gT
+noremap <c-l> gt
 
 " 保存 退出 刷新配置文件
 map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
@@ -354,6 +358,9 @@ Plug '907th/vim-auto-save'
 "Plug 'beeender/Comrade'
 "Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins', 'for' : 'java' }
 
+
+Plug 'brooth/far.vim'
+
 call plug#end()
 
 
@@ -438,9 +445,9 @@ set rtp+=/usr/local/bin/fzf
 "noremap <silent> <C-f> :Files<CR>
 map <expr> <C-f> fugitive#head() != '' ? ':GFiles --cached --others --exclude-standard<CR>' : ':Files<CR>'
 "noremap <silent> <C-f> :Rg<CR>
-noremap <silent> <C-h> :History<CR>
+"noremap <silent> <C-h> :History<CR>
 "noremap <C-t> :BTags<CR>
-noremap <silent> <C-l> :Lines<CR>
+"noremap <silent> <C-l> :Lines<CR>
 noremap <leader>; :History:<CR>
 
 let g:fzf_preview_window = 'right:60%'
@@ -456,6 +463,18 @@ endfunction
 function! s:delete_buffers(lines)
   execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
 endfunction
+
+command! -bang -nargs=* GGrep
+  \ call fzf#vim#grep(
+  \   'git grep --line-number -- '.shellescape(<q-args>), 0,
+  \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
+
+"command! -bang -nargs=* Rg
+  "\ call fzf#vim#grep(
+  "\   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
+  "\   <bang>0 ? fzf#vim#with_preview('up:60%')
+  "\           : fzf#vim#with_preview('right:60%:hidden', '?'),
+  "\   <bang>0)
 
 "command! BD call fzf#run(fzf#wrap({
 "  \ 'source': s:list_buffers(),
@@ -493,6 +512,7 @@ let g:coc_global_extensions = [
 	\ 'coc-tslint-plugin',
 	\ 'coc-tsserver',
 	\ 'coc-vetur',
+	\ 'coc-eslint',
 	\ 'coc-vimlsp',
   \ 'coc-picgo',
 	\ 'coc-yaml',
@@ -603,11 +623,11 @@ let g:vmt_fence_text = 'TOC'
 let g:vmt_fence_closing_text = '/TOC'
 
 " coc-snippets
-imap <C-h> <Plug>(coc-snippets-expand)
-vmap <C-l> <Plug>(coc-snippets-select)
-let g:coc_snippet_next = '<c-l>'
-let g:coc_snippet_prev = '<c-h>'
-imap <C-l> <Plug>(coc-snippets-expand-jump)
+"imap <C-h> <Plug>(coc-snippets-expand)
+"vmap <C-l> <Plug>(coc-snippets-select)
+"let g:coc_snippet_next = '<c-l>'
+"let g:coc_snippet_prev = '<c-h>'
+"imap <C-l> <Plug>(coc-snippets-expand-jump)
 let g:snips_author = 'Chris Yang'
 
 
@@ -674,7 +694,7 @@ map <LEADER>gy :Goyo<CR>
 
 
 " ===
-" === vim-signiture
+" === vim-signature
 " ===
 let g:SignatureMap = {
         \ 'Leader'             :  "m",
@@ -684,9 +704,9 @@ let g:SignatureMap = {
         \ 'DeleteMark'         :  "dm",
         \ 'PurgeMarks'         :  "dm/",
         \ 'PurgeMarkers'       :  "dm?",
-        \ 'GotoNextLineAlpha'  :  "m<LEADER>",
+        \ 'GotoNextLineAlpha'  :  "mn",
         \ 'GotoPrevLineAlpha'  :  "",
-        \ 'GotoNextSpotAlpha'  :  "m<LEADER>",
+        \ 'GotoNextSpotAlpha'  :  "",
         \ 'GotoPrevSpotAlpha'  :  "",
         \ 'GotoNextLineByPos'  :  "",
         \ 'GotoPrevLineByPos'  :  "",
@@ -699,7 +719,8 @@ let g:SignatureMap = {
         \ 'ListLocalMarks'     :  "m/",
         \ 'ListLocalMarkers'   :  "m?"
         \ }
-
+map <leader>m mn
+map <leader>M mp
 
 " ===
 " === Undotree
@@ -810,14 +831,14 @@ let g:rnvimr_presets = [{'width': 1.0, 'height': 1.0}]
 " ===
 " === smartim
 " ===
-let g:smartim_default='com.apple.keylayout.ABC'
-" fix slow in mutiple_cursor mode
-function! Multiple_cursors_before()
-  let g:smartim_disable = 1
-endfunction
-function! Multiple_cursors_after()
-  unlet g:smartim_disable
-endfunction
+"let g:smartim_default='com.apple.keylayout.ABC'
+"" fix slow in mutiple_cursor mode
+"function! Multiple_cursors_before()
+"  let g:smartim_disable = 1
+"endfunction
+"function! Multiple_cursors_after()
+"  unlet g:smartim_disable
+"endfunction
 
 " ===
 " === vim-easymotion
@@ -985,3 +1006,10 @@ let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "ip", "it"]
 "autocmd FileType java exec "CocDisable"
 "" Use deoplete.
 "let g:deoplete#enable_at_startup = 1
+
+
+" ===
+" === far.vim
+" ===
+nnoremap <silent> <c-s-f>  :Farf<cr>
+vnoremap <silent> <c-s-f>  :Farf<cr>
