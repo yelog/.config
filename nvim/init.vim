@@ -71,10 +71,10 @@ map sH <C-w>t<C-w>K
 noremap srh <C-w>b<C-w>K
 noremap srv <C-w>b<C-w>H
 " 切换分屏焦点
-noremap <leader>l <C-w>l
-noremap <leader>h <C-w>h
-noremap <leader>j <C-w>j
-noremap <leader>k <C-w>k
+noremap gl <C-w>l
+noremap gh <C-w>h
+noremap gj <C-w>j
+noremap gk <C-w>k
 " 分屏大小
 map <up> :res -5<CR>
 map <down> :res +5<CR>
@@ -150,6 +150,12 @@ vnoremap <silent> # :<C-U>
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
 
+nnoremap gb *
+vnoremap gb *
+nnoremap gB #
+vnoremap gB #
+
+
 " spelling check with <space>sc
 map <LEADER>sc :set spell!<CR>
 "noremap <C-x> ea<C-x>s
@@ -196,6 +202,7 @@ nnoremap Y y$
 vnoremap Y "+y
 
 nnoremap <c-p> "0p
+vnoremap <c-p> "0p
 
 vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
 
@@ -243,6 +250,8 @@ let g:terminal_color_12 = '#CAA9FA'
 let g:terminal_color_13 = '#FF92D0'
 let g:terminal_color_14 = '#9AEDFE'
 
+" set filetype
+au BufNewFile,BufRead *.ejs set filetype=html
 
 source ~/.config/nvim/cursor.vim
 " Specify a directory for plugins
@@ -547,9 +556,9 @@ nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
 nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
+"nmap <silent> gy <Plug>(coc-type-definition)
 nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
+"nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
 nnoremap <silent> <leader>m :call <SID>show_documentation()<CR>
@@ -695,6 +704,7 @@ map <LEADER>gy :Goyo<CR>
 
 " ===
 " === vim-signature
+" === Bookmarks
 " ===
 let g:SignatureMap = {
         \ 'Leader'             :  "m",
@@ -719,13 +729,13 @@ let g:SignatureMap = {
         \ 'ListLocalMarks'     :  "m/",
         \ 'ListLocalMarkers'   :  "m?"
         \ }
-map <leader>m mn
-map <leader>M mp
+map gm mn
+map gM mp
 
 " ===
 " === Undotree
 " ===
-noremap L :UndotreeToggle<CR>
+noremap <leader>u :UndotreeToggle<CR>
 let g:undotree_DiffAutoOpen = 1
 let g:undotree_SetFocusWhenToggle = 1
 let g:undotree_ShortIndicators = 1
@@ -757,10 +767,10 @@ let g:gitgutter_sign_removed = '▶'
 let g:gitgutter_sign_removed_first_line = '▔'
 let g:gitgutter_sign_modified_removed = '▒'
 " autocmd BufWritePost * GitGutter
-nnoremap <LEADER>gf :GitGutterFold<CR>
-nnoremap H :GitGutterPreviewHunk<CR>
-nnoremap <LEADER>g- :GitGutterPrevHunk<CR>
-nnoremap <LEADER>g= :GitGutterNextHunk<CR>
+nnoremap <LEADER>z :GitGutterFold<CR>
+nnoremap cl :GitGutterPreviewHunk<CR>
+nnoremap gp :GitGutterPrevHunk<CR>
+nnoremap gn :GitGutterNextHunk<CR>
 
 " ===
 " === nvim-treesitter
@@ -793,7 +803,7 @@ nnoremap <LEADER>g= :GitGutterNextHunk<CR>
 " ===
 " === AsyncRun
 " ===
-noremap gp :AsyncRun git push<CR>
+"noremap gp :AsyncRun git push<CR>
 
 
 " ===
