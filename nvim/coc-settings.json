@@ -2,7 +2,7 @@
   "coc.preferences.hoverTarget": "preview",
   "coc.preferences.enableFloatHighlight": true,
   "coc.preferences.snippetStatusText": "Ⓢ ",
-  "coc.preferences.extensionUpdateCheck": "daily",
+  "coc.preferences.extensionUpdateCheck": "never",
   "coc.preferences.messageLevel": "error",
   "coc.source.around.firstMatch": false,
   "coc.source.buffer.firstMatch": false,
