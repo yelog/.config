@@ -11,7 +11,7 @@ git clone --recursive https://github.com/yelog/.config.git ~/.config
 # Download source code
 git clone https://github.com/neovim/neovim.git
 # install cmake and dependency
-yum install -y cmake gcc-c++ libtool unzip
+sudo yum install -y cmake gcc-c++ libtool unzip
 # compile with cmake
 make CMAKE_BUILD_TYPE=Release
 # install

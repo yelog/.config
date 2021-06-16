@@ -190,7 +190,7 @@ cnoremap <M-b> <S-Left>
 cnoremap <M-w> <S-Right>
 
 " find and replace
-noremap \s :%s//g<left><left>
+noremap \s :%s//gc<left><left><left>
 
 " set wrap
 noremap <LEADER>sw :set wrap!<CR>
