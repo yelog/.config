@@ -216,3 +216,17 @@ bindkey -M vicmd ' ' execute-named-cmd # Space for command line mode
 bindkey -a '^[[3~' vi-delete-char
 bindkey -M vicmd 'k' history-substring-search-up
 bindkey -M vicmd 'j' history-substring-search-down
+
+
+# 解决复制粘贴出现很慢情况 (autosuggestions)
+pasteinit() {
+OLD_SELF_INSERT=${${(s.:.)widgets[self-insert]}[2,3]}
+ zle -N self-insert url-quote-magic
+}
+
+pastefinish() {
+ zle -N self-insert $OLD_SELF_INSERT
+}
+ 
+zstyle :bracketed-paste-magic paste-init pasteinit
+zstyle :bracketed-paste-magic paste-finish pastefinish
