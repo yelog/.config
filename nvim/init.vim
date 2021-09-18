@@ -59,7 +59,7 @@ set colorcolumn=100
 set shortmess+=c        " 补全少一些没用的东西
 set virtualedit=block
 
-" 分屏
+"" 分屏
 map s <nop>
 map sl :set splitright<CR>:vsplit<CR>
 map sh :set nosplitright<CR>:vsplit<CR>
@@ -559,7 +559,7 @@ nmap <silent> gi <Plug>(coc-implementation)
 "nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
-nnoremap <silent> <leader>m :call <SID>show_documentation()<CR>
+nnoremap <silent> <leader>d :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
