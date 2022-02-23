@@ -1,28 +1,28 @@
-let mapleader=" "
+let mapleader=' '
 noremap ; :
-"set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
+set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set termencoding=utf-8
 set encoding=utf-8
 set exrc
 set secure
-set nu				                    " 显示行号
+set nu                            " 显示行号
 syntax on
-set ruler			                    " 打开状态标尺
-set cursorline              	    " 突出显示当前行
-set ignorecase smartcase	        " 搜索时忽略大小写，但在有一个或以上大写字母时仍保持对大小写敏感
-set hlsearch			                " 搜索时高亮显示被找到的文本
-set smartindent 		              " 开启新行时使用智能自动缩进
-set incsearch			                " 输入搜索内容时就显示搜索结果
-set autochdir			                " 自动切换当前目录为当前文件所在的目录
-set cmdheight=1             	    " 设定命令行的行数为 1
-set laststatus=2            	    " 显示状态栏 默认值为 1, 无法显示状态栏
+set ruler                         " 打开状态标尺
+set cursorline                    " 突出显示当前行
+set ignorecase smartcase          " 搜索时忽略大小写，但在有一个或以上大写字母时仍保持对大小写敏感
+set hlsearch                      " 搜索时高亮显示被找到的文本
+set smartindent                   " 开启新行时使用智能自动缩进
+set incsearch                     " 输入搜索内容时就显示搜索结果
+set autochdir                     " 自动切换当前目录为当前文件所在的目录
+set cmdheight=1                   " 设定命令行的行数为 1
+set laststatus=2                  " 显示状态栏 默认值为 1, 无法显示状态栏
 set completeopt=longest,noinsert,menuone,noselect,preview
-set relativenumber		            " 设置相对行号
-set wrap			                    " 超出换行
-set wildmenu			                " 自动补全 并且提示后选项
-set showcmd			                  " 显示当前命令
-set nocompatible		              " 兼容旧 vi
-filetype on			                  " 识别不同格式文件
+set relativenumber                " 设置相对行号
+set wrap                          " 超出换行
+set wildmenu                      " 自动补全 并且提示后选项
+set showcmd                       " 显示当前命令
+set nocompatible                  " 兼容旧 vi
+filetype on                       " 识别不同格式文件
 filetype indent on
 filetype plugin on
 filetype plugin indent on
@@ -35,7 +35,7 @@ set shiftwidth=2
 set softtabstop=2
 set tw=0
 set indentexpr=
-set list                        " 回车、空格等不可见字符
+set list                          " 回车、空格等不可见字符
 set listchars=tab:\|\ ,trail:▫
 set foldmethod=indent             " 折叠代码
 set foldlevel=99
@@ -59,7 +59,7 @@ set colorcolumn=100
 set shortmess+=c        " 补全少一些没用的东西
 set virtualedit=block
 
-"" 分屏
+" 分屏
 map s <nop>
 map sl :set splitright<CR>:vsplit<CR>
 map sh :set nosplitright<CR>:vsplit<CR>
@@ -96,9 +96,10 @@ noremap <c-l> gt
 " 保存 退出 刷新配置文件
 map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
 map S :w<CR>
-map Q :q<CR>
+noremap <C-s> :w<CR>
+map Q :qa<CR>
+noremap <C-q> :q<CR>
 map R :source ~/.config/nvim/init.vim<CR>
-noremap <C-q> :qa<CR>
 noremap J 5j
 noremap K 5k
 noremap n nzz
@@ -149,11 +150,6 @@ vnoremap <silent> # :<C-U>
   \gvy?<C-R><C-R>=substitute(
   \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
   \gV:call setreg('"', old_reg, old_regtype)<CR>
-
-nnoremap gb *
-vnoremap gb *
-nnoremap gB #
-vnoremap gB #
 
 
 " spelling check with <space>sc
@@ -285,14 +281,19 @@ Plug 'mbbill/undotree'
 
 " Pretty Dress
 Plug 'bpietravalle/vim-bolt'
-Plug 'blueshirts/darcula'
+"Plug 'blueshirts/darcula'
+Plug 'doums/darcula'
 Plug 'theniceboy/nvim-deus'
 Plug 'ryanoasis/vim-devicons'
 " Status line
-"Plug 'theniceboy/eleline.vim'
-"Plug 'ojroques/vim-scrollstatus'
-Plug 'glepnir/spaceline.vim'
-Plug 'vim-airline/vim-airline'
+Plug 'theniceboy/eleline.vim'
+Plug 'ojroques/vim-scrollstatus'
+"Plug 'glepnir/spaceline.vim'
+"Plug 'vim-airline/vim-airline'
+
+" General Highlighter
+Plug 'RRethy/vim-hexokinase', { 'do': 'make hexokinase' }
+Plug 'RRethy/vim-illuminate'
 
 " highlight
 " HTML, CSS, JavaScript, PHP, JSON, etc.
@@ -320,8 +321,10 @@ Plug 'liuchengxu/vista.vim'
 " see the " paste and @ recored
 "Plug 'junegunn/vim-peekaboo'
 " display available keybindings in popup
-"Plug 'liuchengxu/vim-which-key'
+"Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 "Plug 'hecal3/vim-leader-guide'
+"Plug 'spinks/vim-leader-guide'
+"Plug 'folke/which-key.nvim'
 
 " edit/show/move enhancement
 Plug 'terryma/vim-multiple-cursors'
@@ -333,7 +336,7 @@ Plug 'jiangmiao/auto-pairs'
 "Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
 Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip; in normal mode, type enter to select {[ and on.
 Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
-"Plug 'tpope/vim-capslock'	" Ctrl+L (insert) to toggle capslock
+"Plug 'tpope/vim-capslock'  " Ctrl+L (insert) to toggle capslock
 Plug 'easymotion/vim-easymotion'
 Plug 'haya14busa/incsearch.vim'
 Plug 'haya14busa/incsearch-easymotion.vim'
@@ -345,7 +348,8 @@ Plug 'rhysd/clever-f.vim'
 
 " Git
 "Plug 'theniceboy/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
-Plug 'fszymanski/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
+"Plug 'fszymanski/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
+Plug 'theniceboy/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
 "Plug 'mhinz/vim-signify'
 Plug 'airblade/vim-gitgutter'
 Plug 'cohama/agit.vim'
@@ -386,7 +390,7 @@ call plug#end()
 "let g:one_allow_italics = 1
 
 color deus
-hi NonText ctermfg=gray guifg=grey10
+"hi NonText ctermfg=gray guifg=grey10
 " 透明背景
 "hi Normal ctermfg=252 ctermbg=none
 "color monokai
@@ -500,30 +504,30 @@ let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 " === coc.nvim
 " ===
 let g:coc_global_extensions = [
-		\ 'coc-actions',
-	\ 'coc-css',
-	\ 'coc-diagnostic',
-	\ 'coc-explorer',
-	\ 'coc-gitignore',
-	\ 'coc-html',
-	\ 'coc-json',
-	\ 'coc-lists',
-	\ 'coc-prettier',
-	\ 'coc-python',
-	\ 'coc-snippets',
-	\ 'coc-sourcekit',
-	\ 'coc-syntax',
-	\ 'coc-tasks',
-	\ 'coc-todolist',
-	\ 'coc-translator',
-	\ 'coc-tslint-plugin',
-	\ 'coc-tsserver',
-	\ 'coc-vetur',
-	\ 'coc-eslint',
-	\ 'coc-vimlsp',
+    \ 'coc-actions',
+  \ 'coc-css',
+  \ 'coc-diagnostic',
+  \ 'coc-explorer',
+  \ 'coc-gitignore',
+  \ 'coc-html',
+  \ 'coc-json',
+  \ 'coc-lists',
+  \ 'coc-prettier',
+  \ 'coc-python',
+  \ 'coc-snippets',
+  \ 'coc-sourcekit',
+  \ 'coc-syntax',
+  \ 'coc-tasks',
+  \ 'coc-todolist',
+  \ 'coc-translator',
+  \ 'coc-tslint-plugin',
+  \ 'coc-tsserver',
+  \ 'coc-vetur',
+  \ 'coc-eslint',
+  \ 'coc-vimlsp',
   \ 'coc-picgo',
-	\ 'coc-yaml',
-	\ 'coc-yank']
+  \ 'coc-yaml',
+  \ 'coc-yank']
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
@@ -553,13 +557,13 @@ nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
+nmap <silent> gD <Plug>(coc-definition)
 "nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gd <Plug>(coc-implementation)
 "nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
-nnoremap <silent> <leader>d :call <SID>show_documentation()<CR>
+nnoremap <leader>d :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -572,8 +576,8 @@ function! s:show_documentation()
 endfunction
 
 " Formatting selected code.
-"xmap <leader>f  <Plug>(coc-format-selected)
-"nmap <leader>f  <Plug>(coc-format-selected)
+xmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  <Plug>(coc-format-selected)
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
@@ -614,11 +618,11 @@ let g:instant_markdown_autoscroll = 1
 " ===
 " let g:bullets_set_mappings = 0
 let g:bullets_enabled_file_types = [
-	\ 'markdown',
-	\ 'text',
-	\ 'gitcommit',
-	\ 'scratch'
-	\]
+  \ 'markdown',
+  \ 'text',
+  \ 'gitcommit',
+  \ 'scratch'
+  \]
 
 " ===
 " === vim-markdown-toc
@@ -647,44 +651,44 @@ map <LEADER>tm :TableModeToggle<CR>
 " Compile function
 noremap r :call CompileRunGcc()<CR>
 func! CompileRunGcc()
-	exec "w"
-	if &filetype == 'c'
-		exec "!g++ % -o %<"
-		exec "!time ./%<"
-	elseif &filetype == 'cpp'
-		set splitbelow
-		exec "!g++ -std=c++11 % -Wall -o %<"
-		:sp
-		:res -15
-		:term ./%<
-	elseif &filetype == 'java'
-		exec "!javac %"
-		exec "!time java %<"
-	elseif &filetype == 'sh'
-		:!time bash %
-	elseif &filetype == 'python'
-		set splitbelow
-		:sp
-		:term python3 %
-	elseif &filetype == 'html'
-		silent! exec "!".g:mkdp_browser." % &"
-	elseif &filetype == 'markdown'
-		exec "InstantMarkdownPreview"
-	elseif &filetype == 'tex'
-		silent! exec "VimtexStop"
-		silent! exec "VimtexCompile"
-	elseif &filetype == 'dart'
-		exec "CocCommand flutter.run -d ".g:flutter_default_device." ".g:flutter_run_args
-		silent! exec "CocCommand flutter.dev.openDevLog"
-	elseif &filetype == 'javascript'
-		set splitbelow
-		:sp
-		:term export DEBUG="INFO,ERROR,WARNING"; node --trace-warnings .
-	elseif &filetype == 'go'
-		set splitbelow
-		:sp
-		:term go run .
-	endif
+  exec "w"
+  if &filetype == 'c'
+    exec "!g++ % -o %<"
+    exec "!time ./%<"
+  elseif &filetype == 'cpp'
+    set splitbelow
+    exec "!g++ -std=c++11 % -Wall -o %<"
+    :sp
+    :res -15
+    :term ./%<
+  elseif &filetype == 'java'
+    exec "!javac %"
+    exec "!time java %<"
+  elseif &filetype == 'sh'
+    :!time bash %
+  elseif &filetype == 'python'
+    set splitbelow
+    :sp
+    :term python3 %
+  elseif &filetype == 'html'
+    silent! exec "!".g:mkdp_browser." % &"
+  elseif &filetype == 'markdown'
+    exec "InstantMarkdownPreview"
+  elseif &filetype == 'tex'
+    silent! exec "VimtexStop"
+    silent! exec "VimtexCompile"
+  elseif &filetype == 'dart'
+    exec "CocCommand flutter.run -d ".g:flutter_default_device." ".g:flutter_run_args
+    silent! exec "CocCommand flutter.dev.openDevLog"
+  elseif &filetype == 'javascript'
+    set splitbelow
+    :sp
+    :term export DEBUG="INFO,ERROR,WARNING"; node --trace-warnings .
+  elseif &filetype == 'go'
+    set splitbelow
+    :sp
+    :term go run .
+  endif
 endfunc
 
 " ===
@@ -729,6 +733,11 @@ let g:SignatureMap = {
         \ }
 map gm mn
 map gM mp
+map shm :help Signature<CR>
+nnoremap 'A 'Azz
+nnoremap 'S 'Szz
+nnoremap 'D 'Dzz
+nnoremap 'F 'Fzz
 
 " ===
 " === Undotree
@@ -741,10 +750,10 @@ let g:undotree_WindowLayout = 2
 let g:undotree_DiffpanelHeight = 8
 let g:undotree_SplitWidth = 24
 function g:Undotree_CustomMap()
-	nmap <buffer> u <plug>UndotreeNextState
-	nmap <buffer> e <plug>UndotreePreviousState
-	nmap <buffer> U 5<plug>UndotreeNextState
-	nmap <buffer> E 5<plug>UndotreePreviousState
+  nmap <buffer> u <plug>UndotreeNextState
+  nmap <buffer> e <plug>UndotreePreviousState
+  nmap <buffer> U 5<plug>UndotreeNextState
+  nmap <buffer> E 5<plug>UndotreePreviousState
 endfunc
 
 
@@ -819,7 +828,7 @@ let g:rnvimr_draw_border = 0
 let g:rnvimr_hide_gitignore = 0
 " let g:rnvimr_bw_enable = 1
 highlight link RnvimrNormal CursorLine
-nnoremap <silent> <leader>e :RnvimrToggle<CR><C-\><C-n>:RnvimrResize 0<CR>
+nnoremap <leader>e :RnvimrToggle<CR><C-\><C-n>:RnvimrResize 0<CR>
 let g:rnvimr_action = {
             \ '<C-t>': 'NvimEdit tabedit',
             \ '<C-x>': 'NvimEdit split',
@@ -861,8 +870,8 @@ map ,l <Plug>(easymotion-lineforward)
 map ,h <Plug>(easymotion-linebackward)
 map ,f <Plug>(easymotion-bd-f)
 map ,w <Plug>(easymotion-bd-w)
-map  ' <Plug>(easymotion-sn)
-omap ' <Plug>(easymotion-tn)
+map  ,s <Plug>(easymotion-sn)
+omap ,s <Plug>(easymotion-tn)
 " You can use other keymappings like <C-l> instead of <CR> if you want to
 " use these mappings as default search and sometimes want to move cursor with
 " EasyMotion.
@@ -940,7 +949,6 @@ let g:dashboard_default_executive ='fzf'
 " === eleline.vim
 " ===
 let g:airline_powerline_fonts = 0
-let g:scrollstatus_size = 15
 
 " ===
 " === vim-illuminate
@@ -963,7 +971,7 @@ let g:vista#renderer#icons = {
 \   "variable": "\uf71b",
 \  }
 " function! NearestMethodOrFunction() abort
-" 	return get(b:, 'vista_nearest_method_or_function', '')
+"   return get(b:, 'vista_nearest_method_or_function', '')
 " endfunction
 " set statusline+=%{NearestMethodOrFunction()}
 " autocmd VimEnter * call vista#RunForNearestMethodOrFunction()
@@ -984,9 +992,37 @@ let g:auto_save = 0  " enable AutoSave on Vim startup
 " ===
 " === vim-which-key
 " ===
-"nnoremap <silent> <LEADER>      :WhichKey '<Space>'<CR>
+"nnoremap <silent> <LEADER>      :WhichKey ' '<CR>
 "nnoremap <silent> <localleader> :WhichKey  ','<CR>
+" cp is for file configurations
+" let use of which key pattern
+" Define a separator
+"nnoremap <silent> <space> :WhichKey ' '<cr>
+"vnoremap <silent> <space> :WhichKeyVisual ' '<cr>
+"let g:which_key_map = {}
+"call which_key#register(' ', "g:which_key_map")
+"nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
+" By default timeoutlen is 1000 ms
+"set timeoutlen=500
 
+"lua << EOF
+"  require("which-key").setup {
+"    -- your configuration comes here
+"    -- or leave it empty to use the default settings
+"    -- refer to the configuration section below
+"    key_labels = {
+"    -- override the label used to display some keys. It doesn't effect WK in any other way.
+"    -- For example:
+"    ["<space>"] = "SPC",
+"    -- ["<cr>"] = "RET",
+"    -- ["<tab>"] = "TAB",
+"    },
+"  }
+"EOF
+
+"let mapleader = '\pace>'
+"nnoremap <silent> <leader> :<c-u>LeaderGuide '<Space>'<CR>
+"vnoremap <silent> <leader> :<c-u>LeaderGuideVisual '<Space>'<CR>
 
 
 " ===
@@ -998,8 +1034,8 @@ silent !mkdir -p ~/.config/nvim/tmp/undo
 set backupdir=~/.config/nvim/tmp/backup,.
 set directory=~/.config/nvim/tmp/backup,.
 if has('persistent_undo')
-	set undofile
-	set undodir=~/.config/nvim/tmp/undo,.
+  set undofile
+  set undodir=~/.config/nvim/tmp/undo,.
 endif
 
 
