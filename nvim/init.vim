@@ -1,8 +1,9 @@
 let mapleader=' '
-noremap ; :
+"noremap ; :
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set termencoding=utf-8
 set encoding=utf-8
+set guifont=Monaco:h11
 set exrc
 set secure
 set nu                            " 显示行号
@@ -97,8 +98,8 @@ noremap <c-l> gt
 map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
 map S :w<CR>
 noremap <C-s> :w<CR>
-map Q :qa<CR>
-noremap <C-q> :q<CR>
+map Q :q<CR>
+noremap <C-q> :qa<CR>
 map R :source ~/.config/nvim/init.vim<CR>
 noremap J 5j
 noremap K 5k
@@ -137,7 +138,7 @@ noremap <LEADER><CR> :nohlsearch<CR>
 autocmd FileType markdown noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
 
 " Opening a terminal window
-noremap <LEADER>/ :set splitbelow<CR>:split<CR>:res +10<CR>:term<CR>
+noremap <LEADER>/ :set splitright<CR>:vsplit<CR>:term<CR>
 
 " search selected text in visual mode
 vnoremap <silent> * :<C-U>
@@ -179,8 +180,8 @@ inoremap <C-a> <ESC>A
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
 cnoremap <C-p> <Unp>
-cnoremap <C-n> <Down>
-cnoremap <C-b> <Left>
+"cnoremap <C-n> <Down>
+"cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
 cnoremap <M-b> <S-Left>
 cnoremap <M-w> <S-Right>
@@ -285,6 +286,7 @@ Plug 'bpietravalle/vim-bolt'
 Plug 'doums/darcula'
 Plug 'theniceboy/nvim-deus'
 Plug 'ryanoasis/vim-devicons'
+"Plug 'joshdick/onedark.vim'
 " Status line
 Plug 'theniceboy/eleline.vim'
 Plug 'ojroques/vim-scrollstatus'
@@ -311,6 +313,7 @@ Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
 Plug 'mzlogin/vim-markdown-toc', { 'for': ['gitignore', 'markdown', 'vim-plug'] }
 Plug 'dkarter/bullets.vim'
+Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
 Plug 'plasticboy/vim-markdown'
 "Plug 'vimwiki/vimwiki'
 
@@ -328,12 +331,14 @@ Plug 'liuchengxu/vista.vim'
 
 " edit/show/move enhancement
 Plug 'terryma/vim-multiple-cursors'
+Plug 'dstein64/vim-startuptime'
+Plug 'tpope/vim-repeat'
 Plug 'itchyny/vim-cursorword'
+Plug 'tpope/vim-speeddating'
 Plug 'alvan/vim-closetag'
 "Plug 'junegunn/goyo.vim' " distraction free writing mode
 Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
 Plug 'jiangmiao/auto-pairs'
-"Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
 Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip; in normal mode, type enter to select {[ and on.
 Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
 "Plug 'tpope/vim-capslock'  " Ctrl+L (insert) to toggle capslock
@@ -399,6 +404,8 @@ color deus
 
 "colorscheme snazzy
 "let g:SnazzyTransparent = 1
+
+"colorscheme onedark
 
 "" ===
 "" === NERDTree
@@ -563,7 +570,7 @@ nmap <silent> gd <Plug>(coc-implementation)
 "nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
-nnoremap <leader>d :call <SID>show_documentation()<CR>
+nnoremap sd :call <SID>show_documentation()<CR>
 
 function! s:show_documentation()
   if (index(['vim','help'], &filetype) >= 0)
@@ -577,11 +584,12 @@ endfunction
 
 " Formatting selected code.
 xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
+nmap <leader>f  ggVG<Plug>(coc-format-selected)
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
 nmap ts <Plug>(coc-translator-p)
+vmap <silent> ts <Plug>(coc-translator-pv)
 
 " Remap for do codeAction of selected region
 "function! s:cocActionsOpenFromSelected(type) abort
