@@ -9,6 +9,9 @@
 !/zsh/
 !README.md
 !.gitignore
+!/spacebar/
+!/skhd/
+!/yabai/
 
 /nvim/plugged/
 /nvim/tmp/

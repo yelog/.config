@@ -252,8 +252,8 @@ au BufNewFile,BufRead *.ejs set filetype=html
 
 source ~/.config/nvim/cursor.vim
 " Specify a directory for plugins
-" " - For Neovim: stdpath('data') . '/plugged'
-" " - Avoid using standard Vim directory names like 'plugin'
+ " - For Neovim: stdpath('data') . '/plugged'
+ " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.config/nvim/plugged')
 
 " Make sure you use single quotes
