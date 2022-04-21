@@ -138,7 +138,7 @@ noremap <LEADER><CR> :nohlsearch<CR>
 autocmd FileType markdown noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
 
 " Opening a terminal window
-noremap <LEADER>/ :set splitright<CR>:vsplit<CR>:term<CR>
+"noremap <LEADER>/ :set splitright<CR>:vsplit<CR>:term<CR>
 
 " search selected text in visual mode
 vnoremap <silent> * :<C-U>
@@ -378,6 +378,11 @@ Plug '907th/vim-auto-save'
 
 
 Plug 'brooth/far.vim'
+
+" float term
+Plug 'voldikss/vim-floaterm'
+
+Plug 'github/copilot.vim'
 
 call plug#end()
 
@@ -1065,3 +1070,8 @@ let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "ip", "it"]
 " ===
 nnoremap <silent> <c-s-f>  :Farf<cr>
 vnoremap <silent> <c-s-f>  :Farf<cr>
+
+" ===
+" === voldikss/vim-floaterm
+" ===
+noremap <LEADER>/ :FloatermNew<cr>
