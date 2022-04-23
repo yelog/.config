@@ -91,6 +91,7 @@
 		}
 	],
   "explorer.file.column.indent.indentLine": true,
+  "explorer.openAction.strategy": "vsplit",
   "explorer.file.showHiddenFiles": true,
   "explorer.icon.enableNerdfont": true,
   "explorer.file.column.git.showIgnored": true,

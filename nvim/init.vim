@@ -48,7 +48,7 @@ set laststatus=2                  " 底部状态栏为2
 " 记录上次光标位置
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 set scrolloff=4
-set notimeout
+"set notimeout
 set viewoptions=cursor,folds,slash,unix
 set ttyfast "should make scrolling faster
 set lazyredraw "same as above
@@ -91,8 +91,8 @@ map tl gt
 map tmh :-tabmove<CR>
 map tml :+tabmove<CR>
 
-noremap <c-h> gT
-noremap <c-l> gt
+noremap <c-p> gT
+noremap <c-n> gt
 
 " 保存 退出 刷新配置文件
 map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
@@ -179,7 +179,7 @@ inoremap <C-a> <ESC>A
 " ===
 cnoremap <C-a> <Home>
 cnoremap <C-e> <End>
-cnoremap <C-p> <Unp>
+cnoremap <C-p> <Up>
 "cnoremap <C-n> <Down>
 "cnoremap <C-b> <Left>
 cnoremap <C-f> <Right>
@@ -198,8 +198,8 @@ nnoremap Y y$
 " 选中模式下
 vnoremap Y "+y
 
-nnoremap <c-p> "0p
-vnoremap <c-p> "0p
+"nnoremap <c-p> "0p
+"vnoremap <c-p> "0p
 
 vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
 
@@ -229,8 +229,8 @@ let g:python3_host_prog='/usr/bin/python3'
 " ===
 let g:neoterm_autoscroll = 1
 autocmd TermOpen term://* startinsert
-tnoremap <C-N> <C-\><C-N>
-tnoremap <C-O> <C-\><C-N><C-O>
+"tnoremap <C-N> <C-\><C-N>
+"tnoremap <C-O> <C-\><C-N><C-O>
 let g:terminal_color_0  = '#000000'
 let g:terminal_color_1  = '#FF5555'
 let g:terminal_color_2  = '#50FA7B'
@@ -324,7 +324,7 @@ Plug 'liuchengxu/vista.vim'
 " see the " paste and @ recored
 "Plug 'junegunn/vim-peekaboo'
 " display available keybindings in popup
-"Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
+Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 "Plug 'hecal3/vim-leader-guide'
 "Plug 'spinks/vim-leader-guide'
 "Plug 'folke/which-key.nvim'
@@ -1005,7 +1005,7 @@ let g:auto_save = 0  " enable AutoSave on Vim startup
 " ===
 " === vim-which-key
 " ===
-"nnoremap <silent> <LEADER>      :WhichKey ' '<CR>
+nnoremap <silent> <LEADER>      :WhichKey '<Space>'<CR>
 "nnoremap <silent> <localleader> :WhichKey  ','<CR>
 " cp is for file configurations
 " let use of which key pattern
@@ -1016,7 +1016,7 @@ let g:auto_save = 0  " enable AutoSave on Vim startup
 "call which_key#register(' ', "g:which_key_map")
 "nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
 " By default timeoutlen is 1000 ms
-"set timeoutlen=500
+set timeoutlen=300
 
 "lua << EOF
 "  require("which-key").setup {
