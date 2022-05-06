@@ -93,6 +93,8 @@ map tml :+tabmove<CR>
 
 noremap <c-p> gT
 noremap <c-n> gt
+inoremap <c-p> <esc>gT
+inoremap <c-n> <esc>gt
 
 " 保存 退出 刷新配置文件
 map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
@@ -158,10 +160,10 @@ map <LEADER>sc :set spell!<CR>
 "noremap <C-x> ea<C-x>s
 
 " Indentation
-nnoremap < <<
-nnoremap > >>
-vnoremap < <gv
-vnoremap > >gv
+"nnoremap < <<
+"nnoremap > >>
+"vnoremap < <gv
+"vnoremap > >gv
 
 " Space to Tab
 nnoremap <LEADER>tt :%s/    /\t/g
@@ -250,7 +252,7 @@ let g:terminal_color_14 = '#9AEDFE'
 " set filetype
 au BufNewFile,BufRead *.ejs set filetype=html
 
-source ~/.config/nvim/cursor.vim
+"source ~/.config/nvim/cursor.vim
 " Specify a directory for plugins
  " - For Neovim: stdpath('data') . '/plugged'
  " - Avoid using standard Vim directory names like 'plugin'
@@ -330,7 +332,7 @@ Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 "Plug 'folke/which-key.nvim'
 
 " edit/show/move enhancement
-Plug 'terryma/vim-multiple-cursors'
+"Plug 'terryma/vim-multiple-cursors'
 Plug 'dstein64/vim-startuptime'
 Plug 'tpope/vim-repeat'
 Plug 'itchyny/vim-cursorword'
@@ -382,7 +384,12 @@ Plug 'brooth/far.vim'
 " float term
 Plug 'voldikss/vim-floaterm'
 
+" github ai coding complete
 Plug 'github/copilot.vim'
+
+" database
+"Plug 'tpope/vim-dadbod'
+"Plug 'kristijanhusak/vim-dadbod-ui'
 
 call plug#end()
 
@@ -468,7 +475,7 @@ set rtp+=/usr/local/bin/fzf
 ""set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
 ""set rtp+=/home/david/.linuxbrew/opt/fzf
 "noremap <silent> <C-f> :Files<CR>
-map <expr> <C-f> fugitive#head() != '' ? ':GFiles --cached --others --exclude-standard<CR>' : ':Files<CR>'
+map <expr> <C-f> fugitive#head() != '' ? ':GFiles --cached --others --exclude-standard<CR>' : ':Files .<CR>'
 "noremap <silent> <C-f> :Rg<CR>
 "noremap <silent> <C-h> :History<CR>
 "noremap <C-t> :BTags<CR>
@@ -539,21 +546,22 @@ let g:coc_global_extensions = [
   \ 'coc-vimlsp',
   \ 'coc-picgo',
   \ 'coc-yaml',
+  \ 'coc-java',
   \ 'coc-yank']
 
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"inoremap <silent><expr> <TAB>
+      "\ pumvisible() ? "\<C-n>" :
+      "\ <SID>check_back_space() ? "\<TAB>" :
+      "\ coc#refresh()
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
+"function! s:check_back_space() abort
+  "let col = col('.') - 1
+  "return !col || getline('.')[col - 1]  =~# '\s'
+"endfunction
 
 " Use <c-space> to trigger completion.
 inoremap <silent><expr> <c-space> coc#refresh()
@@ -603,6 +611,22 @@ vmap <silent> ts <Plug>(coc-translator-pv)
 "xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
 "nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
 nmap tt :CocCommand explorer<CR>
+nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
+autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
+
+" Use preset argument to open it
+nmap <space>ed <Cmd>CocCommand explorer --preset .vim<CR>
+nmap <space>ef <Cmd>CocCommand explorer --preset floating<CR>
+nmap <space>ec <Cmd>CocCommand explorer --preset cocConfig<CR>
+nmap <space>eb <Cmd>CocCommand explorer --preset buffer<CR>
+
+" List all presets
+nmap <space>el <Cmd>CocList explPresets<CR>
+
+
+
+
+
 nnoremap <c-c> :CocCommand<CR>
 " coctodolist
 nnoremap <leader>tn :CocCommand todolist.create<CR>
@@ -841,7 +865,7 @@ let g:rnvimr_draw_border = 0
 let g:rnvimr_hide_gitignore = 0
 " let g:rnvimr_bw_enable = 1
 highlight link RnvimrNormal CursorLine
-nnoremap <leader>e :RnvimrToggle<CR><C-\><C-n>:RnvimrResize 0<CR>
+"nnoremap <leader>e :RnvimrToggle<CR><C-\><C-n>:RnvimrResize 0<CR>
 let g:rnvimr_action = {
             \ '<C-t>': 'NvimEdit tabedit',
             \ '<C-x>': 'NvimEdit split',
@@ -876,15 +900,15 @@ let g:rnvimr_presets = [{'width': 1.0, 'height': 1.0}]
 let g:EasyMotion_do_mapping = 0
 let g:EasyMotion_do_shade = 0
 let g:EasyMotion_smartcase = 1
-map , <Plug>(easymotion-prefix)
-map ,j <Plug>(easymotion-j)
-map ,k <Plug>(easymotion-k)
-map ,l <Plug>(easymotion-lineforward)
-map ,h <Plug>(easymotion-linebackward)
-map ,f <Plug>(easymotion-bd-f)
-map ,w <Plug>(easymotion-bd-w)
-map  ,s <Plug>(easymotion-sn)
-omap ,s <Plug>(easymotion-tn)
+""map , <Plug>(easymotion-prefix)
+""map ,j <Plug>(easymotion-j)
+""map ,k <Plug>(easymotion-k)
+""map ,l <Plug>(easymotion-lineforward)
+""map ,h <Plug>(easymotion-linebackward)
+""map ,f <Plug>(easymotion-bd-f)
+""map ,w <Plug>(easymotion-bd-w)
+""map  ,s <Plug>(easymotion-sn)
+""omap ,s <Plug>(easymotion-tn)
 " You can use other keymappings like <C-l> instead of <CR> if you want to
 " use these mappings as default search and sometimes want to move cursor with
 " EasyMotion.
@@ -1075,3 +1099,11 @@ vnoremap <silent> <c-s-f>  :Farf<cr>
 " === voldikss/vim-floaterm
 " ===
 noremap <LEADER>/ :FloatermNew<cr>
+" ===
+" === rhysd/clever-f.vim
+" ===
+map ; <Plug>(clever-f-repeat-forward)
+map , <Plug>(clever-f-repeat-back)
+let g:clever_f_smart_case=1
+" show prompt on the bottom
+"let g:clever_f_show_prompt=1

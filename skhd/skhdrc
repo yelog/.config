@@ -260,7 +260,7 @@ alt - t : yabai -m window --toggle float;\
 #alt - t : ~/.config/yabai/toggle-window-floating-tiling.sh
 
 # toggle sticky (show on all spaces)
-# alt - s : yabai -m window --toggle sticky
+#alt - s : yabai -m window --toggle sticky
 
 # toggle topmost (keep above other windows)
 alt - o : yabai -m window --toggle topmost
