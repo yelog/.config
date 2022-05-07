@@ -96,6 +96,16 @@
   "explorer.icon.enableNerdfont": true,
   "explorer.file.column.git.showIgnored": true,
   "explorer.buffer.showHiddenBuffers": false,
+  "explorer.presets": {
+    "tab": {
+      "position": "tab",
+      "quit-on-open": true
+    },
+    "floating": {
+      "position": "floating",
+      "open-action-strategy": "sourceWindow"
+    }
+  },
   "explorer.keyMappings.global": {
     "gl": false,
     "go": "reveal:sourceWindow",

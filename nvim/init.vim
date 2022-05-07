@@ -53,6 +53,7 @@ set viewoptions=cursor,folds,slash,unix
 set ttyfast "should make scrolling faster
 set lazyredraw "same as above
 set visualbell
+set history=200 " Ex command history size
 
 set hidden
 set updatetime=100      " 响应快一些
@@ -103,8 +104,8 @@ noremap <C-s> :w<CR>
 map Q :q<CR>
 noremap <C-q> :qa<CR>
 map R :source ~/.config/nvim/init.vim<CR>
-noremap J 5j
-noremap K 5k
+"noremap J 5j
+"noremap K 5k
 noremap n nzz
 noremap N Nzz
 noremap * *zz
@@ -184,7 +185,7 @@ cnoremap <C-e> <End>
 cnoremap <C-p> <Up>
 "cnoremap <C-n> <Down>
 "cnoremap <C-b> <Left>
-cnoremap <C-f> <Right>
+"cnoremap <C-f> <Right>
 cnoremap <M-b> <S-Left>
 cnoremap <M-w> <S-Right>
 
@@ -275,7 +276,7 @@ Plug 'kevinhwang91/rnvimr'
 "Plug 'pechorin/any-jump.vim'
 
 " 首屏
-Plug 'glepnir/dashboard-nvim'
+"Plug 'glepnir/dashboard-nvim'
 "Plug 'liuchengxu/vim-clap'
 
 " Undo Tree
@@ -610,8 +611,9 @@ vmap <silent> ts <Plug>(coc-translator-pv)
 "endfunction
 "xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
 "nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
-nmap tt :CocCommand explorer<CR>
-nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
+nmap <Leader>e :CocCommand explorer<CR>
+nmap <D-1> :CocCommand explorer<CR>
+"nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
 autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
 
 " Use preset argument to open it
@@ -683,50 +685,51 @@ let g:snips_author = 'Chris Yang'
 " === vim-table-mode
 " ===
 map <LEADER>tm :TableModeToggle<CR>
+map <leader>tf :TableFormat<cr>
 
 
 " Compile function
-noremap r :call CompileRunGcc()<CR>
-func! CompileRunGcc()
-  exec "w"
-  if &filetype == 'c'
-    exec "!g++ % -o %<"
-    exec "!time ./%<"
-  elseif &filetype == 'cpp'
-    set splitbelow
-    exec "!g++ -std=c++11 % -Wall -o %<"
-    :sp
-    :res -15
-    :term ./%<
-  elseif &filetype == 'java'
-    exec "!javac %"
-    exec "!time java %<"
-  elseif &filetype == 'sh'
-    :!time bash %
-  elseif &filetype == 'python'
-    set splitbelow
-    :sp
-    :term python3 %
-  elseif &filetype == 'html'
-    silent! exec "!".g:mkdp_browser." % &"
-  elseif &filetype == 'markdown'
-    exec "InstantMarkdownPreview"
-  elseif &filetype == 'tex'
-    silent! exec "VimtexStop"
-    silent! exec "VimtexCompile"
-  elseif &filetype == 'dart'
-    exec "CocCommand flutter.run -d ".g:flutter_default_device." ".g:flutter_run_args
-    silent! exec "CocCommand flutter.dev.openDevLog"
-  elseif &filetype == 'javascript'
-    set splitbelow
-    :sp
-    :term export DEBUG="INFO,ERROR,WARNING"; node --trace-warnings .
-  elseif &filetype == 'go'
-    set splitbelow
-    :sp
-    :term go run .
-  endif
-endfunc
+"noremap r :call CompileRunGcc()<CR>
+"func! CompileRunGcc()
+  "exec "w"
+  "if &filetype == 'c'
+    "exec "!g++ % -o %<"
+    "exec "!time ./%<"
+  "elseif &filetype == 'cpp'
+    "set splitbelow
+    "exec "!g++ -std=c++11 % -Wall -o %<"
+    ":sp
+    ":res -15
+    ":term ./%<
+  "elseif &filetype == 'java'
+    "exec "!javac %"
+    "exec "!time java %<"
+  "elseif &filetype == 'sh'
+    ":!time bash %
+  "elseif &filetype == 'python'
+    "set splitbelow
+    ":sp
+    ":term python3 %
+  "elseif &filetype == 'html'
+    "silent! exec "!".g:mkdp_browser." % &"
+  "elseif &filetype == 'markdown'
+    "exec "InstantMarkdownPreview"
+  "elseif &filetype == 'tex'
+    "silent! exec "VimtexStop"
+    "silent! exec "VimtexCompile"
+  "elseif &filetype == 'dart'
+    "exec "CocCommand flutter.run -d ".g:flutter_default_device." ".g:flutter_run_args
+    "silent! exec "CocCommand flutter.dev.openDevLog"
+  "elseif &filetype == 'javascript'
+    "set splitbelow
+    ":sp
+    ":term export DEBUG="INFO,ERROR,WARNING"; node --trace-warnings .
+  "elseif &filetype == 'go'
+    "set splitbelow
+    ":sp
+    ":term go run .
+  "endif
+"endfunc
 
 " ===
 " === Python-syntax
@@ -885,14 +888,14 @@ let g:rnvimr_presets = [{'width': 1.0, 'height': 1.0}]
 " ===
 " === smartim
 " ===
-"let g:smartim_default='com.apple.keylayout.ABC'
-"" fix slow in mutiple_cursor mode
-"function! Multiple_cursors_before()
-"  let g:smartim_disable = 1
-"endfunction
-"function! Multiple_cursors_after()
-"  unlet g:smartim_disable
-"endfunction
+let g:smartim_default='com.apple.keylayout.ABC'
+" fix slow in mutiple_cursor mode
+function! Multiple_cursors_before()
+  let g:smartim_disable = 1
+endfunction
+function! Multiple_cursors_after()
+  unlet g:smartim_disable
+endfunction
 
 " ===
 " === vim-easymotion
