@@ -11,6 +11,7 @@ syntax on
 set ruler                         " 打开状态标尺
 set cursorline                    " 突出显示当前行
 set ignorecase smartcase          " 搜索时忽略大小写，但在有一个或以上大写字母时仍保持对大小写敏感
+set infercase                     " 补全时自动判断该使用大写还是小写
 set hlsearch                      " 搜索时高亮显示被找到的文本
 set smartindent                   " 开启新行时使用智能自动缩进
 set incsearch                     " 输入搜索内容时就显示搜索结果
@@ -18,6 +19,7 @@ set autochdir                     " 自动切换当前目录为当前文件所�
 set cmdheight=1                   " 设定命令行的行数为 1
 set laststatus=2                  " 显示状态栏 默认值为 1, 无法显示状态栏
 set completeopt=longest,noinsert,menuone,noselect,preview
+"set complete+=k                   " 启用字典补全
 set relativenumber                " 设置相对行号
 set wrap                          " 超出换行
 set wildmenu                      " 自动补全 并且提示后选项
@@ -60,28 +62,32 @@ set updatetime=100      " 响应快一些
 set colorcolumn=100
 set shortmess+=c        " 补全少一些没用的东西
 set virtualedit=block
+"set nowrapscan         " 不循环搜索
 
 " 分屏
 map s <nop>
-map sl :set splitright<CR>:vsplit<CR>
-map sh :set nosplitright<CR>:vsplit<CR>
-map sk :set nosplitbelow<CR>:split<CR>
-map sj :set splitbelow<CR>:split<CR>
-map sV <C-w>t<C-w>H
-map sH <C-w>t<C-w>K
+"map sl :set splitright<CR>:vsplit<CR>
+"map sh :set nosplitright<CR>:vsplit<CR>
+"map sk :set nosplitbelow<CR>:split<CR>
+"map sj :set splitbelow<CR>:split<CR>
+"map sV <C-w>t<C-w>H
+"map sH <C-w>t<C-w>K
+"map so <c-w>o
+"map sc <c-w>c
 " Rotate screens
-noremap srh <C-w>b<C-w>K
-noremap srv <C-w>b<C-w>H
+"noremap srh <C-w>b<C-w>K
+"noremap srv <C-w>b<C-w>H
 " 切换分屏焦点
-noremap gl <C-w>l
-noremap gh <C-w>h
-noremap gj <C-w>j
-noremap gk <C-w>k
+"noremap gl <C-w>l
+"noremap gh <C-w>h
+"noremap gj <C-w>j
+"noremap gk <C-w>k
 " 分屏大小
 map <up> :res -5<CR>
 map <down> :res +5<CR>
 map <left> :vertical resize-5<CR>
 map <right> :vertical resize+5<CR>
+map <c-w>V <c-w>s<cr>
 
 " 标签页
 map ti :tabe<CR>
@@ -94,8 +100,8 @@ map tml :+tabmove<CR>
 
 noremap <c-p> gT
 noremap <c-n> gt
-inoremap <c-p> <esc>gT
-inoremap <c-n> <esc>gt
+"inoremap <c-p> <esc>gT
+"inoremap <c-n> <esc>gt
 
 " 保存 退出 刷新配置文件
 map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
@@ -135,8 +141,10 @@ vnoremap <leader>( xi()<esc>hp
 " 0 toggle ^ or 0
 noremap  <expr>0     col('.') == 1 ? '^': '0'
 
-" Search
+" highlight
 noremap <LEADER><CR> :nohlsearch<CR>
+" vim实用技巧推荐，原nnoremap<silent> <C-l> :<C-u>nohlsearch<CR><C-l>` 不知道后面 <c-l>`是干嘛的，故去掉了
+nnoremap<silent> <C-l> :<C-u>nohlsearch<CR>
 " Press space twice to jump to the next '<++>' and edit it
 autocmd FileType markdown noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
 
@@ -165,10 +173,6 @@ map <LEADER>sc :set spell!<CR>
 "nnoremap > >>
 "vnoremap < <gv
 "vnoremap > >gv
-
-" Space to Tab
-nnoremap <LEADER>tt :%s/    /\t/g
-vnoremap <LEADER>tt :s/    /\t/g
 
 " Folding
 noremap <silent> <LEADER>o za
@@ -205,6 +209,9 @@ vnoremap Y "+y
 "vnoremap <c-p> "0p
 
 vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
+
+" input %% to insert buffer path int command mode
+cnoremap <expr> %% getcmdtype( ) == ':' ? expand('%:h').'/' : '%%'
 
 " ===
 " === Markdown Settings
@@ -252,6 +259,9 @@ let g:terminal_color_14 = '#9AEDFE'
 
 " set filetype
 au BufNewFile,BufRead *.ejs set filetype=html
+
+nnoremap & :&&<CR>
+xnoremap & :&&<CR>
 
 "source ~/.config/nvim/cursor.vim
 " Specify a directory for plugins
@@ -317,7 +327,10 @@ Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
 Plug 'mzlogin/vim-markdown-toc', { 'for': ['gitignore', 'markdown', 'vim-plug'] }
 Plug 'dkarter/bullets.vim'
 Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
-Plug 'plasticboy/vim-markdown'
+"Plug 'plasticboy/vim-markdown'
+Plug 'tpope/vim-markdown'
+"Plug 'gabrielelana/vim-markdown'
+"Plug 'vim-pandoc/vim-pandoc-syntax'
 "Plug 'vimwiki/vimwiki'
 
 " Bookmarks
@@ -379,7 +392,6 @@ Plug '907th/vim-auto-save'
 "Plug 'beeender/Comrade'
 "Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins', 'for' : 'java' }
 
-
 Plug 'brooth/far.vim'
 
 " float term
@@ -391,6 +403,27 @@ Plug 'github/copilot.vim'
 " database
 "Plug 'tpope/vim-dadbod'
 "Plug 'kristijanhusak/vim-dadbod-ui'
+
+Plug 'jkramer/vim-checkbox'
+
+Plug 'dhruvasagar/vim-open-url'
+
+" A mroe adventurous wildmenu
+if has('nvim')
+  function! UpdateRemotePlugins(...)
+    " Needed to refresh runtime files
+    let &rtp=&rtp
+    UpdateRemotePlugins
+  endfunction
+
+  Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
+else
+  Plug 'gelguy/wilder.nvim'
+
+  " To use Python remote plugin features in Vim, can be skipped
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
+endif
 
 call plug#end()
 
@@ -455,7 +488,7 @@ color deus
 " ===
 let g:Lf_WindowPosition = 'popup'
 "nnoremap <c-p> :Leaderf file<CR>
-nnoremap <c-e> :Leaderf mru<CR>
+"nnoremap <c-e> :Leaderf mru<CR>
 let g:Lf_PreviewInPopup = 1
 let g:Lf_PreviewCode = 1
 let g:Lf_ShowHidden = 1
@@ -472,6 +505,11 @@ let g:Lf_UseCache = 0
 " ===
 " === FZF
 " ===
+function! s:get_git_root()
+  let root = split(system('git rev-parse --show-toplevel'), '\n')[0]
+  return v:shell_error ? '.' : root
+endfunction
+
 set rtp+=/usr/local/bin/fzf
 ""set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
 ""set rtp+=/home/david/.linuxbrew/opt/fzf
@@ -516,7 +554,7 @@ command! -bang -nargs=* GGrep
 "\ }))
 "
 "noremap <c-d> :BD<CR>
-noremap <silent> <C-w> :Buffers<CR>
+noremap <silent> <C-e> :Buffers<CR>
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 
@@ -682,6 +720,11 @@ let g:snips_author = 'Chris Yang'
 
 
 " ===
+" === tpope/vim-markdown
+" ===
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'json', 'java']
+
+" ===
 " === vim-table-mode
 " ===
 map <LEADER>tm :TableModeToggle<CR>
@@ -817,7 +860,7 @@ let g:gitgutter_sign_modified_removed = '▒'
 nnoremap <LEADER>z :GitGutterFold<CR>
 nnoremap cl :GitGutterPreviewHunk<CR>
 nnoremap gp :GitGutterPrevHunk<CR>
-nnoremap gn :GitGutterNextHunk<CR>
+"nnoremap gn :GitGutterNextHunk<CR>
 
 " ===
 " === nvim-treesitter
@@ -975,7 +1018,7 @@ endfunction
 " === dashboard
 " ===
 "let g:mapleader="\<Space>"
-let g:dashboard_default_executive ='fzf'
+"let g:dashboard_default_executive ='fzf'
 "nmap <Leader>ss :<C-u>SessionSave<CR>
 "nmap <Leader>sl :<C-u>SessionLoad<CR>
 "nnoremap <silent> <Leader>fh :DashboardFindHistory<CR>
@@ -1032,7 +1075,7 @@ let g:auto_save = 0  " enable AutoSave on Vim startup
 " ===
 " === vim-which-key
 " ===
-nnoremap <silent> <LEADER>      :WhichKey '<Space>'<CR>
+nnoremap <silent> <LEADER> :WhichKey '<Space>'<CR>
 "nnoremap <silent> <localleader> :WhichKey  ','<CR>
 " cp is for file configurations
 " let use of which key pattern
@@ -1110,3 +1153,30 @@ map , <Plug>(clever-f-repeat-back)
 let g:clever_f_smart_case=1
 " show prompt on the bottom
 "let g:clever_f_show_prompt=1
+
+
+" ===
+" === vim-pandoc/vim-pandoc-syntax
+" ===
+"augroup pandoc_syntax
+    "au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
+"augroup END
+
+" ===
+" === gelguy/wilder.nvim
+" ===
+call wilder#setup({
+      \ 'modes': [':', '/', '?'],
+      \ 'next_key': '<Tab>',
+      \ 'previous_key': '<S-Tab>',
+      \ 'accept_key': '<Down>',
+      \ 'reject_key': '<Up>',
+      \ })
+" 'highlighter' : applies highlighting to the candidates
+"call wilder#set_option('renderer', wilder#wildmenu_renderer({
+      "\ 'highlighter': wilder#basic_highlighter(),
+      "\ }))
+" 'highlighter' : applies highlighting to the candidates
+call wilder#set_option('renderer', wilder#popupmenu_renderer({
+      \ 'highlighter': wilder#basic_highlighter(),
+      \ }))
