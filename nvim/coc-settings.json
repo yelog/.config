@@ -108,7 +108,7 @@
   },
   "explorer.keyMappings.global": {
     "gl": false,
-    "go": "reveal:sourceWindow",
+    "g.": "reveal:sourceWindow",
 		"u": "nodePrev",
 		"e": "nodeNext",
 		"<tab>": "actionMenu",

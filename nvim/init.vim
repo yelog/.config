@@ -112,10 +112,10 @@ noremap <C-q> :qa<CR>
 map R :source ~/.config/nvim/init.vim<CR>
 "noremap J 5j
 "noremap K 5k
-noremap n nzz
-noremap N Nzz
-noremap * *zz
-noremap # #zz
+"noremap n nzz
+"noremap N Nzz
+"noremap * *zz
+"noremap # #zz
 " Ctrl + U or E will move up/down the view port without moving the cursor
 noremap <C-U> 5<C-y>
 noremap <C-D> 5<C-e>
@@ -214,7 +214,7 @@ vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
 cnoremap <expr> %% getcmdtype( ) == ':' ? expand('%:h').'/' : '%%'
 
 " ===
-" === Markdown Settings
+" === Markdown snippets
 " ===
 " Snippets
 source ~/.config/nvim/md-snippets.vim
@@ -281,8 +281,8 @@ Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
 Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 " ranger in neovim
-Plug 'kevinhwang91/rnvimr'
-"Plug 'airblade/vim-rooter'
+"Plug 'kevinhwang91/rnvimr'
+Plug 'airblade/vim-rooter'
 "Plug 'pechorin/any-jump.vim'
 
 " 首屏
@@ -298,6 +298,7 @@ Plug 'bpietravalle/vim-bolt'
 "Plug 'blueshirts/darcula'
 Plug 'doums/darcula'
 Plug 'theniceboy/nvim-deus'
+Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'ryanoasis/vim-devicons'
 "Plug 'joshdick/onedark.vim'
 " Status line
@@ -329,6 +330,8 @@ Plug 'dkarter/bullets.vim'
 Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
 "Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-markdown'
+" <leader>tt
+Plug 'jkramer/vim-checkbox'
 "Plug 'gabrielelana/vim-markdown'
 "Plug 'vim-pandoc/vim-pandoc-syntax'
 "Plug 'vimwiki/vimwiki'
@@ -404,8 +407,6 @@ Plug 'github/copilot.vim'
 "Plug 'tpope/vim-dadbod'
 "Plug 'kristijanhusak/vim-dadbod-ui'
 
-Plug 'jkramer/vim-checkbox'
-
 Plug 'dhruvasagar/vim-open-url'
 
 " A mroe adventurous wildmenu
@@ -440,7 +441,7 @@ call plug#end()
 "let g:oceanic_next_terminal_italic = 1
 "let g:one_allow_italics = 1
 
-color deus
+"color deus
 "hi NonText ctermfg=gray guifg=grey10
 " 透明背景
 "hi Normal ctermfg=252 ctermbg=none
@@ -452,6 +453,15 @@ color deus
 "let g:SnazzyTransparent = 1
 
 "colorscheme onedark
+
+let g:tokyonight_style = "night"
+let g:tokyonight_italic_functions = 1
+let g:tokyonight_colors = {
+  \ 'hint': 'orange',
+  \ 'error': '#ff0000'
+  \ }
+" Load the colorscheme
+colorscheme tokyonight
 
 "" ===
 "" === NERDTree
@@ -635,8 +645,8 @@ function! s:show_documentation()
 endfunction
 
 " Formatting selected code.
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  ggVG<Plug>(coc-format-selected)
+"xmap <leader>f  <Plug>(coc-format-selected)
+"nmap <leader>f  ggVG<Plug>(coc-format-selected)
 
 " Symbol renaming.
 nmap <leader>rn <Plug>(coc-rename)
@@ -722,13 +732,14 @@ let g:snips_author = 'Chris Yang'
 " ===
 " === tpope/vim-markdown
 " ===
-let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'json', 'java']
+let g:markdown_syntax_conceal = 0
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'json', 'java', 'js=javascript', 'sql']
 
 " ===
 " === vim-table-mode
 " ===
 map <LEADER>tm :TableModeToggle<CR>
-map <leader>tf :TableFormat<cr>
+map <leader>tf :TableModeRealign<cr>
 
 
 " Compile function
@@ -905,27 +916,27 @@ let g:asyncrun_open = 6
 " ===
 " === rnvimr
 " ===
-let g:rnvimr_enable_ex = 1
-let g:rnvimr_enable_picker = 1
-let g:rnvimr_draw_border = 0
-let g:rnvimr_hide_gitignore = 0
-" let g:rnvimr_bw_enable = 1
-highlight link RnvimrNormal CursorLine
-"nnoremap <leader>e :RnvimrToggle<CR><C-\><C-n>:RnvimrResize 0<CR>
-let g:rnvimr_action = {
-            \ '<C-t>': 'NvimEdit tabedit',
-            \ '<C-x>': 'NvimEdit split',
-            \ '<C-v>': 'NvimEdit vsplit',
-            \ 'gw': 'JumpNvimCwd',
-            \ 'yw': 'EmitRangerCwd'
-            \ }
-let g:rnvimr_layout = { 'relative': 'editor',
-            \ 'width': &columns,
-            \ 'height': &lines,
-            \ 'col': 0,
-            \ 'row': 0,
-            \ 'style': 'minimal' }
-let g:rnvimr_presets = [{'width': 1.0, 'height': 1.0}]
+"let g:rnvimr_enable_ex = 1
+"let g:rnvimr_enable_picker = 1
+"let g:rnvimr_draw_border = 0
+"let g:rnvimr_hide_gitignore = 0
+"" let g:rnvimr_bw_enable = 1
+"highlight link RnvimrNormal CursorLine
+""nnoremap <leader>e :RnvimrToggle<CR><C-\><C-n>:RnvimrResize 0<CR>
+"let g:rnvimr_action = {
+            "\ '<C-t>': 'NvimEdit tabedit',
+            "\ '<C-x>': 'NvimEdit split',
+            "\ '<C-v>': 'NvimEdit vsplit',
+            "\ 'gw': 'JumpNvimCwd',
+            "\ 'yw': 'EmitRangerCwd'
+            "\ }
+"let g:rnvimr_layout = { 'relative': 'editor',
+            "\ 'width': &columns,
+            "\ 'height': &lines,
+            "\ 'col': 0,
+            "\ 'row': 0,
+            "\ 'style': 'minimal' }
+"let g:rnvimr_presets = [{'width': 1.0, 'height': 1.0}]
 
 
 " ===
@@ -946,27 +957,53 @@ endfunction
 let g:EasyMotion_do_mapping = 0
 let g:EasyMotion_do_shade = 0
 let g:EasyMotion_smartcase = 1
-""map , <Plug>(easymotion-prefix)
-""map ,j <Plug>(easymotion-j)
-""map ,k <Plug>(easymotion-k)
-""map ,l <Plug>(easymotion-lineforward)
-""map ,h <Plug>(easymotion-linebackward)
-""map ,f <Plug>(easymotion-bd-f)
-""map ,w <Plug>(easymotion-bd-w)
-""map  ,s <Plug>(easymotion-sn)
-""omap ,s <Plug>(easymotion-tn)
-" You can use other keymappings like <C-l> instead of <CR> if you want to
+let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
+map <leader> <Plug>(easymotion-prefix)
+map <leader>j <Plug>(easymotion-j)
+map <leader>k <Plug>(easymotion-k)
+map <leader>l <Plug>(easymotion-lineforward)
+map <leader>h <Plug>(easymotion-linebackward)
+map <leader>f <Plug>(easymotion-sn)
+map <leader>w <Plug>(easymotion-bd-w)
+"map n <Plug>(easymotion-next)
+"map N <Plug>(easymotion-prev)
+""map / <Plug>(easymotion-sn)
+"map / <Plug>(incsearch-easymotion-/)
+"map ? <Plug>(incsearch-easymotion-?)
+"map g/ <Plug>(incsearch-easymotion-stay)
+"map  ,s <Plug>(easymotion-sn)
+"omap ,s <Plug>(easymotion-tn)
+" You can use other keymappings like <C-l> instead of <cr>if you want to
 " use these mappings as default search and sometimes want to move cursor with
 " EasyMotion.
-function! s:incsearch_config(...) abort
-  return incsearch#util#deepextend(deepcopy({
-  \   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
-  \   'keymap': {
-  \     "\<CR>": '<Over>(easymotion)'
-  \   },
-  \   'is_expr': 0
-  \ }), get(a:, 1, {}))
-endfunction
+"function! s:incsearch_config(...) abort
+  "return incsearch#util#deepextend(deepcopy({
+  "\   'modules': [incsearch#config#easymotion#module({'overwin': 1})],
+  "\   'keymap': {
+  "\     "\<CR>": '<Over>(easymotion)'
+  "\   },
+  "\   'is_expr': 0
+  "\ }), get(a:, 1, {}))
+"endfunction
+"augroup incsearch-easymotion
+  "autocmd!
+  "autocmd User IncSearchEnter autocmd! incsearch-easymotion-impl
+"augroup END
+"augroup incsearch-easymotion-impl
+  "autocmd!
+"augroup END
+
+"function! IncsearchEasyMotion() abort
+  "autocmd incsearch-easymotion-impl User IncSearchExecute :silent! call EasyMotion#Search(0, 2, 0)
+  "return "\<CR>"
+"endfunction
+"let g:incsearch_cli_key_mappings = {
+"\   "\<Space>": {
+"\       'key': 'IncsearchEasyMotion()',
+"\       'noremap': 1,
+"\       'expr': 1
+"\   }
+"\ }
 
 "noremap <silent><expr> /  incsearch#go(<SID>incsearch_config())
 "noremap <silent><expr> ?  incsearch#go(<SID>incsearch_config({'command': '?'}))
@@ -1165,18 +1202,42 @@ let g:clever_f_smart_case=1
 " ===
 " === gelguy/wilder.nvim
 " ===
-call wilder#setup({
-      \ 'modes': [':', '/', '?'],
-      \ 'next_key': '<Tab>',
-      \ 'previous_key': '<S-Tab>',
-      \ 'accept_key': '<Down>',
-      \ 'reject_key': '<Up>',
-      \ })
-" 'highlighter' : applies highlighting to the candidates
-"call wilder#set_option('renderer', wilder#wildmenu_renderer({
-      "\ 'highlighter': wilder#basic_highlighter(),
-      "\ }))
-" 'highlighter' : applies highlighting to the candidates
-call wilder#set_option('renderer', wilder#popupmenu_renderer({
-      \ 'highlighter': wilder#basic_highlighter(),
-      \ }))
+
+" ++once supported in Nvim 0.4+ and Vim 8.1+
+"autocmd CmdlineEnter * ++once call s:wilder_init() | call s:wilder#main#start()
+
+"function! s:wilder_init() abort
+    call wilder#setup({
+          \ 'modes': [':', '/', '?'],
+          \ 'next_key': '<Tab>',
+          \ 'previous_key': '<S-Tab>',
+          \ 'accept_key': '<Down>',
+          \ 'reject_key': '<Up>',
+          \ })
+    " Can also be passed to the 'highlights' option
+    call wilder#set_option('renderer', wilder#popupmenu_renderer({
+          \ 'highlighter': wilder#basic_highlighter(),
+          \ 'highlights': {
+          \   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
+          \ },
+          \ }))
+    " fuzzy
+    call wilder#set_option('pipeline', [
+          \   wilder#debounce(10),
+          \   wilder#branch(
+          \     wilder#cmdline_pipeline({
+          \       'fuzzy': 1,
+          \       'set_pcre2_pattern': 1,
+          \     }),
+          \     wilder#python_search_pipeline({
+          \       'pattern': 'fuzzy',
+          \     }),
+          \   ),
+          \ ])
+"endfunction
+
+" ===
+" === airblade/vim-rooter
+" ===
+let g:rooter_patterns = ['.git/']
+nnoremap <silent> <leader>tr :RooterToggle<cr>
