@@ -104,7 +104,8 @@ noremap <c-n> gt
 "inoremap <c-n> <esc>gt
 
 " 保存 退出 刷新配置文件
-map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
+"map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
+" 'V
 map S :w<CR>
 noremap <C-s> :w<CR>
 map Q :q<CR>
@@ -175,7 +176,7 @@ map <LEADER>sc :set spell!<CR>
 "vnoremap > >gv
 
 " Folding
-noremap <silent> <LEADER>o za
+"noremap <silent> <LEADER>o za
 
 " ===
 " === Insert Mode Cursor Movement
@@ -299,6 +300,7 @@ Plug 'bpietravalle/vim-bolt'
 Plug 'doums/darcula'
 Plug 'theniceboy/nvim-deus'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+Plug 'catppuccin/nvim', {'as': 'catppuccin'}
 Plug 'ryanoasis/vim-devicons'
 "Plug 'joshdick/onedark.vim'
 " Status line
@@ -410,8 +412,8 @@ Plug 'github/copilot.vim'
 Plug 'dhruvasagar/vim-open-url'
 
 " lsp
-Plug 'williamboman/nvim-lsp-installer'
-Plug 'neovim/nvim-lspconfig'
+"Plug 'williamboman/nvim-lsp-installer'
+"Plug 'neovim/nvim-lspconfig'
 
 " A mroe adventurous wildmenu
 if has('nvim')
@@ -458,14 +460,14 @@ call plug#end()
 
 "colorscheme onedark
 
-let g:tokyonight_style = "night"
-let g:tokyonight_italic_functions = 1
-let g:tokyonight_colors = {
-  \ 'hint': 'orange',
-  \ 'error': '#ff0000'
-  \ }
-" Load the colorscheme
-colorscheme tokyonight
+"let g:tokyonight_style = "night"
+"let g:tokyonight_italic_functions = 1
+"let g:tokyonight_colors = {
+  "\ 'hint': 'orange',
+  "\ 'error': '#ff0000'
+  "\ }
+"" Load the colorscheme
+"colorscheme tokyonight
 
 "" ===
 "" === NERDTree
@@ -502,7 +504,7 @@ colorscheme tokyonight
 " ===
 let g:Lf_WindowPosition = 'popup'
 "nnoremap <c-p> :Leaderf file<CR>
-"nnoremap <c-e> :Leaderf mru<CR>
+nnoremap <leader>r :Leaderf mru<CR>
 let g:Lf_PreviewInPopup = 1
 let g:Lf_PreviewCode = 1
 let g:Lf_ShowHidden = 1
@@ -528,12 +530,14 @@ set rtp+=/usr/local/bin/fzf
 ""set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
 ""set rtp+=/home/david/.linuxbrew/opt/fzf
 "noremap <silent> <C-f> :Files<CR>
-map <expr> <C-f> fugitive#head() != '' ? ':GFiles --cached --others --exclude-standard<CR>' : ':Files .<CR>'
+"map <expr> <C-f> fugitive#head() != '' ? ':GFiles --cached --others --exclude-standard<CR>' : ':Files .<CR>'
 "noremap <silent> <C-f> :Rg<CR>
 "noremap <silent> <C-h> :History<CR>
 "noremap <C-t> :BTags<CR>
 "noremap <silent> <C-l> :Lines<CR>
-noremap <leader>; :History:<CR>
+noremap <silent> <leader>f :Files<CR>
+noremap <leader>; :History:<cr>
+noremap <leader>F :Rg<cr>
 
 let g:fzf_preview_window = 'right:60%'
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
@@ -652,7 +656,7 @@ endfunction
 "nmap <leader>f  ggVG<Plug>(coc-format-selected)
 
 " Symbol renaming.
-nmap <leader>rn <Plug>(coc-rename)
+"nmap <leader>rn <Plug>(coc-rename)
 nmap ts <Plug>(coc-translator-p)
 vmap <silent> ts <Plug>(coc-translator-pv)
 
@@ -798,7 +802,7 @@ let g:python_highlight_all = 1
 " ===
 " === Goyo
 " ===
-map <LEADER>gy :Goyo<CR>
+"map <LEADER>gy :Goyo<CR>
 
 
 " ===
@@ -856,11 +860,13 @@ endfunc
 
 " Open up lazygit
 noremap \g :Git
-noremap <c-g> :tabe<CR>:-tabmove<CR>:term lazygit<CR>
+noremap <leader>gg :tabe<CR>:-tabmove<CR>:term lazygit<CR>
 " ==
-" == GitGutter
+" == airblade/vim-gitgutter
 " ==
 " let g:gitgutter_signs = 0
+"let g:gitgutter_diff_relative_to = 'working_tree'
+let g:gitgutter_diff_base = 'HEAD'
 let g:gitgutter_sign_allow_clobber = 0
 let g:gitgutter_map_keys = 0
 let g:gitgutter_override_sign_column_highlight = 0
@@ -871,10 +877,10 @@ let g:gitgutter_sign_removed = '▶'
 let g:gitgutter_sign_removed_first_line = '▔'
 let g:gitgutter_sign_modified_removed = '▒'
 " autocmd BufWritePost * GitGutter
-nnoremap <LEADER>z :GitGutterFold<CR>
-nnoremap cl :GitGutterPreviewHunk<CR>
-nnoremap gp :GitGutterPrevHunk<CR>
-"nnoremap gn :GitGutterNextHunk<CR>
+nnoremap <leader>gf :GitGutterFold<CR>
+nnoremap <leader>gp :GitGutterPreviewHunk<CR>
+nnoremap <leader>gk :GitGutterPrevHunk<CR>
+nnoremap <leader>gj :GitGutterNextHunk<CR>
 
 " ===
 " === nvim-treesitter
@@ -966,7 +972,7 @@ map <leader>j <Plug>(easymotion-j)
 map <leader>k <Plug>(easymotion-k)
 map <leader>l <Plug>(easymotion-lineforward)
 map <leader>h <Plug>(easymotion-linebackward)
-map <leader>f <Plug>(easymotion-sn)
+"map <leader>f <Plug>(easymotion-sn)
 map <leader>w <Plug>(easymotion-bd-w)
 "map n <Plug>(easymotion-next)
 "map N <Plug>(easymotion-prev)
@@ -1084,7 +1090,7 @@ hi illuminatedWord cterm=undercurl gui=undercurl
 " === taglist
 " ===
 noremap <LEADER>v :Vista!!<CR>
-noremap <c-t> :silent! Vista finder coc<CR>
+noremap <leader>o :silent! Vista finder coc<CR>
 let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 let g:vista_default_executive = 'coc'
 let g:vista_fzf_preview = ['right:50%']
@@ -1126,7 +1132,7 @@ nnoremap <silent> <LEADER> :WhichKey '<Space>'<CR>
 "call which_key#register(' ', "g:which_key_map")
 "nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
 " By default timeoutlen is 1000 ms
-set timeoutlen=300
+set timeoutlen=600
 
 "lua << EOF
 "  require("which-key").setup {
@@ -1248,15 +1254,90 @@ nnoremap <silent> <leader>tr :RooterToggle<cr>
 " ===
 " === lsp
 " ===
-lua <<EOF
-require("nvim-lsp-installer").setup({
-    automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
-    ui = {
-        icons = {
-            server_installed = "✓",
-            server_pending = "➜",
-            server_uninstalled = "✗"
-        }
-    }
-})
+"lua <<EOF
+"require("nvim-lsp-installer").setup({
+    "automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
+    "ui = {
+        "icons = {
+            "server_installed = "✓",
+            "server_pending = "➜",
+            "server_uninstalled = "✗"
+        "}
+    "}
+"})
+"EOF
+
+" ===
+" === catppuccin
+" ===
+lua << EOF
+local catppuccin = require("catppuccin")
+
+-- configure it
+catppuccin.setup(
+  {
+  transparent_background = false,
+  term_colors = false,
+  styles = {    -- TODO: style setting doesn't work
+    comments = "underline",
+    functions = "bold",
+    keywords = "NONE",
+    strings = "underline",
+    variables = "NONE",
+  },
+  integrations = {
+    treesitter = true,
+    native_lsp = {
+      enabled = true,
+      virtual_text = {
+        errors = "italic",
+        hints = "italic",
+        warnings = "italic",
+        information = "italic",
+      },
+      underlines = {
+        errors = "underline",
+        hints = "underline",
+        warnings = "underline",
+        information = "underline",
+      },
+    },
+    lsp_trouble = false,
+    cmp = true,
+    lsp_saga = false,
+    gitgutter = false,
+    gitsigns = true,
+    telescope = true,
+    nvimtree = {
+      enabled = true,
+      show_root = false,
+      transparent_panel = false,
+    },
+    neotree = {
+      enabled = false,
+      show_root = false,
+      transparent_panel = false,
+    },
+    which_key = true,
+    indent_blankline = {
+      enabled = true,
+      colored_indent_levels = true,
+    },
+    dashboard = true,
+    neogit = false,
+    vim_sneak = false,
+    fern = false,
+    barbar = false,
+    bufferline = true,
+    markdown = true,
+    lightspeed = false,
+    ts_rainbow = false,
+    hop = true,
+    notify = true,
+    telekasten = true,
+    symbols_outline = true,
+  }
+}
+)
 EOF
+colorscheme catppuccin
