@@ -286,7 +286,7 @@ Plug 'airblade/vim-rooter'
 "Plug 'pechorin/any-jump.vim'
 
 " 首屏
-"Plug 'glepnir/dashboard-nvim'
+Plug 'glepnir/dashboard-nvim'
 "Plug 'liuchengxu/vim-clap'
 
 " Undo Tree
@@ -408,6 +408,10 @@ Plug 'github/copilot.vim'
 "Plug 'kristijanhusak/vim-dadbod-ui'
 
 Plug 'dhruvasagar/vim-open-url'
+
+" lsp
+Plug 'williamboman/nvim-lsp-installer'
+Plug 'neovim/nvim-lspconfig'
 
 " A mroe adventurous wildmenu
 if has('nvim')
@@ -595,7 +599,6 @@ let g:coc_global_extensions = [
   \ 'coc-vimlsp',
   \ 'coc-picgo',
   \ 'coc-yaml',
-  \ 'coc-java',
   \ 'coc-yank']
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -1054,8 +1057,8 @@ endfunction
 " ===
 " === dashboard
 " ===
-"let g:mapleader="\<Space>"
-"let g:dashboard_default_executive ='fzf'
+let g:mapleader="\<Space>"
+let g:dashboard_default_executive ='fzf'
 "nmap <Leader>ss :<C-u>SessionSave<CR>
 "nmap <Leader>sl :<C-u>SessionLoad<CR>
 "nnoremap <silent> <Leader>fh :DashboardFindHistory<CR>
@@ -1241,3 +1244,19 @@ let g:clever_f_smart_case=1
 " ===
 let g:rooter_patterns = ['.git/']
 nnoremap <silent> <leader>tr :RooterToggle<cr>
+
+" ===
+" === lsp
+" ===
+lua <<EOF
+require("nvim-lsp-installer").setup({
+    automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
+    ui = {
+        icons = {
+            server_installed = "✓",
+            server_pending = "➜",
+            server_uninstalled = "✗"
+        }
+    }
+})
+EOF

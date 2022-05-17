@@ -170,7 +170,7 @@
   "javascript.showUnused": true,
   "javascript.suggest.names": true,
   "javascript.suggestionActions.enabled": true,
-  "java.jdt.ls.vmargs": "-javaagent:/Users/y/software/java/lombok.jar",
+  //"java.jdt.ls.vmargs": "-javaagent:/Users/y/software/java/lombok.jar",
   "json.format.enable": true,
   "prettier.printWidth": 100,
   "prettier.eslintIntegration": true,
