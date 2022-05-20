@@ -1,5 +1,5 @@
 let mapleader=' '
-"noremap ; :
+"nnoremap ; :
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set termencoding=utf-8
 set encoding=utf-8
@@ -46,7 +46,6 @@ set viewoptions=cursor,folds,slash,unix
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"    " normal 和 insert 模式的光标样式设置
 let &t_SR = "\<Esc>]50;CursorShape=2\x7"
 let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-set laststatus=2                  " 底部状态栏为2
 " 记录上次光标位置
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 set scrolloff=4
@@ -98,8 +97,8 @@ map tl gt
 map tmh :-tabmove<CR>
 map tml :+tabmove<CR>
 
-noremap <c-p> gT
-noremap <c-n> gt
+nnoremap <c-p> gT
+nnoremap <c-n> gt
 "inoremap <c-p> <esc>gT
 "inoremap <c-n> <esc>gt
 
@@ -297,12 +296,14 @@ Plug 'mbbill/undotree'
 " Pretty Dress
 Plug 'bpietravalle/vim-bolt'
 "Plug 'blueshirts/darcula'
-Plug 'doums/darcula'
-Plug 'theniceboy/nvim-deus'
+"Plug 'doums/darcula'
+"Plug 'theniceboy/nvim-deus'
+Plug 'ellisonleao/gruvbox.nvim'
+"Plug 'ful1e5/onedark.nvim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-Plug 'catppuccin/nvim', {'as': 'catppuccin'}
+"Plug 'catppuccin/nvim', {'as': 'catppuccin', 'branch': 'dev-remaster'}
 Plug 'ryanoasis/vim-devicons'
-"Plug 'joshdick/onedark.vim'
+Plug 'joshdick/onedark.vim'
 " Status line
 Plug 'theniceboy/eleline.vim'
 Plug 'ojroques/vim-scrollstatus'
@@ -332,11 +333,12 @@ Plug 'dkarter/bullets.vim'
 Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
 "Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-markdown'
-" <leader>tt
+" <leader>tt 由于不知道如何修改快捷键，暂时不用
 Plug 'jkramer/vim-checkbox'
+Plug 'tenxsoydev/vim-markdown-checkswitch'
 "Plug 'gabrielelana/vim-markdown'
 "Plug 'vim-pandoc/vim-pandoc-syntax'
-"Plug 'vimwiki/vimwiki'
+Plug 'vimwiki/vimwiki'
 
 " Bookmarks
 Plug 'kshenoy/vim-signature'
@@ -409,6 +411,10 @@ Plug 'github/copilot.vim'
 "Plug 'tpope/vim-dadbod'
 "Plug 'kristijanhusak/vim-dadbod-ui'
 
+" gB open url in the default
+" g<cr> search word under cursor using default search engine
+" gG Google search word under cursor
+" gW Wikipedia search word under cursor
 Plug 'dhruvasagar/vim-open-url'
 
 " lsp
@@ -455,10 +461,14 @@ call plug#end()
 
 "colorscheme darcula
 
+"set background=dark
+"colorscheme onedark
+"set termguicolors
+
 "colorscheme snazzy
 "let g:SnazzyTransparent = 1
 
-"colorscheme onedark
+colorscheme onedark
 
 "let g:tokyonight_style = "night"
 "let g:tokyonight_italic_functions = 1
@@ -468,6 +478,17 @@ call plug#end()
   "\ }
 "" Load the colorscheme
 "colorscheme tokyonight
+
+"set background=dark " or light if you want light mode
+colorscheme gruvbox
+
+" ===
+" === catppuccin
+" ===
+"lua << EOF
+"require('config')
+"EOF
+"colorscheme catppuccin
 
 "" ===
 "" === NERDTree
@@ -504,7 +525,7 @@ call plug#end()
 " ===
 let g:Lf_WindowPosition = 'popup'
 "nnoremap <c-p> :Leaderf file<CR>
-nnoremap <leader>r :Leaderf mru<CR>
+"nnoremap <leader>r :Leaderf mru<CR>
 let g:Lf_PreviewInPopup = 1
 let g:Lf_PreviewCode = 1
 let g:Lf_ShowHidden = 1
@@ -538,6 +559,8 @@ set rtp+=/usr/local/bin/fzf
 noremap <silent> <leader>f :Files<CR>
 noremap <leader>; :History:<cr>
 noremap <leader>F :Rg<cr>
+noremap <leader>b :Buffers<CR>
+noremap <leader>r :History<CR>
 
 let g:fzf_preview_window = 'right:60%'
 let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
@@ -566,13 +589,12 @@ command! -bang -nargs=* GGrep
   "\   <bang>0)
 
 "command! BD call fzf#run(fzf#wrap({
-"  \ 'source': s:list_buffers(),
-"  \ 'sink*': { lines -> s:delete_buffers(lines) },
-"  \ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
+  "\ 'source': s:list_buffers(),
+  "\ 'sink*': { lines -> s:delete_buffers(lines) },
+  "\ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
 "\ }))
 "
 "noremap <c-d> :BD<CR>
-noremap <silent> <C-e> :Buffers<CR>
 
 let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 
@@ -582,6 +604,7 @@ let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 let g:coc_global_extensions = [
     \ 'coc-actions',
   \ 'coc-css',
+  \ 'coc-java',
   \ 'coc-diagnostic',
   \ 'coc-explorer',
   \ 'coc-gitignore',
@@ -603,6 +626,7 @@ let g:coc_global_extensions = [
   \ 'coc-vimlsp',
   \ 'coc-picgo',
   \ 'coc-yaml',
+  \ 'coc-sh',
   \ 'coc-yank']
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -747,6 +771,15 @@ let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'json', 'java', 
 " ===
 map <LEADER>tm :TableModeToggle<CR>
 map <leader>tf :TableModeRealign<cr>
+
+" ===
+" === tenxsoydev/vim-markdown-checkswitch
+" ===
+nnoremap <silent> <leader>mc :CheckSwitch<cr>
+vnoremap <silent> <leader>mc :CheckSwitch<cr>gv
+" Cycle between NO checkbox, empty, and ticked checkboxes 
+" or toggle between empty and ticked checkboxes
+let g:md_checkswitch_style = 'cycle' "'cycle' or 'toggle'
 
 
 " Compile function
@@ -1266,78 +1299,3 @@ nnoremap <silent> <leader>tr :RooterToggle<cr>
     "}
 "})
 "EOF
-
-" ===
-" === catppuccin
-" ===
-lua << EOF
-local catppuccin = require("catppuccin")
-
--- configure it
-catppuccin.setup(
-  {
-  transparent_background = false,
-  term_colors = false,
-  styles = {    -- TODO: style setting doesn't work
-    comments = "underline",
-    functions = "bold",
-    keywords = "NONE",
-    strings = "underline",
-    variables = "NONE",
-  },
-  integrations = {
-    treesitter = true,
-    native_lsp = {
-      enabled = true,
-      virtual_text = {
-        errors = "italic",
-        hints = "italic",
-        warnings = "italic",
-        information = "italic",
-      },
-      underlines = {
-        errors = "underline",
-        hints = "underline",
-        warnings = "underline",
-        information = "underline",
-      },
-    },
-    lsp_trouble = false,
-    cmp = true,
-    lsp_saga = false,
-    gitgutter = false,
-    gitsigns = true,
-    telescope = true,
-    nvimtree = {
-      enabled = true,
-      show_root = false,
-      transparent_panel = false,
-    },
-    neotree = {
-      enabled = false,
-      show_root = false,
-      transparent_panel = false,
-    },
-    which_key = true,
-    indent_blankline = {
-      enabled = true,
-      colored_indent_levels = true,
-    },
-    dashboard = true,
-    neogit = false,
-    vim_sneak = false,
-    fern = false,
-    barbar = false,
-    bufferline = true,
-    markdown = true,
-    lightspeed = false,
-    ts_rainbow = false,
-    hop = true,
-    notify = true,
-    telekasten = true,
-    symbols_outline = true,
-  }
-}
-)
-EOF
-colorscheme catppuccin
