@@ -627,6 +627,7 @@ let g:coc_global_extensions = [
   \ 'coc-picgo',
   \ 'coc-yaml',
   \ 'coc-sh',
+  \ 'coc-db',
   \ 'coc-yank']
 
 " Use tab for trigger completion with characters ahead and navigate.
