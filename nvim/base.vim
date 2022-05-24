@@ -66,22 +66,21 @@ set virtualedit=block
 
 " 分屏
 map s <nop>
-"map sl :set splitright<CR>:vsplit<CR>
-"map sh :set nosplitright<CR>:vsplit<CR>
-"map sk :set nosplitbelow<CR>:split<CR>
-"map sj :set splitbelow<CR>:split<CR>
-"map sV <C-w>t<C-w>H
-"map sH <C-w>t<C-w>K
-"map so <c-w>o
-"map sc <c-w>c
-" Rotate screens
-"noremap srh <C-w>b<C-w>K
-"noremap srv <C-w>b<C-w>H
+map sl :set splitright<CR>:vsplit<CR>
+map sh :set nosplitright<CR>:vsplit<CR>
+map sk :set nosplitbelow<CR>:split<CR>
+map sj :set splitbelow<CR>:split<CR>
+map sH <C-w>H
+map sL <C-w>L
+map sJ <C-w>J
+map sK <C-w>K
+map so <c-w>o
+map sc <c-w>c
 " 切换分屏焦点
-"noremap gl <C-w>l
-"noremap gh <C-w>h
-"noremap gj <C-w>j
-"noremap gk <C-w>k
+noremap gl <C-w>l
+noremap gh <C-w>h
+noremap gj <C-w>j
+noremap gk <C-w>k
 " 分屏大小
 map <up> :res -5<CR>
 map <down> :res +5<CR>
@@ -270,3 +269,8 @@ xnoremap & :&&<CR>
 " Specify a directory for plugins
  " - For Neovim: stdpath('data') . '/plugged'
  " - Avoid using standard Vim directory names like 'plugin'
+
+augroup my_textwidth
+  au!
+  autocmd FileType text,markdown,tex setlocal textwidth=80
+augroup END
