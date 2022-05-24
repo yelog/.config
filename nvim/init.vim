@@ -1,272 +1,5 @@
-let mapleader=' '
-"nnoremap ; :
-set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
-set termencoding=utf-8
-set encoding=utf-8
-set guifont=Monaco:h11
-set exrc
-set secure
-set nu                            " 显示行号
-syntax on
-set ruler                         " 打开状态标尺
-set cursorline                    " 突出显示当前行
-set ignorecase smartcase          " 搜索时忽略大小写，但在有一个或以上大写字母时仍保持对大小写敏感
-set infercase                     " 补全时自动判断该使用大写还是小写
-set hlsearch                      " 搜索时高亮显示被找到的文本
-set smartindent                   " 开启新行时使用智能自动缩进
-set incsearch                     " 输入搜索内容时就显示搜索结果
-set autochdir                     " 自动切换当前目录为当前文件所在的目录
-set cmdheight=1                   " 设定命令行的行数为 1
-set laststatus=2                  " 显示状态栏 默认值为 1, 无法显示状态栏
-set completeopt=longest,noinsert,menuone,noselect,preview
-"set complete+=k                   " 启用字典补全
-set relativenumber                " 设置相对行号
-set wrap                          " 超出换行
-set wildmenu                      " 自动补全 并且提示后选项
-set showcmd                       " 显示当前命令
-set nocompatible                  " 兼容旧 vi
-filetype on                       " 识别不同格式文件
-filetype indent on
-filetype plugin on
-filetype plugin indent on
-set mouse=a                       " 支持鼠标
-let &t_ut=''                      " 修复配色错误的问题
-set noexpandtab
-set expandtab
-set tabstop=2
-set shiftwidth=2
-set softtabstop=2
-set tw=0
-set indentexpr=
-set list                          " 回车、空格等不可见字符
-set listchars=tab:\|\ ,trail:▫
-set foldmethod=indent             " 折叠代码
-set foldlevel=99
-set viewoptions=cursor,folds,slash,unix
-let &t_SI = "\<Esc>]50;CursorShape=1\x7"    " normal 和 insert 模式的光标样式设置
-let &t_SR = "\<Esc>]50;CursorShape=2\x7"
-let &t_EI = "\<Esc>]50;CursorShape=0\x7"
-" 记录上次光标位置
-au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
-set scrolloff=4
-"set notimeout
-set viewoptions=cursor,folds,slash,unix
-set ttyfast "should make scrolling faster
-set lazyredraw "same as above
-set visualbell
-set history=200 " Ex command history size
+source ~/.config/nvim/base.vim
 
-set hidden
-set updatetime=100      " 响应快一些
-set colorcolumn=100
-set shortmess+=c        " 补全少一些没用的东西
-set virtualedit=block
-"set nowrapscan         " 不循环搜索
-
-" 分屏
-map s <nop>
-"map sl :set splitright<CR>:vsplit<CR>
-"map sh :set nosplitright<CR>:vsplit<CR>
-"map sk :set nosplitbelow<CR>:split<CR>
-"map sj :set splitbelow<CR>:split<CR>
-"map sV <C-w>t<C-w>H
-"map sH <C-w>t<C-w>K
-"map so <c-w>o
-"map sc <c-w>c
-" Rotate screens
-"noremap srh <C-w>b<C-w>K
-"noremap srv <C-w>b<C-w>H
-" 切换分屏焦点
-"noremap gl <C-w>l
-"noremap gh <C-w>h
-"noremap gj <C-w>j
-"noremap gk <C-w>k
-" 分屏大小
-map <up> :res -5<CR>
-map <down> :res +5<CR>
-map <left> :vertical resize-5<CR>
-map <right> :vertical resize+5<CR>
-map <c-w>V <c-w>s<cr>
-
-" 标签页
-map ti :tabe<CR>
-"map th :-tabnext<CR>
-map th gT
-"map tl :+tabnext<CR>
-map tl gt
-map tmh :-tabmove<CR>
-map tml :+tabmove<CR>
-
-nnoremap <c-p> gT
-nnoremap <c-n> gt
-"inoremap <c-p> <esc>gT
-"inoremap <c-n> <esc>gt
-
-" 保存 退出 刷新配置文件
-"map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
-" 'V
-map S :w<CR>
-noremap <C-s> :w<CR>
-map Q :q<CR>
-noremap <C-q> :qa<CR>
-map R :source ~/.config/nvim/init.vim<CR>
-"noremap J 5j
-"noremap K 5k
-"noremap n nzz
-"noremap N Nzz
-"noremap * *zz
-"noremap # #zz
-" Ctrl + U or E will move up/down the view port without moving the cursor
-noremap <C-U> 5<C-y>
-noremap <C-D> 5<C-e>
-nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
-nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
-nnoremap <leader>` viw<esc>a`<esc>hbi`<esc>lel
-nnoremap <leader>{ viw<esc>a}<esc>hbi{<esc>lel
-nnoremap <leader>} viw<esc>a}<esc>hbi{<esc>lel
-nnoremap <leader>[ viw<esc>a]<esc>hbi[<esc>lel
-nnoremap <leader>] viw<esc>a]<esc>hbi[<esc>lel
-nnoremap <leader>( viw<esc>a)<esc>hbi(<esc>lel
-nnoremap <leader>) viw<esc>a)<esc>hbi(<esc>lel
-vnoremap <leader>" xi""<esc>hp
-vnoremap <leader>' xi''<esc>hp
-vnoremap <leader>` xi``<esc>hp
-vnoremap <leader>{ xi{}<esc>hp
-vnoremap <leader>} xi{}<esc>hp
-vnoremap <leader>[ xi[]<esc>hp
-vnoremap <leader>] xi[]<esc>hp
-vnoremap <leader>) xi()<esc>hp
-vnoremap <leader>( xi()<esc>hp
-
-" 0 toggle ^ or 0
-noremap  <expr>0     col('.') == 1 ? '^': '0'
-
-" highlight
-noremap <LEADER><CR> :nohlsearch<CR>
-" vim实用技巧推荐，原nnoremap<silent> <C-l> :<C-u>nohlsearch<CR><C-l>` 不知道后面 <c-l>`是干嘛的，故去掉了
-nnoremap<silent> <C-l> :<C-u>nohlsearch<CR>
-" Press space twice to jump to the next '<++>' and edit it
-autocmd FileType markdown noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
-
-" Opening a terminal window
-"noremap <LEADER>/ :set splitright<CR>:vsplit<CR>:term<CR>
-
-" search selected text in visual mode
-vnoremap <silent> * :<C-U>
-  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-  \gvy/<C-R><C-R>=substitute(
-  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
-  \gV:call setreg('"', old_reg, old_regtype)<CR>
-vnoremap <silent> # :<C-U>
-  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-  \gvy?<C-R><C-R>=substitute(
-  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
-  \gV:call setreg('"', old_reg, old_regtype)<CR>
-
-
-" spelling check with <space>sc
-map <LEADER>sc :set spell!<CR>
-"noremap <C-x> ea<C-x>s
-
-" Indentation
-"nnoremap < <<
-"nnoremap > >>
-"vnoremap < <gv
-"vnoremap > >gv
-
-" Folding
-"noremap <silent> <LEADER>o za
-
-" ===
-" === Insert Mode Cursor Movement
-" ===
-inoremap <C-a> <ESC>A
-" ===
-" === Command Mode Cursor Movement
-" ===
-cnoremap <C-a> <Home>
-cnoremap <C-e> <End>
-cnoremap <C-p> <Up>
-"cnoremap <C-n> <Down>
-"cnoremap <C-b> <Left>
-"cnoremap <C-f> <Right>
-cnoremap <M-b> <S-Left>
-cnoremap <M-w> <S-Right>
-
-" find and replace
-noremap \s :%s//gc<left><left><left>
-
-" set wrap
-noremap <LEADER>sw :set wrap!<CR>
-
-" 剪贴板
-" 普通模式下复制到行尾
-nnoremap Y y$
-" 选中模式下
-vnoremap Y "+y
-
-"nnoremap <c-p> "0p
-"vnoremap <c-p> "0p
-
-vnoremap // y/\V<C-R>=escape(@",'/\')<CR><CR>
-
-" input %% to insert buffer path int command mode
-cnoremap <expr> %% getcmdtype( ) == ':' ? expand('%:h').'/' : '%%'
-
-" ===
-" === Markdown snippets
-" ===
-" Snippets
-source ~/.config/nvim/md-snippets.vim
-" auto spell
-"autocmd BufRead,BufNewFile *.md setlocal spell
-
-" 同时打开多个文件
-"function! MultipleEdit(p_list)
-  "for p in a:p_list
-    "for c in glob(p, 0, 1)
-      "execute 'edit ' . c
-    "endfor
-  "endfor
-"endfunction
-"command! -bar -bang -nargs=+ -complete=file Edit call MultipleEdit([<f-args>])
-
-let g:python_host_prog='/usr/bin/python2'
-let g:python3_host_prog='/usr/bin/python3'
-
-" ===
-" === Terminal Behaviors
-" ===
-let g:neoterm_autoscroll = 1
-autocmd TermOpen term://* startinsert
-"tnoremap <C-N> <C-\><C-N>
-"tnoremap <C-O> <C-\><C-N><C-O>
-let g:terminal_color_0  = '#000000'
-let g:terminal_color_1  = '#FF5555'
-let g:terminal_color_2  = '#50FA7B'
-let g:terminal_color_3  = '#F1FA8C'
-let g:terminal_color_4  = '#BD93F9'
-let g:terminal_color_5  = '#FF79C6'
-let g:terminal_color_6  = '#8BE9FD'
-let g:terminal_color_7  = '#BFBFBF'
-let g:terminal_color_8  = '#4D4D4D'
-let g:terminal_color_9  = '#FF6E67'
-let g:terminal_color_10 = '#5AF78E'
-let g:terminal_color_11 = '#F4F99D'
-let g:terminal_color_12 = '#CAA9FA'
-let g:terminal_color_13 = '#FF92D0'
-let g:terminal_color_14 = '#9AEDFE'
-
-" set filetype
-au BufNewFile,BufRead *.ejs set filetype=html
-
-nnoremap & :&&<CR>
-xnoremap & :&&<CR>
-
-"source ~/.config/nvim/cursor.vim
-" Specify a directory for plugins
- " - For Neovim: stdpath('data') . '/plugged'
- " - Avoid using standard Vim directory names like 'plugin'
 call plug#begin('~/.config/nvim/plugged')
 
 " Make sure you use single quotes
@@ -438,6 +171,9 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
+" 自动决定显示相对行号还是绝对行号
+Plug 'jeffkreeftmeijer/vim-numbertoggle'
+
 call plug#end()
 
 
@@ -445,6 +181,8 @@ call plug#end()
 " ===
 " === Dress up my vim
 " ===
+"hi Visual term=reverse cterm=reverse guibg=Grey
+" define line highlight color
 "set termguicolors " enable true colors support
 "let $NVIM_TUI_ENABLE_TRUE_COLOR=1
 "set background=dark
@@ -843,31 +581,31 @@ let g:python_highlight_all = 1
 " === vim-signature
 " === Bookmarks
 " ===
-let g:SignatureMap = {
-        \ 'Leader'             :  "m",
-        \ 'PlaceNextMark'      :  "m,",
-        \ 'ToggleMarkAtLine'   :  "mm",
-        \ 'PurgeMarksAtLine'   :  "dm-",
-        \ 'DeleteMark'         :  "dm",
-        \ 'PurgeMarks'         :  "dm/",
-        \ 'PurgeMarkers'       :  "dm?",
-        \ 'GotoNextLineAlpha'  :  "mn",
-        \ 'GotoPrevLineAlpha'  :  "",
-        \ 'GotoNextSpotAlpha'  :  "",
-        \ 'GotoPrevSpotAlpha'  :  "",
-        \ 'GotoNextLineByPos'  :  "",
-        \ 'GotoPrevLineByPos'  :  "",
-        \ 'GotoNextSpotByPos'  :  "mn",
-        \ 'GotoPrevSpotByPos'  :  "mp",
-        \ 'GotoNextMarker'     :  "",
-        \ 'GotoPrevMarker'     :  "",
-        \ 'GotoNextMarkerAny'  :  "",
-        \ 'GotoPrevMarkerAny'  :  "",
-        \ 'ListLocalMarks'     :  "m/",
-        \ 'ListLocalMarkers'   :  "m?"
-        \ }
-map gm mn
-map gM mp
+"let g:SignatureMap = {
+        "\ 'Leader'             :  "m",
+        "\ 'PlaceNextMark'      :  "m,",
+        "\ 'ToggleMarkAtLine'   :  "mm",
+        "\ 'PurgeMarksAtLine'   :  "dm-",
+        "\ 'DeleteMark'         :  "dm",
+        "\ 'PurgeMarks'         :  "dm/",
+        "\ 'PurgeMarkers'       :  "dm?",
+        "\ 'GotoNextLineAlpha'  :  "mn",
+        "\ 'GotoPrevLineAlpha'  :  "",
+        "\ 'GotoNextSpotAlpha'  :  "",
+        "\ 'GotoPrevSpotAlpha'  :  "",
+        "\ 'GotoNextLineByPos'  :  "",
+        "\ 'GotoPrevLineByPos'  :  "",
+        "\ 'GotoNextSpotByPos'  :  "mn",
+        "\ 'GotoPrevSpotByPos'  :  "mp",
+        "\ 'GotoNextMarker'     :  "",
+        "\ 'GotoPrevMarker'     :  "",
+        "\ 'GotoNextMarkerAny'  :  "",
+        "\ 'GotoPrevMarkerAny'  :  "",
+        "\ 'ListLocalMarks'     :  "m/",
+        "\ 'ListLocalMarkers'   :  "m?"
+        "\ }
+map gm ]'
+map gM ['
 map shm :help Signature<CR>
 nnoremap 'A 'Azz
 nnoremap 'S 'Szz
@@ -1004,7 +742,7 @@ let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
 map <leader> <Plug>(easymotion-prefix)
 map <leader>j <Plug>(easymotion-j)
 map <leader>k <Plug>(easymotion-k)
-map <leader>l <Plug>(easymotion-lineforward)
+"map <leader>l <Plug>(easymotion-lineforward)
 map <leader>h <Plug>(easymotion-linebackward)
 "map <leader>f <Plug>(easymotion-sn)
 map <leader>w <Plug>(easymotion-bd-w)
