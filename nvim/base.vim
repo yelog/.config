@@ -97,8 +97,8 @@ map tl gt
 map tmh :-tabmove<CR>
 map tml :+tabmove<CR>
 
-nnoremap <c-p> gT
-nnoremap <c-n> gt
+"nnoremap <c-p> gT
+"nnoremap <c-n> gt
 "inoremap <c-p> <esc>gT
 "inoremap <c-n> <esc>gt
 

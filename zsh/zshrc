@@ -233,3 +233,10 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 
 # fzf searching
 export FZF_DEFAULT_COMMAND='fd --type f'
+
+# Auto tmux ssh hostname window title that actually works
+ssh() {
+  tmux rename-window "$*"
+  command ssh "$@"
+  tmux setw automatic-rename on
+}

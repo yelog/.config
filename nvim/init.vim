@@ -38,10 +38,14 @@ Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'ryanoasis/vim-devicons'
 Plug 'joshdick/onedark.vim'
 " Status line
-Plug 'theniceboy/eleline.vim'
-Plug 'ojroques/vim-scrollstatus'
+"Plug 'theniceboy/eleline.vim'
+"Plug 'ojroques/vim-scrollstatus'
 "Plug 'glepnir/spaceline.vim'
 "Plug 'vim-airline/vim-airline'
+Plug 'nvim-lualine/lualine.nvim'
+" If you want to have icons in your statusline choose one of these
+Plug 'kyazdani42/nvim-web-devicons'
+Plug 'romgrk/barbar.nvim'
 
 " General Highlighter
 Plug 'RRethy/vim-hexokinase', { 'do': 'make hexokinase' }
@@ -71,7 +75,7 @@ Plug 'jkramer/vim-checkbox'
 Plug 'tenxsoydev/vim-markdown-checkswitch'
 "Plug 'gabrielelana/vim-markdown'
 "Plug 'vim-pandoc/vim-pandoc-syntax'
-Plug 'vimwiki/vimwiki'
+"Plug 'vimwiki/vimwiki'
 
 " Bookmarks
 Plug 'kshenoy/vim-signature'
@@ -138,7 +142,7 @@ Plug 'brooth/far.vim'
 Plug 'voldikss/vim-floaterm'
 
 " github ai coding complete
-Plug 'github/copilot.vim'
+"Plug 'github/copilot.vim'
 
 " database
 "Plug 'tpope/vim-dadbod'
@@ -173,6 +177,11 @@ endif
 
 " 自动决定显示相对行号还是绝对行号
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
+
+" sessoin manager
+"Plug 'nvim-telescope/telescope.nvim'
+Plug 'rmagatti/auto-session'
+"Plug 'rmagatti/session-lens'
 
 call plug#end()
 
@@ -295,9 +304,10 @@ set rtp+=/usr/local/bin/fzf
 "noremap <C-t> :BTags<CR>
 "noremap <silent> <C-l> :Lines<CR>
 noremap <silent> <leader>f :Files<CR>
+noremap <silent> <C-f> :Files<CR>
 noremap <leader>; :History:<cr>
 noremap <leader>F :Rg<cr>
-noremap <leader>b :Buffers<CR>
+"noremap <leader>b :Buffers<CR>
 noremap <leader>r :History<CR>
 
 let g:fzf_preview_window = 'right:60%'
@@ -739,13 +749,14 @@ let g:EasyMotion_do_mapping = 0
 let g:EasyMotion_do_shade = 0
 let g:EasyMotion_smartcase = 1
 let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
-map <leader> <Plug>(easymotion-prefix)
-map <leader>j <Plug>(easymotion-j)
-map <leader>k <Plug>(easymotion-k)
-"map <leader>l <Plug>(easymotion-lineforward)
-map <leader>h <Plug>(easymotion-linebackward)
-"map <leader>f <Plug>(easymotion-sn)
-map <leader>w <Plug>(easymotion-bd-w)
+map ; <Plug>(easymotion-prefix)
+map ;j <Plug>(easymotion-j)
+map ;k <Plug>(easymotion-k)
+map ;l <Plug>(easymotion-lineforward)
+map ;h <Plug>(easymotion-linebackward)
+map ;s <Plug>(easymotion-sn)
+map ;t <Plug>(easymotion-tn)
+map ;w <Plug>(easymotion-bd-w)
 "map n <Plug>(easymotion-next)
 "map N <Plug>(easymotion-prev)
 ""map / <Plug>(easymotion-sn)
@@ -1038,3 +1049,177 @@ nnoremap <silent> <leader>tr :RooterToggle<cr>
     "}
 "})
 "EOF
+
+" ===
+" === rmagatti/auto-session
+" ===
+" or use lua
+lua << EOF
+local opts = {
+  log_level = 'info',
+  auto_session_enable_last_session = false,
+  auto_session_root_dir = vim.fn.stdpath('data').."/sessions/",
+  auto_session_enabled = true,
+  auto_save_enabled = nil,
+  auto_restore_enabled = nil,
+  auto_session_suppress_dirs = nil,
+  auto_session_use_git_branch = nil,
+  -- the configs below are lua only
+  bypass_session_save_file_types = nil
+}
+
+require('auto-session').setup(opts)
+
+EOF
+
+" ===
+" === nvim-lualine/lualine.nvim
+" ===
+lua << END
+require('lualine').setup {
+  options = {
+    icons_enabled = true,
+    theme = 'auto',
+    component_separators = { left = '', right = ''},
+    section_separators = { left = '', right = ''},
+    disabled_filetypes = {},
+    always_divide_middle = true,
+    globalstatus = false,
+  },
+  sections = {
+    lualine_a = {'mode'},
+    lualine_b = {'branch', 'diff', 'diagnostics'},
+    lualine_c = {require('auto-session-library').current_session_name},
+    lualine_x = {'encoding', 'fileformat', 'filetype'},
+    lualine_y = {'progress'},
+    lualine_z = {'location'}
+  },
+  inactive_sections = {
+    lualine_a = {},
+    lualine_b = {},
+    lualine_c = {'filename'},
+    lualine_x = {'location'},
+    lualine_y = {},
+    lualine_z = {}
+  },
+  tabline = {},
+  extensions = {}
+}
+END
+
+" ===
+" === romgrk/barbar.nvim
+" ===
+" Move to previous/next
+nnoremap <silent> <C-p> :BufferPrevious<CR>
+nnoremap <silent> <C-n> :BufferNext<CR>
+" Re-order to previous/next
+"nnoremap <silent> <C-<> :BufferMovePrevious<CR>
+"nnoremap <silent> <C->> :BufferMoveNext<CR>
+" Goto buffer in position...
+nnoremap <silent> <C-1> :BufferGoto 1<CR>
+nnoremap <silent> <C-2> :BufferGoto 2<CR>
+nnoremap <silent> <C-3> :BufferGoto 3<CR>
+nnoremap <silent> <C-4> :BufferGoto 4<CR>
+nnoremap <silent> <C-5> :BufferGoto 5<CR>
+nnoremap <silent> <C-6> :BufferGoto 6<CR>
+nnoremap <silent> <C-7> :BufferGoto 7<CR>
+nnoremap <silent> <C-8> :BufferGoto 8<CR>
+nnoremap <silent> <C-9> :BufferGoto 9<CR>
+nnoremap <silent> <C-0> :BufferLast<CR>
+" Pin/unpin buffer
+"nnoremap <silent> <A-p> :BufferPin<CR>
+" Close buffer
+nnoremap <silent> <C-w> :BufferClose<CR>
+" Wipeout buffer
+"                          :BufferWipeout<CR>
+" Close commands
+nnoremap <silent> <leader>bo :BufferCloseAllButCurrent<CR>
+"                          :BufferCloseAllButPinned<CR>
+"                          :BufferCloseAllButCurrentOrPinned<CR>
+"                          :BufferCloseBuffersLeft<CR>
+"                          :BufferCloseBuffersRight<CR>
+" Magic buffer-picking mode
+nnoremap <silent> <C-e>    :BufferPick<CR>
+"" Sort automatically by...
+nnoremap <silent> <Space>bb :BufferOrderByBufferNumber<CR>
+nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
+nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
+nnoremap <silent> <Space>bw :BufferOrderByWindowNumber<CR>
+nnoremap <silent> <Space>bp :BufferPin<CR>
+
+" Other:
+" :BarbarEnable - enables barbar (enabled by default)
+" :BarbarDisable - very bad command, should never be used
+let bufferline = get(g:, 'bufferline', {})
+" New tabs are opened next to the currently selected tab.
+" Enable to insert them in buffer number order.
+let bufferline.add_in_buffer_number_order = v:false
+
+" Enable/disable animations
+let bufferline.animation = v:true
+
+" Enable/disable auto-hiding the tab bar when there is a single buffer
+let bufferline.auto_hide = v:false
+
+" Enable/disable current/total tabpages indicator (top right corner)
+let bufferline.tabpages = v:true
+
+" Enable/disable close button
+let bufferline.closable = v:true
+
+" Enables/disable clickable tabs
+"  - left-click: go to buffer
+"  - middle-click: delete buffer
+let bufferline.clickable = v:true
+
+" Excludes buffers from the tabline
+let bufferline.exclude_ft = ['javascript']
+let bufferline.exclude_name = ['package.json']
+
+" Enable/disable icons
+" if set to 'buffer_number', will show buffer number in the tabline
+" if set to 'numbers', will show buffer index in the tabline
+" if set to 'both', will show buffer index and icons in the tabline
+" if set to 'buffer_number_with_icon', will show buffer number and icons in the tabline
+let bufferline.icons = v:true
+
+" Sets the icon's highlight group.
+" If false, will use nvim-web-devicons colors
+let bufferline.icon_custom_colors = v:false
+let bufferline.icon_separator_active = '▎'
+let bufferline.icon_separator_inactive = '▎'
+let bufferline.icon_close_tab = ''
+let bufferline.icon_close_tab_modified = '●'
+let bufferline.icon_pinned = '車'
+" If true, new buffers will be inserted at the start/end of the list.
+" Default is to insert after current buffer.
+let bufferline.insert_at_start = v:false
+let bufferline.insert_at_end = v:false
+
+" Sets the maximum padding width with which to surround each tab.
+let bufferline.maximum_padding = 4
+
+" Sets the maximum buffer name length.
+let bufferline.maximum_length = 30
+
+" If set, the letters for each buffer in buffer-pick mode will be
+" assigned based on their name. Otherwise or in case all letters are
+" already assigned, the behavior is to assign letters in order of
+" usability (see order below)
+let bufferline.semantic_letters = v:true
+
+" New buffer letters are assigned in this order. This order is
+" optimal for the qwerty keyboard layout but might need adjustement
+" for other layouts.
+let bufferline.letters =
+  \ 'asdfjkl;ghnmxcvbziowerutyqpASDFJKLGHNMXCVBZIOWERUTYQP'
+
+" Sets the name of unnamed buffers. By default format is "[Buffer X]"
+" where X is the buffer number. But only a static string is accepted here.
+let bufferline.no_name_title = v:null
+
+" ===
+" === jiangmiao/auto-pairs
+" ===
+let g:AutoPairsShortcutToggle = '<A-a>'
