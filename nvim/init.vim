@@ -660,6 +660,9 @@ let g:gitgutter_sign_modified = '░'
 let g:gitgutter_sign_removed = '▶'
 let g:gitgutter_sign_removed_first_line = '▔'
 let g:gitgutter_sign_modified_removed = '▒'
+highlight GitGutterAdd    guifg=#009900 ctermfg=2
+highlight GitGutterChange guifg=#3F93B0 ctermfg=3
+highlight GitGutterDelete guifg=#ff2222 ctermfg=1
 " autocmd BufWritePost * GitGutter
 nnoremap <leader>gf :GitGutterFold<CR>
 nnoremap <leader>gp :GitGutterPreviewHunk<CR>
