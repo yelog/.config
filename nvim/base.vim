@@ -168,11 +168,7 @@ vnoremap <silent> # :<C-U>
 map <LEADER>sc :set spell!<CR>
 "noremap <C-x> ea<C-x>s
 
-" Indentation
-"nnoremap < <<
-"nnoremap > >>
-"vnoremap < <gv
-"vnoremap > >gv
+map ' `
 
 " Folding
 "noremap <silent> <LEADER>o za

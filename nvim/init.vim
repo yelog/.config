@@ -102,10 +102,11 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip; in normal mode, type enter to select {[ and on.
 Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
 "Plug 'tpope/vim-capslock'  " Ctrl+L (insert) to toggle capslock
-Plug 'easymotion/vim-easymotion'
-Plug 'haya14busa/incsearch.vim'
-Plug 'haya14busa/incsearch-easymotion.vim'
-Plug 'rhysd/clever-f.vim'
+"Plug 'easymotion/vim-easymotion'
+"Plug 'haya14busa/incsearch.vim'
+"Plug 'haya14busa/incsearch-easymkevinhwang91/rnvimrotion.vim'
+"Plug 'rhysd/clever-f.vim'
+Plug 'phaazon/hop.nvim'
 
 " Treesitter
 "Plug 'nvim-treesitter/nvim-treesitter'
@@ -357,6 +358,7 @@ let g:coc_global_extensions = [
   \ 'coc-explorer',
   \ 'coc-gitignore',
   \ 'coc-html',
+  \ 'coc-vue',
   \ 'coc-json',
   \ 'coc-lists',
   \ 'coc-prettier',
@@ -745,18 +747,18 @@ endfunction
 " ===
 " === vim-easymotion
 " ===
-let g:EasyMotion_do_mapping = 0
-let g:EasyMotion_do_shade = 0
-let g:EasyMotion_smartcase = 1
-let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
-map ; <Plug>(easymotion-prefix)
-map ;j <Plug>(easymotion-j)
-map ;k <Plug>(easymotion-k)
-map ;l <Plug>(easymotion-lineforward)
-map ;h <Plug>(easymotion-linebackward)
-map ;s <Plug>(easymotion-sn)
-map ;t <Plug>(easymotion-tn)
-map ;w <Plug>(easymotion-bd-w)
+"let g:EasyMotion_do_mapping = 0
+"let g:EasyMotion_do_shade = 0
+"let g:EasyMotion_smartcase = 1
+"let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
+"map ; <Plug>(easymotion-prefix)
+"map ;j <Plug>(easymotion-j)
+"map ;k <Plug>(easymotion-k)
+"map ;l <Plug>(easymotion-lineforward)
+"map ;h <Plug>(easymotion-linebackward)
+"map ;s <Plug>(easymotion-sn)
+"map ;t <Plug>(easymotion-tn)
+"map ;w <Plug>(easymotion-bd-w)
 "map n <Plug>(easymotion-next)
 "map N <Plug>(easymotion-prev)
 ""map / <Plug>(easymotion-sn)
@@ -1218,8 +1220,24 @@ let bufferline.letters =
 " Sets the name of unnamed buffers. By default format is "[Buffer X]"
 " where X is the buffer number. But only a static string is accepted here.
 let bufferline.no_name_title = v:null
+autocmd User CocExplorerOpenPre lua require'bufferline.state'.set_offset(38, 'FileTree')
+autocmd User CocExplorerQuitPre lua require'bufferline.state'.set_offset(0) 
 
 " ===
 " === jiangmiao/auto-pairs
 " ===
 let g:AutoPairsShortcutToggle = '<A-a>'
+
+" ===
+" === phaazon/hop.nvim
+" ===
+lua require'hop'.setup { keys = 'etovxqpdygfblzhckisuran', jump_on_sole_occurrence = true }
+noremap ;w <cmd>HopWord<cr>
+noremap ;a <cmd>HopAnywhere<cr>
+noremap ;s <cmd>HopChar2<cr>
+noremap ;l <cmd>HopWordCurrentLineAC<cr>
+noremap ;h <cmd>HopWordCurrentLineBC<cr>
+noremap ;k <cmd>HopLineBC<cr>
+noremap ;j <cmd>HopLineAC<cr>
+noremap f <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true })<cr>
+noremap F <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true })<cr>
