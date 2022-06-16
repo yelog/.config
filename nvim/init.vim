@@ -666,6 +666,7 @@ nnoremap <leader>gp :GitGutterPreviewHunk<CR>
 nnoremap <leader>gk :GitGutterPrevHunk<CR>
 nnoremap <leader>gj :GitGutterNextHunk<CR>
 nnoremap <leader>gu :GitGutterUndoHunk<CR>
+nnoremap <leader>gd :GitGutterDiffOrig<CR>
 
 " ===
 " === nvim-treesitter
