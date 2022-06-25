@@ -186,6 +186,10 @@ Plug 'jeffkreeftmeijer/vim-numbertoggle'
 Plug 'rmagatti/auto-session'
 "Plug 'rmagatti/session-lens'
 
+" open file with lineNumber and columnNumber
+" :e file:20   :vi file:20:3
+Plug 'wsdjeg/vim-fetch'
+
 call plug#end()
 
 
