@@ -60,6 +60,7 @@ Plug 'gko/vim-coloresque', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'c
 Plug 'yuezk/vim-js', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
 "Plug 'posva/vim- vue'
 Plug 'mattn/emmet-vim'
+"Plug 'artur-shaik/vim-javacomplete2'
 
 " Markdown
 Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
@@ -129,6 +130,7 @@ Plug 'theniceboy/vim-snippets'
 " need install im-select (mac-only)
 " curl -Ls https://raw.githubusercontent.com/daipeihust/im-select/master/install_mac.sh | sh
 Plug 'ybian/smartim'
+"Plug 'rlue/vim-barbaric'
 
 " autosave
 Plug '907th/vim-auto-save'
@@ -1247,3 +1249,8 @@ noremap ;k <cmd>HopLineBC<cr>
 noremap ;j <cmd>HopLineAC<cr>
 noremap f <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true })<cr>
 noremap F <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true })<cr>
+
+" ===
+" === 'artur-shaik/vim-javacomplete2
+" ===
+"autocmd FileType java setlocal omnifunc=javacomplete#Complete
