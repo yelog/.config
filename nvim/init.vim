@@ -110,7 +110,7 @@ Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
 Plug 'phaazon/hop.nvim'
 
 " Treesitter
-"Plug 'nvim-treesitter/nvim-treesitter'
+"Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 "Plug 'nvim-treesitter/playground'
 
 " Git
@@ -189,6 +189,12 @@ Plug 'rmagatti/auto-session'
 " open file with lineNumber and columnNumber
 " :e file:20   :vi file:20:3
 Plug 'wsdjeg/vim-fetch'
+
+" even better % 👊 navigate and highlight matching words 👊 modern matchit and matchparen
+Plug 'andymass/vim-matchup'
+" fix match tag in vue
+" https://github.com/andymass/vim-matchup/issues/106
+Plug 'posva/vim-vue'
 
 call plug#end()
 
@@ -683,11 +689,11 @@ nnoremap <leader>gb :Git blame<CR>
 " ===
 "lua <<EOF
 "require'nvim-treesitter.configs'.setup {
-"  ensure_installed = {"typescript", "dart", "java"},     -- one of "all", "language", or a list of languages
-"  highlight = {
-"    enable = true,              -- false will disable the whole extension
-"    disable = { "c", "rust" },  -- list of language that will be disabled
-"  },
+  "ensure_installed = {"typescript", "vue", "java", "javascript", "markdown", "markdown_inline"},     -- one of "all", "language", or a list of languages
+  "highlight = {
+    "enable = true,              -- false will disable the whole extension
+    "disable = { "c", "rust" },  -- list of language that will be disabled
+  "},
 "}
 "EOF
 
