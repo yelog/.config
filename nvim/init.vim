@@ -1194,8 +1194,8 @@ let bufferline.closable = v:true
 let bufferline.clickable = v:true
 
 " Excludes buffers from the tabline
-let bufferline.exclude_ft = ['javascript']
-let bufferline.exclude_name = ['package.json']
+"let bufferline.exclude_ft = ['javascript']
+"let bufferline.exclude_name = ['package.json']
 
 " Enable/disable icons
 " if set to 'buffer_number', will show buffer number in the tabline
