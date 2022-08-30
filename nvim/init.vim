@@ -196,6 +196,10 @@ Plug 'andymass/vim-matchup'
 " https://github.com/andymass/vim-matchup/issues/106
 Plug 'posva/vim-vue'
 
+Plug 'ellisonleao/glow.nvim', {'branch': 'main'}
+
+Plug 'mbpowers/nvimager'
+
 call plug#end()
 
 
@@ -527,7 +531,7 @@ let g:snips_author = 'Chris Yang'
 " === tpope/vim-markdown
 " ===
 let g:markdown_syntax_conceal = 0
-let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'json', 'java', 'js=javascript', 'sql']
+let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'json', 'java', 'js=javascript', 'sql', 'yaml', 'Dockerfile']
 
 " ===
 " === vim-table-mode
@@ -1264,3 +1268,16 @@ noremap F <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintD
 " === 'artur-shaik/vim-javacomplete2
 " ===
 "autocmd FileType java setlocal omnifunc=javacomplete#Complete
+
+" ===
+" ===  ellisonleao/glow.nvim
+" ===
+
+" ===
+" === mbpowers/nvimager
+" ===
+nmap <leader>qq <Plug>NvimagerToggle
+"let g:nvimager#autostart = 0
+"let g:nvimager#title = 1
+"let g:nvimager#dynamic_scaler = 'fit_contain'
+"let g:nvimager#static_scaler = 'forced_cover'
