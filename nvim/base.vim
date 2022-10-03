@@ -228,7 +228,7 @@ source ~/.config/nvim/md-snippets.vim
 "command! -bar -bang -nargs=+ -complete=file Edit call MultipleEdit([<f-args>])
 
 let g:python_host_prog='/usr/bin/python2'
-let g:python3_host_prog='/usr/bin/python3'
+let g:python3_host_prog='/usr/local/bin/python3'
 
 " ===
 " === Terminal Behaviors

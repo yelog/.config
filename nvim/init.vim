@@ -390,6 +390,7 @@ let g:coc_global_extensions = [
   \ 'coc-vetur',
   \ 'coc-eslint',
   \ 'coc-vimlsp',
+  \ 'coc-lua',
   \ 'coc-picgo',
   \ 'coc-yaml',
   \ 'coc-sh',
@@ -399,11 +400,11 @@ let g:coc_global_extensions = [
 " Use tab for trigger completion with characters ahead and navigate.
 " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
 " other plugin before putting this into your config.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"inoremap <silent><expr> <TAB>
+      "\ pumvisible() ? "\<C-n>" :
+      "\ <SID>check_back_space() ? "\<TAB>" :
+      "\ coc#refresh()
+"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
 
 "function! s:check_back_space() abort
   "let col = col('.') - 1
@@ -671,13 +672,15 @@ let g:gitgutter_sign_allow_clobber = 0
 let g:gitgutter_map_keys = 0
 let g:gitgutter_override_sign_column_highlight = 0
 let g:gitgutter_preview_win_floating = 1
-let g:gitgutter_sign_added = '▎'
-let g:gitgutter_sign_modified = '░'
+"let g:gitgutter_sign_added = '▎'
+let g:gitgutter_sign_added = '▍'
+"let g:gitgutter_sign_modified = '░'
+let g:gitgutter_sign_modified = '▍'
 let g:gitgutter_sign_removed = '▶'
 let g:gitgutter_sign_removed_first_line = '▔'
 let g:gitgutter_sign_modified_removed = '▒'
 highlight GitGutterAdd    guifg=#009900 ctermfg=2
-highlight GitGutterChange guifg=#3F93B0 ctermfg=3
+highlight GitGutterChange guifg=#0099FF ctermfg=3
 highlight GitGutterDelete guifg=#ff2222 ctermfg=1
 " autocmd BufWritePost * GitGutter
 nnoremap <leader>gf :GitGutterFold<CR>
@@ -916,8 +919,8 @@ let g:vista#renderer#icons = {
 " === vim-auto-save
 " ===
 noremap <LEADER>as :AutoSaveToggle<CR>
-let g:auto_save = 0  " enable AutoSave on Vim startup
-"let g:auto_save_silent = 1  " do not display the auto-save notification
+let g:auto_save = 1  " enable AutoSave on Vim startup
+let g:auto_save_silent = 1  " do not display the auto-save notification
 "let g:auto_save = 0
 "augroup ft_markdown
 "  au!
@@ -1022,35 +1025,67 @@ let g:clever_f_smart_case=1
 " ++once supported in Nvim 0.4+ and Vim 8.1+
 "autocmd CmdlineEnter * ++once call s:wilder_init() | call s:wilder#main#start()
 
-"function! s:wilder_init() abort
-    call wilder#setup({
-          \ 'modes': [':', '/', '?'],
-          \ 'next_key': '<Tab>',
-          \ 'previous_key': '<S-Tab>',
-          \ 'accept_key': '<Down>',
-          \ 'reject_key': '<Up>',
-          \ })
-    " Can also be passed to the 'highlights' option
-    call wilder#set_option('renderer', wilder#popupmenu_renderer({
-          \ 'highlighter': wilder#basic_highlighter(),
-          \ 'highlights': {
-          \   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
-          \ },
-          \ }))
-    " fuzzy
-    call wilder#set_option('pipeline', [
-          \   wilder#debounce(10),
-          \   wilder#branch(
-          \     wilder#cmdline_pipeline({
-          \       'fuzzy': 1,
-          \       'set_pcre2_pattern': 1,
-          \     }),
-          \     wilder#python_search_pipeline({
-          \       'pattern': 'fuzzy',
-          \     }),
-          \   ),
-          \ ])
-"endfunction
+call wilder#setup({
+      \ 'modes': [':', '/', '?'],
+      \ 'next_key': '<Tab>',
+      \ 'previous_key': '<S-Tab>',
+      \ 'accept_key': '<Down>',
+      \ 'reject_key': '<Up>',
+      \ })
+"" Can also be passed to the 'highlights' option
+"call wilder#set_option('renderer', wilder#popupmenu_renderer({
+      "\ 'highlighter': wilder#basic_highlighter(),
+      "\ 'highlights': {
+      "\   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
+      "\ },
+      "\ }))
+
+" 'border'            : 'single', 'double', 'rounded' or 'solid'
+"                     : can also be a list of 8 characters,
+"                     : see :h wilder#popupmenu_border_theme() for more details
+" 'highlights.border' : highlight to use for the border`
+call wilder#set_option('renderer', wilder#popupmenu_renderer(wilder#popupmenu_border_theme({
+      \ 'highlighter': wilder#basic_highlighter(),
+      \ 'highlights': {
+      \   'border': 'Normal',
+      \   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
+      \ },
+      \ 'border': 'rounded',
+      \ 'reverse': 1
+      \ })))
+" 'border'            : 'single', 'double', 'rounded' or 'solid'
+"                     : can also be a list of 8 characters,
+"                     : see :h wilder#popupmenu_palette_theme() for more details
+" 'max_height'        : max height of the palette
+" 'min_height'        : set to the same as 'max_height' for a fixed height window
+" 'prompt_position'   : 'top' or 'bottom' to set the location of the prompt
+" 'reverse'           : set to 1 to reverse the order of the list
+"                     : use in combination with 'prompt_position'
+"call wilder#set_option('renderer', wilder#popupmenu_renderer(wilder#popupmenu_palette_theme({
+      "\ 'highlighter': wilder#basic_highlighter(),
+      "\ 'highlights': {
+      "\   'border': 'Normal',
+      "\   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
+      "\ },
+      "\ 'border': 'rounded',
+      "\ 'max_height': '75%',
+      "\ 'min_height': 0,
+      "\ 'prompt_position': 'top',
+      "\ 'reverse': 0
+      "\ })))
+"" fuzzy
+call wilder#set_option('pipeline', [
+      \   wilder#debounce(10),
+      \   wilder#branch(
+      \     wilder#cmdline_pipeline({
+      \       'fuzzy': 1,
+      \       'set_pcre2_pattern': 1,
+      \     }),
+      \     wilder#python_search_pipeline({
+      \       'pattern': 'fuzzy',
+      \     }),
+      \   ),
+      \ ])
 
 " ===
 " === airblade/vim-rooter
