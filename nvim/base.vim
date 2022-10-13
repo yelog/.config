@@ -266,7 +266,9 @@ xnoremap & :&&<CR>
  " - For Neovim: stdpath('data') . '/plugged'
  " - Avoid using standard Vim directory names like 'plugin'
 
-augroup my_textwidth
-  au!
-  autocmd FileType text,markdown,tex setlocal textwidth=80
-augroup END
+
+" 超长自动换行
+"augroup my_textwidth
+  "au!
+  "autocmd FileType text,markdown,tex setlocal textwidth=80
+"augroup END

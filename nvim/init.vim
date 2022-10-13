@@ -12,7 +12,7 @@ Plug 'wellle/tmux-complete.vim'
 " File navigation
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
+"Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 " ranger in neovim
 "Plug 'kevinhwang91/rnvimr'
 Plug 'airblade/vim-rooter'
@@ -110,7 +110,7 @@ Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
 Plug 'phaazon/hop.nvim'
 
 " Treesitter
-"Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 "Plug 'nvim-treesitter/playground'
 
 " Git
@@ -142,7 +142,8 @@ Plug '907th/vim-auto-save'
 Plug 'brooth/far.vim'
 
 " float term
-Plug 'voldikss/vim-floaterm'
+"Plug 'voldikss/vim-floaterm'
+Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 
 " github ai coding complete
 "Plug 'github/copilot.vim'
@@ -182,7 +183,8 @@ endif
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
 " sessoin manager
-"Plug 'nvim-telescope/telescope.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 Plug 'rmagatti/auto-session'
 "Plug 'rmagatti/session-lens'
 
@@ -198,7 +200,9 @@ Plug 'posva/vim-vue'
 
 Plug 'ellisonleao/glow.nvim', {'branch': 'main'}
 
-Plug 'mbpowers/nvimager'
+"Plug 'mbpowers/nvimager'
+"Plug 'edluffy/hologram.nvim'
+"Plug 'heapslip/vimage.nvim'
 
 call plug#end()
 
@@ -287,21 +291,21 @@ colorscheme gruvbox
 " ===
 " === Leaderf
 " ===
-let g:Lf_WindowPosition = 'popup'
-"nnoremap <c-p> :Leaderf file<CR>
-"nnoremap <leader>r :Leaderf mru<CR>
-let g:Lf_PreviewInPopup = 1
-let g:Lf_PreviewCode = 1
-let g:Lf_ShowHidden = 1
-let g:Lf_ShowDevIcons = 1
-let g:Lf_UseVersionControlTool = 0
-let g:Lf_IgnoreCurrentBufferName = 1
-let g:Lf_WildIgnore = {
-        \ 'dir': ['.git', 'vendor', 'node_modules'],
-        \ 'file': ['__vim_project_root']
-        \}
-let g:Lf_UseMemoryCache = 0
-let g:Lf_UseCache = 0
+"let g:Lf_WindowPosition = 'popup'
+""nnoremap <c-p> :Leaderf file<CR>
+""nnoremap <leader>r :Leaderf mru<CR>
+"let g:Lf_PreviewInPopup = 1
+"let g:Lf_PreviewCode = 1
+"let g:Lf_ShowHidden = 1
+"let g:Lf_ShowDevIcons = 1
+"let g:Lf_UseVersionControlTool = 0
+"let g:Lf_IgnoreCurrentBufferName = 1
+"let g:Lf_WildIgnore = {
+        "\ 'dir': ['.git', 'vendor', 'node_modules'],
+        "\ 'file': ['__vim_project_root']
+        "\}
+"let g:Lf_UseMemoryCache = 0
+"let g:Lf_UseCache = 0
 
 " ===
 " === FZF
@@ -320,10 +324,10 @@ set rtp+=/usr/local/bin/fzf
 "noremap <silent> <C-h> :History<CR>
 "noremap <C-t> :BTags<CR>
 "noremap <silent> <C-l> :Lines<CR>
-noremap <silent> <leader>f :Files<CR>
-noremap <silent> <C-f> :Files<CR>
+"noremap <silent> <leader>f :Files<CR>
+"noremap <silent> <C-f> :Files<CR>
 noremap <leader>; :History:<cr>
-noremap <leader>F :Rg<cr>
+"noremap <leader>F :Rg<cr>
 "noremap <leader>b :Buffers<CR>
 noremap <leader>r :History<CR>
 
@@ -444,7 +448,7 @@ function! s:show_documentation()
 endfunction
 
 " Formatting selected code.
-"xmap <leader>f  <Plug>(coc-format-selected)
+xmap <leader>fm  <Plug>(coc-format-selected)
 "nmap <leader>f  ggVG<Plug>(coc-format-selected)
 
 " Symbol renaming.
@@ -476,7 +480,7 @@ nmap <space>el <Cmd>CocList explPresets<CR>
 
 
 
-nnoremap <c-c> :CocCommand<CR>
+"nnoremap <c-c> :CocCommand<CR>
 " coctodolist
 nnoremap <leader>tn :CocCommand todolist.create<CR>
 nnoremap <leader>tl :CocList todolist<CR>
@@ -1000,7 +1004,7 @@ vnoremap <silent> <c-s-f>  :Farf<cr>
 " ===
 " === voldikss/vim-floaterm
 " ===
-noremap <LEADER>/ :FloatermNew<cr>
+"noremap <LEADER>/ :FloatermNew<cr>
 " ===
 " === rhysd/clever-f.vim
 " ===
@@ -1316,3 +1320,71 @@ nmap <leader>qq <Plug>NvimagerToggle
 "let g:nvimager#title = 1
 "let g:nvimager#dynamic_scaler = 'fit_contain'
 "let g:nvimager#static_scaler = 'forced_cover'
+
+
+
+
+" ===
+" === edluffy/hologram.nvim
+" ===
+"lua <<EOF
+"require('hologram').setup{
+    "auto_display = true -- WIP automatic markdown image display, may be prone to breaking
+"}
+"EOF
+
+" ===
+" === nvim-telescope/telescope.nvim
+" ===
+" Find files using Telescope command-line sugar.
+nnoremap <leader>ff <cmd>Telescope find_files<cr>
+nnoremap <leader>fg <cmd>Telescope live_grep<cr>
+nnoremap <leader>fb <cmd>Telescope buffers<cr>
+nnoremap <leader>fh <cmd>Telescope help_tags<cr>
+lua << EOF
+require('telescope').setup{
+  defaults = {
+    prompt_prefix = " ",
+    selection_caret = "❯ ",
+    path_display = { "truncate" },
+    selection_strategy = "reset",
+    sorting_strategy = "ascending",
+    layout_strategy = "horizontal",
+    layout_config = {
+      horizontal = {
+        prompt_position = "top",
+        preview_width = 0.55,
+        results_width = 0.8,
+      },
+      vertical = {
+        mirror = false,
+      },
+      width = 0.87,
+      height = 0.80,
+      preview_cutoff = 120,
+    },
+  }
+}
+EOF
+
+
+" ===
+" === akinsho/toggleterm.nvim
+" ===
+
+lua << EOF
+require('toggleterm').setup{
+  size = 10,
+  open_mapping = [[<c-\>]],
+  shading_factor = 2,
+  direction = "float",
+  float_opts = {
+    border = "curved",
+    highlights = {
+      border = "Normal",
+      background = "Normal",
+    },
+  },
+}
+EOF
+
