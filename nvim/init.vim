@@ -103,7 +103,8 @@ Plug 'alvan/vim-closetag'
 Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
 Plug 'jiangmiao/auto-pairs'
 Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip; in normal mode, type enter to select {[ and on.
-Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
+"Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
+Plug 'numToStr/Comment.nvim'
 "Plug 'tpope/vim-capslock'  " Ctrl+L (insert) to toggle capslock
 "Plug 'easymotion/vim-easymotion'
 "Plug 'haya14busa/incsearch.vim'
@@ -1405,5 +1406,37 @@ EOF
 
 nnoremap <c-n> :BufferLineCycleNext<CR>
 nnoremap <c-p> :BufferLineCyclePrev<CR>
-nnoremap <c-w> :bdelete<CR>
-nnoremap <C-S-p> :BufferLineMoveNext<CR>
+" nnoremap <leader>c :bdelete<CR>
+nnoremap <c-q> :bdelete<CR>
+nnoremap >b :BufferLineMoveNext<CR>
+nnoremap <b :BufferLineMovePrev<CR>
+
+
+" ===
+" === numToStr/Comment.nvim
+" ===
+lua << EOF
+require('Comment').setup(
+    {
+        toggler = {
+            line = '<leader>//',
+            block = 'gbc',
+        },
+        opleader = {
+            line = '<leader>/',
+            block = 'gb',
+        },
+        extra = {
+            above = 'gcO',
+            below = 'gco',
+            eol = 'gcA',
+        },
+        mappings = {
+            basic = true,
+            extra = true,
+        },
+        pre_hook = nil,
+        post_hook = nil,
+    }
+)
+EOF

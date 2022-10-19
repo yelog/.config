@@ -108,7 +108,7 @@ map tml :+tabmove<CR>
 map S :w<CR>
 noremap <C-s> :w<CR>
 map Q :q<CR>
-noremap <C-q> :qa<CR>
+" noremap <C-q> :qa<CR>
 map R :source ~/.config/nvim/init.vim<CR>
 "noremap J 5j
 "noremap K 5k
