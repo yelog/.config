@@ -46,7 +46,6 @@ Plug 'joshdick/onedark.vim'
 Plug 'nvim-lualine/lualine.nvim'
 " If you want to have icons in your statusline choose one of these
 Plug 'kyazdani42/nvim-web-devicons'
-"Plug 'romgrk/barbar.nvim'
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 
 " General Highlighter
@@ -163,7 +162,7 @@ Plug 'dhruvasagar/vim-open-url'
 
 " lsp
 "Plug 'williamboman/nvim-lsp-installer'
-"Plug 'neovim/nvim-lspconfig'
+Plug 'neovim/nvim-lspconfig'
 
 " A mroe adventurous wildmenu
 if has('nvim')
@@ -206,6 +205,8 @@ Plug 'ellisonleao/glow.nvim', {'branch': 'main'}
 "Plug 'mbpowers/nvimager'
 "Plug 'edluffy/hologram.nvim'
 "Plug 'heapslip/vimage.nvim'
+
+Plug 'jose-elias-alvarez/null-ls.nvim'
 
 call plug#end()
 
@@ -1021,74 +1022,6 @@ let g:clever_f_smart_case=1
     "au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
 "augroup END
 
-" ===
-" === gelguy/wilder.nvim
-" ===
-
-" ++once supported in Nvim 0.4+ and Vim 8.1+
-"autocmd CmdlineEnter * ++once call s:wilder_init() | call s:wilder#main#start()
-
-call wilder#setup({
-      \ 'modes': [':', '/', '?'],
-      \ 'next_key': '<Tab>',
-      \ 'previous_key': '<S-Tab>',
-      \ 'accept_key': '<Down>',
-      \ 'reject_key': '<Up>',
-      \ })
-"" Can also be passed to the 'highlights' option
-"call wilder#set_option('renderer', wilder#popupmenu_renderer({
-      "\ 'highlighter': wilder#basic_highlighter(),
-      "\ 'highlights': {
-      "\   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
-      "\ },
-      "\ }))
-
-" 'border'            : 'single', 'double', 'rounded' or 'solid'
-"                     : can also be a list of 8 characters,
-"                     : see :h wilder#popupmenu_border_theme() for more details
-" 'highlights.border' : highlight to use for the border`
-call wilder#set_option('renderer', wilder#popupmenu_renderer(wilder#popupmenu_border_theme({
-      \ 'highlighter': wilder#basic_highlighter(),
-      \ 'highlights': {
-      \   'border': 'Normal',
-      \   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
-      \ },
-      \ 'border': 'rounded',
-      \ 'reverse': 1
-      \ })))
-" 'border'            : 'single', 'double', 'rounded' or 'solid'
-"                     : can also be a list of 8 characters,
-"                     : see :h wilder#popupmenu_palette_theme() for more details
-" 'max_height'        : max height of the palette
-" 'min_height'        : set to the same as 'max_height' for a fixed height window
-" 'prompt_position'   : 'top' or 'bottom' to set the location of the prompt
-" 'reverse'           : set to 1 to reverse the order of the list
-"                     : use in combination with 'prompt_position'
-"call wilder#set_option('renderer', wilder#popupmenu_renderer(wilder#popupmenu_palette_theme({
-      "\ 'highlighter': wilder#basic_highlighter(),
-      "\ 'highlights': {
-      "\   'border': 'Normal',
-      "\   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
-      "\ },
-      "\ 'border': 'rounded',
-      "\ 'max_height': '75%',
-      "\ 'min_height': 0,
-      "\ 'prompt_position': 'top',
-      "\ 'reverse': 0
-      "\ })))
-"" fuzzy
-call wilder#set_option('pipeline', [
-      \   wilder#debounce(10),
-      \   wilder#branch(
-      \     wilder#cmdline_pipeline({
-      \       'fuzzy': 1,
-      \       'set_pcre2_pattern': 1,
-      \     }),
-      \     wilder#python_search_pipeline({
-      \       'pattern': 'fuzzy',
-      \     }),
-      \   ),
-      \ ])
 
 " ===
 " === airblade/vim-rooter
@@ -1112,176 +1045,7 @@ nnoremap <silent> <leader>tr :RooterToggle<cr>
 "})
 "EOF
 
-" ===
-" === rmagatti/auto-session
-" ===
-" or use lua
-lua << EOF
-local opts = {
-  log_level = 'info',
-  auto_session_enable_last_session = false,
-  auto_session_root_dir = vim.fn.stdpath('data').."/sessions/",
-  auto_session_enabled = true,
-  auto_save_enabled = nil,
-  auto_restore_enabled = nil,
-  auto_session_suppress_dirs = nil,
-  auto_session_use_git_branch = nil,
-  -- the configs below are lua only
-  bypass_session_save_file_types = nil
-}
 
-require('auto-session').setup(opts)
-
-EOF
-
-" ===
-" === nvim-lualine/lualine.nvim
-" ===
-lua << END
-require('lualine').setup {
-  options = {
-    icons_enabled = true,
-    theme = 'auto',
-    component_separators = { left = '', right = ''},
-    section_separators = { left = '', right = ''},
-    disabled_filetypes = {},
-    always_divide_middle = true,
-    globalstatus = false,
-  },
-  sections = {
-    lualine_a = {'mode'},
-    lualine_b = {'branch', 'diff', 'diagnostics'},
-    lualine_c = {require('auto-session-library').current_session_name},
-    lualine_x = {'encoding', 'fileformat', 'filetype'},
-    lualine_y = {'progress'},
-    lualine_z = {'location'}
-  },
-  inactive_sections = {
-    lualine_a = {},
-    lualine_b = {},
-    lualine_c = {'filename'},
-    lualine_x = {'location'},
-    lualine_y = {},
-    lualine_z = {}
-  },
-  tabline = {},
-  extensions = {}
-}
-END
-
-" ===
-" === romgrk/barbar.nvim
-" ===
-" Move to previous/next
-"nnoremap <silent> <C-p> :BufferPrevious<CR>
-"nnoremap <silent> <C-n> :BufferNext<CR>
-"" Re-order to previous/next
-""nnoremap <silent> <C-<> :BufferMovePrevious<CR>
-""nnoremap <silent> <C->> :BufferMoveNext<CR>
-"" Goto buffer in position...
-"nnoremap <silent> <C-1> :BufferGoto 1<CR>
-"nnoremap <silent> <C-2> :BufferGoto 2<CR>
-"nnoremap <silent> <C-3> :BufferGoto 3<CR>
-"nnoremap <silent> <C-4> :BufferGoto 4<CR>
-"nnoremap <silent> <C-5> :BufferGoto 5<CR>
-"nnoremap <silent> <C-6> :BufferGoto 6<CR>
-"nnoremap <silent> <C-7> :BufferGoto 7<CR>
-"nnoremap <silent> <C-8> :BufferGoto 8<CR>
-"nnoremap <silent> <C-9> :BufferGoto 9<CR>
-"nnoremap <silent> <C-0> :BufferLast<CR>
-"" Pin/unpin buffer
-""nnoremap <silent> <A-p> :BufferPin<CR>
-"" Close buffer
-"nnoremap <silent> <C-w> :BufferClose<CR>
-"" Wipeout buffer
-""                          :BufferWipeout<CR>
-"" Close commands
-"nnoremap <silent> <leader>bo :BufferCloseAllButCurrent<CR>
-""                          :BufferCloseAllButPinned<CR>
-""                          :BufferCloseAllButCurrentOrPinned<CR>
-""                          :BufferCloseBuffersLeft<CR>
-""                          :BufferCloseBuffersRight<CR>
-"" Magic buffer-picking mode
-"nnoremap <silent> <C-e>    :BufferPick<CR>
-""" Sort automatically by...
-"nnoremap <silent> <Space>bb :BufferOrderByBufferNumber<CR>
-"nnoremap <silent> <Space>bd :BufferOrderByDirectory<CR>
-"nnoremap <silent> <Space>bl :BufferOrderByLanguage<CR>
-"nnoremap <silent> <Space>bw :BufferOrderByWindowNumber<CR>
-"nnoremap <silent> <Space>bp :BufferPin<CR>
-
-"" Other:
-"" :BarbarEnable - enables barbar (enabled by default)
-"" :BarbarDisable - very bad command, should never be used
-"let bufferline = get(g:, 'bufferline', {})
-"" New tabs are opened next to the currently selected tab.
-"" Enable to insert them in buffer number order.
-"let bufferline.add_in_buffer_number_order = v:false
-"
-"" Enable/disable animations
-"let bufferline.animation = v:true
-"
-"" Enable/disable auto-hiding the tab bar when there is a single buffer
-"let bufferline.auto_hide = v:false
-"
-"" Enable/disable current/total tabpages indicator (top right corner)
-"let bufferline.tabpages = v:true
-"
-"" Enable/disable close button
-"let bufferline.closable = v:true
-"
-"" Enables/disable clickable tabs
-""  - left-click: go to buffer
-""  - middle-click: delete buffer
-"let bufferline.clickable = v:true
-"
-"" Excludes buffers from the tabline
-""let bufferline.exclude_ft = ['javascript']
-""let bufferline.exclude_name = ['package.json']
-"
-"" Enable/disable icons
-"" if set to 'buffer_number', will show buffer number in the tabline
-"" if set to 'numbers', will show buffer index in the tabline
-"" if set to 'both', will show buffer index and icons in the tabline
-"" if set to 'buffer_number_with_icon', will show buffer number and icons in the tabline
-"let bufferline.icons = v:true
-"
-"" Sets the icon's highlight group.
-"" If false, will use nvim-web-devicons colors
-"let bufferline.icon_custom_colors = v:false
-"let bufferline.icon_separator_active = '▎'
-"let bufferline.icon_separator_inactive = '▎'
-"let bufferline.icon_close_tab = ''
-"let bufferline.icon_close_tab_modified = '●'
-"let bufferline.icon_pinned = '車'
-"" If true, new buffers will be inserted at the start/end of the list.
-"" Default is to insert after current buffer.
-"let bufferline.insert_at_start = v:false
-"let bufferline.insert_at_end = v:false
-"
-"" Sets the maximum padding width with which to surround each tab.
-"let bufferline.maximum_padding = 4
-"
-"" Sets the maximum buffer name length.
-"let bufferline.maximum_length = 30
-"
-"" If set, the letters for each buffer in buffer-pick mode will be
-"" assigned based on their name. Otherwise or in case all letters are
-"" already assigned, the behavior is to assign letters in order of
-"" usability (see order below)
-"let bufferline.semantic_letters = v:true
-"
-"" New buffer letters are assigned in this order. This order is
-"" optimal for the qwerty keyboard layout but might need adjustement
-"" for other layouts.
-"let bufferline.letters =
-"  \ 'asdfjkl;ghnmxcvbziowerutyqpASDFJKLGHNMXCVBZIOWERUTYQP'
-"
-"" Sets the name of unnamed buffers. By default format is "[Buffer X]"
-"" where X is the buffer number. But only a static string is accepted here.
-"let bufferline.no_name_title = v:null
-"autocmd User CocExplorerOpenPre lua require'bufferline.state'.set_offset(38, 'FileTree')
-"autocmd User CocExplorerQuitPre lua require'bufferline.state'.set_offset(0) 
 
 " ===
 " === jiangmiao/auto-pairs
@@ -1340,70 +1104,11 @@ nnoremap <leader>ff <cmd>Telescope find_files<cr>
 nnoremap <leader>fg <cmd>Telescope live_grep<cr>
 nnoremap <leader>fb <cmd>Telescope buffers<cr>
 nnoremap <leader>fh <cmd>Telescope help_tags<cr>
-lua << EOF
-require('telescope').setup{
-  defaults = {
-    prompt_prefix = " ",
-    selection_caret = "❯ ",
-    path_display = { "truncate" },
-    selection_strategy = "reset",
-    sorting_strategy = "ascending",
-    layout_strategy = "horizontal",
-    layout_config = {
-      horizontal = {
-        prompt_position = "top",
-        preview_width = 0.55,
-        results_width = 0.8,
-      },
-      vertical = {
-        mirror = false,
-      },
-      width = 0.87,
-      height = 0.80,
-      preview_cutoff = 120,
-    },
-  }
-}
-EOF
 
 
 " ===
-" === akinsho/toggleterm.nvim
+" === akinsho/bufferline.nvim
 " ===
-
-lua << EOF
-require('toggleterm').setup{
-  size = 10,
-  open_mapping = [[<c-\>]],
-  shading_factor = 2,
-  direction = "float",
-  float_opts = {
-    border = "curved",
-    highlights = {
-      border = "Normal",
-      background = "Normal",
-    },
-  },
-}
-EOF
-
-set termguicolors
-lua << EOF
-require("bufferline").setup{
-options = {
-    offsets = {
-      { filetype = "NvimTree", text = "", padding = 1 },
-      { filetype = "neo-tree", text = "", padding = 1 },
-      { filetype = "Outline", text = "", padding = 1 },
-    },
-    max_name_length = 14,
-    max_prefix_length = 13,
-    tab_size = 20,
-    separator_style = "thin",
-  },
-}
-EOF
-
 nnoremap <c-n> :BufferLineCycleNext<CR>
 nnoremap <c-p> :BufferLineCyclePrev<CR>
 " nnoremap <leader>c :bdelete<CR>
@@ -1412,31 +1117,7 @@ nnoremap >b :BufferLineMoveNext<CR>
 nnoremap <b :BufferLineMovePrev<CR>
 
 
-" ===
-" === numToStr/Comment.nvim
-" ===
+
 lua << EOF
-require('Comment').setup(
-    {
-        toggler = {
-            line = '<leader>//',
-            block = 'gbc',
-        },
-        opleader = {
-            line = '<leader>/',
-            block = 'gb',
-        },
-        extra = {
-            above = 'gcO',
-            below = 'gco',
-            eol = 'gcA',
-        },
-        mappings = {
-            basic = true,
-            extra = true,
-        },
-        pre_hook = nil,
-        post_hook = nil,
-    }
-)
+require('init')
 EOF
