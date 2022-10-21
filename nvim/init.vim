@@ -10,9 +10,10 @@ Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'wellle/tmux-complete.vim'
 
 " File navigation
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+" Plug 'junegunn/fzf.vim'
 Plug 'nvim-neo-tree/neo-tree.nvim'
+Plug 'MunifTanjim/nui.nvim'
 "Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
 " ranger in neovim
 "Plug 'kevinhwang91/rnvimr'
@@ -59,7 +60,6 @@ Plug 'neoclide/jsonc.vim'
 Plug 'gko/vim-coloresque', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
 "Plug 'pangloss/vim-javascript', { 'for' :['javascript', 'vim-plug'] }
 Plug 'yuezk/vim-js', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
-"Plug 'posva/vim- vue'
 Plug 'mattn/emmet-vim'
 "Plug 'artur-shaik/vim-javacomplete2'
 
@@ -67,16 +67,9 @@ Plug 'mattn/emmet-vim'
 Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 "Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install_sync() }, 'for' :['markdown', 'vim-plug'] }
 Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
-Plug 'mzlogin/vim-markdown-toc', { 'for': ['gitignore', 'markdown', 'vim-plug'] }
 Plug 'dkarter/bullets.vim'
-Plug 'godlygeek/tabular' " type ;Tabularize /= to align the =
-"Plug 'plasticboy/vim-markdown'
 Plug 'tpope/vim-markdown'
-" <leader>tt 由于不知道如何修改快捷键，暂时不用
-Plug 'jkramer/vim-checkbox'
 Plug 'tenxsoydev/vim-markdown-checkswitch'
-"Plug 'gabrielelana/vim-markdown'
-"Plug 'vim-pandoc/vim-pandoc-syntax'
 "Plug 'vimwiki/vimwiki'
 
 " Bookmarks
@@ -86,10 +79,10 @@ Plug 'liuchengxu/vista.vim'
 " see the " paste and @ recored
 "Plug 'junegunn/vim-peekaboo'
 " display available keybindings in popup
-Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
+" Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 "Plug 'hecal3/vim-leader-guide'
 "Plug 'spinks/vim-leader-guide'
-"Plug 'folke/which-key.nvim'
+" Plug 'folke/which-key.nvim'
 
 " edit/show/move enhancement
 "Plug 'terryma/vim-multiple-cursors'
@@ -118,7 +111,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Git
 "Plug 'theniceboy/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
 "Plug 'fszymanski/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
-Plug 'theniceboy/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
+" Plug 'theniceboy/fz-gitignore', { 'do': ':UpdateRemotePlugins' }
 "Plug 'mhinz/vim-signify'
 Plug 'airblade/vim-gitgutter'
 Plug 'cohama/agit.vim'
@@ -162,7 +155,7 @@ Plug 'dhruvasagar/vim-open-url'
 
 " lsp
 "Plug 'williamboman/nvim-lsp-installer'
-Plug 'neovim/nvim-lspconfig'
+" Plug 'neovim/nvim-lspconfig'
 
 " A mroe adventurous wildmenu
 if has('nvim')
@@ -466,8 +459,8 @@ vmap <silent> ts <Plug>(coc-translator-pv)
 "endfunction
 "xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
 "nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
-nmap <Leader>e :CocCommand explorer<CR>
-nmap <D-1> :CocCommand explorer<CR>
+" nmap <Leader>e :CocCommand explorer<CR>
+" nmap <D-1> :CocCommand explorer<CR>
 "nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
 autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
 
@@ -935,7 +928,7 @@ let g:auto_save_silent = 1  " do not display the auto-save notification
 " ===
 " === vim-which-key
 " ===
-nnoremap <silent> <LEADER> :WhichKey '<Space>'<CR>
+" nnoremap <silent> <LEADER> :WhichKey '<Space>'<CR>
 "nnoremap <silent> <localleader> :WhichKey  ','<CR>
 " cp is for file configurations
 " let use of which key pattern
@@ -946,7 +939,7 @@ nnoremap <silent> <LEADER> :WhichKey '<Space>'<CR>
 "call which_key#register(' ', "g:which_key_map")
 "nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
 " By default timeoutlen is 1000 ms
-set timeoutlen=600
+" set timeoutlen=500
 
 "lua << EOF
 "  require("which-key").setup {
@@ -1078,7 +1071,7 @@ noremap F <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintD
 " ===
 " === mbpowers/nvimager
 " ===
-nmap <leader>qq <Plug>NvimagerToggle
+" nmap <leader>qq <Plug>NvimagerToggle
 "let g:nvimager#autostart = 0
 "let g:nvimager#title = 1
 "let g:nvimager#dynamic_scaler = 'fit_contain'
@@ -1095,15 +1088,6 @@ nmap <leader>qq <Plug>NvimagerToggle
     "auto_display = true -- WIP automatic markdown image display, may be prone to breaking
 "}
 "EOF
-
-" ===
-" === nvim-telescope/telescope.nvim
-" ===
-" Find files using Telescope command-line sugar.
-nnoremap <leader>ff <cmd>Telescope find_files<cr>
-nnoremap <leader>fg <cmd>Telescope live_grep<cr>
-nnoremap <leader>fb <cmd>Telescope buffers<cr>
-nnoremap <leader>fh <cmd>Telescope help_tags<cr>
 
 
 " ===
