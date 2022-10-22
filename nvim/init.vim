@@ -28,7 +28,7 @@ Plug 'airblade/vim-rooter'
 Plug 'mbbill/undotree'
 
 
-" Pretty Dress
+" Style
 Plug 'bpietravalle/vim-bolt'
 "Plug 'blueshirts/darcula'
 "Plug 'doums/darcula'
@@ -116,6 +116,7 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 Plug 'airblade/vim-gitgutter'
 Plug 'cohama/agit.vim'
 Plug 'tpope/vim-fugitive'
+Plug 'kdheepak/lazygit.nvim'
 
 " Snippets
 " Plug 'SirVer/ultisnips'
@@ -194,10 +195,6 @@ Plug 'andymass/vim-matchup'
 Plug 'posva/vim-vue'
 
 Plug 'ellisonleao/glow.nvim', {'branch': 'main'}
-
-"Plug 'mbpowers/nvimager'
-"Plug 'edluffy/hologram.nvim'
-"Plug 'heapslip/vimage.nvim'
 
 Plug 'jose-elias-alvarez/null-ls.nvim'
 
@@ -391,7 +388,6 @@ let g:coc_global_extensions = [
   \ 'coc-vetur',
   \ 'coc-eslint',
   \ 'coc-vimlsp',
-  \ 'coc-lua',
   \ 'coc-picgo',
   \ 'coc-yaml',
   \ 'coc-sh',
@@ -426,9 +422,9 @@ nmap <silent> [g <Plug>(coc-diagnostic-prev)
 nmap <silent> ]g <Plug>(coc-diagnostic-next)
 
 " GoTo code navigation.
-nmap <silent> gD <Plug>(coc-definition)
+nmap <silent> gd <Plug>(coc-definition)
 "nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gd <Plug>(coc-implementation)
+nmap <silent> gD <Plug>(coc-implementation)
 "nmap <silent> gr <Plug>(coc-references)
 
 " Use K to show documentation in preview window.
@@ -657,8 +653,14 @@ endfunc
 
 
 " Open up lazygit
-noremap \g :Git
-noremap <leader>gg :tabe<CR>:-tabmove<CR>:term lazygit<CR>
+" noremap \g :Git
+" noremap <leader>gg :tabe<CR>:-tabmove<CR>:term lazygit<CR>
+let g:lazygit_floating_window_winblend = 0 " transparency of floating window
+let g:lazygit_floating_window_scaling_factor = 0.9 " scaling factor for floating window
+let g:lazygit_floating_window_corner_chars = ['╭', '╮', '╰', '╯'] " customize lazygit popup window corner characters
+let g:lazygit_floating_window_use_plenary = 0 " use plenary.nvim to manage floating window if available
+let g:lazygit_use_neovim_remote = 1 " fallback to 0 if neovim-remote is not installed
+nnoremap <silent> <leader>gg :LazyGit<CR>
 " ==
 " == airblade/vim-gitgutter
 " ==
@@ -1058,36 +1060,6 @@ noremap ;k <cmd>HopLineBC<cr>
 noremap ;j <cmd>HopLineAC<cr>
 noremap f <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true })<cr>
 noremap F <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true })<cr>
-
-" ===
-" === 'artur-shaik/vim-javacomplete2
-" ===
-"autocmd FileType java setlocal omnifunc=javacomplete#Complete
-
-" ===
-" ===  ellisonleao/glow.nvim
-" ===
-
-" ===
-" === mbpowers/nvimager
-" ===
-" nmap <leader>qq <Plug>NvimagerToggle
-"let g:nvimager#autostart = 0
-"let g:nvimager#title = 1
-"let g:nvimager#dynamic_scaler = 'fit_contain'
-"let g:nvimager#static_scaler = 'forced_cover'
-
-
-
-
-" ===
-" === edluffy/hologram.nvim
-" ===
-"lua <<EOF
-"require('hologram').setup{
-    "auto_display = true -- WIP automatic markdown image display, may be prone to breaking
-"}
-"EOF
 
 
 " ===
