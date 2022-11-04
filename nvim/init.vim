@@ -9,20 +9,10 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'wellle/tmux-complete.vim'
 
-" File navigation
-" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-" Plug 'junegunn/fzf.vim'
 Plug 'nvim-neo-tree/neo-tree.nvim'
 Plug 'MunifTanjim/nui.nvim'
-"Plug 'Yggdroot/LeaderF', { 'do': './install.sh' }
-" ranger in neovim
-"Plug 'kevinhwang91/rnvimr'
 Plug 'airblade/vim-rooter'
 "Plug 'pechorin/any-jump.vim'
-
-" 首屏
-"Plug 'glepnir/dashboard-nvim'
-"Plug 'liuchengxu/vim-clap'
 
 " Undo Tree
 Plug 'mbbill/undotree'
@@ -36,11 +26,9 @@ Plug 'bpietravalle/vim-bolt'
 Plug 'ellisonleao/gruvbox.nvim'
 "Plug 'ful1e5/onedark.nvim'
 Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-"Plug 'catppuccin/nvim', {'as': 'catppuccin', 'branch': 'dev-remaster'}
 Plug 'ryanoasis/vim-devicons'
 Plug 'joshdick/onedark.vim'
 " Status line
-"Plug 'theniceboy/eleline.vim'
 "Plug 'ojroques/vim-scrollstatus'
 "Plug 'glepnir/spaceline.vim'
 "Plug 'vim-airline/vim-airline'
@@ -74,10 +62,9 @@ Plug 'tenxsoydev/vim-markdown-checkswitch'
 
 " Bookmarks
 Plug 'kshenoy/vim-signature'
-" Taglist
 Plug 'liuchengxu/vista.vim'
 " see the " paste and @ recored
-"Plug 'junegunn/vim-peekaboo'
+Plug 'junegunn/vim-peekaboo'
 " display available keybindings in popup
 " Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 "Plug 'hecal3/vim-leader-guide'
@@ -109,13 +96,9 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 "Plug 'nvim-treesitter/playground'
 
 " Git
-"Plug 'theniceboy/vim-gitignore', { 'for': ['gitignore', 'vim-plug'] }
-"Plug 'fszymanski/fzf-gitignore', { 'do': ':UpdateRemotePlugins' }
-" Plug 'theniceboy/fz-gitignore', { 'do': ':UpdateRemotePlugins' }
-"Plug 'mhinz/vim-signify'
 Plug 'airblade/vim-gitgutter'
-Plug 'cohama/agit.vim'
-Plug 'tpope/vim-fugitive'
+" Plug 'cohama/agit.vim'
+" Plug 'tpope/vim-fugitive'
 Plug 'kdheepak/lazygit.nvim'
 
 " Snippets
@@ -143,10 +126,6 @@ Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 
 " github ai coding complete
 "Plug 'github/copilot.vim'
-
-" database
-"Plug 'tpope/vim-dadbod'
-"Plug 'kristijanhusak/vim-dadbod-ui'
 
 " gB open url in the default
 " g<cr> search word under cursor using default search engine
@@ -244,122 +223,7 @@ colorscheme onedark
 "set background=dark " or light if you want light mode
 colorscheme gruvbox
 
-" ===
-" === catppuccin
-" ===
-"lua << EOF
-"require('config')
-"EOF
-"colorscheme catppuccin
 
-"" ===
-"" === NERDTree
-"" ===
-"map ff :NERDTreeToggle<CR>
-""let NERDTreeMapOpenExpl = ""
-""let NERDTreeMapUpdir = ""
-"let NERDTreeMapUpdirKeepOpen = ""
-""let NERDTreeMapOpenSplit = ""
-""let NERDTreeOpenVSplit = ""
-"let NERDTreeMapActivateNode = "l"
-"let NERDTreeMapOpenInTab = ""
-"let NERDTreeMapPreview = ""
-"let NERDTreeMapCloseDir = "h"
-"let NERDTreeMapChangeRoot = "y"
-
-
-"" ==
-"" == NERDTree-git
-"" ==
-"let g:NERDTreeIndicatorMapCustom = {
-"    \ "Modified"  : "✹",
-"    \ "Staged"    : "✚",
-"    \ "Untracked" : "✭",
-"    \ "Renamed"   : "➜",
-"    \ "Unmerged"  : "═",
-"    \ "Deleted"   : "✖",
-"    \ "Dirty"     : "✗",
-"    \ "Clean"     : "✔︎",
-"    \ "Unknown"   : "?"
-"    \ }
-" ===
-" === Leaderf
-" ===
-"let g:Lf_WindowPosition = 'popup'
-""nnoremap <c-p> :Leaderf file<CR>
-""nnoremap <leader>r :Leaderf mru<CR>
-"let g:Lf_PreviewInPopup = 1
-"let g:Lf_PreviewCode = 1
-"let g:Lf_ShowHidden = 1
-"let g:Lf_ShowDevIcons = 1
-"let g:Lf_UseVersionControlTool = 0
-"let g:Lf_IgnoreCurrentBufferName = 1
-"let g:Lf_WildIgnore = {
-        "\ 'dir': ['.git', 'vendor', 'node_modules'],
-        "\ 'file': ['__vim_project_root']
-        "\}
-"let g:Lf_UseMemoryCache = 0
-"let g:Lf_UseCache = 0
-
-" ===
-" === FZF
-" ===
-function! s:get_git_root()
-  let root = split(system('git rev-parse --show-toplevel'), '\n')[0]
-  return v:shell_error ? '.' : root
-endfunction
-
-set rtp+=/usr/local/bin/fzf
-""set rtp+=/home/linuxbrew/.linuxbrew/opt/fzf
-""set rtp+=/home/david/.linuxbrew/opt/fzf
-"noremap <silent> <C-f> :Files<CR>
-"map <expr> <C-f> fugitive#head() != '' ? ':GFiles --cached --others --exclude-standard<CR>' : ':Files .<CR>'
-"noremap <silent> <C-f> :Rg<CR>
-"noremap <silent> <C-h> :History<CR>
-"noremap <C-t> :BTags<CR>
-"noremap <silent> <C-l> :Lines<CR>
-"noremap <silent> <leader>f :Files<CR>
-"noremap <silent> <C-f> :Files<CR>
-noremap <leader>; :History:<cr>
-"noremap <leader>F :Rg<cr>
-"noremap <leader>b :Buffers<CR>
-noremap <leader>r :History<CR>
-
-let g:fzf_preview_window = 'right:60%'
-let g:fzf_commits_log_options = '--graph --color=always --format="%C(auto)%h%d %s %C(black)%C(bold)%cr"'
-
-function! s:list_buffers()
-  redir => list
-  silent ls
-  redir END
-  return split(list, "\n")
-endfunction
-
-function! s:delete_buffers(lines)
-  execute 'bwipeout' join(map(a:lines, {_, line -> split(line)[0]}))
-endfunction
-
-command! -bang -nargs=* GGrep
-  \ call fzf#vim#grep(
-  \   'git grep --line-number -- '.shellescape(<q-args>), 0,
-  \   fzf#vim#with_preview({'dir': systemlist('git rev-parse --show-toplevel')[0]}), <bang>0)
-
-"command! -bang -nargs=* Rg
-  "\ call fzf#vim#grep(
-  "\   'rg --column --line-number --no-heading --color=always --smart-case '.shellescape(<q-args>), 1,
-  "\   <bang>0 ? fzf#vim#with_preview('up:60%')
-  "\           : fzf#vim#with_preview('right:60%:hidden', '?'),
-  "\   <bang>0)
-
-"command! BD call fzf#run(fzf#wrap({
-  "\ 'source': s:list_buffers(),
-  "\ 'sink*': { lines -> s:delete_buffers(lines) },
-  "\ 'options': '--multi --reverse --bind ctrl-a:select-all+accept'
-"\ }))
-"
-"noremap <c-d> :BD<CR>
-
-let g:fzf_layout = { 'window': { 'width': 0.9, 'height': 0.8 } }
 
 " ===
 " === coc.nvim
@@ -474,12 +338,6 @@ nmap <space>el <Cmd>CocList explPresets<CR>
 nnoremap <leader>tn :CocCommand todolist.create<CR>
 nnoremap <leader>tl :CocList todolist<CR>
 nnoremap <leader>tu :CocCommand todolist.download<CR>:CocCommand todolist.upload<CR>
-
-" ===
-" === Taglist
-" ===
-map <silent> T :TagbarOpenAutoClose<CR>
-
 
 " ===
 " === vim-instant-markdown
@@ -626,8 +484,8 @@ let g:python_highlight_all = 1
         "\ 'ListLocalMarks'     :  "m/",
         "\ 'ListLocalMarkers'   :  "m?"
         "\ }
-map gm ]'
-map gM ['
+map gm ]`
+map gM [`
 map shm :help Signature<CR>
 nnoremap 'A 'Azz
 nnoremap 'S 'Szz
@@ -869,24 +727,6 @@ function! s:MdCodeBlockTextObj(type) abort
   execute 'normal! `<V`>'
 endfunction
 
-" ===
-" === dashboard
-" ===
-"let g:mapleader="\<Space>"
-"let g:dashboard_default_executive ='fzf'
-"nmap <Leader>ss :<C-u>SessionSave<CR>
-"nmap <Leader>sl :<C-u>SessionLoad<CR>
-"nnoremap <silent> <Leader>fh :DashboardFindHistory<CR>
-"nnoremap <silent> <Leader>ff :DashboardFindFile<CR>
-"nnoremap <silent> <Leader>tc :DashboardChangeColorscheme<CR>
-"nnoremap <silent> <Leader>fa :DashboardFindWord<CR>
-"nnoremap <silent> <Leader>fb :DashboardJumpMark<CR>
-"nnoremap <silent> <Leader>cn :DashboardNewFile<CR>
-
-" ===
-" === eleline.vim
-" ===
-let g:airline_powerline_fonts = 0
 
 " ===
 " === vim-illuminate
@@ -896,7 +736,6 @@ hi illuminatedWord cterm=undercurl gui=undercurl
 
 " ===
 " === Vista.vim
-" === taglist
 " ===
 noremap <LEADER>v :Vista!!<CR>
 noremap <leader>o :silent! Vista finder coc<CR>
