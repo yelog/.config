@@ -186,8 +186,8 @@ cnoremap <C-p> <Up>
 "cnoremap <C-n> <Down>
 "cnoremap <C-b> <Left>
 "cnoremap <C-f> <Right>
-cnoremap <M-b> <S-Left>
-cnoremap <M-w> <S-Right>
+" cnoremap <M-b> <S-Left>
+" cnoremap <M-w> <S-Right>
 
 " find and replace
 noremap \s :%s//gc<left><left><left>

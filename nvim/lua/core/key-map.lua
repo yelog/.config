@@ -11,5 +11,11 @@ maps.n["<leader>fb"] = { function() require("telescope.builtin").buffers() end, 
 maps.n["<leader>ft"] = { function() require("telescope.builtin").help_tags() end, desc = "Search tags" }
 maps.n["<leader>fm"] = { function() require("telescope.builtin").marks() end, desc = "Search marks" }
 
+-- neo-tree
+-- maps.n["<leader>e"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }
+maps.n["<leader>e"] = { "<cmd>Neotree toggle<cr>", desc = "Toggle Explorer" }
+maps.n["<M-1>"] = { "<cmd>Neotree toggle<cr>", desc = "Toggle Explorer" }
+maps.n["<leader>o"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" }
+
 
 my.set_mappings(maps)
