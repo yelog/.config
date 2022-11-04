@@ -1062,18 +1062,6 @@ noremap f <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintD
 noremap F <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true })<cr>
 
 
-" ===
-" === akinsho/bufferline.nvim
-" ===
-nnoremap <c-n> :BufferLineCycleNext<CR>
-nnoremap <c-p> :BufferLineCyclePrev<CR>
-" nnoremap <leader>c :bdelete<CR>
-nnoremap <c-q> :bdelete<CR>
-nnoremap >b :BufferLineMoveNext<CR>
-nnoremap <b :BufferLineMovePrev<CR>
-
-
-
 lua << EOF
 require('init')
 EOF
