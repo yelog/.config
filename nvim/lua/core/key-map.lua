@@ -4,7 +4,7 @@ local maps = { i = {}, n = {}, v = {}, t = {}, [""] = {} }
 
 maps[""]["<Space>"] = "<Nop>"
 -- Base
-maps.n["<leader>qq"] = { "<cmd>qa<cr>", desc = "Quit" }
+maps.n["<leader>q"] = { "<cmd>wqa<cr>", desc = "Quit" }
 
 -- Telescope
 maps.n["<leader>ff"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }

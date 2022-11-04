@@ -9,17 +9,15 @@ call plug#begin('~/.config/nvim/plugged')
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'wellle/tmux-complete.vim'
 
+" window
 Plug 'nvim-neo-tree/neo-tree.nvim'
-Plug 'MunifTanjim/nui.nvim'
-Plug 'airblade/vim-rooter'
-"Plug 'pechorin/any-jump.vim'
-
-" Undo Tree
 Plug 'mbbill/undotree'
-
+Plug 'MunifTanjim/nui.nvim'
+Plug 'nvim-lua/plenary.nvim'
+Plug 'nvim-telescope/telescope.nvim'
 
 " Style
-Plug 'bpietravalle/vim-bolt'
+" Plug 'bpietravalle/vim-bolt'
 "Plug 'blueshirts/darcula'
 "Plug 'doums/darcula'
 "Plug 'theniceboy/nvim-deus'
@@ -73,7 +71,7 @@ Plug 'junegunn/vim-peekaboo'
 
 " edit/show/move enhancement
 "Plug 'terryma/vim-multiple-cursors'
-Plug 'dstein64/vim-startuptime'
+" Plug 'dstein64/vim-startuptime'
 Plug 'tpope/vim-repeat'
 Plug 'itchyny/vim-cursorword'
 Plug 'tpope/vim-speeddating'
@@ -158,9 +156,8 @@ endif
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
 " sessoin manager
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
 Plug 'rmagatti/auto-session'
+Plug 'airblade/vim-rooter'
 "Plug 'rmagatti/session-lens'
 
 " open file with lineNumber and columnNumber
@@ -897,8 +894,8 @@ noremap ;l <cmd>HopWordCurrentLineAC<cr>
 noremap ;h <cmd>HopWordCurrentLineBC<cr>
 noremap ;k <cmd>HopLineBC<cr>
 noremap ;j <cmd>HopLineAC<cr>
-noremap f <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true })<cr>
-noremap F <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true })<cr>
+" noremap f <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true })<cr>
+" noremap F <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true })<cr>
 
 
 lua << EOF
