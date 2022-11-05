@@ -119,24 +119,24 @@ map R :source ~/.config/nvim/init.vim<CR> :nohlsearch<CR>
 " Ctrl + U or E will move up/down the view port without moving the cursor
 noremap <C-U> 5<C-y>
 noremap <C-D> 5<C-e>
-nnoremap <leader>" viw<esc>a"<esc>hbi"<esc>lel
-nnoremap <leader>' viw<esc>a'<esc>hbi'<esc>lel
-nnoremap <leader>` viw<esc>a`<esc>hbi`<esc>lel
-nnoremap <leader>{ viw<esc>a}<esc>hbi{<esc>lel
-nnoremap <leader>} viw<esc>a}<esc>hbi{<esc>lel
-nnoremap <leader>[ viw<esc>a]<esc>hbi[<esc>lel
-nnoremap <leader>] viw<esc>a]<esc>hbi[<esc>lel
-nnoremap <leader>( viw<esc>a)<esc>hbi(<esc>lel
-nnoremap <leader>) viw<esc>a)<esc>hbi(<esc>lel
-vnoremap <leader>" xi""<esc>hp
-vnoremap <leader>' xi''<esc>hp
-vnoremap <leader>` xi``<esc>hp
-vnoremap <leader>{ xi{}<esc>hp
-vnoremap <leader>} xi{}<esc>hp
-vnoremap <leader>[ xi[]<esc>hp
-vnoremap <leader>] xi[]<esc>hp
-vnoremap <leader>) xi()<esc>hp
-vnoremap <leader>( xi()<esc>hp
+nnoremap <leader>i" viw<esc>a"<esc>hbi"<esc>lel
+nnoremap <leader>i' viw<esc>a'<esc>hbi'<esc>lel
+nnoremap <leader>i` viw<esc>a`<esc>hbi`<esc>lel
+nnoremap <leader>i{ viw<esc>a}<esc>hbi{<esc>lel
+nnoremap <leader>i} viw<esc>a}<esc>hbi{<esc>lel
+nnoremap <leader>i[ viw<esc>a]<esc>hbi[<esc>lel
+nnoremap <leader>i] viw<esc>a]<esc>hbi[<esc>lel
+nnoremap <leader>i( viw<esc>a)<esc>hbi(<esc>lel
+nnoremap <leader>i) viw<esc>a)<esc>hbi(<esc>lel
+vnoremap <leader>i" xi""<esc>hp
+vnoremap <leader>i' xi''<esc>hp
+vnoremap <leader>i` xi``<esc>hp
+vnoremap <leader>i{ xi{}<esc>hp
+vnoremap <leader>i} xi{}<esc>hp
+vnoremap <leader>i[ xi[]<esc>hp
+vnoremap <leader>i] xi[]<esc>hp
+vnoremap <leader>i) xi()<esc>hp
+vnoremap <leader>i( xi()<esc>hp
 
 " 0 toggle ^ or 0
 noremap  <expr>0     col('.') == 1 ? '^': '0'

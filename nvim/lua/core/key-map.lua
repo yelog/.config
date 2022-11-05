@@ -5,12 +5,19 @@ local maps = { i = {}, n = {}, v = {}, t = {}, [""] = {} }
 maps[""]["<Space>"] = "<Nop>"
 
 -- Base
-maps.n["Q"] = { "<cmd>wqa<cr>", desc = "Quit" }
+maps.n["Q"] = { "<cmd>w<cr><cmd>qa<cr>", desc = "Quit" }
+
+-- vim-plug
+maps.n["<leader>pi"] = { "<cmd>PlugInstall<cr>", desc = "plug install" }
+maps.n["<leader>pc"] = { "<cmd>PlugClean<cr>", desc = "plug clean" }
+maps.n["<leader>pu"] = { "<cmd>PlugUpdate<cr>", desc = "plug update" }
+
 
 -- Telescope
 maps.n["<leader>ff"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }
 maps.n["<leader>fb"] = { function() require("telescope.builtin").buffers() end, desc = "Search buffers" }
 maps.n["<leader>fr"] = { function() require("telescope.builtin").lsp_references() end, desc = "Search references" }
+maps.n["<leader>fk"] = { function() require("telescope.builtin").keymaps() end, desc = "Search keymap" }
 maps.n["<leader>ft"] = { function() require("telescope.builtin").help_tags() end, desc = "Search tags" }
 maps.n["<leader>fm"] = { function() require("telescope.builtin").marks() end, desc = "Search marks" }
 maps.n["<leader>fh"] = { function() require("telescope.builtin").oldfiles() end, desc = "Search hisotry" }

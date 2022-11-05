@@ -59,7 +59,7 @@ Plug 'junegunn/vim-peekaboo'
 " Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
 "Plug 'hecal3/vim-leader-guide'
 "Plug 'spinks/vim-leader-guide'
-" Plug 'folke/which-key.nvim'
+Plug 'folke/which-key.nvim'
 
 " edit/show/move enhancement
 "Plug 'terryma/vim-multiple-cursors'
@@ -93,6 +93,7 @@ Plug 'ybian/smartim'
 " autosave
 Plug '907th/vim-auto-save'
 
+" Find And Replace Vim plugin
 Plug 'brooth/far.vim'
 
 " float term
