@@ -22,10 +22,10 @@ Plug 'nvim-telescope/telescope.nvim'
 "Plug 'doums/darcula'
 "Plug 'theniceboy/nvim-deus'
 Plug 'ellisonleao/gruvbox.nvim'
-"Plug 'ful1e5/onedark.nvim'
-Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
+" Plug 'ful1e5/onedark.nvim'
+" Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
 Plug 'ryanoasis/vim-devicons'
-Plug 'joshdick/onedark.vim'
+" Plug 'joshdick/onedark.vim'
 " Status line
 "Plug 'ojroques/vim-scrollstatus'
 "Plug 'glepnir/spaceline.vim'
@@ -35,19 +35,11 @@ Plug 'nvim-lualine/lualine.nvim'
 Plug 'kyazdani42/nvim-web-devicons'
 Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 
-" General Highlighter
+" show color by color code
 Plug 'RRethy/vim-hexokinase', { 'do': 'make hexokinase' }
+" automatically highlighting other uses of the word under the cursor
 Plug 'RRethy/vim-illuminate'
-
-" highlight
-" HTML, CSS, JavaScript, PHP, JSON, etc.
-Plug 'elzr/vim-json'
-Plug 'neoclide/jsonc.vim'
-Plug 'gko/vim-coloresque', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
-"Plug 'pangloss/vim-javascript', { 'for' :['javascript', 'vim-plug'] }
-Plug 'yuezk/vim-js', { 'for': ['vim-plug', 'php', 'html', 'javascript', 'css', 'less'] }
-Plug 'mattn/emmet-vim'
-"Plug 'artur-shaik/vim-javacomplete2'
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Markdown
 Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
@@ -84,8 +76,6 @@ Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or 
 Plug 'numToStr/Comment.nvim'
 Plug 'phaazon/hop.nvim'
 
-" Treesitter
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Git
 Plug 'airblade/vim-gitgutter'
@@ -186,7 +176,7 @@ call plug#end()
 "colorscheme snazzy
 "let g:SnazzyTransparent = 1
 
-colorscheme onedark
+" colorscheme onedark
 
 "let g:tokyonight_style = "night"
 "let g:tokyonight_italic_functions = 1
