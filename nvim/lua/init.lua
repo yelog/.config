@@ -1,4 +1,9 @@
 require('utils')
+require('utils.plugins')
+
+require('core.key-map')
+
+require('config.colorscheme')
 require('config.comment')
 -- require('config.toggleterm')
 require('config.bufferline')
@@ -9,5 +14,6 @@ require('config.wilder')
 -- require('config.null-ls')
 require('config.neo-tree')
 require('config.which-key')
-require('core.key-map')
-require('core.key-map')
+require('config.markdown')
+require('config.bullets')
+

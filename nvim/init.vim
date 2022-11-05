@@ -6,49 +6,39 @@ call plug#begin('~/.config/nvim/plugged')
 
 
 " Auto Complete
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'wellle/tmux-complete.vim'
-Plug 'folke/neodev.nvim'
-
-" window
-Plug 'nvim-neo-tree/neo-tree.nvim'
-Plug 'MunifTanjim/nui.nvim'
-Plug 'mbbill/undotree'
-Plug 'nvim-lua/plenary.nvim'
-Plug 'nvim-telescope/telescope.nvim'
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Style
 " Plug 'bpietravalle/vim-bolt'
 "Plug 'blueshirts/darcula'
 "Plug 'doums/darcula'
 "Plug 'theniceboy/nvim-deus'
-Plug 'ellisonleao/gruvbox.nvim'
+" Plug 'ellisonleao/gruvbox.nvim'
 " Plug 'ful1e5/onedark.nvim'
 " Plug 'folke/tokyonight.nvim', { 'branch': 'main' }
-Plug 'ryanoasis/vim-devicons'
+" Plug 'ryanoasis/vim-devicons'
 " Plug 'joshdick/onedark.vim'
 " Status line
 "Plug 'ojroques/vim-scrollstatus'
 "Plug 'glepnir/spaceline.vim'
 "Plug 'vim-airline/vim-airline'
-Plug 'nvim-lualine/lualine.nvim'
+" Plug 'nvim-lualine/lualine.nvim'
 " If you want to have icons in your statusline choose one of these
-Plug 'kyazdani42/nvim-web-devicons'
-Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
+" Plug 'akinsho/bufferline.nvim', { 'tag': 'v2.*' }
 
 " show color by color code
-Plug 'RRethy/vim-hexokinase', { 'do': 'make hexokinase' }
+" Plug 'RRethy/vim-hexokinase', { 'do': 'make hexokinase' }
 " automatically highlighting other uses of the word under the cursor
-Plug 'RRethy/vim-illuminate'
-Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+" Plug 'RRethy/vim-illuminate'
+" Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Markdown
-Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
+" Plug 'suan/vim-instant-markdown', {'for': 'markdown'}
 "Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install_sync() }, 'for' :['markdown', 'vim-plug'] }
-Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
-Plug 'dkarter/bullets.vim'
-Plug 'tpope/vim-markdown'
-Plug 'tenxsoydev/vim-markdown-checkswitch'
+" Plug 'dhruvasagar/vim-table-mode', { 'on': 'TableModeToggle' }
+" Plug 'dkarter/bullets.vim'
+" Plug 'tpope/vim-markdown'
+" Plug 'tenxsoydev/vim-markdown-checkswitch'
 "Plug 'vimwiki/vimwiki'
 
 " Bookmarks
@@ -180,185 +170,161 @@ call plug#end()
 "colorscheme tokyonight
 
 "set background=dark " or light if you want light mode
-colorscheme gruvbox
+" colorscheme gruvbox
 
 
 
-" ===
-" === coc.nvim
-" ===
-let g:coc_global_extensions = [
-    \ 'coc-actions',
-  \ 'coc-css',
-  \ 'coc-java',
-  \ 'coc-diagnostic',
-  \ 'coc-explorer',
-  \ 'coc-gitignore',
-  \ 'coc-html',
-  \ 'coc-vue',
-  \ 'coc-json',
-  \ 'coc-lists',
-  \ 'coc-prettier',
-  \ 'coc-python',
-  \ 'coc-snippets',
-  \ 'coc-sourcekit',
-  \ 'coc-syntax',
-  \ 'coc-tasks',
-  \ 'coc-todolist',
-  \ 'coc-translator',
-  \ 'coc-tslint-plugin',
-  \ 'coc-tsserver',
-  \ 'coc-vetur',
-  \ 'coc-eslint',
-  \ 'coc-vimlsp',
-  \ 'coc-picgo',
-  \ 'coc-yaml',
-  \ 'coc-sh',
-  \ 'coc-db',
-  \ 'coc-sumneko-lua',
-  \ 'coc-yank']
-
-" Use tab for trigger completion with characters ahead and navigate.
-" NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
-" other plugin before putting this into your config.
-"inoremap <silent><expr> <TAB>
-      "\ pumvisible() ? "\<C-n>" :
-      "\ <SID>check_back_space() ? "\<TAB>" :
-      "\ coc#refresh()
-"inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-"function! s:check_back_space() abort
-  "let col = col('.') - 1
-  "return !col || getline('.')[col - 1]  =~# '\s'
-"endfunction
-
-" Use <c-space> to trigger completion.
-" inoremap <silent><expr> <c-space> coc#refresh()
-
-" Make <CR> auto-select the first completion item and notify coc.nvim to
-" format on enter, <cr> could be remapped by other vim plugin
-" inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-"                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-
-" Use `[g` and `]g` to navigate diagnostics
-" Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" GoTo code navigation.
-nmap <silent> gd <Plug>(coc-definition)
-"nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gD <Plug>(coc-implementation)
-"nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window.
-nnoremap sd :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (coc#rpc#ready())
-    call CocActionAsync('doHover')
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
-" Formatting selected code.
-xmap <leader>fm  <Plug>(coc-format-selected)
-"nmap <leader>f  ggVG<Plug>(coc-format-selected)
-
-" Symbol renaming.
-"nmap <leader>rn <Plug>(coc-rename)
-nmap ts <Plug>(coc-translator-p)
-vmap <silent> ts <Plug>(coc-translator-pv)
-
-" Remap for do codeAction of selected region
-"function! s:cocActionsOpenFromSelected(type) abort
-"  execute 'CocCommand actions.open ' . a:type
-"endfunction
-"xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
-"nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
-" nmap <Leader>e :CocCommand explorer<CR>
-" nmap <D-1> :CocCommand explorer<CR>
-"nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
-autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
-
-" Use preset argument to open it
-nmap <space>ed <Cmd>CocCommand explorer --preset .vim<CR>
-nmap <space>ef <Cmd>CocCommand explorer --preset floating<CR>
-nmap <space>ec <Cmd>CocCommand explorer --preset cocConfig<CR>
-nmap <space>eb <Cmd>CocCommand explorer --preset buffer<CR>
-
-" List all presets
-nmap <space>el <Cmd>CocList explPresets<CR>
-
-"nnoremap <c-c> :CocCommand<CR>
-" coctodolist
-nnoremap <leader>tn :CocCommand todolist.create<CR>
-nnoremap <leader>tl :CocList todolist<CR>
-nnoremap <leader>tu :CocCommand todolist.download<CR>:CocCommand todolist.upload<CR>
+" " ===
+" " === coc.nvim
+" " ===
+" let g:coc_global_extensions = [
+"     \ 'coc-actions',
+"   \ 'coc-css',
+"   \ 'coc-java',
+"   \ 'coc-diagnostic',
+"   \ 'coc-explorer',
+"   \ 'coc-gitignore',
+"   \ 'coc-html',
+"   \ 'coc-vue',
+"   \ 'coc-json',
+"   \ 'coc-lists',
+"   \ 'coc-prettier',
+"   \ 'coc-python',
+"   \ 'coc-snippets',
+"   \ 'coc-sourcekit',
+"   \ 'coc-syntax',
+"   \ 'coc-tasks',
+"   \ 'coc-todolist',
+"   \ 'coc-translator',
+"   \ 'coc-tslint-plugin',
+"   \ 'coc-tsserver',
+"   \ 'coc-vetur',
+"   \ 'coc-eslint',
+"   \ 'coc-vimlsp',
+"   \ 'coc-picgo',
+"   \ 'coc-yaml',
+"   \ 'coc-sh',
+"   \ 'coc-db',
+"   \ 'coc-sumneko-lua',
+"   \ 'coc-yank']
+"
+" " Use tab for trigger completion with characters ahead and navigate.
+" " NOTE: Use command ':verbose imap <tab>' to make sure tab is not mapped by
+" " other plugin before putting this into your config.
+" "inoremap <silent><expr> <TAB>
+"       "\ pumvisible() ? "\<C-n>" :
+"       "\ <SID>check_back_space() ? "\<TAB>" :
+"       "\ coc#refresh()
+" "inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+"
+" "function! s:check_back_space() abort
+"   "let col = col('.') - 1
+"   "return !col || getline('.')[col - 1]  =~# '\s'
+" "endfunction
+"
+" " Use <c-space> to trigger completion.
+" " inoremap <silent><expr> <c-space> coc#refresh()
+"
+" " Make <CR> auto-select the first completion item and notify coc.nvim to
+" " format on enter, <cr> could be remapped by other vim plugin
+" " inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+" "                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+"
+" " Use `[g` and `]g` to navigate diagnostics
+" " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.
+" nmap <silent> [g <Plug>(coc-diagnostic-prev)
+" nmap <silent> ]g <Plug>(coc-diagnostic-next)
+"
+" " GoTo code navigation.
+" nmap <silent> gd <Plug>(coc-definition)
+" "nmap <silent> gy <Plug>(coc-type-definition)
+" nmap <silent> gD <Plug>(coc-implementation)
+" "nmap <silent> gr <Plug>(coc-references)
+"
+" " Use K to show documentation in preview window.
+" nnoremap sd :call <SID>show_documentation()<CR>
+"
+" function! s:show_documentation()
+"   if (index(['vim','help'], &filetype) >= 0)
+"     execute 'h '.expand('<cword>')
+"   elseif (coc#rpc#ready())
+"     call CocActionAsync('doHover')
+"   else
+"     execute '!' . &keywordprg . " " . expand('<cword>')
+"   endif
+" endfunction
+"
+" " Formatting selected code.
+" xmap <leader>fm  <Plug>(coc-format-selected)
+" "nmap <leader>f  ggVG<Plug>(coc-format-selected)
+"
+" " Symbol renaming.
+" "nmap <leader>rn <Plug>(coc-rename)
+" nmap ts <Plug>(coc-translator-p)
+" vmap <silent> ts <Plug>(coc-translator-pv)
+"
+" " Remap for do codeAction of selected region
+" "function! s:cocActionsOpenFromSelected(type) abort
+" "  execute 'CocCommand actions.open ' . a:type
+" "endfunction
+" "xmap <silent> <leader>a :<C-u>execute 'CocCommand actions.open ' . visualmode()<CR>
+" "nmap <silent> <leader>a :<C-u>set operatorfunc=<SID>cocActionsOpenFromSelected<CR>g@
+" " nmap <Leader>e :CocCommand explorer<CR>
+" " nmap <D-1> :CocCommand explorer<CR>
+" "nmap <Leader>er <Cmd>call CocAction('runCommand', 'explorer.doAction', 'closest', ['reveal:0'], [['relative', 0, 'file']])<CR>
+" autocmd BufEnter * if (winnr("$") == 1 && &filetype == 'coc-explorer') | q | endif
+"
+" " Use preset argument to open it
+" nmap <space>ed <Cmd>CocCommand explorer --preset .vim<CR>
+" nmap <space>ef <Cmd>CocCommand explorer --preset floating<CR>
+" nmap <space>ec <Cmd>CocCommand explorer --preset cocConfig<CR>
+" nmap <space>eb <Cmd>CocCommand explorer --preset buffer<CR>
+"
+" " List all presets
+" nmap <space>el <Cmd>CocList explPresets<CR>
+"
+" "nnoremap <c-c> :CocCommand<CR>
+" " coctodolist
+" nnoremap <leader>tn :CocCommand todolist.create<CR>
+" nnoremap <leader>tl :CocList todolist<CR>
+" nnoremap <leader>tu :CocCommand todolist.download<CR>:CocCommand todolist.upload<CR>
 
 " ===
 " === vim-instant-markdown
 " ===
-let g:instant_markdown_slow = 0
-let g:instant_markdown_autostart = 0
+" let g:instant_markdown_slow = 0
+" let g:instant_markdown_autostart = 0
 " let g:instant_markdown_open_to_the_world = 1
 " let g:instant_markdown_allow_unsafe_content = 1
 " let g:instant_markdown_allow_external_content = 0
 " let g:instant_markdown_mathjax = 1
-let g:instant_markdown_autoscroll = 1
+" let g:instant_markdown_autoscroll = 1
 
 " ===
 " === Bullets.vim
 " ===
 " let g:bullets_set_mappings = 0
-let g:bullets_enabled_file_types = [
-  \ 'markdown',
-  \ 'text',
-  \ 'gitcommit',
-  \ 'scratch'
-  \]
-
-" ===
-" === vim-markdown-toc
-" ===
-"let g:vmt_auto_update_on_save = 0
-"let g:vmt_dont_insert_fence = 1
-let g:vmt_cycle_list_item_markers = 1
-let g:vmt_fence_text = 'TOC'
-let g:vmt_fence_closing_text = '/TOC'
-
-" coc-snippets
-"imap <C-h> <Plug>(coc-snippets-expand)
-"vmap <C-l> <Plug>(coc-snippets-select)
-"let g:coc_snippet_next = '<c-l>'
-"let g:coc_snippet_prev = '<c-h>'
-"imap <C-l> <Plug>(coc-snippets-expand-jump)
-let g:snips_author = 'Chris Yang'
-
+" let g:bullets_enabled_file_types = [
+"   \ 'markdown',
+"   \ 'text',
+"   \ 'gitcommit',
+"   \ 'scratch'
+"   \]
 
 " ===
 " === tpope/vim-markdown
 " ===
-let g:markdown_syntax_conceal = 0
-let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'json', 'java', 'js=javascript', 'sql', 'yaml', 'Dockerfile']
-
-" ===
-" === vim-table-mode
-" ===
-map <LEADER>tm :TableModeToggle<CR>
-map <leader>tf :TableModeRealign<cr>
+" let g:markdown_syntax_conceal = 0
+" let g:markdown_fenced_languages = ['html', 'python', 'bash=sh', 'json', 'java', 'js=javascript', 'sql', 'yaml', 'Dockerfile']
 
 " ===
 " === tenxsoydev/vim-markdown-checkswitch
 " ===
-nnoremap <silent> <leader>mc :CheckSwitch<cr>
-vnoremap <silent> <leader>mc :CheckSwitch<cr>gv
+" nnoremap <silent> <leader>mc :CheckSwitch<cr>
+" vnoremap <silent> <leader>mc :CheckSwitch<cr>gv
 " Cycle between NO checkbox, empty, and ticked checkboxes 
 " or toggle between empty and ticked checkboxes
-let g:md_checkswitch_style = 'cycle' "'cycle' or 'toggle'
+" let g:md_checkswitch_style = 'cycle' "'cycle' or 'toggle'
 
 
 " Compile function
@@ -451,24 +417,6 @@ nnoremap 'A 'Azz
 nnoremap 'S 'Szz
 nnoremap 'D 'Dzz
 nnoremap 'F 'Fzz
-
-" ===
-" === Undotree
-" ===
-noremap <leader>u :UndotreeToggle<CR>
-let g:undotree_DiffAutoOpen = 1
-let g:undotree_SetFocusWhenToggle = 1
-let g:undotree_ShortIndicators = 1
-let g:undotree_WindowLayout = 2
-let g:undotree_DiffpanelHeight = 8
-let g:undotree_SplitWidth = 24
-function g:Undotree_CustomMap()
-  nmap <buffer> u <plug>UndotreeNextState
-  nmap <buffer> e <plug>UndotreePreviousState
-  nmap <buffer> U 5<plug>UndotreeNextState
-  nmap <buffer> E 5<plug>UndotreePreviousState
-endfunc
-
 
 " Open up lazygit
 " noremap \g :Git
@@ -691,8 +639,8 @@ endfunction
 " ===
 " === vim-illuminate
 " ===
-let g:Illuminate_delay = 750
-hi illuminatedWord cterm=undercurl gui=undercurl
+" let g:Illuminate_delay = 750
+" hi illuminatedWord cterm=undercurl gui=undercurl
 
 " ===
 " === Vista.vim
@@ -726,18 +674,6 @@ let g:auto_save_silent = 1  " do not display the auto-save notification
 "  au FileType java let b:auto_save = 1
 "augroup END
 
-" ===
-" === undotree
-" ===
-silent !mkdir -p ~/.config/nvim/tmp/backup
-silent !mkdir -p ~/.config/nvim/tmp/undo
-"silent !mkdir -p ~/.config/nvim/tmp/sessions
-set backupdir=~/.config/nvim/tmp/backup,.
-set directory=~/.config/nvim/tmp/backup,.
-if has('persistent_undo')
-  set undofile
-  set undodir=~/.config/nvim/tmp/undo,.
-endif
 
 
 " ===
