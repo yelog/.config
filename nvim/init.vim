@@ -11,8 +11,8 @@ Plug 'wellle/tmux-complete.vim'
 
 " window
 Plug 'nvim-neo-tree/neo-tree.nvim'
-Plug 'mbbill/undotree'
 Plug 'MunifTanjim/nui.nvim'
+Plug 'mbbill/undotree'
 Plug 'nvim-lua/plenary.nvim'
 Plug 'nvim-telescope/telescope.nvim'
 
@@ -94,7 +94,7 @@ Plug 'brooth/far.vim'
 
 " float term
 "Plug 'voldikss/vim-floaterm'
-Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
+" Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 
 " github ai coding complete
 "Plug 'github/copilot.vim'
@@ -104,10 +104,6 @@ Plug 'akinsho/toggleterm.nvim', {'tag' : '*'}
 " gG Google search word under cursor
 " gW Wikipedia search word under cursor
 Plug 'dhruvasagar/vim-open-url'
-
-" lsp
-"Plug 'williamboman/nvim-lsp-installer'
-" Plug 'neovim/nvim-lspconfig'
 
 " A mroe adventurous wildmenu
 if has('nvim')
@@ -137,9 +133,7 @@ Plug 'airblade/vim-rooter'
 " even better % 👊 navigate and highlight matching words 👊 modern matchit and matchparen
 Plug 'andymass/vim-matchup'
 
-Plug 'ellisonleao/glow.nvim', {'branch': 'main'}
-
-Plug 'jose-elias-alvarez/null-ls.nvim'
+" Plug 'jose-elias-alvarez/null-ls.nvim'
 
 call plug#end()
 
