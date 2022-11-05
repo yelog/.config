@@ -109,7 +109,7 @@ map S :w<CR>
 noremap <C-s> :w<CR>
 " map Q :q<CR>
 " noremap <C-q> :qa<CR>
-map R :source ~/.config/nvim/init.vim<CR>
+map R :source ~/.config/nvim/init.vim<CR> :nohlsearch<CR>
 "noremap J 5j
 "noremap K 5k
 "noremap n nzz

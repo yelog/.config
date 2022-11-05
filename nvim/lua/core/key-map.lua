@@ -3,8 +3,9 @@ local is_available = my.is_available
 local maps = { i = {}, n = {}, v = {}, t = {}, [""] = {} }
 
 maps[""]["<Space>"] = "<Nop>"
+
 -- Base
-maps.n["<leader>q"] = { "<cmd>wqa<cr>", desc = "Quit" }
+maps.n["Q"] = { "<cmd>wqa<cr>", desc = "Quit" }
 
 -- Telescope
 maps.n["<leader>ff"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }
@@ -35,6 +36,6 @@ maps.n["<c-n>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Buffer Next" }
 maps.n["<c-p>"] = { "<cmd>BufferLineCyclePrev<cr>", desc = "Buffer Previous" }
 maps.n[">b"] = { "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Next" }
 maps.n["<b"] = { "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Previous" }
-maps.n["Q"] = { "<cmd>bdelete<cr>", desc = "Buffer Close" }
+maps.n["<c-q>"] = { "<cmd>bdelete<cr>", desc = "Buffer Close" }
 
 my.set_mappings(maps)
