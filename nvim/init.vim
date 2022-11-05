@@ -8,6 +8,7 @@ call plug#begin('~/.config/nvim/plugged')
 " Auto Complete
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 Plug 'wellle/tmux-complete.vim'
+Plug 'folke/neodev.nvim'
 
 " window
 Plug 'nvim-neo-tree/neo-tree.nvim'
@@ -214,6 +215,7 @@ let g:coc_global_extensions = [
   \ 'coc-yaml',
   \ 'coc-sh',
   \ 'coc-db',
+  \ 'coc-sumneko-lua',
   \ 'coc-yank']
 
 " Use tab for trigger completion with characters ahead and navigate.
@@ -231,12 +233,12 @@ let g:coc_global_extensions = [
 "endfunction
 
 " Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
+" inoremap <silent><expr> <c-space> coc#refresh()
 
 " Make <CR> auto-select the first completion item and notify coc.nvim to
 " format on enter, <cr> could be remapped by other vim plugin
-inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
-                              \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
+" inoremap <silent><expr> <cr> pumvisible() ? coc#_select_confirm()
+"                               \: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 
 " Use `[g` and `]g` to navigate diagnostics
 " Use `:CocDiagnostics` to get all diagnostics of current buffer in location list.

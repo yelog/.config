@@ -272,3 +272,5 @@ xnoremap & :&&<CR>
   "au!
   "autocmd FileType text,markdown,tex setlocal textwidth=80
 "augroup END
+
+autocmd FileChangedShell * let v:fcs_choice = 'reload'
