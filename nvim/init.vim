@@ -82,21 +82,13 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip; in normal mode, type enter to select {[ and on.
 "Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
 Plug 'numToStr/Comment.nvim'
-"Plug 'tpope/vim-capslock'  " Ctrl+L (insert) to toggle capslock
-"Plug 'easymotion/vim-easymotion'
-"Plug 'haya14busa/incsearch.vim'
-"Plug 'haya14busa/incsearch-easymkevinhwang91/rnvimrotion.vim'
-"Plug 'rhysd/clever-f.vim'
 Plug 'phaazon/hop.nvim'
 
 " Treesitter
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
-"Plug 'nvim-treesitter/playground'
 
 " Git
 Plug 'airblade/vim-gitgutter'
-" Plug 'cohama/agit.vim'
-" Plug 'tpope/vim-fugitive'
 Plug 'kdheepak/lazygit.nvim'
 
 " Snippets
@@ -107,14 +99,9 @@ Plug 'theniceboy/vim-snippets'
 " need install im-select (mac-only)
 " curl -Ls https://raw.githubusercontent.com/daipeihust/im-select/master/install_mac.sh | sh
 Plug 'ybian/smartim'
-"Plug 'rlue/vim-barbaric'
 
 " autosave
 Plug '907th/vim-auto-save'
-
-" Comrade
-"Plug 'beeender/Comrade'
-"Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins', 'for' : 'java' }
 
 Plug 'brooth/far.vim'
 
@@ -160,15 +147,8 @@ Plug 'rmagatti/auto-session'
 Plug 'airblade/vim-rooter'
 "Plug 'rmagatti/session-lens'
 
-" open file with lineNumber and columnNumber
-" :e file:20   :vi file:20:3
-Plug 'wsdjeg/vim-fetch'
-
 " even better % 👊 navigate and highlight matching words 👊 modern matchit and matchparen
 Plug 'andymass/vim-matchup'
-" fix match tag in vue
-" https://github.com/andymass/vim-matchup/issues/106
-Plug 'posva/vim-vue'
 
 Plug 'ellisonleao/glow.nvim', {'branch': 'main'}
 
@@ -832,51 +812,12 @@ let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "ip", "it"]
 nnoremap <silent> <c-s-f>  :Farf<cr>
 vnoremap <silent> <c-s-f>  :Farf<cr>
 
-" ===
-" === voldikss/vim-floaterm
-" ===
-"noremap <LEADER>/ :FloatermNew<cr>
-" ===
-" === rhysd/clever-f.vim
-" ===
-map ; <Plug>(clever-f-repeat-forward)
-map , <Plug>(clever-f-repeat-back)
-let g:clever_f_smart_case=1
-" show prompt on the bottom
-"let g:clever_f_show_prompt=1
-
-
-" ===
-" === vim-pandoc/vim-pandoc-syntax
-" ===
-"augroup pandoc_syntax
-    "au! BufNewFile,BufFilePre,BufRead *.md set filetype=markdown.pandoc
-"augroup END
-
 
 " ===
 " === airblade/vim-rooter
 " ===
 let g:rooter_patterns = ['.git/']
 nnoremap <silent> <leader>tr :RooterToggle<cr>
-
-" ===
-" === lsp
-" ===
-"lua <<EOF
-"require("nvim-lsp-installer").setup({
-    "automatic_installation = true, -- automatically detect which servers to install (based on which servers are set up via lspconfig)
-    "ui = {
-        "icons = {
-            "server_installed = "✓",
-            "server_pending = "➜",
-            "server_uninstalled = "✗"
-        "}
-    "}
-"})
-"EOF
-
-
 
 " ===
 " === jiangmiao/auto-pairs
