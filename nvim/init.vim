@@ -55,10 +55,6 @@ Plug 'kshenoy/vim-signature'
 Plug 'liuchengxu/vista.vim'
 " see the " paste and @ recored
 Plug 'junegunn/vim-peekaboo'
-" display available keybindings in popup
-" Plug 'liuchengxu/vim-which-key', { 'on': ['WhichKey', 'WhichKey!'] }
-"Plug 'hecal3/vim-leader-guide'
-"Plug 'spinks/vim-leader-guide'
 Plug 'folke/which-key.nvim'
 
 " edit/show/move enhancement
@@ -733,42 +729,6 @@ let g:auto_save_silent = 1  " do not display the auto-save notification
 "  au FileType markdown let b:auto_save = 1
 "  au FileType java let b:auto_save = 1
 "augroup END
-
-" ===
-" === vim-which-key
-" ===
-" nnoremap <silent> <LEADER> :WhichKey '<Space>'<CR>
-"nnoremap <silent> <localleader> :WhichKey  ','<CR>
-" cp is for file configurations
-" let use of which key pattern
-" Define a separator
-"nnoremap <silent> <space> :WhichKey ' '<cr>
-"vnoremap <silent> <space> :WhichKeyVisual ' '<cr>
-"let g:which_key_map = {}
-"call which_key#register(' ', "g:which_key_map")
-"nnoremap <silent> <leader> :WhichKey '<Space>'<CR>
-" By default timeoutlen is 1000 ms
-" set timeoutlen=500
-
-"lua << EOF
-"  require("which-key").setup {
-"    -- your configuration comes here
-"    -- or leave it empty to use the default settings
-"    -- refer to the configuration section below
-"    key_labels = {
-"    -- override the label used to display some keys. It doesn't effect WK in any other way.
-"    -- For example:
-"    ["<space>"] = "SPC",
-"    -- ["<cr>"] = "RET",
-"    -- ["<tab>"] = "TAB",
-"    },
-"  }
-"EOF
-
-"let mapleader = '\pace>'
-"nnoremap <silent> <leader> :<c-u>LeaderGuide '<Space>'<CR>
-"vnoremap <silent> <leader> :<c-u>LeaderGuideVisual '<Space>'<CR>
-
 
 " ===
 " === undotree
