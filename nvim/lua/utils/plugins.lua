@@ -7,7 +7,26 @@ end
 
 return packer.startup(function()
   use 'wbthomason/packer.nvim' -- Package manager
+  -------------- LSP --------------
   use 'neovim/nvim-lspconfig' -- Configurations for Nvim LSP
+  use { 'hrsh7th/nvim-cmp' }
+  -- use { 'hrsh7th/cmp-buffer' }
+  use { 'hrsh7th/cmp-nvim-lsp' }
+  -- use { 'hrsh7th/cmp-cmdline' } -- use to command/search complete
+
+  -- use { 'hrsh7th/cmp-vsnip' }
+  -- use { 'hrsh7th/vim-vsnip' }
+  -- use { 'L3MON4D3/LuaSnip' }
+  -- use { 'saadparwaiz1/cmp_luasnip' }
+
+  use { 'jose-elias-alvarez/null-ls.nvim' }
+
+  use "nvim-lua/plenary.nvim" -- Useful lua functions used ny lots of plugins
+  use "nvim-lua/popup.nvim"
+  use "folke/neodev.nvim"
+
+
+  -- window
   use {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v2.x",
@@ -41,4 +60,5 @@ return packer.startup(function()
   use { 'dkarter/bullets.vim' }
   use { 'tpope/vim-markdown' }
   use { 'tenxsoydev/vim-markdown-checkswitch' }
+  use { 'gelguy/wilder.nvim' }
 end)

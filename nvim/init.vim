@@ -97,21 +97,21 @@ Plug 'brooth/far.vim'
 Plug 'dhruvasagar/vim-open-url'
 
 " A mroe adventurous wildmenu
-if has('nvim')
-  function! UpdateRemotePlugins(...)
-    " Needed to refresh runtime files
-    let &rtp=&rtp
-    UpdateRemotePlugins
-  endfunction
-
-  Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
-else
-  Plug 'gelguy/wilder.nvim'
-
-  " To use Python remote plugin features in Vim, can be skipped
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
+" if has('nvim')
+"   function! UpdateRemotePlugins(...)
+"     " Needed to refresh runtime files
+"     let &rtp=&rtp
+"     UpdateRemotePlugins
+"   endfunction
+"
+"   Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
+" else
+"   Plug 'gelguy/wilder.nvim'
+"
+"   " To use Python remote plugin features in Vim, can be skipped
+"   Plug 'roxma/nvim-yarp'
+"   Plug 'roxma/vim-hug-neovim-rpc'
+" endif
 
 " 自动决定显示相对行号还是绝对行号
 Plug 'jeffkreeftmeijer/vim-numbertoggle'

@@ -5,7 +5,8 @@ local maps = { i = {}, n = {}, v = {}, t = {}, [""] = {} }
 maps[""]["<Space>"] = "<Nop>"
 
 -- Base
-maps.n["Q"] = { "<cmd>w<cr><cmd>qa<cr>", desc = "Quit" }
+maps.n["Q"] = { "<cmd>qa<cr>", desc = "Quit" }
+-- maps.n["Q"] = { "<cmd>w<cr><cmd>qa<cr>", desc = "Quit" }
 
 -- vim-plug
 maps.n["<leader>pi"] = { "<cmd>PlugInstall<cr>", desc = "plug install" }
