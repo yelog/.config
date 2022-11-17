@@ -42,22 +42,21 @@ call plug#begin('~/.config/nvim/plugged')
 "Plug 'vimwiki/vimwiki'
 
 " Bookmarks
-Plug 'kshenoy/vim-signature'
+" Plug 'kshenoy/vim-signature'
 " Plug 'liuchengxu/vista.vim'
 " see the " paste and @ recored
-Plug 'junegunn/vim-peekaboo'
+" Plug 'junegunn/vim-peekaboo'
 " Plug 'folke/which-key.nvim'
 
 " edit/show/move enhancement
 "Plug 'terryma/vim-multiple-cursors'
 " Plug 'dstein64/vim-startuptime'
-Plug 'tpope/vim-repeat'
-Plug 'itchyny/vim-cursorword'
-Plug 'tpope/vim-speeddating'
-Plug 'alvan/vim-closetag'
+" Plug 'tpope/vim-repeat'
+" Plug 'itchyny/vim-cursorword'
+" Plug 'alvan/vim-closetag'
 "Plug 'junegunn/goyo.vim' " distraction free writing mode
-Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
-Plug 'jiangmiao/auto-pairs'
+" Plug 'tpope/vim-surround' " type ysiw' to wrap the word with '' or type cs'` to change 'word' to `word`
+" Plug 'jiangmiao/auto-pairs'
 " Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip; in normal mode, type enter to select {[ and on.
 "Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
 " Plug 'numToStr/Comment.nvim'
@@ -65,8 +64,8 @@ Plug 'jiangmiao/auto-pairs'
 
 
 " Git
-Plug 'airblade/vim-gitgutter'
-Plug 'kdheepak/lazygit.nvim'
+" Plug 'airblade/vim-gitgutter'
+" Plug 'kdheepak/lazygit.nvim'
 
 " Snippets
 " Plug 'SirVer/ultisnips'
@@ -75,13 +74,13 @@ Plug 'kdheepak/lazygit.nvim'
 " todo smart to switch input method
 " need install im-select (mac-only)
 " curl -Ls https://raw.githubusercontent.com/daipeihust/im-select/master/install_mac.sh | sh
-Plug 'ybian/smartim'
+" Plug 'ybian/smartim'
 
 " autosave
-Plug '907th/vim-auto-save'
+" Plug '907th/vim-auto-save'
 
 " Find And Replace Vim plugin
-Plug 'brooth/far.vim'
+" Plug 'brooth/far.vim'
 
 " float term
 "Plug 'voldikss/vim-floaterm'
@@ -94,7 +93,7 @@ Plug 'brooth/far.vim'
 " g<cr> search word under cursor using default search engine
 " gG Google search word under cursor
 " gW Wikipedia search word under cursor
-Plug 'dhruvasagar/vim-open-url'
+" Plug 'dhruvasagar/vim-open-url'
 
 " A mroe adventurous wildmenu
 " if has('nvim')
@@ -114,11 +113,11 @@ Plug 'dhruvasagar/vim-open-url'
 " endif
 
 " 自动决定显示相对行号还是绝对行号
-Plug 'jeffkreeftmeijer/vim-numbertoggle'
+" Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
 " sessoin manager
 " Plug 'rmagatti/auto-session'
-Plug 'airblade/vim-rooter'
+" Plug 'airblade/vim-rooter'
 "Plug 'rmagatti/session-lens'
 
 " even better % 👊 navigate and highlight matching words 👊 modern matchit and matchparen
@@ -373,7 +372,7 @@ call plug#end()
 " ===
 " === Python-syntax
 " ===
-let g:python_highlight_all = 1
+" let g:python_highlight_all = 1
 " let g:python_slow_sync = 0
 
 
@@ -410,51 +409,51 @@ let g:python_highlight_all = 1
         "\ 'ListLocalMarks'     :  "m/",
         "\ 'ListLocalMarkers'   :  "m?"
         "\ }
-map gm ]`
-map gM [`
-map shm :help Signature<CR>
-nnoremap 'A 'Azz
-nnoremap 'S 'Szz
-nnoremap 'D 'Dzz
-nnoremap 'F 'Fzz
+" map gm ]`
+" map gM [`
+" map shm :help Signature<CR>
+" nnoremap 'A 'Azz
+" nnoremap 'S 'Szz
+" nnoremap 'D 'Dzz
+" nnoremap 'F 'Fzz
 
 " Open up lazygit
 " noremap \g :Git
 " noremap <leader>gg :tabe<CR>:-tabmove<CR>:term lazygit<CR>
-let g:lazygit_floating_window_winblend = 0 " transparency of floating window
-let g:lazygit_floating_window_scaling_factor = 0.9 " scaling factor for floating window
-let g:lazygit_floating_window_corner_chars = ['╭', '╮', '╰', '╯'] " customize lazygit popup window corner characters
-let g:lazygit_floating_window_use_plenary = 0 " use plenary.nvim to manage floating window if available
-let g:lazygit_use_neovim_remote = 1 " fallback to 0 if neovim-remote is not installed
-nnoremap <silent> <leader>gg :LazyGit<CR>
+" let g:lazygit_floating_window_winblend = 0 " transparency of floating window
+" let g:lazygit_floating_window_scaling_factor = 0.9 " scaling factor for floating window
+" let g:lazygit_floating_window_corner_chars = ['╭', '╮', '╰', '╯'] " customize lazygit popup window corner characters
+" let g:lazygit_floating_window_use_plenary = 0 " use plenary.nvim to manage floating window if available
+" let g:lazygit_use_neovim_remote = 1 " fallback to 0 if neovim-remote is not installed
+" nnoremap <silent> <leader>gg :LazyGit<CR>
 " ==
 " == airblade/vim-gitgutter
 " ==
 " let g:gitgutter_signs = 0
 "let g:gitgutter_diff_relative_to = 'working_tree'
-let g:gitgutter_diff_base = 'HEAD'
-let g:gitgutter_sign_allow_clobber = 0
-let g:gitgutter_map_keys = 0
-let g:gitgutter_override_sign_column_highlight = 0
-let g:gitgutter_preview_win_floating = 1
-"let g:gitgutter_sign_added = '▎'
-let g:gitgutter_sign_added = '▍'
-"let g:gitgutter_sign_modified = '░'
-let g:gitgutter_sign_modified = '▍'
-let g:gitgutter_sign_removed = '▶'
-let g:gitgutter_sign_removed_first_line = '▔'
-let g:gitgutter_sign_modified_removed = '▒'
-highlight GitGutterAdd    guifg=#009900 ctermfg=2
-highlight GitGutterChange guifg=#0099FF ctermfg=3
-highlight GitGutterDelete guifg=#ff2222 ctermfg=1
+" let g:gitgutter_diff_base = 'HEAD'
+" let g:gitgutter_sign_allow_clobber = 0
+" let g:gitgutter_map_keys = 0
+" let g:gitgutter_override_sign_column_highlight = 0
+" let g:gitgutter_preview_win_floating = 1
+" "let g:gitgutter_sign_added = '▎'
+" let g:gitgutter_sign_added = '▍'
+" "let g:gitgutter_sign_modified = '░'
+" let g:gitgutter_sign_modified = '▍'
+" let g:gitgutter_sign_removed = '▶'
+" let g:gitgutter_sign_removed_first_line = '▔'
+" let g:gitgutter_sign_modified_removed = '▒'
+" highlight GitGutterAdd    guifg=#009900 ctermfg=2
+" highlight GitGutterChange guifg=#0099FF ctermfg=3
+" highlight GitGutterDelete guifg=#ff2222 ctermfg=1
 " autocmd BufWritePost * GitGutter
-nnoremap <leader>gf :GitGutterFold<CR>
-nnoremap <leader>gp :GitGutterPreviewHunk<CR>
-nnoremap <leader>gk :GitGutterPrevHunk<CR>
-nnoremap <leader>gj :GitGutterNextHunk<CR>
-nnoremap <leader>gu :GitGutterUndoHunk<CR>
-nnoremap <leader>gd :GitGutterDiffOrig<CR>
-nnoremap <leader>gb :Git blame<CR>
+" nnoremap <leader>gf :GitGutterFold<CR>
+" nnoremap <leader>gp :GitGutterPreviewHunk<CR>
+" nnoremap <leader>gk :GitGutterPrevHunk<CR>
+" nnoremap <leader>gj :GitGutterNextHunk<CR>
+" nnoremap <leader>gu :GitGutterUndoHunk<CR>
+" nnoremap <leader>gd :GitGutterDiffOrig<CR>
+" nnoremap <leader>gb :Git blame<CR>
 
 " ===
 " === nvim-treesitter
@@ -493,7 +492,7 @@ nnoremap <leader>gb :Git blame<CR>
 " ===
 " === AsyncTasks
 " ===
-let g:asyncrun_open = 6
+" let g:asyncrun_open = 6
 
 
 " ===
@@ -525,14 +524,7 @@ let g:asyncrun_open = 6
 " ===
 " === smartim
 " ===
-let g:smartim_default='com.apple.keylayout.ABC'
-" fix slow in mutiple_cursor mode
-function! Multiple_cursors_before()
-  let g:smartim_disable = 1
-endfunction
-function! Multiple_cursors_after()
-  unlet g:smartim_disable
-endfunction
+" let g:smartim_default='com.apple.keylayout.ABC'
 
 " ===
 " === vim-easymotion
@@ -604,13 +596,13 @@ endfunction
 "nmap 'w <Plug>(easymotion-overwin-w)
 
 
-vnoremap <silent> ic :<C-U>call <SID>MdCodeBlockTextObj('i')<CR>
-onoremap <silent> ic :<C-U>call <SID>MdCodeBlockTextObj('i')<CR>
-
-vnoremap <silent> ac :<C-U>call <SID>MdCodeBlockTextObj('a')<CR>
-onoremap <silent> ac :<C-U>call <SID>MdCodeBlockTextObj('a')<CR>
-
-function! s:MdCodeBlockTextObj(type) abort
+" vnoremap <silent> ic :<C-U>call <SID>MdCodeBlockTextObj('i')<CR>
+" onoremap <silent> ic :<C-U>call <SID>MdCodeBlockTextObj('i')<CR>
+"
+" vnoremap <silent> ac :<C-U>call <SID>MdCodeBlockTextObj('a')<CR>
+" onoremap <silent> ac :<C-U>call <SID>MdCodeBlockTextObj('a')<CR>
+"
+" function! s:MdCodeBlockTextObj(type) abort
   " the parameter type specify whether it is inner text objects or around
   " text objects.
 
@@ -618,22 +610,22 @@ function! s:MdCodeBlockTextObj(type) abort
   " of a code block. Actually, there are still issues if the cursor is on the
   " closing of a code block. In this case, the start row of code blocks would
   " be wrong. Unless we can match code blocks, it is not easy to fix this.
-  normal! $
-  let start_row = searchpos('\s*```', 'bnW')[0]
-  let end_row = searchpos('\s*```', 'nW')[0]
-
-  let buf_num = bufnr()
-  " For inner code blocks, remove the start and end line containing backticks.
-  if a:type ==# 'i'
-    let start_row += 1
-    let end_row -= 1
-  endif
-  " echo a:type start_row end_row
-
-  call setpos("'<", [buf_num, start_row, 1, 0])
-  call setpos("'>", [buf_num, end_row, 1, 0])
-  execute 'normal! `<V`>'
-endfunction
+"   normal! $
+"   let start_row = searchpos('\s*```', 'bnW')[0]
+"   let end_row = searchpos('\s*```', 'nW')[0]
+"
+"   let buf_num = bufnr()
+"   " For inner code blocks, remove the start and end line containing backticks.
+"   if a:type ==# 'i'
+"     let start_row += 1
+"     let end_row -= 1
+"   endif
+"   " echo a:type start_row end_row
+"
+"   call setpos("'<", [buf_num, start_row, 1, 0])
+"   call setpos("'>", [buf_num, end_row, 1, 0])
+"   execute 'normal! `<V`>'
+" endfunction
 
 
 " ===
@@ -646,15 +638,15 @@ endfunction
 " === Vista.vim
 " ===
 " noremap <LEADER>v :Vista!!<CR>
-noremap <leader>o :silent! Vista finder coc<CR>
-let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
-let g:vista_default_executive = 'coc'
-let g:vista_fzf_preview = ['right:50%']
-let g:vista#renderer#enable_icon = 1
-let g:vista#renderer#icons = {
-\   "function": "\uf794",
-\   "variable": "\uf71b",
-\  }
+" noremap <leader>o :silent! Vista finder coc<CR>
+" let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
+" let g:vista_default_executive = 'coc'
+" let g:vista_fzf_preview = ['right:50%']
+" let g:vista#renderer#enable_icon = 1
+" let g:vista#renderer#icons = {
+" \   "function": "\uf794",
+" \   "variable": "\uf71b",
+" \  }
 " function! NearestMethodOrFunction() abort
 "   return get(b:, 'vista_nearest_method_or_function', '')
 " endfunction
@@ -664,9 +656,9 @@ let g:vista#renderer#icons = {
 " ===
 " === vim-auto-save
 " ===
-noremap <LEADER>as :AutoSaveToggle<CR>
-let g:auto_save = 1  " enable AutoSave on Vim startup
-let g:auto_save_silent = 1  " do not display the auto-save notification
+" noremap <LEADER>as :AutoSaveToggle<CR>
+" let g:auto_save = 1  " enable AutoSave on Vim startup
+" let g:auto_save_silent = 1  " do not display the auto-save notification
 "let g:auto_save = 0
 "augroup ft_markdown
 "  au!
@@ -692,15 +684,15 @@ let g:auto_save_silent = 1  " do not display the auto-save notification
 " ===
 " === far.vim
 " ===
-nnoremap <silent> <c-s-f>  :Farf<cr>
-vnoremap <silent> <c-s-f>  :Farf<cr>
+" nnoremap <silent> <c-s-f>  :Farf<cr>
+" vnoremap <silent> <c-s-f>  :Farf<cr>
 
 
 " ===
 " === airblade/vim-rooter
 " ===
-let g:rooter_patterns = ['.git/']
-nnoremap <silent> <leader>tr :RooterToggle<cr>
+" let g:rooter_patterns = ['.git/']
+" nnoremap <silent> <leader>tr :RooterToggle<cr>
 
 " ===
 " === jiangmiao/auto-pairs

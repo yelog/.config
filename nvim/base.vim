@@ -41,7 +41,7 @@ set tw=0
 set indentexpr=
 set list                          " 回车、空格等不可见字符
 set listchars=tab:\|\ ,trail:▫
-set foldmethod=indent             " 折叠代码
+set foldmethod=manual             " 折叠代码
 set foldlevel=99
 set viewoptions=cursor,folds,slash,unix
 let &t_SI = "\<Esc>]50;CursorShape=1\x7"    " normal 和 insert 模式的光标样式设置
@@ -109,7 +109,7 @@ map S :w<CR>
 noremap <C-s> :w<CR>
 " map Q :q<CR>
 " noremap <C-q> :qa<CR>
-map R :source ~/.config/nvim/init.vim<CR> :nohlsearch<CR>
+" map R :source ~/.config/nvim/init.vim<CR> :nohlsearch<CR>
 "noremap J 5j
 "noremap K 5k
 "noremap n nzz
@@ -196,9 +196,9 @@ noremap \s :%s//gc<left><left><left>
 noremap <LEADER>sw :set wrap!<CR>
 
 " 剪贴板
-" 普通模式下复制到行尾
-nnoremap Y y$
-" 选中模式下
+" 普通模式下 Y 复制当前匿名寄存器到 Clipboard
+nnoremap Y :let @+=@"<CR>
+" 选中模式下 Y 复制到 Clipboard
 vnoremap Y "+y
 
 "nnoremap <c-p> "0p

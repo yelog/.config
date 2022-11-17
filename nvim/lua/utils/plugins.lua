@@ -9,13 +9,17 @@ return packer.startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   -------------- lsp & complete --------------
   use 'neovim/nvim-lspconfig' -- Configurations for Nvim LSP
+  use { 'ray-x/lsp_signature.nvim' }
   use { 'hrsh7th/nvim-cmp' }
-  use { 'hrsh7th/cmp-buffer' }
+  use { 'hrsh7th/cmp-buffer' } -- nvim-cmp source for buffer words
   use { 'hrsh7th/cmp-nvim-lsp' }
-  use { 'andersevenrud/cmp-tmux' }
-  use { 'hrsh7th/cmp-path' }
+  use { 'andersevenrud/cmp-tmux' } -- tmux completion source for nvim-cmp
+  use { 'hrsh7th/cmp-path' } -- nvim-cmp source for filesystem paths
   use { 'hrsh7th/cmp-cmdline' } -- use to command/search complete
-  use { 'lukas-reineke/cmp-rg' } -- use to command/search complete
+  use { 'lukas-reineke/cmp-rg' } -- ripgrep source for nvim-cmp
+  use { 'alvan/vim-closetag' } -- when "<table|", type > , will be "<table>|</table>"
+  use { 'windwp/nvim-autopairs' }
+  use { 'windwp/nvim-ts-autotag' }
 
   -- use { 'hrsh7th/cmp-vsnip' }
   -- use { 'hrsh7th/vim-vsnip' }
@@ -40,7 +44,7 @@ return packer.startup(function(use)
   }
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.0',
-    requires = { { 'nvim-lua/plenary.nvim' } }
+    requires = { { 'nvim-lua/plenary.nvim' }, { "kdheepak/lazygit.nvim" } }
   }
   use {
     'akinsho/bufferline.nvim',
@@ -48,7 +52,7 @@ return packer.startup(function(use)
     requires = 'kyazdani42/nvim-web-devicons'
   }
   use { 'rmagatti/auto-session' }
-  use { 'phaazon/hop.nvim', branch = 'v2'}
+  use { 'phaazon/hop.nvim', branch = 'v2' }
   use {
     'numToStr/Comment.nvim',
     config = function()
@@ -66,9 +70,18 @@ return packer.startup(function(use)
   use {
     'gcmt/wildfire.vim',
     config = function()
-      vim.g.wildfire_objects = {"i'", 'i"', "i)", "i]", "i}", "ip", "it"}
+      vim.g.wildfire_objects = { "i'", 'i"', "i)", "i]", "i}", "ip", "it" }
     end
   }
+  use { 'tpope/vim-surround' } -- type ysiw' to wrap the word with '' or type cs'` to change 'word' to `word`
+  use { 'tpope/vim-repeat' } -- repeat surround and so on
+  use { 'ybian/smartim' } -- smart switch input method
+  use { 'itchyny/vim-cursorword' } -- Underlines the word under the cursor
+  use { '907th/vim-auto-save' } -- auto-save
+  use { 'dhruvasagar/vim-open-url' } -- open brower with the url under the cursor
+  use { 'airblade/vim-rooter' } -- Changes Vim working directory to project root
+  -------------- git --------------
+  use { 'airblade/vim-gitgutter' }
   -------------- decoration --------------
   use { 'ellisonleao/gruvbox.nvim' }
   use {
@@ -77,6 +90,7 @@ return packer.startup(function(use)
   }
   use { 'RRethy/vim-illuminate' } -- automatically highlighting other uses of the word under the cursor
   use { 'rrethy/vim-hexokinase', run = 'make hexokinase' } -- show color by color code
+  use { 'jeffkreeftmeijer/vim-numbertoggle' } -- Toggles between hybrid and absolute line numbers automatically
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' } -- automatically highlighting other uses of the word under the cursor
   use { 'dhruvasagar/vim-table-mode' } -- table mode
   use { 'dkarter/bullets.vim' } -- list style

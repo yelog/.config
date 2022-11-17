@@ -9,9 +9,9 @@ maps.n["Q"] = { "<cmd>qa<cr>", desc = "Quit" }
 -- maps.n["Q"] = { "<cmd>w<cr><cmd>qa<cr>", desc = "Quit" }
 
 -- vim-plug
-maps.n["<leader>pi"] = { "<cmd>PlugInstall<cr>", desc = "plug install" }
-maps.n["<leader>pc"] = { "<cmd>PlugClean<cr>", desc = "plug clean" }
-maps.n["<leader>pu"] = { "<cmd>PlugUpdate<cr>", desc = "plug update" }
+maps.n["<leader>pi"] = { "<cmd>PackerInstall<cr>", desc = "plug install" }
+maps.n["<leader>pc"] = { "<cmd>PackerClean<cr>", desc = "plug clean" }
+maps.n["<leader>pu"] = { "<cmd>PackerUpdate<cr>", desc = "plug update" }
 
 
 -- Telescope
@@ -60,5 +60,17 @@ maps.n[";l"] = { "<cmd>HopWordCurrentLineAC<cr>", desc = "Hop line right" }
 maps.n[";h"] = { "<cmd>HopWordCurrentLineBC<cr>", desc = "Hop line left" }
 maps.n[";k"] = { "<cmd>HopLineBC<cr>", desc = "Hop line down" }
 maps.n[";j"] = { "<cmd>HopLineAC<cr>", desc = "Hop line up" }
+
+-- git
+maps.n["<leader>gg"] = { "<cmd>LazyGit<cr>", desc = "LazyGit" }
+maps.n["<leader>gh"] = { "<cmd>LazyGitFilterCurrentFile<cr>", desc = "Current file history" }
+maps.n["<leader>gf"] = { "<cmd>GitGutterFold<cr>", desc = "git fold" }
+maps.n["<leader>gp"] = { "<cmd>GitGutterPreviewHunk<cr>", desc = "git review hunk" }
+maps.n["<leader>gk"] = { "<cmd>GitGutterPrevHunk<cr>", desc = "git prev hunk" }
+maps.n["<leader>gj"] = { "<cmd>GitGutterNextHunk<cr>", desc = "git next hunk" }
+maps.n["<leader>gu"] = { "<cmd>GitGutterUndoHunk<cr>", desc = "git reset" }
+maps.n["<leader>gd"] = { "<cmd>GitGutterDiffOrig<cr>", desc = "git diff" }
+maps.n["<leader>gb"] = { "<cmd>Git blame<cr>", desc = "git blame" }
+
 
 my.set_mappings(maps)
