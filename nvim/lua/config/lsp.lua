@@ -62,6 +62,7 @@ table.insert(runtime_path, "lua/?/init.lua")
 lspconfig.sumneko_lua.setup({
   capabilities = capabilities,
   on_attach = on_attach,
+  root_dir = lspconfig.util.root_pattern('.git'),
   flags = lsp_flags,
   settings = {
     Lua = {

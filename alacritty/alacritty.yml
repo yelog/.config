@@ -29,5 +29,6 @@ key_bindings:
   - { key: D,  mods: Command,           chars: "\x1bd"           }
   - { key: Key1,  mods: Command,           chars: "\x1b1"           }
   - { key: Key3,  mods: Command,           chars: "\x1b3"           }
+  - { key: Back, action:  ReceiveChar}
   # - { key: Q,  mods: Control|Shift,           chars: "\x1b[81;5u"           }
   # - { key: J,        mods: Control|Shift, chars: "\x1b[74;5u"                }
