@@ -43,10 +43,10 @@ call plug#begin('~/.config/nvim/plugged')
 
 " Bookmarks
 Plug 'kshenoy/vim-signature'
-Plug 'liuchengxu/vista.vim'
+" Plug 'liuchengxu/vista.vim'
 " see the " paste and @ recored
 Plug 'junegunn/vim-peekaboo'
-Plug 'folke/which-key.nvim'
+" Plug 'folke/which-key.nvim'
 
 " edit/show/move enhancement
 "Plug 'terryma/vim-multiple-cursors'
@@ -58,10 +58,10 @@ Plug 'alvan/vim-closetag'
 "Plug 'junegunn/goyo.vim' " distraction free writing mode
 Plug 'tpope/vim-surround' " type ysks' to wrap the word with '' or type cs'` to change 'word' to `word`
 Plug 'jiangmiao/auto-pairs'
-Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip; in normal mode, type enter to select {[ and on.
+" Plug 'gcmt/wildfire.vim' " in Visual mode, type i' to select all text in '', or type i) i] i} ip; in normal mode, type enter to select {[ and on.
 "Plug 'scrooloose/nerdcommenter' " in <space>cc to comment a line
-Plug 'numToStr/Comment.nvim'
-Plug 'phaazon/hop.nvim'
+" Plug 'numToStr/Comment.nvim'
+" Plug 'phaazon/hop.nvim'
 
 
 " Git
@@ -70,7 +70,7 @@ Plug 'kdheepak/lazygit.nvim'
 
 " Snippets
 " Plug 'SirVer/ultisnips'
-Plug 'theniceboy/vim-snippets'
+" Plug 'theniceboy/vim-snippets'
 
 " todo smart to switch input method
 " need install im-select (mac-only)
@@ -117,12 +117,12 @@ Plug 'dhruvasagar/vim-open-url'
 Plug 'jeffkreeftmeijer/vim-numbertoggle'
 
 " sessoin manager
-Plug 'rmagatti/auto-session'
+" Plug 'rmagatti/auto-session'
 Plug 'airblade/vim-rooter'
 "Plug 'rmagatti/session-lens'
 
 " even better % 👊 navigate and highlight matching words 👊 modern matchit and matchparen
-Plug 'andymass/vim-matchup'
+" Plug 'andymass/vim-matchup'
 
 " Plug 'jose-elias-alvarez/null-ls.nvim'
 
@@ -645,7 +645,7 @@ endfunction
 " ===
 " === Vista.vim
 " ===
-noremap <LEADER>v :Vista!!<CR>
+" noremap <LEADER>v :Vista!!<CR>
 noremap <leader>o :silent! Vista finder coc<CR>
 let g:vista_icon_indent = ["╰─▸ ", "├─▸ "]
 let g:vista_default_executive = 'coc'
@@ -679,7 +679,7 @@ let g:auto_save_silent = 1  " do not display the auto-save notification
 " ===
 " === wildfire
 " ===
-let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "ip", "it"]
+" let g:wildfire_objects = ["i'", 'i"', "i)", "i]", "i}", "ip", "it"]
 
 " ===
 " === comrade
@@ -710,14 +710,14 @@ let g:AutoPairsShortcutToggle = '<A-a>'
 " ===
 " === phaazon/hop.nvim
 " ===
-lua require'hop'.setup { keys = 'etovxqpdygfblzhckisuran', jump_on_sole_occurrence = true }
-noremap ;w <cmd>HopWord<cr>
-noremap ;a <cmd>HopAnywhere<cr>
-noremap ;s <cmd>HopChar2<cr>
-noremap ;l <cmd>HopWordCurrentLineAC<cr>
-noremap ;h <cmd>HopWordCurrentLineBC<cr>
-noremap ;k <cmd>HopLineBC<cr>
-noremap ;j <cmd>HopLineAC<cr>
+" lua require'hop'.setup { keys = 'etovxqpdygfblzhckisuran', jump_on_sole_occurrence = true }
+" noremap ;w <cmd>HopWord<cr>
+" noremap ;a <cmd>HopAnywhere<cr>
+" noremap ;s <cmd>HopChar2<cr>
+" noremap ;l <cmd>HopWordCurrentLineAC<cr>
+" noremap ;h <cmd>HopWordCurrentLineBC<cr>
+" noremap ;k <cmd>HopLineBC<cr>
+" noremap ;j <cmd>HopLineAC<cr>
 " noremap f <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.AFTER_CURSOR, current_line_only = true })<cr>
 " noremap F <cmd>lua require'hop'.hint_char1({ direction = require'hop.hint'.HintDirection.BEFORE_CURSOR, current_line_only = true })<cr>
 

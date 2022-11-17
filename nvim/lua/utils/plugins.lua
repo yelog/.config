@@ -5,16 +5,17 @@ if not status_ok then
   return
 end
 
-return packer.startup(function()
+return packer.startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
-  -------------- LSP --------------
+  -------------- lsp & complete --------------
   use 'neovim/nvim-lspconfig' -- Configurations for Nvim LSP
   use { 'hrsh7th/nvim-cmp' }
   use { 'hrsh7th/cmp-buffer' }
   use { 'hrsh7th/cmp-nvim-lsp' }
   use { 'andersevenrud/cmp-tmux' }
   use { 'hrsh7th/cmp-path' }
-  -- use { 'hrsh7th/cmp-cmdline' } -- use to command/search complete
+  use { 'hrsh7th/cmp-cmdline' } -- use to command/search complete
+  use { 'lukas-reineke/cmp-rg' } -- use to command/search complete
 
   -- use { 'hrsh7th/cmp-vsnip' }
   -- use { 'hrsh7th/vim-vsnip' }
@@ -27,8 +28,7 @@ return packer.startup(function()
   use "nvim-lua/popup.nvim"
   use "folke/neodev.nvim"
 
-
-  -- window
+  -------------- tool --------------
   use {
     "nvim-neo-tree/neo-tree.nvim",
     branch = "v2.x",
@@ -40,27 +40,47 @@ return packer.startup(function()
   }
   use {
     'nvim-telescope/telescope.nvim', tag = '0.1.0',
-    requires = { {'nvim-lua/plenary.nvim'} }
-  }
-  use { 'wellle/tmux-complete.vim' }
-  use { 'ellisonleao/gruvbox.nvim' }
-  use {
-    'nvim-lualine/lualine.nvim',
-    requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+    requires = { { 'nvim-lua/plenary.nvim' } }
   }
   use {
     'akinsho/bufferline.nvim',
     tag = "v3.*",
     requires = 'kyazdani42/nvim-web-devicons'
   }
-  use { 'rrethy/vim-hexokinase', run = 'make hexokinase' }  -- show color by color code
+  use { 'rmagatti/auto-session' }
+  use { 'phaazon/hop.nvim', branch = 'v2'}
+  use {
+    'numToStr/Comment.nvim',
+    config = function()
+      require('Comment').setup()
+    end
+  }
+  use {
+    'andymass/vim-matchup',
+    setup = function()
+      -- may set any options here
+      vim.g.matchup_matchparen_offscreen = { method = "popup" }
+    end
+  }
+  use { "folke/which-key.nvim" }
+  use {
+    'gcmt/wildfire.vim',
+    config = function()
+      vim.g.wildfire_objects = {"i'", 'i"', "i)", "i]", "i}", "ip", "it"}
+    end
+  }
+  -------------- decoration --------------
+  use { 'ellisonleao/gruvbox.nvim' }
+  use {
+    'nvim-lualine/lualine.nvim',
+    requires = { 'kyazdani42/nvim-web-devicons', opt = true }
+  }
   use { 'RRethy/vim-illuminate' } -- automatically highlighting other uses of the word under the cursor
+  use { 'rrethy/vim-hexokinase', run = 'make hexokinase' } -- show color by color code
   use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' } -- automatically highlighting other uses of the word under the cursor
-  -------------- markdown --------------
+  use { 'dhruvasagar/vim-table-mode' } -- table mode
+  use { 'dkarter/bullets.vim' } -- list style
+  use { 'tpope/vim-markdown' } -- syntax highlighting and filetype plugins for Markdown
+  use { 'tenxsoydev/vim-markdown-checkswitch' } -- checkbox
   use { 'suan/vim-instant-markdown', ft = 'markdown' } -- automatically highlighting other uses of the word under the cursor
-  use { 'dhruvasagar/vim-table-mode' }
-  use { 'dkarter/bullets.vim' }
-  use { 'tpope/vim-markdown' }
-  use { 'tenxsoydev/vim-markdown-checkswitch' }
-  use { 'gelguy/wilder.nvim' }
 end)

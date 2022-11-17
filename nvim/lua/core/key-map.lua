@@ -52,5 +52,13 @@ maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" 
 maps.n["<leader>mc"] = { "<cmd>CheckSwitch<cr>", desc = "Checkbox Switch" }
 maps.v["<leader>mc"] = { "<cmd>CheckSwitch<cr>gv", desc = "Checkbox Switch" }
 
+-- hop
+maps.n[";w"] = { "<cmd>HopWord<cr>", desc = "Hop Word" }
+maps.n[";a"] = { "<cmd>HopAnywhere<cr>", desc = "Hop Anywhere" }
+maps.n[";s"] = { "<cmd>HopChar2<cr>", desc = "Hop search" }
+maps.n[";l"] = { "<cmd>HopWordCurrentLineAC<cr>", desc = "Hop line right" }
+maps.n[";h"] = { "<cmd>HopWordCurrentLineBC<cr>", desc = "Hop line left" }
+maps.n[";k"] = { "<cmd>HopLineBC<cr>", desc = "Hop line down" }
+maps.n[";j"] = { "<cmd>HopLineAC<cr>", desc = "Hop line up" }
 
 my.set_mappings(maps)

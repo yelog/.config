@@ -1,4 +1,3 @@
-
 require('Comment').setup(
     {
         toggler = {
