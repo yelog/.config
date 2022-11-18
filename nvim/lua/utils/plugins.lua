@@ -20,10 +20,11 @@ return packer.startup(function(use)
   use { 'alvan/vim-closetag' } -- when "<table|", type > , will be "<table>|</table>"
   use { 'windwp/nvim-autopairs' }
   use { 'windwp/nvim-ts-autotag' }
+  use { 'onsails/lspkind.nvim' }
 
   -- use { 'hrsh7th/cmp-vsnip' }
   -- use { 'hrsh7th/vim-vsnip' }
-  -- use { 'L3MON4D3/LuaSnip' }
+  use { 'L3MON4D3/LuaSnip' }
   -- use { 'saadparwaiz1/cmp_luasnip' }
 
   use { 'jose-elias-alvarez/null-ls.nvim' }
