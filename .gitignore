@@ -3,7 +3,9 @@
 /*/
 
 # ... but these:
-!/ranger/
+!/ranger/rc.conf
+!/ranger/rifile.conf
+!/ranger/scope.sh
 !/tmux/
 !/nvim/
 !/zsh/
