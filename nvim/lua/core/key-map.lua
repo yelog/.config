@@ -13,6 +13,9 @@ maps.n["<leader>pi"] = { "<cmd>PackerInstall<cr>", desc = "plug install" }
 maps.n["<leader>pc"] = { "<cmd>PackerClean<cr>", desc = "plug clean" }
 maps.n["<leader>pu"] = { "<cmd>PackerUpdate<cr>", desc = "plug update" }
 
+-- lsp
+maps.n["<leader>lf"] = { function() vim.lsp.buf.format { async = true } end, desc = "format code" }
+
 
 -- Telescope
 maps.n["<leader>ff"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }

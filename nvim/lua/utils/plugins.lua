@@ -8,8 +8,9 @@ end
 return packer.startup(function(use)
   use 'wbthomason/packer.nvim' -- Package manager
   -------------- lsp & complete --------------
-  use 'neovim/nvim-lspconfig' -- Configurations for Nvim LSP
-  use { 'ray-x/lsp_signature.nvim' }
+  use { 'neovim/nvim-lspconfig' } -- Configurations for Nvim LSP
+  use { "williamboman/mason.nvim" }
+  use { 'ray-x/lsp_signature.nvim' } -- Show function signature when you type
   use { 'hrsh7th/nvim-cmp' }
   use { 'hrsh7th/cmp-buffer' } -- nvim-cmp source for buffer words
   use { 'hrsh7th/cmp-nvim-lsp' }

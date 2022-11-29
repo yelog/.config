@@ -1,10 +1,10 @@
 require("null-ls").setup({
-    filetypes = { "lua" },
-    sources = {
-        require("null-ls").builtins.formatting.stylua,
-        require("null-ls").builtins.diagnostics.eslint,
-        require("null-ls").builtins.completion.spell,
-    },
+  filetypes = { "lua" },
+  sources = {
+    require("null-ls").builtins.formatting.stylua,
+    require("null-ls").builtins.diagnostics.eslint,
+    require("null-ls").builtins.completion.spell,
+  },
 })
 
 -- local null_ls = require("null-ls")
@@ -38,4 +38,3 @@ require("null-ls").setup({
 -- }
 --
 -- null_ls.register(no_really)
-
