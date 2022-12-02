@@ -6,6 +6,17 @@ maps[""]["<Space>"] = "<Nop>"
 
 -- Base
 maps.n["Q"] = { "<cmd>qa<cr>", desc = "Quit" }
+maps.n["<c-q>"] = { function ()
+  -- print(vim.fn.tabpagenr('$'))
+  print(vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$'))
+  if vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$') > 1 then
+    -- close current window
+    vim.cmd("close")
+  else
+    -- close current file
+    vim.cmd("bdelete")
+  end
+end, desc = "Quit" }
 -- maps.n["Q"] = { "<cmd>w<cr><cmd>qa<cr>", desc = "Quit" }
 
 -- vim-plug
@@ -47,7 +58,7 @@ maps.n["<c-n>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Buffer Next" }
 maps.n["<c-p>"] = { "<cmd>BufferLineCyclePrev<cr>", desc = "Buffer Previous" }
 maps.n[">b"] = { "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Next" }
 maps.n["<b"] = { "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Previous" }
-maps.n["<c-q>"] = { "<cmd>bdelete<cr>", desc = "Buffer Close" }
+-- maps.n["<c-q>"] = { "<cmd>bdelete<cr>", desc = "Buffer Close" }
 
 -- markdown
 maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" }
