@@ -32,3 +32,13 @@ key_bindings:
   - { key: Back, action:  ReceiveChar}
   # - { key: Q,  mods: Control|Shift,           chars: "\x1b[81;5u"           }
   # - { key: J,        mods: Control|Shift, chars: "\x1b[74;5u"                }
+
+window:
+  # decorations: buttonless
+  decorations: full
+  # position:
+  #  x: 2
+  #  y: 2
+  # padding:
+  #   x: 2
+  #   y: 2

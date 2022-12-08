@@ -6,9 +6,13 @@ maps[""]["<Space>"] = "<Nop>"
 
 -- Base
 maps.n["Q"] = { "<cmd>qa<cr>", desc = "Quit" }
+local neoTree = require("neo-tree")
 maps.n["<c-q>"] = { function ()
+    -- print(vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$'))
+  -- print(neoTree.get_prior_window())
+  -- vim.fn.getwininfo(1)
   -- print(vim.fn.tabpagenr('$'))
-  print(vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$'))
+
   if vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$') > 1 then
     -- close current window
     vim.cmd("close")
