@@ -10,6 +10,7 @@ return packer.startup(function(use)
   -------------- lsp & complete --------------
   use { 'neovim/nvim-lspconfig' } -- Configurations for Nvim LSP
   use { "williamboman/mason.nvim" }
+  use { "williamboman/mason-lspconfig.nvim" }
   use { 'ray-x/lsp_signature.nvim' } -- Show function signature when you type
   use { 'hrsh7th/nvim-cmp' }
   use { 'hrsh7th/cmp-buffer' } -- nvim-cmp source for buffer words
