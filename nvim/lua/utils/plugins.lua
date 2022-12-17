@@ -78,28 +78,29 @@ return packer.startup(function(use)
       vim.g.wildfire_objects = { "i'", 'i"', "i)", "i]", "i}", "ip", "it" }
     end
   }
-  use { 'tpope/vim-surround' } -- type ysiw' to wrap the word with '' or type cs'` to change 'word' to `word`
-  use { 'tpope/vim-repeat' } -- repeat surround and so on
-  use { 'ybian/smartim' } -- smart switch input method
-  use { 'itchyny/vim-cursorword' } -- Underlines the word under the cursor
-  use { '907th/vim-auto-save' } -- auto-save
-  use { 'dhruvasagar/vim-open-url' } -- open brower with the url under the cursor
-  use { 'airblade/vim-rooter' } -- Changes Vim working directory to project root
+  use { 'tpope/vim-surround' } --> type ysiw' to wrap the word with '' or type cs'` to change 'word' to `word`
+  use { 'tpope/vim-repeat' } --> repeat surround and so on
+  use { 'ybian/smartim' } --> smart switch input method
+  use { 'itchyny/vim-cursorword' } --> Underlines the word under the cursor
+  use { '907th/vim-auto-save' } --> auto-save
+  use { 'dhruvasagar/vim-open-url' } --> open brower with the url under the cursor
+  use { 'airblade/vim-rooter' } --> Changes Vim working directory to project root
   -------------- git --------------
   use { 'airblade/vim-gitgutter' }
   -------------- decoration --------------
   use { 'ellisonleao/gruvbox.nvim' }
+  use {"lukas-reineke/indent-blankline.nvim"} --> Indent guides for Neovim
   use {
     'nvim-lualine/lualine.nvim',
     requires = { 'kyazdani42/nvim-web-devicons', opt = true }
   }
-  use { 'RRethy/vim-illuminate' } -- automatically highlighting other uses of the word under the cursor
-  use { 'rrethy/vim-hexokinase', run = 'make hexokinase' } -- show color by color code
-  use { 'jeffkreeftmeijer/vim-numbertoggle' } -- Toggles between hybrid and absolute line numbers automatically
-  use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' } -- automatically highlighting other uses of the word under the cursor
-  use { 'dhruvasagar/vim-table-mode' } -- table mode
-  use { 'dkarter/bullets.vim' } -- list style
-  use { 'tpope/vim-markdown' } -- syntax highlighting and filetype plugins for Markdown
-  use { 'tenxsoydev/vim-markdown-checkswitch' } -- checkbox
-  use { 'suan/vim-instant-markdown', ft = 'markdown' } -- automatically highlighting other uses of the word under the cursor
+  use { 'RRethy/vim-illuminate' } --> automatically highlighting other uses of the word under the cursor
+  use { 'rrethy/vim-hexokinase', run = 'make hexokinase' } --> show color by color code
+  use { 'jeffkreeftmeijer/vim-numbertoggle' } --> Toggles between hybrid and absolute line numbers automatically
+  use { 'nvim-treesitter/nvim-treesitter', run = ':TSUpdate' } --> automatically highlighting other uses of the word under the cursor
+  use { 'dhruvasagar/vim-table-mode' } --> table mode
+  use { 'dkarter/bullets.vim' } --> list style
+  use { 'tpope/vim-markdown' } --> syntax highlighting and filetype plugins for Markdown
+  use { 'tenxsoydev/vim-markdown-checkswitch' } --> checkbox
+  use { 'suan/vim-instant-markdown', ft = 'markdown' } --> automatically highlighting other uses of the word under the cursor
 end)
