@@ -36,6 +36,7 @@ maps.n["<leader>lf"] = { function() vim.lsp.buf.format { async = true } end, des
 -- Telescope
 maps.n["<leader>ff"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }
 maps.n["<leader>fb"] = { function() require("telescope.builtin").buffers() end, desc = "Search buffers" }
+maps.n["<leader>fn"] = { function() require('telescope').extensions.notify.notify() end, desc = "Search buffers" }
 maps.n["<leader>fr"] = { function() require("telescope.builtin").lsp_references() end, desc = "Search references" }
 maps.n["<leader>fk"] = { function() require("telescope.builtin").keymaps() end, desc = "Search keymap" }
 maps.n["<leader>ft"] = { function() require("telescope.builtin").help_tags() end, desc = "Search tags" }
@@ -51,6 +52,15 @@ maps.n["<leader>fW"] = {
   end,
   desc = "Search words in all files",
 }
+
+local truezen = require('true-zen')
+--> true-zen
+maps.n["<leader>zn"] = { "<cmd>TZNarrow<cr>", desc = "" }
+maps.v["<leader>zn"] = { "<cmd>'<,'>TZNarrow<cr>", desc = "" }
+maps.n["<leader>zf"] = { "<cmd>TZFocus<cr>", desc = "" }
+maps.n["<leader>zm"] = { "<cmd>TZMinimalist<cr>", desc = "" }
+maps.n["<leader>za"] = { "<cmd>TZAtaraxis<cr>", desc = "" }
+
 
 -- neo-tree
 -- maps.n["<leader>e"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }

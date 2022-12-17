@@ -54,6 +54,8 @@ return packer.startup(function(use)
     tag = "v3.*",
     requires = 'kyazdani42/nvim-web-devicons'
   }
+  use { 'rcarriga/nvim-notify' }
+  use { "Pocco81/true-zen.nvim" }
   use { 'rmagatti/auto-session' }
   use { 'phaazon/hop.nvim', branch = 'v2' }
   use {
