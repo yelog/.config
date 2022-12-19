@@ -95,11 +95,11 @@ maps.n[";j"] = { "<cmd>HopLineAC<cr>", desc = "Hop line up" }
 maps.n["<leader>gg"] = { "<cmd>LazyGit<cr>", desc = "LazyGit" }
 maps.n["<leader>gh"] = { "<cmd>LazyGitFilterCurrentFile<cr>", desc = "Current file history" }
 maps.n["<leader>gf"] = { "<cmd>GitGutterFold<cr>", desc = "git fold" }
-maps.n["<leader>gp"] = { "<cmd>GitGutterPreviewHunk<cr>", desc = "git review hunk" }
-maps.n["<leader>gk"] = { "<cmd>GitGutterPrevHunk<cr>", desc = "git prev hunk" }
-maps.n["<leader>gj"] = { "<cmd>GitGutterNextHunk<cr>", desc = "git next hunk" }
+maps.n["<leader>gp"] = { "<cmd>GitGutterPrevHunk<cr>", desc = "git prev hunk" }
+maps.n["<leader>gn"] = { "<cmd>GitGutterNextHunk<cr>", desc = "git next hunk" }
 maps.n["<leader>gu"] = { "<cmd>GitGutterUndoHunk<cr>", desc = "git reset" }
-maps.n["<leader>gd"] = { "<cmd>GitGutterDiffOrig<cr>", desc = "git diff" }
+maps.n["<leader>gd"] = { "<cmd>GitGutterPreviewHunk<cr>", desc = "git review hunk" }
+-- maps.n["<leader>gd"] = { "<cmd>GitGutterDiffOrig<cr>", desc = "git diff" }
 maps.n["<leader>gb"] = { "<cmd>Git blame<cr>", desc = "git blame" }
 
 
