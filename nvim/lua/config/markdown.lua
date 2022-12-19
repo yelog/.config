@@ -9,3 +9,8 @@ vim.g.markdown_fenced_languages = { 'html', 'python', 'bash=sh', 'json', 'java',
 
 -- tenxsoydev/vim-markdown-checkswitch
 vim.g.md_checkswitch_style = 'cycle'
+--> custom color
+vim.cmd [[highlight checkbox cterm=bold gui=bold guifg=#b16286]]
+vim.cmd [[match checkbox /\v\[ \]/]]
+vim.cmd [[highlight checkbox_checked cterm=bold gui=bold guifg=#3ac569]]
+vim.cmd [[2match checkbox_checked /\v\[x\]/]]
