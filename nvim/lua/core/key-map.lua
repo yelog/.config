@@ -29,8 +29,8 @@ maps.n["<leader>pc"] = { "<cmd>PackerClean<cr>", desc = "plug clean" }
 maps.n["<leader>pu"] = { "<cmd>PackerUpdate<cr>", desc = "plug update" }
 
 -- lsp
-maps.n["<leader>ll"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
-maps.n["<leader>lf"] = { function() vim.lsp.buf.format { async = true } end, desc = "format code" }
+maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
+maps.n["<leader>ll"] = { function() vim.lsp.buf.format { async = true } end, desc = "format code" }
 
 
 -- Telescope

@@ -1,5 +1,5 @@
 vim.o.background = "dark" -- or "light" for light mode
-require('gruvbox').setup({
+require("gruvbox").setup({
   undercurl = true,
   underline = true,
   bold = true,
@@ -16,6 +16,6 @@ require('gruvbox').setup({
   transparent_mode = false,
   palette_overrides = {
     -- bright_green = "#C58940"
-  }
+  },
 })
 vim.cmd([[colorscheme gruvbox]])
