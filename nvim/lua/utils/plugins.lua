@@ -88,6 +88,12 @@ return packer.startup(function(use)
   use({ "907th/vim-auto-save" }) --> auto-save
   use({ "dhruvasagar/vim-open-url" }) --> open brower with the url under the cursor
   use({ "airblade/vim-rooter" }) --> Changes Vim working directory to project root
+  -- use({ -- chrome input use neovim
+  --   "glacambre/firenvim",
+  --   run = function()
+  --     vim.fn["firenvim#install"](0)
+  --   end,
+  -- })
   -------------- git --------------
   use({ "airblade/vim-gitgutter" })
   -------------- decoration --------------

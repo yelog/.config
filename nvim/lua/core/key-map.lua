@@ -23,7 +23,8 @@ maps.n["<c-q>"] = { function ()
 end, desc = "Quit" }
 -- maps.n["Q"] = { "<cmd>w<cr><cmd>qa<cr>", desc = "Quit" }
 
--- vim-plug
+-- plugin
+maps.n["<leader>pp"] = { "<cmd>PackerSync<cr>", desc = "plug install" }
 maps.n["<leader>pi"] = { "<cmd>PackerInstall<cr>", desc = "plug install" }
 maps.n["<leader>pc"] = { "<cmd>PackerClean<cr>", desc = "plug clean" }
 maps.n["<leader>pu"] = { "<cmd>PackerUpdate<cr>", desc = "plug update" }
@@ -43,8 +44,8 @@ maps.n["<leader>ft"] = { function() require("telescope.builtin").help_tags() end
 maps.n["<leader>fm"] = { function() require("telescope.builtin").marks() end, desc = "Search marks" }
 maps.n["<leader>fh"] = { function() require("telescope.builtin").oldfiles() end, desc = "Search hisotry" }
 maps.n["<leader>f;"] = { function() require("telescope.builtin").builtin() end, desc = "Search builtin" }
-maps.n["<leader>fw"] = { function() require("telescope.builtin").live_grep() end, desc = "Search word" }
-maps.n["<leader>fW"] = {
+maps.n["<leader>fs"] = { function() require("telescope.builtin").live_grep() end, desc = "Search word" }
+maps.n["<leader>fS"] = {
   function()
     require("telescope.builtin").live_grep {
       additional_args = function(args) return vim.list_extend(args, { "--hidden", "--no-ignore" }) end,
@@ -101,6 +102,10 @@ maps.n["<leader>gu"] = { "<cmd>GitGutterUndoHunk<cr>", desc = "git reset" }
 maps.n["<leader>gd"] = { "<cmd>GitGutterPreviewHunk<cr>", desc = "git review hunk" }
 -- maps.n["<leader>gd"] = { "<cmd>GitGutterDiffOrig<cr>", desc = "git diff" }
 maps.n["<leader>gb"] = { "<cmd>Git blame<cr>", desc = "git blame" }
+
+
+
+maps.n["<leader>pv"] = { vim.cmd.Ex, desc = "git blame" }
 
 
 my.set_mappings(maps)
