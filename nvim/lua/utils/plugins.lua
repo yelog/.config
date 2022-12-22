@@ -18,6 +18,7 @@ return packer.startup(function(use)
   use({ "andersevenrud/cmp-tmux" }) -- tmux completion source for nvim-cmp
   use({ "hrsh7th/cmp-path" }) -- nvim-cmp source for filesystem paths
   use({ "hrsh7th/cmp-cmdline" }) -- use to command/search complete
+  use({ "octaltree/cmp-look" })
   use({ "lukas-reineke/cmp-rg" }) -- ripgrep source for nvim-cmp
   use({ "alvan/vim-closetag" }) -- when "<table|", type > , will be "<table>|</table>"
   use({ "windwp/nvim-autopairs" })
@@ -91,6 +92,7 @@ return packer.startup(function(use)
   use({ "airblade/vim-gitgutter" })
   -------------- decoration --------------
   use({ "ellisonleao/gruvbox.nvim" })
+  use({ "stevearc/dressing.nvim" })
   use({ "lukas-reineke/indent-blankline.nvim" }) --> Indent guides for Neovim
   use({
     "nvim-lualine/lualine.nvim",

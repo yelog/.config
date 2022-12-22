@@ -25,3 +25,4 @@ function my.set_mappings(map_table, base)
   end
 end
 
+function my.is_available(plugin) return packer_plugins ~= nil and packer_plugins[plugin] ~= nil end
