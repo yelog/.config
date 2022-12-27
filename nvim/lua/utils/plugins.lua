@@ -37,6 +37,35 @@ return packer.startup(function(use)
   use("nvim-lua/popup.nvim")
   use("folke/neodev.nvim")
 
+  use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }) --> automatically highlighting other uses of the word under the cursor
+  use({ "nvim-treesitter/playground" }) --> automatically highlighting other uses of the word under the cursor
+  use({
+    "abecodes/tabout.nvim",
+    config = function()
+      require("tabout").setup({
+        tabkey = "<Tab>", -- key to trigger tabout, set to an empty string to disable
+        backwards_tabkey = "<S-Tab>", -- key to trigger backwards tabout, set to an empty string to disable
+        act_as_tab = true, -- shift content if tab out is not possible
+        act_as_shift_tab = false, -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
+        default_tab = "<C-t>", -- shift default action (only at the beginning of a line, otherwise <TAB> is used)
+        default_shift_tab = "<C-d>", -- reverse shift default action,
+        enable_backwards = true, -- well ...
+        completion = true, -- if the tabkey is used in a completion pum
+        tabouts = {
+          { open = "'", close = "'" },
+          { open = '"', close = '"' },
+          { open = "`", close = "`" },
+          { open = "(", close = ")" },
+          { open = "[", close = "]" },
+          { open = "{", close = "}" },
+        },
+        ignore_beginning = true, --[[ if the cursor is at the beginning of a filled element it will rather tab out than shift the content ]]
+        exclude = {}, -- tabout will ignore these filetypes
+      })
+    end,
+    wants = { "nvim-treesitter" }, -- or require if not used so far
+    after = { "nvim-cmp" }, -- if a completion plugin is using tabs load it before
+  })
   -------------- tool --------------
   use({
     "nvim-neo-tree/neo-tree.nvim",
@@ -96,6 +125,7 @@ return packer.startup(function(use)
   -- })
   -------------- git --------------
   use({ "airblade/vim-gitgutter" })
+  -- use({ "f-person/git-blame.nvim" })
   -------------- decoration --------------
   use({ "ellisonleao/gruvbox.nvim" })
   use({ "stevearc/dressing.nvim" })
@@ -107,7 +137,6 @@ return packer.startup(function(use)
   use({ "RRethy/vim-illuminate" }) --> automatically highlighting other uses of the word under the cursor
   use({ "rrethy/vim-hexokinase", run = "make hexokinase" }) --> show color by color code
   use({ "jeffkreeftmeijer/vim-numbertoggle" }) --> Toggles between hybrid and absolute line numbers automatically
-  use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }) --> automatically highlighting other uses of the word under the cursor
   use({ "dhruvasagar/vim-table-mode" }) --> table mode
   use({ "dkarter/bullets.vim" }) --> list style
   use({ "tpope/vim-markdown" }) --> syntax highlighting and filetype plugins for Markdown
