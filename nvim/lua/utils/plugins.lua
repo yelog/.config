@@ -66,6 +66,59 @@ return packer.startup(function(use)
     wants = { "nvim-treesitter" }, -- or require if not used so far
     after = { "nvim-cmp" }, -- if a completion plugin is using tabs load it before
   })
+  use({
+    "folke/trouble.nvim",
+    requires = "kyazdani42/nvim-web-devicons",
+    config = function()
+      require("trouble").setup({
+        position = "bottom", -- position of the list can be: bottom, top, left, right
+        height = 10, -- height of the trouble list when position is top or bottom
+        width = 50, -- width of the list when position is left or right
+        icons = true, -- use devicons for filenames
+        mode = "workspace_diagnostics", -- "workspace_diagnostics", "document_diagnostics", "quickfix", "lsp_references", "loclist"
+        fold_open = "", -- icon used for open folds
+        fold_closed = "", -- icon used for closed folds
+        group = true, -- group results by file
+        padding = true, -- add an extra new line on top of the list
+        action_keys = { -- key mappings for actions in the trouble list
+          -- map to {} to remove a mapping, for example:
+          -- close = {},
+          close = "q", -- close the list
+          cancel = "<esc>", -- cancel the preview and get back to your last window / buffer / cursor
+          refresh = "r", -- manually refresh
+          jump = { "<cr>", "<tab>" }, -- jump to the diagnostic or open / close folds
+          open_split = { "<c-x>" }, -- open buffer in new split
+          open_vsplit = { "<c-v>" }, -- open buffer in new vsplit
+          open_tab = { "<c-t>" }, -- open buffer in new tab
+          jump_close = { "o" }, -- jump to the diagnostic and close the list
+          toggle_mode = "m", -- toggle between "workspace" and "document" diagnostics mode
+          toggle_preview = "P", -- toggle auto_preview
+          hover = "K", -- opens a small popup with the full multiline message
+          preview = "p", -- preview the diagnostic location
+          close_folds = { "zM", "zm" }, -- close all folds
+          open_folds = { "zR", "zr" }, -- open all folds
+          toggle_fold = { "zA", "za" }, -- toggle fold of current file
+          previous = "k", -- previous item
+          next = "j", -- next item
+        },
+        indent_lines = true, -- add an indent guide below the fold icons
+        auto_open = false, -- automatically open the list when you have diagnostics
+        auto_close = false, -- automatically close the list when you have no diagnostics
+        auto_preview = true, -- automatically preview the location of the diagnostic. <esc> to close preview and go back to last window
+        auto_fold = false, -- automatically fold a file trouble list at creation
+        auto_jump = { "lsp_definitions" }, -- for the given modes, automatically jump if there is only a single result
+        signs = {
+          -- icons / text used for a diagnostic
+          error = "",
+          warning = "",
+          hint = "",
+          information = "",
+          other = "﫠",
+        },
+        use_diagnostic_signs = false, -- enabling this will use the signs defined in your lsp client
+      })
+    end,
+  })
   -------------- tool --------------
   use({
     "nvim-neo-tree/neo-tree.nvim",
@@ -128,6 +181,7 @@ return packer.startup(function(use)
   -- use({ "f-person/git-blame.nvim" })
   -------------- decoration --------------
   use({ "ellisonleao/gruvbox.nvim" })
+  use({ "folke/tokyonight.nvim" })
   use({ "stevearc/dressing.nvim" })
   use({ "lukas-reineke/indent-blankline.nvim" }) --> Indent guides for Neovim
   use({
@@ -137,9 +191,12 @@ return packer.startup(function(use)
   use({ "RRethy/vim-illuminate" }) --> automatically highlighting other uses of the word under the cursor
   use({ "rrethy/vim-hexokinase", run = "make hexokinase" }) --> show color by color code
   use({ "jeffkreeftmeijer/vim-numbertoggle" }) --> Toggles between hybrid and absolute line numbers automatically
+  -------------- markdown --------------
   use({ "dhruvasagar/vim-table-mode" }) --> table mode
   use({ "dkarter/bullets.vim" }) --> list style
-  use({ "tpope/vim-markdown" }) --> syntax highlighting and filetype plugins for Markdown
-  use({ "tenxsoydev/vim-markdown-checkswitch" }) --> checkbox
+  -- use({ "tpope/vim-markdown" }) --> syntax highlighting and filetype plugins for Markdown
+  use({ "godlygeek/tabular" })
+  use({ "preservim/vim-markdown" })
+  use({ "tenxsoydev/vim-markdown-checkswitch" }) --> checkbox shortcut
   use({ "suan/vim-instant-markdown", ft = "markdown" }) --> automatically highlighting other uses of the word under the cursor
 end)
