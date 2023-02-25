@@ -39,6 +39,16 @@ return packer.startup(function(use)
 
   use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }) --> automatically highlighting other uses of the word under the cursor
   use({ "nvim-treesitter/playground" }) --> automatically highlighting other uses of the word under the cursor
+  use({ "edluffy/hologram.nvim" })
+  --  Image Viewer as ASCII Art for Neovim written in Lua
+  use({
+    "samodostal/image.nvim",
+    requires = {
+      "nvim-lua/plenary.nvim",
+    },
+  })
+  use({ "m00qek/baleia.nvim", tag = "v1.2.0" }) -->
+
   use({
     "abecodes/tabout.nvim",
     config = function()
@@ -175,6 +185,10 @@ return packer.startup(function(use)
   --   run = function()
   --     vim.fn["firenvim#install"](0)
   --   end,
+  -- })
+  -- use({
+  --   "arnarg/todotxt.nvim",
+  --   requires = { "MunifTanjim/nui.nvim" },
   -- })
   -------------- git --------------
   use({ "airblade/vim-gitgutter" })

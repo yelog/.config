@@ -67,7 +67,7 @@ maps.n["<leader>za"] = { "<cmd>TZAtaraxis<cr>", desc = "" }
 -- maps.n["<leader>e"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }
 -- maps.n["<leader>e"] = { "<cmd>Neotree toggle<cr>", desc = "Toggle Explorer" }
 maps.n["<M-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
-maps.n["<M-2>"] = { "<cmd>Neotree float toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n["<M-2>"] = { "<cmd>Neotree float toggle<cr>", desc = "Toggle Explorer" }
 -- maps.n["<leader>o"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" }
 
 -- bufferline
@@ -103,9 +103,10 @@ maps.n["<leader>gd"] = { "<cmd>GitGutterPreviewHunk<cr>", desc = "git review hun
 -- maps.n["<leader>gd"] = { "<cmd>GitGutterDiffOrig<cr>", desc = "git diff" }
 maps.n["<leader>gb"] = { "<cmd>Git blame<cr>", desc = "git blame" }
 
-
-
 maps.n["<leader>pv"] = { vim.cmd.Ex, desc = "git blame" }
 
+-- task manager
+maps.n["<leader>tn"] = { "<cmd>ToDoTxtCapture<cr>", desc= "New Todo"}
+maps.n["<M-2>"] = { "<cmd>ToDoTxtTasksToggle<cr>", desc= "Toggle TodoBoard"}
 
 my.set_mappings(maps)
