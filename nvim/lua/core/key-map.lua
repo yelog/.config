@@ -1,5 +1,3 @@
-local is_available = my.is_available
-
 local maps = { i = {}, n = {}, v = {}, t = {}, [""] = {} }
 
 maps[""]["<Space>"] = "<Nop>"
