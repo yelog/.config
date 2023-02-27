@@ -39,15 +39,15 @@ return packer.startup(function(use)
 
   use({ "nvim-treesitter/nvim-treesitter", run = ":TSUpdate" }) --> automatically highlighting other uses of the word under the cursor
   use({ "nvim-treesitter/playground" }) --> automatically highlighting other uses of the word under the cursor
-  use({ "edluffy/hologram.nvim" })
+  -- use({ "edluffy/hologram.nvim" })
   --  Image Viewer as ASCII Art for Neovim written in Lua
-  use({
-    "samodostal/image.nvim",
-    requires = {
-      "nvim-lua/plenary.nvim",
-    },
-  })
-  use({ "m00qek/baleia.nvim", tag = "v1.2.0" }) -->
+  -- use({
+  --   "samodostal/image.nvim",
+  --   requires = {
+  --     "nvim-lua/plenary.nvim",
+  --   },
+  -- })
+  -- use({ "m00qek/baleia.nvim", tag = "v1.2.0" }) -->
 
   use({
     "abecodes/tabout.nvim",
@@ -100,7 +100,23 @@ return packer.startup(function(use)
     tag = "v3.*",
     requires = "kyazdani42/nvim-web-devicons",
   })
-  use({ "rcarriga/nvim-notify" })
+  -- use({ "rcarriga/nvim-notify" })
+  use({
+    "folke/noice.nvim",
+    config = function()
+      require("noice").setup({
+        -- add any options here
+      })
+    end,
+    requires = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      "MunifTanjim/nui.nvim",
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      "rcarriga/nvim-notify",
+    },
+  })
   use({ "Pocco81/true-zen.nvim" })
   use({ "rmagatti/auto-session" })
   use({ "phaazon/hop.nvim", branch = "v2" })

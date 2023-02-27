@@ -4,7 +4,7 @@ maps[""]["<Space>"] = "<Nop>"
 
 -- Base
 maps.n["Q"] = { "<cmd>qa<cr>", desc = "Quit" }
-local neoTree = require("neo-tree")
+-- local neoTree = require("neo-tree")
 maps.n["<c-q>"] = { function ()
     -- print(vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$'))
   -- print(neoTree.get_prior_window())
@@ -52,7 +52,7 @@ maps.n["<leader>fS"] = {
   desc = "Search words in all files",
 }
 
-local truezen = require('true-zen')
+-- local truezen = require('true-zen')
 --> true-zen
 maps.n["<leader>zn"] = { "<cmd>TZNarrow<cr>", desc = "" }
 maps.v["<leader>zn"] = { "<cmd>'<,'>TZNarrow<cr>", desc = "" }
