@@ -56,33 +56,33 @@ require("lazy").setup({
 	-- })
 	-- use({ "m00qek/baleia.nvim", tag = "v1.2.0" }) -->
 
-	-- use({
-	--   "abecodes/tabout.nvim",
-	--   config = function()
-	--     require("tabout").setup({
-	--       tabkey = "<Tab>", -- key to trigger tabout, set to an empty string to disable
-	--       backwards_tabkey = "<S-Tab>", -- key to trigger backwards tabout, set to an empty string to disable
-	--       act_as_tab = true, -- shift content if tab out is not possible
-	--       act_as_shift_tab = false, -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
-	--       default_tab = "<C-t>", -- shift default action (only at the beginning of a line, otherwise <TAB> is used)
-	--       default_shift_tab = "<C-d>", -- reverse shift default action,
-	--       enable_backwards = true, -- well ...
-	--       completion = true, -- if the tabkey is used in a completion pum
-	--       tabouts = {
-	--         { open = "'", close = "'" },
-	--         { open = '"', close = '"' },
-	--         { open = "`", close = "`" },
-	--         { open = "(", close = ")" },
-	--         { open = "[", close = "]" },
-	--         { open = "{", close = "}" },
-	--       },
-	--       ignore_beginning = true, --[[ if the cursor is at the beginning of a filled element it will rather tab out than shift the content ]]
-	--       exclude = {}, -- tabout will ignore these filetypes
-	--     })
-	--   end,
-	--   wants = { "nvim-treesitter" }, -- or require if not used so far
-	--   after = { "nvim-cmp" }, -- if a completion plugin is using tabs load it before
-	-- })
+	{
+		"abecodes/tabout.nvim",
+		config = function()
+			require("tabout").setup({
+				tabkey = "<Tab>", -- key to trigger tabout, set to an empty string to disable
+				backwards_tabkey = "<S-Tab>", -- key to trigger backwards tabout, set to an empty string to disable
+				act_as_tab = true, -- shift content if tab out is not possible
+				act_as_shift_tab = false, -- reverse shift content if tab out is not possible (if your keyboard/terminal supports <S-Tab>)
+				default_tab = "<C-t>", -- shift default action (only at the beginning of a line, otherwise <TAB> is used)
+				default_shift_tab = "<C-d>", -- reverse shift default action,
+				enable_backwards = true, -- well ...
+				completion = true, -- if the tabkey is used in a completion pum
+				tabouts = {
+					{ open = "'", close = "'" },
+					{ open = '"', close = '"' },
+					{ open = "`", close = "`" },
+					{ open = "(", close = ")" },
+					{ open = "[", close = "]" },
+					{ open = "{", close = "}" },
+				},
+				ignore_beginning = true, --[[ if the cursor is at the beginning of a filled element it will rather tab out than shift the content ]]
+				exclude = {}, -- tabout will ignore these filetypes
+			})
+		end,
+		wants = { "nvim-treesitter" }, -- or require if not used so far
+		after = { "nvim-cmp" }, -- if a completion plugin is using tabs load it before
+	},
 	{
 		"folke/trouble.nvim",
 		dependencies = { "kyazdani42/nvim-web-devicons" },
@@ -175,14 +175,19 @@ require("lazy").setup({
 		dependencies = { "kyazdani42/nvim-web-devicons" },
 	},
 	"RRethy/vim-illuminate", --> automatically highlighting other uses of the word under the cursor
-	-- { ecrrethy/vim-hexokinase" }, --> show color by color code
+	"lilydjwg/colorizer", --> show color by color code
 	"jeffkreeftmeijer/vim-numbertoggle", --> Toggles between hybrid and absolute line numbers automatically
-	-------------- markdown --------------
+	--	-------------- markdown --------------
 	"dhruvasagar/vim-table-mode", --> table mode
 	"dkarter/bullets.vim", --> list style
-	-- use({ "tpope/vim-markdown" }) --> syntax highlighting and filetype plugins for Markdown
-	"godlygeek/tabular",
-	"preservim/vim-markdown",
-	"tenxsoydev/vim-markdown-checkswitch", --> checkbox shortcut
+	--	-- use({ "tpope/vim-markdown" }) --> syntax highlighting and filetype plugins for Markdown
+	-- "godlygeek/tabular",
+	-- "preservim/vim-markdown",
+	{
+		"tenxsoydev/vim-markdown-checkswitch",
+		config = function()
+			vim.g.md_checkswitch_style = "cycle"
+		end,
+	}, --> checkbox shortcut
 	{ "suan/vim-instant-markdown", ft = "markdown" }, --> automatically highlighting other uses of the word under the cursor
 })

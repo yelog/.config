@@ -33,7 +33,8 @@ maps.n["<leader>ll"] = { function() vim.lsp.buf.format { async = true } end, des
 
 
 -- Telescope
-maps.n["<leader>ff"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }
+maps.n["<M-M>"] = { function() require("telescope.builtin").lsp_document_symbols() end, desc = "Search file" }
+maps.n["<leader>ff"] = { function() require("telescope.builtin").find_files() end, desc = "search symbols" }
 maps.n["<leader>fb"] = { function() require("telescope.builtin").buffers() end, desc = "Search buffers" }
 maps.n["<leader>fn"] = { function() require('telescope').extensions.notify.notify() end, desc = "Search buffers" }
 maps.n["<leader>fr"] = { function() require("telescope.builtin").lsp_references() end, desc = "Search references" }
