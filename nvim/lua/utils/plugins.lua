@@ -133,7 +133,7 @@ return packer.startup(function(use)
       vim.g.matchup_matchparen_offscreen = { method = "popup" }
     end,
   })
-  use({ "folke/which-key.nvim" })
+  -- use({ "folke/which-key.nvim" })
   use({
     "gcmt/wildfire.vim",
     config = function()

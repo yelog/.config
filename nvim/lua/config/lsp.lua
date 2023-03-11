@@ -39,54 +39,54 @@ local lsp_flags = {
 }
 -- Set up lspconfig.
 local capabilities = require("cmp_nvim_lsp").default_capabilities()
-lspconfig["pyright"].setup({
-  on_attach = on_attach,
-  flags = lsp_flags,
-})
-lspconfig["tsserver"].setup({
-  on_attach = on_attach,
-  flags = lsp_flags,
-})
-lspconfig["rust_analyzer"].setup({
-  on_attach = on_attach,
-  flags = lsp_flags,
-  -- Server-specific settings...
-  settings = {
-    ["rust-analyzer"] = {},
-  },
-})
+-- lspconfig["pyright"].setup({
+--   on_attach = on_attach,
+--   flags = lsp_flags,
+-- })
+-- lspconfig["tsserver"].setup({
+--   on_attach = on_attach,
+--   flags = lsp_flags,
+-- })
+-- lspconfig["rust_analyzer"].setup({
+--   on_attach = on_attach,
+--   flags = lsp_flags,
+--   -- Server-specific settings...
+--   settings = {
+--     ["rust-analyzer"] = {},
+--   },
+-- })
 -- example to setup sumneko and enable call snippets
-local runtime_path = vim.split(package.path, ";")
-table.insert(runtime_path, "lua/?.lua")
-table.insert(runtime_path, "lua/?/init.lua")
-lspconfig.sumneko_lua.setup({
-  capabilities = capabilities,
-  on_attach = on_attach,
-  root_dir = lspconfig.util.root_pattern(".git"),
-  flags = lsp_flags,
-  settings = {
-    Lua = {
-      completion = {
-        callSnippet = "Replace",
-      },
-      runtime = {
-        -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
-        version = "LuaJIT",
-        -- Setup your lua path
-        path = runtime_path,
-      },
-      diagnostics = {
-        -- Get the language server to recognize the `vim` global
-        globals = { "vim" },
-      },
-      workspace = {
-        -- Make the server aware of Neovim runtime files
-        library = vim.api.nvim_get_runtime_file("", true),
-      },
-      -- Do not send telemetry data containing a randomized but unique identifier
-      telemetry = {
-        enable = false,
-      },
-    },
-  },
-})
+-- local runtime_path = vim.split(package.path, ";")
+-- table.insert(runtime_path, "lua/?.lua")
+-- table.insert(runtime_path, "lua/?/init.lua")
+-- lspconfig.sumneko_lua.setup({
+--   capabilities = capabilities,
+--   on_attach = on_attach,
+--   root_dir = lspconfig.util.root_pattern(".git"),
+--   flags = lsp_flags,
+--   settings = {
+--     Lua = {
+--       completion = {
+--         callSnippet = "Replace",
+--       },
+--       runtime = {
+--         -- Tell the language server which version of Lua you're using (most likely LuaJIT in the case of Neovim)
+--         version = "LuaJIT",
+--         -- Setup your lua path
+--         path = runtime_path,
+--       },
+--       diagnostics = {
+--         -- Get the language server to recognize the `vim` global
+--         globals = { "vim" },
+--       },
+--       workspace = {
+--         -- Make the server aware of Neovim runtime files
+--         library = vim.api.nvim_get_runtime_file("", true),
+--       },
+--       -- Do not send telemetry data containing a randomized but unique identifier
+--       telemetry = {
+--         enable = false,
+--       },
+--     },
+--   },
+-- })
