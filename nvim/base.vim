@@ -53,7 +53,7 @@ set scrolloff=4
 "set notimeout
 set viewoptions=cursor,folds,slash,unix
 set ttyfast "should make scrolling faster
-set lazyredraw "same as above
+" set lazyredraw "same as above
 set visualbell
 set history=200 " Ex command history size
 
