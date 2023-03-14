@@ -190,4 +190,16 @@ require("lazy").setup({
 		end,
 	}, --> checkbox shortcut
 	{ "suan/vim-instant-markdown", ft = "markdown" }, --> automatically highlighting other uses of the word under the cursor
+	{
+		"renerocksai/telekasten.nvim",
+		dependencies = { 
+      "nvim-telescope/telescope.nvim",
+      "renerocksai/calendar-vim",
+    },
+		config = function()
+			require("telekasten").setup({
+				home = vim.fn.expand("/Users/y/Library/Mobile Documents/iCloud~md~obsidian/Documents"), -- Put the name of your notes directory here
+			})
+		end,
+	},
 })

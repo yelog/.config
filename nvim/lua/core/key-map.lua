@@ -11,21 +11,22 @@ maps.n["<c-q>"] = { function ()
   -- vim.fn.getwininfo(1)
   -- print(vim.fn.tabpagenr('$'))
 
-  if vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$') > 1 then
-    -- close current window
-    vim.cmd("close")
-  else
+  -- if vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$') > 1 then
+  -- if vim.fn.len(vim.fn.getbufinfo({ buflisted = 1 })) > 1 then
     -- close current file
     vim.cmd("bdelete")
-  end
+  -- else
+  -- --   -- close current window
+  --   vim.cmd("close")
+  -- end
 end, desc = "Quit" }
 -- maps.n["Q"] = { "<cmd>w<cr><cmd>qa<cr>", desc = "Quit" }
 
 -- plugin
-maps.n["<leader>pp"] = { "<cmd>PackerSync<cr>", desc = "plug install" }
-maps.n["<leader>pi"] = { "<cmd>PackerInstall<cr>", desc = "plug install" }
-maps.n["<leader>pc"] = { "<cmd>PackerClean<cr>", desc = "plug clean" }
-maps.n["<leader>pu"] = { "<cmd>PackerUpdate<cr>", desc = "plug update" }
+maps.n["<leader>pp"] = { "<cmd>Lazy<cr>", desc = "plug install" }
+-- maps.n["<leader>pi"] = { "<cmd>PackerInstall<cr>", desc = "plug install" }
+-- maps.n["<leader>pc"] = { "<cmd>PackerClean<cr>", desc = "plug clean" }
+-- maps.n["<leader>pu"] = { "<cmd>PackerUpdate<cr>", desc = "plug update" }
 
 -- lsp
 maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
@@ -81,6 +82,7 @@ maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" 
 maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" }
 maps.n["<leader>mc"] = { "<cmd>CheckSwitch<cr>", desc = "Checkbox Switch" }
 maps.v["<leader>mc"] = { "<cmd>CheckSwitch<cr>gv", desc = "Checkbox Switch" }
+-- maps.v["<leader>"] = { "<cmd>CheckSwitch<cr>gv", desc = "Checkbox Switch" }
 
 -- hop
 maps.n[";w"] = { "<cmd>HopWord<cr>", desc = "Hop Word" }

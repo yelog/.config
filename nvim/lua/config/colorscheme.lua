@@ -65,6 +65,7 @@ require("tokyonight").setup({
 		highlights.markdownH2Delimiter = { fg = highlights.markdownH2.fg }
 		highlights.markdownH3Delimiter = { fg = highlights.markdownH3.fg }
 		highlights.markdownH4Delimiter = { fg = highlights.markdownH4.fg }
+    highlights.Visual = { bg="#6D6BC8" }
 	end,
 })
 -- vim.cmd([[colorscheme gruvbox]])
@@ -75,3 +76,4 @@ vim.cmd([[highlight checkbox cterm=bold gui=bold guifg=#b16286]])
 vim.cmd([[match checkbox /\v\[ \]/]])
 vim.cmd([[highlight checkbox_checked cterm=bold gui=bold guifg=#3ac569]])
 vim.cmd([[2match checkbox_checked /\v\[x\]/]])
+vim.cmd([[hi tkLink ctermfg=Blue cterm=bold,underline guifg=blue gui=bold,underline]])
