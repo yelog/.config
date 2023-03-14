@@ -4,7 +4,7 @@ maps[""]["<Space>"] = "<Nop>"
 
 -- Base
 maps.n["Q"] = { "<cmd>qa<cr>", desc = "Quit" }
--- local neoTree = require("neo-tree")
+local neoTree = require("neo-tree")
 maps.n["<c-q>"] = { function ()
     -- print(vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$'))
   -- print(neoTree.get_prior_window())
@@ -14,7 +14,8 @@ maps.n["<c-q>"] = { function ()
   -- if vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$') > 1 then
   -- if vim.fn.len(vim.fn.getbufinfo({ buflisted = 1 })) > 1 then
     -- close current file
-    vim.cmd("bdelete")
+    -- vim.cmd("bdelete")
+    vim.cmd('Bdelete')
   -- else
   -- --   -- close current window
   --   vim.cmd("close")
@@ -31,6 +32,7 @@ maps.n["<leader>pp"] = { "<cmd>Lazy<cr>", desc = "plug install" }
 -- lsp
 maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
 maps.n["<leader>ll"] = { function() vim.lsp.buf.format { async = true } end, desc = "format code" }
+maps.v["<leader>ll"] = { function() vim.lsp.buf.format { async = true } end, desc = "format code" }
 
 
 -- Telescope
@@ -104,7 +106,14 @@ maps.n["<leader>gd"] = { "<cmd>GitGutterPreviewHunk<cr>", desc = "git review hun
 -- maps.n["<leader>gd"] = { "<cmd>GitGutterDiffOrig<cr>", desc = "git diff" }
 maps.n["<leader>gb"] = { "<cmd>Git blame<cr>", desc = "git blame" }
 
-maps.n["<leader>pv"] = { vim.cmd.Ex, desc = "git blame" }
+maps.n["<M-W>"] = { function()
+  local view = require("diffview.lib").get_current_view()
+  if view then
+    vim.cmd("DiffviewClose")
+  else
+    vim.cmd("DiffviewOpen ")
+  end
+end, desc = "git diff" }
 
 -- task manager
 maps.n["<leader>tn"] = { "<cmd>ToDoTxtCapture<cr>", desc= "New Todo"}
