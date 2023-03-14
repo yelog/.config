@@ -5,7 +5,16 @@ return {
     config = function()
       require("nvim-treesitter.configs").setup({
         -- A list of parser names, or "all"
-        ensure_installed = { "javascript", "typescript", "bash", "c", "lua", "rust" },
+        ensure_installed = {
+          "javascript",
+          "typescript",
+          "bash",
+          "c",
+          "lua",
+          "rust",
+          -- "markdown",
+          -- "markdown_inline",
+        },
 
         -- Install parsers synchronously (only applied to `ensure_installed`)
         sync_install = false,
@@ -15,7 +24,7 @@ return {
         auto_install = true,
 
         -- List of parsers to ignore installing (for "all")
-        ignore_install = { "markdown" },
+        -- ignore_install = { "markdown" },
 
         ---- If you need to change the installation directory of the parsers (see -> Advanced Setup)
         -- parser_install_dir = "/some/path/to/store/parsers", -- Remember to run vim.opt.runtimepath:append("/some/path/to/store/parsers")!

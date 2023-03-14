@@ -111,6 +111,8 @@ return {
           -- { name = "rg" }, -- For filesystem paths
           -- { name = 'ultisnips' }, -- For ultisnips users
           -- { name = 'snippy' }, -- For snippy users
+          { name = "obsidian" },
+          { name = "marksman" },
         }),
         sorting = {
           priority_weight = 2,
