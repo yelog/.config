@@ -4,7 +4,7 @@ maps[""]["<Space>"] = "<Nop>"
 
 -- Base
 maps.n["Q"] = { "<cmd>qa<cr>", desc = "Quit" }
-local neoTree = require("neo-tree")
+-- local neoTree = require("neo-tree")
 maps.n["<c-q>"] = { function ()
     -- print(vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$'))
   -- print(neoTree.get_prior_window())
@@ -75,8 +75,12 @@ maps.n["<M-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 -- bufferline
 maps.n["<c-n>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Buffer Next" }
 maps.n["<c-p>"] = { "<cmd>BufferLineCyclePrev<cr>", desc = "Buffer Previous" }
-maps.n[">b"] = { "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Next" }
-maps.n["<b"] = { "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Previous" }
+maps.n["<leader>tn"] = { "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Next" }
+maps.n["<leader>tp"] = { "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Previous" }
+maps.n["<leader>to"] = { "<cmd>BufferLineCloseLeft<cr><cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Others" }
+maps.n["<leader>tc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Buffer Close Pick" }
+maps.n["<leader>tcl"] = { "<cmd>BufferLineCloseLeft<cr>", desc = "Buffer Close Left" }
+maps.n["<leader>tcr"] = { "<cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Right" }
 -- maps.n["<c-q>"] = { "<cmd>bdelete<cr>", desc = "Buffer Close" }
 
 -- markdown
@@ -127,7 +131,7 @@ maps.n["<M-W>"] = { function()
 end, desc = "git diff" }
 
 -- task manager
-maps.n["<leader>tn"] = { "<cmd>ToDoTxtCapture<cr>", desc= "New Todo"}
+-- maps.n["<leader>tn"] = { "<cmd>ToDoTxtCapture<cr>", desc= "New Todo"}
 maps.n["<M-2>"] = { "<cmd>ToDoTxtTasksToggle<cr>", desc= "Toggle TodoBoard"}
 
 my.set_mappings(maps)
