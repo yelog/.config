@@ -18,4 +18,5 @@ require("lazy").setup("plugins")
 
 require("utils")
 require("utils.key-map")
+require("utils.custom-color")
 

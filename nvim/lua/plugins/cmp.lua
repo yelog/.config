@@ -6,12 +6,6 @@ return {
       local luasnip = require("luasnip")
       local compare = require("cmp.config.compare")
 
-      local buffer_fts = {
-        "markdown",
-        "toml",
-        "yaml",
-        "json",
-      }
       local check_backspace = function()
         local line, col = unpack(vim.api.nvim_win_get_cursor(0))
         return col ~= 0
@@ -81,29 +75,24 @@ return {
           }),
         }),
         sources = cmp.config.sources({
-          {
-            name = "nvim_lsp",
-            filter = function(entry, ctx)
-              local kind = require("cmp.types.lsp").CompletionItemKind[entry:get_kind()]
-              if kind == "Snippet" and ctx.prev_context.filetype == "java" then
-                return true
-              end
-
-              if kind == "Text" then
-                return true
-              end
-            end,
-            group_index = 2,
-          },
+          -- {
+          --   name = "nvim_lsp",
+          --   filter = function(entry, ctx)
+          --     local kind = require("cmp.types.lsp").CompletionItemKind[entry:get_kind()]
+          --     if kind == "Snippet" and ctx.prev_context.filetype == "java" then
+          --       return true
+          --     end
+          --
+          --     if kind == "Text" then
+          --       return true
+          --     end
+          --   end,
+          --   group_index = 2,
+          -- },
           { name = "luasnip", group_index = 2 }, -- For luasnip users
           {
             name = "buffer",
             group_index = 2,
-            filter = function(entry, ctx)
-              if not contains(buffer_fts, ctx.prev_context.filetype) then
-                return true
-              end
-            end,
           }, -- For buffer words
           -- { name = "tmux", group_index = 2 }, -- For tmux words
           -- { name = 'vsnip' }, -- For vsnip users

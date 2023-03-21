@@ -35,10 +35,10 @@ return {
       ---@param highlights Highlights
       ---@param colors ColorScheme
       on_highlights = function(highlights, colors)
-        highlights.markdownH1 = { fg = "#F99417" }
-        highlights.markdownH2 = { fg = "#FFED00" }
-        highlights.markdownH3 = { fg = "#16FF00" }
-        highlights.markdownH4 = { fg = "#30E3DF" }
+        highlights.markdownH1 = { fg = "#0081b4" }
+        highlights.markdownH2 = { fg = "#ef9020" }
+        highlights.markdownH3 = { fg = "#e990ab" }
+        highlights.markdownH4 = { fg = "#96cbb3" }
         highlights.markdownH1Delimiter = { fg = highlights.markdownH1.fg }
         highlights.markdownH2Delimiter = { fg = highlights.markdownH2.fg }
         highlights.markdownH3Delimiter = { fg = highlights.markdownH3.fg }
@@ -48,11 +48,5 @@ return {
     })
     vim.cmd([[colorscheme tokyonight]])
 
-    --> custom color
-    vim.cmd([[highlight checkbox cterm=bold gui=bold guifg=#b16286]])
-    vim.cmd([[match checkbox /\v\[ \]/]])
-    vim.cmd([[highlight checkbox_checked cterm=bold gui=bold guifg=#3ac569]])
-    vim.cmd([[2match checkbox_checked /\v\[x\]/]])
-    vim.cmd([[hi tkLink ctermfg=Blue cterm=bold,underline guifg=blue gui=bold,underline]])
   end,
 }
