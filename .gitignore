@@ -8,6 +8,7 @@
 !/ranger/scope.sh
 !/tmux/
 !/nvim/
+!/hammerspoon/
 !/zsh/
 !README.md
 !.gitignore
