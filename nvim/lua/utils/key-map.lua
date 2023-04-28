@@ -75,12 +75,12 @@ maps.n["<M-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 -- bufferline
 maps.n["<c-n>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Buffer Next" }
 maps.n["<c-p>"] = { "<cmd>BufferLineCyclePrev<cr>", desc = "Buffer Previous" }
-maps.n["<leader>tn"] = { "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Next" }
-maps.n["<leader>tp"] = { "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Previous" }
-maps.n["<leader>to"] = { "<cmd>BufferLineCloseLeft<cr><cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Others" }
-maps.n["<leader>tc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Buffer Close Pick" }
-maps.n["<leader>tcl"] = { "<cmd>BufferLineCloseLeft<cr>", desc = "Buffer Close Left" }
-maps.n["<leader>tcr"] = { "<cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Right" }
+maps.n["<leader>bn"] = { "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Next" }
+maps.n["<leader>bp"] = { "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Previous" }
+maps.n["<leader>bo"] = { "<cmd>BufferLineCloseLeft<cr><cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Others" }
+maps.n["<leader>bc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Buffer Close Pick" }
+maps.n["<leader>bcl"] = { "<cmd>BufferLineCloseLeft<cr>", desc = "Buffer Close Left" }
+maps.n["<leader>bcr"] = { "<cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Right" }
 -- maps.n["<c-q>"] = { "<cmd>bdelete<cr>", desc = "Buffer Close" }
 
 -- markdown
@@ -121,7 +121,7 @@ maps.n["<leader>gd"] = { "<cmd>GitGutterPreviewHunk<cr>", desc = "git review hun
 -- maps.n["<leader>gd"] = { "<cmd>GitGutterDiffOrig<cr>", desc = "git diff" }
 maps.n["<leader>gb"] = { "<cmd>Git blame<cr>", desc = "git blame" }
 
-maps.n["<M-W>"] = { function()
+maps.n["<leader>gw"] = { function()
   local view = require("diffview.lib").get_current_view()
   if view then
     vim.cmd("DiffviewClose")
@@ -132,6 +132,10 @@ end, desc = "git diff" }
 
 -- task manager
 -- maps.n["<leader>tn"] = { "<cmd>ToDoTxtCapture<cr>", desc= "New Todo"}
-maps.n["<M-2>"] = { "<cmd>ToDoTxtTasksToggle<cr>", desc= "Toggle TodoBoard"}
+maps.n["<M-2>"] = { "<cmd>AerialToggle<cr>", desc= "Toggle outline"}
+
+--ChatGPT
+-- maps.n["<leader>ai"] = { "<cmd>ChatGPT<cr>", desc = "ChatGPT"}
+maps.n["<leader>ai"] = { "<cmd>NeoAIToggle<cr>", desc = "ChatGPT"}
 
 my.set_mappings(maps)

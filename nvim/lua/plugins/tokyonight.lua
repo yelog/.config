@@ -44,6 +44,7 @@ return {
         highlights.markdownH3Delimiter = { fg = highlights.markdownH3.fg }
         highlights.markdownH4Delimiter = { fg = highlights.markdownH4.fg }
         highlights.Visual = { bg = "#6D6BC8" }
+        highlights.markdownBold = { bold = true, fg = "#0081b4" }
       end,
     })
     vim.cmd([[colorscheme tokyonight]])

@@ -29,6 +29,7 @@ return {
 				ensure_installed = {
 					"marksman",
 					"lua_ls",
+					"tsserver",
 					-- "rust_analyzer",
 				},
 			})
@@ -80,6 +81,24 @@ return {
 				capabilities = capabilities,
 			})
 			lspconfig["marksman"].manager.try_add_wrapper()
+			lspconfig["tsserver"].setup({
+				on_attach = on_attach,
+				flags = lsp_flags,
+				settings = {
+					completions = {
+						completeFunctionCalls = true,
+					},
+				},
+			})
+			lspconfig["eslint"].setup({
+				on_attach = on_attach,
+				flags = lsp_flags,
+			})
+			-- lspconfig["bash-language-server"].setup({
+			-- 	on_attach = on_attach,
+			-- 	flags = lsp_flags,
+			-- 	capabilities = capabilities,
+			-- })
 			-- lspconfig["pyright"].setup({
 			--   on_attach = on_attach,
 			--   flags = lsp_flags,
@@ -122,6 +141,15 @@ return {
 					},
 				},
 			})
+			-- vim.api.nvim_create_autocmd("FileType", {
+			-- 	pattern = "sh",
+			-- 	callback = function()
+			-- 		vim.lsp.start({
+			-- 			name = "bash-language-server",
+			-- 			cmd = { "bash-language-server", "start" },
+			-- 		})
+			-- 	end,
+			-- })
 		end,
 	},
 }

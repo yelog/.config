@@ -75,20 +75,20 @@ return {
           }),
         }),
         sources = cmp.config.sources({
-          -- {
-          --   name = "nvim_lsp",
-          --   filter = function(entry, ctx)
-          --     local kind = require("cmp.types.lsp").CompletionItemKind[entry:get_kind()]
-          --     if kind == "Snippet" and ctx.prev_context.filetype == "java" then
-          --       return true
-          --     end
-          --
-          --     if kind == "Text" then
-          --       return true
-          --     end
-          --   end,
-          --   group_index = 2,
-          -- },
+          {
+            name = "nvim_lsp",
+            filter = function(entry, ctx)
+              local kind = require("cmp.types.lsp").CompletionItemKind[entry:get_kind()]
+              if kind == "Snippet" and ctx.prev_context.filetype == "java" then
+                return true
+              end
+
+              if kind == "Text" then
+                return true
+              end
+            end,
+            group_index = 2,
+          },
           { name = "luasnip", group_index = 2 }, -- For luasnip users
           {
             name = "buffer",
@@ -100,8 +100,10 @@ return {
           -- { name = "rg" }, -- For filesystem paths
           -- { name = 'ultisnips' }, -- For ultisnips users
           -- { name = 'snippy' }, -- For snippy users
-          { name = "obsidian" },
           { name = "marksman" },
+          { name = "tsserver" },
+          -- { name = "bash-language-server" },
+          { name = "obsidian" },
         }),
         sorting = {
           priority_weight = 2,

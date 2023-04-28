@@ -65,17 +65,17 @@ set virtualedit=block
 "set nowrapscan         " 不循环搜索
 
 " 分屏
-map s <nop>
-map sl :set splitright<CR>:vsplit<CR>
-map sh :set nosplitright<CR>:vsplit<CR>
-map sk :set nosplitbelow<CR>:split<CR>
-map sj :set splitbelow<CR>:split<CR>
-map sH <C-w>H
-map sL <C-w>L
-map sJ <C-w>J
-map sK <C-w>K
-map so <c-w>o
-map sc <c-w>c
+" map <leader>s <nop>
+map <leader>sl :set splitright<CR>:vsplit<CR>
+map <leader>sh :set nosplitright<CR>:vsplit<CR>
+map <leader>sk :set nosplitbelow<CR>:split<CR>
+map <leader>sj :set splitbelow<CR>:split<CR>
+map <leader>sH <C-w>H
+map <leader>sL <C-w>L
+map <leader>sJ <C-w>J
+map <leader>sK <C-w>K
+map <leader>so <c-w>o
+map <leader>sc <c-w>c
 " 切换分屏焦点
 noremap gl <C-w>l
 noremap gh <C-w>h
@@ -105,7 +105,7 @@ map tml :+tabmove<CR>
 " 保存 退出 刷新配置文件
 "map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
 " 'V
-map S :w<CR>
+map <leader>S :w<CR>
 noremap <C-s> :w<CR>
 " map Q :q<CR>
 " noremap <C-q> :qa<CR>
@@ -165,7 +165,7 @@ vnoremap <silent> # :<C-U>
 
 
 " spelling check with <space>sc
-map <LEADER>sc :set spell!<CR>
+" map <LEADER>sc :set spell!<CR>
 "noremap <C-x> ea<C-x>s
 
 map ' `

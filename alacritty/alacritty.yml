@@ -70,3 +70,5 @@ hints:
     binding:
       key: U
       mods: Command|Shift
+cursor:
+  style: Block
