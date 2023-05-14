@@ -1,5 +1,13 @@
 return {
   {
+    "L3MON4D3/LuaSnip",
+    dependencies = { "rafamadriz/friendly-snippets" },
+    config = function()
+      -- require("luasnip").filetype_extend("ruby", { "rails" })
+      require("luasnip.loaders.from_vscode").lazy_load()
+    end,
+  },
+  {
     "hrsh7th/nvim-cmp",
     config = function()
       local cmp = require("cmp")
@@ -79,7 +87,7 @@ return {
             name = "nvim_lsp",
             filter = function(entry, ctx)
               local kind = require("cmp.types.lsp").CompletionItemKind[entry:get_kind()]
-              if kind == "Snippet" and ctx.prev_context.filetype == "java" then
+              if kind == "Snippet" then
                 return true
               end
 
@@ -196,6 +204,7 @@ return {
       })
     end,
   },
+  'saadparwaiz1/cmp_luasnip',
   "hrsh7th/cmp-buffer", -- nvim-cmp source for buffer words
   "hrsh7th/cmp-nvim-lsp",
   "andersevenrud/cmp-tmux", -- tmux completion source for nvim-cmp
