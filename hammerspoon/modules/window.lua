@@ -26,16 +26,16 @@ if windows.same_application_auto_layout_grid ~= nil then
 end
 
 -- 同一应用的所有窗口自动水平均分或垂直均分
-if windows.same_application_auto_layout_horizontal_or_vertical ~= nil then
-  hs.hotkey.bind(
-    windows.same_application_auto_layout_horizontal_or_vertical.prefix,
-    windows.same_application_auto_layout_horizontal_or_vertical.key,
-    windows.same_application_auto_layout_horizontal_or_vertical.message,
-    function()
-      same_application(AUTO_LAYOUT_TYPE.HORIZONTAL_OR_VERTICAL)
-    end
-  )
-end
+-- if windows.same_application_auto_layout_horizontal_or_vertical ~= nil then
+--   hs.hotkey.bind(
+--     windows.same_application_auto_layout_horizontal_or_vertical.prefix,
+--     windows.same_application_auto_layout_horizontal_or_vertical.key,
+--     windows.same_application_auto_layout_horizontal_or_vertical.message,
+--     function()
+--       same_application(AUTO_LAYOUT_TYPE.HORIZONTAL_OR_VERTICAL)
+--     end
+--   )
+-- end
 
 -- 同一工作空间下的所有窗口自动网格式布局
 if windows.same_space_auto_layout_grid ~= nil then

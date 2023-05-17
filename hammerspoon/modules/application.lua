@@ -11,6 +11,7 @@ hs.fnutils.each(applications, function(item)
 end)
 
 function activateApp(bundleID)
+  print(bundleID)
   local app = hs.application.get(bundleID)
   local appWindows = (app == nil) and {} or app:allWindows()
   -- local appWindowNumber = (bundleID == "com.apple.finder") and (#appWindows - 1) or #appWindows
