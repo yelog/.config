@@ -82,10 +82,10 @@ noremap gh <C-w>h
 noremap gj <C-w>j
 noremap gk <C-w>k
 " 分屏大小
-map <up> :res -5<CR>
-map <down> :res +5<CR>
-map <left> :vertical resize-5<CR>
-map <right> :vertical resize+5<CR>
+noremap <up> :res -5<CR>
+noremap <down> :res +5<CR>
+noremap <left> :vertical resize-5<CR>
+noremap <right> :vertical resize+5<CR>
 map <c-w>V <c-w>s<cr>
 
 " 标签页
@@ -128,6 +128,7 @@ nnoremap <leader>i[ viw<esc>a]<esc>hbi[<esc>lel
 nnoremap <leader>i] viw<esc>a]<esc>hbi[<esc>lel
 nnoremap <leader>i( viw<esc>a)<esc>hbi(<esc>lel
 nnoremap <leader>i) viw<esc>a)<esc>hbi(<esc>lel
+nnoremap <leader>i<space> viw<esc>a <esc>hbi <esc>lel
 vnoremap <leader>i" xi""<esc>hp
 vnoremap <leader>i' xi''<esc>hp
 vnoremap <leader>i` xi``<esc>hp
@@ -137,6 +138,7 @@ vnoremap <leader>i[ xi[]<esc>hp
 vnoremap <leader>i] xi[]<esc>hp
 vnoremap <leader>i) xi()<esc>hp
 vnoremap <leader>i( xi()<esc>hp
+vnoremap <leader>i<space> xi  <esc>hp
 
 " 0 toggle ^ or 0
 noremap  <expr>0     col('.') == 1 ? '^': '0'

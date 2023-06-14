@@ -108,8 +108,8 @@ return {
           -- { name = "rg" }, -- For filesystem paths
           -- { name = 'ultisnips' }, -- For ultisnips users
           -- { name = 'snippy' }, -- For snippy users
-          { name = "marksman" },
-          { name = "tsserver" },
+          -- { name = "marksman" },
+          -- { name = "tsserver" },
           -- { name = "bash-language-server" },
           { name = "obsidian" },
         }),

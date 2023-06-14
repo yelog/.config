@@ -93,6 +93,7 @@ applications = {
     {prefix = applicationHyperKey, key = "F", message="Finder", bundleId="com.apple.finder"},
     {prefix = applicationHyperKey, key = "B", message="Chrome", bundleId="com.google.Chrome"},
     {prefix = applicationHyperKey, key = "I", message="IntelliJ IDEA", bundleId="com.jetbrains.intellij"},
+    -- {prefix = applicationHyperKey, key = "I", message="IntelliJ IDEA", bundleId="com.jetbrains.intellij-EAP"},
     {prefix = applicationHyperKey, key = "O", message="Obsidian", bundleId="md.obsidian"},
     {prefix = applicationHyperKey, key = "E", message="discord", bundleId="com.hnc.Discord"},
     {prefix = applicationHyperKey, key = "R", message="Redis Desktop Manager", bundleId="me.qii404.another-redis-desktop-manager"},

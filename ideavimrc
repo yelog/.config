@@ -1,0 +1,123 @@
+source ~/.config/nvim/base.vim
+
+nnoremap <c-p> gT
+nnoremap <c-n> gt
+nnoremap <c-q> :q<CR>
+
+set keep-english-in-normal
+set surround
+" 重命名时保持normal状态
+set idearefactormode=keep
+let g:EasyMotion_override_acejump = 0
+let mapleader=" "
+
+" 屏蔽key
+noremap u u
+noremap e e
+nnoremap r r
+
+" multiple-cursors
+set multiple-cursors
+set commentary
+
+set relativenumber
+
+" input :actionlist view all mapping
+" store in desktop/docs/idea-vim-action-list.md
+nnoremap <silent> <leader>d :action QuickJavaDoc<CR>
+nnoremap <silent> gd :action GotoImplementation<CR>
+nnoremap <silent> gD :action GotoDeclaration<CR>
+"nnoremap <silent> gi gi
+"nnoremap <silent> gi :action GotoSuperMethod<CR>
+nnoremap <silent> gf :action GotoFile<CR>
+vnoremap <silent> gf :action GotoFile<CR>
+nnoremap <silent> su :action FindUsages<CR>
+nnoremap <silent> gu :action ShowUsages<CR>
+nnoremap <silent> se :action EvaluateExpression<CR>
+vnoremap <silent> se :action EvaluateExpression<CR>
+
+nnoremap <silent> <leader>// :action CommentByLineComment<CR>
+vnoremap <silent> <leader>/ :action ToggleBookmarkWithMnemonic<CR>
+
+"修改所有的关联名字
+nnoremap <Leader>rn :action RenameElement<CR>
+"修改当前文件的文件名
+nnoremap <silent> <leader>rf :action RenameFile<CR>
+
+"bookmark
+nnoremap <silent> mm :action ToggleBookmark<CR>
+nnoremap <silent> gm :action GotoNextBookmark<CR>
+nnoremap <silent> gM :action GotoPreviousBookmark<CR>
+nnoremap <silent> <leader>m :action popup@BookmarkContextMenu<CR>
+
+" lsp
+nnoremap <silent> <leader>ln :action GotoNextError<CR>
+nnoremap <silent> <leader>lp :action GotoPreviousError<CR>
+nnoremap <silent> <leader>gn :action JumpToNextChange<CR>
+nnoremap <silent> <leader>gp :action JumpToLastChange<CR>
+
+" NERDtree
+set NERDTree
+nnoremap <silent> <leader>e :NERDTreeToggle<CR>
+nnoremap <silent> yr :CopyReference<CR>
+autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
+# vim打开自动NERDTree
+autocmd vimenter * NERDTree
+
+nnoremap <silent> yp :CopyPath<CR>
+nnoremap <silent> go :action FileChooser.LightEditGotoOpenedFile<CR>
+
+" Breakpoint
+nnoremap <silent> sb :action ToggleLineBreakpoint<CR>
+nnoremap <silent> gb :action Debugger.FocusOnBreakpoint<CR>
+
+vnoremap * "oyy/<c-r>o<CR>
+vnoremap # "oyy/<c-r>o<CR>N
+
+nnoremap <silent> <leader>ff :action GotoFile<CR>
+
+nnoremap <silent> <left> :action ResizeToolWindowRight<CR>
+
+" Better uncommenting
+"augroup uncommenting
+  "autocmd!
+  "autocmd filetype java nnoremap <buffer> <leader>u ^3x
+  "autocmd FileType vue nnoremap <buffer> <C-s> :action Javascript.Linters.EsLint.Fix<CR>
+  "autocmd FileType java nnoremap <buffer> <C-s> :action ReformatCode<CR>
+"augroup end
+
+
+" ===
+" === vim-easymotion
+" ===
+set easymotion
+let g:EasyMotion_do_mapping = 0
+let g:EasyMotion_do_shade = 0
+let g:EasyMotion_smartcase = 1
+let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
+map ; <Plug>(easymotion-prefix)
+map ;j <Plug>(easymotion-j)
+map ;k <Plug>(easymotion-k)
+map ;l <Plug>(easymotion-lineforward)
+map ;h <Plug>(easymotion-linebackward)
+"map ;s <Plug>(easymotion-sn)
+map ;s <Plug>(easymotion-s2)
+map ;t <Plug>(easymotion-tn)
+map ;w <Plug>(easymotion-bd-w)
+
+set sneak
+
+noremap <leader>ll :action ReformatCode<CR>
+
+" jump to next error
+noremap <leader>lj <ESC>:action GotoNextError<CR>
+" jump to previous error
+noremap <leader>lk <ESC>:action GotoPreviousError<CR>
+
+" jump to next change
+noremap <leader>gj <ESC>:action JumpToNextChange<CR>
+" jump to previous change
+" noremap <leader>gk <ESC>:action JumpToLastChange<CR>
+" nnoremap <leader>gj :cn<CR>
+
+" nnoremap <leader>gj :action NextChange<CR>

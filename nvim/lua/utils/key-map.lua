@@ -33,6 +33,7 @@ maps.n["<leader>pp"] = { "<cmd>Lazy<cr>", desc = "plug install" }
 maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
 maps.n["<leader>ll"] = { function() vim.lsp.buf.format { async = true } end, desc = "format code" }
 maps.v["<leader>ll"] = { function() vim.lsp.buf.format { async = true } end, desc = "format code" }
+maps.n["<M-s>"] = { "<cmd>EslintFixAll<cr>", desc = "format code" }
 
 
 -- Telescope

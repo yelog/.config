@@ -29,6 +29,8 @@ return {
           "marksman",
           "lua_ls",
           "tsserver",
+          "vuels",
+          "html",
           -- "rust_analyzer",
         },
       })
@@ -90,6 +92,64 @@ return {
         },
       })
       lspconfig["eslint"].setup({
+        filetyps = { "vue", "javascript", "typescript" },
+        on_attach = on_attach,
+        flags = lsp_flags,
+      })
+      lspconfig["vuels"].setup({
+        filetyps = { "vue" },
+        cmd = { "vls" },
+        on_attach = on_attach,
+        flags = lsp_flags,
+        root_dir = lspconfig.util.root_pattern("package.json", "vue.config.js"),
+        settings = {
+          config = {
+            css = {},
+            emmet = {},
+            html = {
+              suggest = {},
+            },
+            javascript = {
+              format = {},
+            },
+            stylusSupremacy = {},
+            typescript = {
+              format = {
+                enable = true,
+              },
+            },
+            vetur = {
+              completion = {
+                autoImport = true,
+                tagCasing = "kebab",
+                useScaffoldSnippets = true,
+              },
+              format = {
+                defaultFormatter = {
+                  html = "none",
+                  js = "prettier",
+                  ts = "prettier",
+                },
+                -- defaultFormatterOptions = {},
+                -- scriptInitialIndent = false,
+                -- styleInitialIndent = false
+              },
+              useWorkspaceDependencies = false,
+              validation = {
+                script = true,
+                style = true,
+                template = true,
+                templateProps = true,
+                interpolation = true,
+              },
+              exprimental = {
+                templateInterpolationService = true,
+              },
+            },
+          },
+        },
+      })
+      lspconfig["html"].setup({
         on_attach = on_attach,
         flags = lsp_flags,
       })
@@ -119,6 +179,7 @@ return {
       -- table.insert(runtime_path, "lua/?.lua")
       -- table.insert(runtime_path, "lua/?/init.lua")
 
+      local runtime_path = vim.split(package.path, ";")
       lspconfig["lua_ls"].setup({
         on_attach = on_attach,
         settings = {

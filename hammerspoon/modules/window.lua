@@ -710,3 +710,14 @@ hs.hotkey.bind(
     end
   end
 )
+
+-- 配置快捷键
+local hotkey = require "hs.hotkey"
+local axuielement = require "hs.axuielement"
+
+-- 设置将焦点切换到第二个桌面的快捷键
+hotkey.bind({"ctrl"}, "2", function()
+    local app = axuielement.applicationElement(hs.application.frontmostApplication())
+    local desktop = app:attributeValue("AXFocusedWindow"):attributeValue("AXParent"):attributeValue("AXParent"):attributeValue("AXChildren")[2]
+    desktop:setAttributeValue("AXFocused", true)
+end)
