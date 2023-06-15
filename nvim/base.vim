@@ -198,6 +198,12 @@ noremap \s :%s/<c-r><c-w>/<c-r><c-w>/gI<left><left><left>
 noremap <LEADER>sw :set wrap!<CR>
 
 " 剪贴板
+" 打通复制寄存器和粘贴板
+set clipboard=unnamedplus
+" nnoremap y "+y
+" vnoremap y "+y
+" nnoremap p "+p
+
 " 普通模式下 Y 复制当前匿名寄存器到 Clipboard
 nnoremap Y :let @+=@"<CR>
 " 选中模式下 Y 复制到 Clipboard

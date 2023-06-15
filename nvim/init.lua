@@ -19,4 +19,10 @@ require("lazy").setup("plugins")
 require("utils")
 require("utils.key-map")
 require("utils.custom-color")
+-- 设置水平分割线样式为 "-"
+-- vim.opt.fillchars:append({vert = "|", fold = "~", eob = " ", msgsep = "~", diff = "", foldopen = "▾", foldsep = "│", foldclose = "▸"})
+
+-- 设置垂直分割线样式为 "|"
+-- vim.opt.fillchars:append({vert = "|"})
+
 

@@ -102,16 +102,6 @@ maps.n["<leader>md"] = {"<cmd>ObsidianToday<cr>", desc = "goto daily task"}
 --   desc = "goto file",
 -- }
 
-
--- hop
-maps.n[";w"] = { "<cmd>HopWord<cr>", desc = "Hop Word" }
-maps.n[";a"] = { "<cmd>HopAnywhere<cr>", desc = "Hop Anywhere" }
-maps.n[";s"] = { "<cmd>HopChar2<cr>", desc = "Hop search" }
-maps.n[";l"] = { "<cmd>HopWordCurrentLineAC<cr>", desc = "Hop line right" }
-maps.n[";h"] = { "<cmd>HopWordCurrentLineBC<cr>", desc = "Hop line left" }
-maps.n[";k"] = { "<cmd>HopLineBC<cr>", desc = "Hop line down" }
-maps.n[";j"] = { "<cmd>HopLineAC<cr>", desc = "Hop line up" }
-
 -- git
 maps.n["<leader>gg"] = { "<cmd>LazyGit<cr>", desc = "LazyGit" }
 maps.n["<leader>gh"] = { "<cmd>LazyGitFilterCurrentFile<cr>", desc = "Current file history" }

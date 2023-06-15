@@ -95,15 +95,15 @@ let g:EasyMotion_do_mapping = 0
 let g:EasyMotion_do_shade = 0
 let g:EasyMotion_smartcase = 1
 let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
-map ; <Plug>(easymotion-prefix)
-map ;j <Plug>(easymotion-j)
-map ;k <Plug>(easymotion-k)
-map ;l <Plug>(easymotion-lineforward)
-map ;h <Plug>(easymotion-linebackward)
+map , <Plug>(easymotion-prefix)
+map ,j <Plug>(easymotion-j)
+map ,k <Plug>(easymotion-k)
+map ,l <Plug>(easymotion-lineforward)
+map ,h <Plug>(easymotion-linebackward)
 "map ;s <Plug>(easymotion-sn)
-map ;s <Plug>(easymotion-s2)
-map ;t <Plug>(easymotion-tn)
-map ;w <Plug>(easymotion-bd-w)
+map ,s <Plug>(easymotion-s2)
+map ,t <Plug>(easymotion-tn)
+map ,w <Plug>(easymotion-bd-w)
 
 set sneak
 
