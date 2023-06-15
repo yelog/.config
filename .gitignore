@@ -18,6 +18,7 @@
 !/alacritty/
 !/karabiner/
 !ideavimrc
+!init.sh
 
 /nvim/plugged/
 /nvim/tmp/
