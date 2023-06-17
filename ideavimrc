@@ -86,6 +86,10 @@ nnoremap <silent> <left> :action ResizeToolWindowRight<CR>
   "autocmd FileType java nnoremap <buffer> <C-s> :action ReformatCode<CR>
 "augroup end
 
+set which-key
+set notimeout
+set matchit
+" let g:ideavim_xml_enabled = 1
 
 " ===
 " === vim-easymotion

@@ -20,7 +20,7 @@ return {
 						{ filetype = "neo-tree", text = "", padding = 1 },
 						{ filetype = "Outline", text = "", padding = 1 },
 					},
-					separator_style = "thick",
+					separator_style = "thin",
 					-- hover = {
 					-- 	enabled = true,
 					-- 	delay = 200,

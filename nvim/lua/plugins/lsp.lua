@@ -81,7 +81,6 @@ return {
         flags = lsp_flags,
         capabilities = capabilities,
       })
-      lspconfig["marksman"].manager.try_add_wrapper()
       lspconfig["tsserver"].setup({
         on_attach = on_attach,
         flags = lsp_flags,

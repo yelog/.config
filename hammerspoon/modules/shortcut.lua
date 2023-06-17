@@ -37,7 +37,7 @@ windows = {
     -- 左下角
     left_bottom = { prefix = windowHyperKey, key = "Z", message = "Left Bottom" },
     -- 右下角
-    right_bottom = { prefix = windowHyperKey, key = "C", message = "Right Bottom" },
+    -- right_bottom = { prefix = windowHyperKey, key = "C", message = "Right Bottom" },
     -- 1/9
     -- one = {prefix = windowHyperKey, key = "1", message = "1/9"},
     -- 2/9
@@ -119,7 +119,7 @@ applications = {
     },
     --{prefix = applicationHyperKey, key = "D", message="DataGrip", bundleId="com.jetbrains.datagrip"},
     { prefix = applicationHyperKey, key = "Z", message = "Apifox", bundleId = "cn.apifox.app" },
-    { prefix = applicationHyperKey, key = "C", message = "Calendar", bundleId = "com.apple.iCal" },
+    -- { prefix = applicationHyperKey, key = "C", message = "Calendar", bundleId = "com.apple.iCal" },
     { prefix = applicationHyperKey, key = "T", message = "Terminal", bundleId = "org.alacritty" },
     { prefix = applicationHyperKey, key = "U", message = "Teams", bundleId = "com.microsoft.teams" },
     { prefix = applicationHyperKey, key = "M", message = "Mail", bundleId = "com.apple.mail" },

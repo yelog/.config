@@ -332,18 +332,18 @@ hs.hotkey.bind(windows.left_bottom.prefix, windows.left_bottom.key, windows.left
 end)
 
 -- 右下角
-hs.hotkey.bind(windows.right_bottom.prefix, windows.right_bottom.key, windows.right_bottom.message, function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
-
-  f.x = max.x + (max.w / 2)
-  f.y = max.y + (max.h / 2)
-  f.w = max.w / 2
-  f.h = max.h / 2
-  win:setFrame(f)
-end)
+-- hs.hotkey.bind(windows.right_bottom.prefix, windows.right_bottom.key, windows.right_bottom.message, function()
+--   local win = hs.window.focusedWindow()
+--   local f = win:frame()
+--   local screen = win:screen()
+--   local max = screen:frame()
+--
+--   f.x = max.x + (max.w / 2)
+--   f.y = max.y + (max.h / 2)
+--   f.w = max.w / 2
+--   f.h = max.h / 2
+--   win:setFrame(f)
+-- end)
 
 -- 1/9
 if windows.one then
