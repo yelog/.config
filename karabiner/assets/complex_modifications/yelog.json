@@ -54,6 +54,27 @@
       ]
     },
     {
+      "description": "Map ctrl-; to Esc(yelog.json)",
+      "manipulators": [
+        {
+          "from": {
+            "key_code": "semicolon",
+            "modifiers": {
+              "mandatory": [
+                "right_control"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "escape"
+            }
+          ],
+          "type": "basic"
+        }
+      ]
+    },
+    {
       "description": "(command+option+shift) + h/j/k/l == vim directional Keys(yelog.json)",
       "manipulators": [
         {
