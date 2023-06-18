@@ -239,3 +239,7 @@ ssh() {
   command ssh "$@"
   tmux setw automatic-rename on
 }
+
+
+# 如果没有参数 打印当前上下文，如果有参数，设置为当前上下文
+alias kc='kubeSetConfig(){ if [ ! -n "$1" ]; then kubectl config current-context; else cat $1 > $HOME/.kube/config;fi };kubeSetConfig'
