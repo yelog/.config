@@ -1,6 +1,6 @@
 return {
   "neovim/nvim-lspconfig", -- Configurations for Nvim LSP
-  "alvan/vim-closetag", -- when "<table|", type > , will be "<table>|</table>"
+  "alvan/vim-closetag",    -- when "<table|", type > , will be "<table>|</table>"
   {
     "windwp/nvim-ts-autotag",
     config = function()

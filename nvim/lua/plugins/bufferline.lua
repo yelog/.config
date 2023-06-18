@@ -2,7 +2,7 @@ return {
 	{
 		"akinsho/bufferline.nvim",
 		-- version > v3.5.0 close icon will not show
-		-- version = "v3.5.0",
+		-- version = "main",
 		dependencies = { "nvim-tree/nvim-web-devicons", version = "*" },
 		config = function()
 			vim.opt.termguicolors = true
@@ -10,11 +10,6 @@ return {
 			bufferline.setup({
 				options = {
 					mode = "buffers", -- set to "tabs" to only show tabpages instead
-					buffer_close_icon = "",
-					-- modified_icon = "●",
-					-- close_icon = "",
-					-- left_trunc_marker = "",
-					-- right_trunc_marker = "",
 					offsets = {
 						{ filetype = "NvimTree", text = "", padding = 1 },
 						{ filetype = "neo-tree", text = "", padding = 1 },

@@ -152,6 +152,7 @@ alias v=nvim
 alias sudo='sudo '
 alias lg=lazygit
 alias j=z
+alias python=python3
 
 # colors man
 function man()
