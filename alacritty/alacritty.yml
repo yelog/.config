@@ -37,7 +37,8 @@ key_bindings:
   # - { key: I,  mods: Shift|Control,           chars: "\x1b[73;5u"           }
   - { key: W,  mods: Shift|Command,           chars: "\x1bW"           }
   - { key: Back, action:  ReceiveChar}
-  # - { key: Q,  mods: Control|Shift,           chars: "\x1b[81;5u"           }
+  - { key: N,  mods: Control|Shift,           chars: "\x1b[78;5u"           }
+  - { key: P,        mods: Control|Shift, chars: "\x1b[80;5u"                }
   # - { key: J,        mods: Control|Shift, chars: "\x1b[74;5u"                }
   # - { key: A,         mods: Alt,       chars: "\x1ba"                       }
   # - { key: B,         mods: Alt,       chars: "\x1bb"                       }
@@ -116,8 +117,8 @@ key_bindings:
   # - { key: Backslash, mods: Alt|Shift, chars: "\x1b|"                       } # Alt + |
 
 window:
-  # decorations: buttonless
-  decorations: full
+  decorations: buttonless
+  # decorations: full
   # position:
   #  x: 2
   #  y: 2

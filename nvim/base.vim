@@ -202,7 +202,7 @@ noremap <LEADER>sw :set wrap!<CR>
 " set clipboard=unnamedplus
 
 " 普通模式下 Y 复制当前匿名寄存器到 Clipboard
-nnoremap Y :let @+=@"<CR>
+" nnoremap Y :let @+=@"<CR>
 " 选中模式下 Y 复制到 Clipboard
 vnoremap Y "+y
 

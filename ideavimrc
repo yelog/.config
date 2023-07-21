@@ -51,14 +51,18 @@ nnoremap <silent> gM :action GotoPreviousBookmark<CR>
 nnoremap <silent> <leader>m :action popup@BookmarkContextMenu<CR>
 
 " lsp
-nnoremap <silent> <leader>ln :action GotoNextError<CR>
-nnoremap <silent> <leader>lp :action GotoPreviousError<CR>
+" nnoremap <silent> <leader>ln :action GotoNextError<CR>
+" nnoremap <silent> <leader>lp :action GotoPreviousError<CR>
 nnoremap <silent> <leader>gn :action JumpToNextChange<CR>
 nnoremap <silent> <leader>gp :action JumpToLastChange<CR>
+" jump to next error
+nnoremap <leader>lj <ESC>:action GotoNextError<CR>
+" jump to previous error
+nnoremap <leader>lk <ESC>:action GotoPreviousError<CR>
+nnoremap <silent> <leader>ll :action OptimizeImports<CR>:action ReformatCode<CR>
+" autocmd FileType * nnoremap <buffer> <leader>ll :action OptimizeImports<CR>:action ReformatCode<CR>
+" autocmd FileType vue,javascript nnoremap <buffer> <leader>ll :action Javascript.Linters.EsLint.Fix<CR>
 
-" NERDtree
-set NERDTree
-nnoremap <silent> <leader>e :NERDTreeToggle<CR>
 nnoremap <silent> yr :CopyReference<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
 # vim打开自动NERDTree
@@ -94,6 +98,7 @@ set matchit
 " ===
 " === vim-easymotion
 " ===
+Plug 'easymotion/vim-easymotion'
 set easymotion
 let g:EasyMotion_do_mapping = 0
 let g:EasyMotion_do_shade = 0
@@ -111,12 +116,6 @@ map ,w <Plug>(easymotion-bd-w)
 
 set sneak
 
-noremap <leader>ll :action ReformatCode<CR>
-
-" jump to next error
-noremap <leader>lj <ESC>:action GotoNextError<CR>
-" jump to previous error
-noremap <leader>lk <ESC>:action GotoPreviousError<CR>
 
 " jump to next change
 noremap <leader>gj <ESC>:action JumpToNextChange<CR>

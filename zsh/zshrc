@@ -130,9 +130,6 @@ compinit
 
 KEYTIMEOUT=1
 
-alias hs='hexo clean && hexo g && hexo s'
-alias hd='hexo clean && hexo g && hexo d && git add . && git commit -m "update" && git push -f'
-alias tailf='tail -f'
 export PUB_HOSTED_URL=https://pub.flutter-io.cn
 export FLUTTER_STORAGE_BASE_URL=https://storage.flutter-io.cn
 
@@ -142,7 +139,37 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # ctn auto complete
 #complete -W "$(docker ps --format"{{.Names}}")" ctn
 
-alias ra=ranger
+# hexo
+blogPath='/Users/yelog/myspace/blog/source/_posts'
+function hs() {
+  # clean dir
+  rm -rf $blogPath/*
+  mkdir -p $blogPath
+  # find and cp blog to dir
+  # find /Users/yelog/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents -name "*.md" -type f -exec sh -c 'head -n 2 "{}" | grep -A1 "^---$" | grep -q "^title:" && ln -s "{}" ~/myspace/blog/source/_posts/' \;
+  # find /Users/yelog/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents -name "*.md" -type f -exec sh -c 'head -n 2 "{}" | grep -A1 "^---$" | grep -q "^title:" && ln -s "{}" "~/myspace/blog/source/_posts/$(basename "{}")"' \;
+  find /Users/yelog/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents -name "*.md" -type f -exec sh -c 'head -n 2 "{}" | grep -A1 "^---$" | grep -q "^title:" && echo "~/myspace/blog/source/_posts/$(basename "{}")"' \;
+  hexo clean
+  hexo g
+  hexo s
+}
+function hd() {
+  # clean dir
+  rm -rf $blogPath/*
+  mkdir -p $blogPath
+  # find and cp blog to dir
+  find /Users/yelog/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents -name "*.md" -type f -exec sh -c 'head -n 2 "{}" | grep -A1 "^---$" | grep -q "^title:" && cp "{}" ~/myspace/blog/source/_posts/' \;
+  hexo clean
+  hexo g
+  hexo d
+  git add .
+  git commit -m "update"
+  git push -f
+}
+# alias hs="hexo clean && hexo g && hexo s"
+# alias hd='hexo clean && hexo g && hexo d && git add . && git commit -m "update" && git push -f'
+alias tailf='tail -f'
+alias ra=joshuto
 alias s=neofetch
 alias chrome=open -a "Google Chrome"
 alias tn='tmux new -s '
@@ -152,7 +179,12 @@ alias v=nvim
 alias sudo='sudo '
 alias lg=lazygit
 alias j=z
-alias python=python3
+alias ls=exa
+# alias python=/Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11
+# export PYTHON_HOME=/Library/Frameworks/Python.framework/Versions/3.11
+# export PATH=$PATH:$PYTHON_HOME/bin
+# 如果没有参数 打印当前上下文，如果有参数，设置为当前上下文
+alias kc='kubeSetConfig(){ if [ ! -n "$1" ]; then kubectl config current-context; else cat $1 > $HOME/.kube/config;fi };kubeSetConfig'
 
 # colors man
 function man()
@@ -182,6 +214,9 @@ export FZF_DEFAULT_OPTS=--reverse
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+
+nvm use v14.15.4 > /dev/null 2>&1
+typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 # vi-mode
 bindkey '^v' edit-command-line
@@ -240,6 +275,3 @@ ssh() {
   tmux setw automatic-rename on
 }
 
-
-# 如果没有参数 打印当前上下文，如果有参数，设置为当前上下文
-alias kc='kubeSetConfig(){ if [ ! -n "$1" ]; then kubectl config current-context; else cat $1 > $HOME/.kube/config;fi };kubeSetConfig'

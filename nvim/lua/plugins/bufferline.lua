@@ -33,5 +33,5 @@ return {
 			})
 		end,
 	},
-	"moll/vim-bbye", -- bdelete has problem, so use this
+	"moll/vim-bbye", -- bdelete has problem, so use tghishis
 }

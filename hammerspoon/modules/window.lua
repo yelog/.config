@@ -602,12 +602,15 @@ hs.hotkey.bind(
     local f = win:frame()
     local screen = win:screen()
     local max = screen:frame()
+    local stageWidth = 170
 
+    print(max.x)
+    print(f.x)
     if f.w == max.w and f.h == max.h then
-      f.x = max.x + (max.w / 4)
-      f.y = max.y + (max.h / 4)
-      f.w = max.w / 2
-      f.h = max.h / 2
+      f.x = max.x + stageWidth
+      f.y = max.y
+      f.w = max.w - stageWidth
+      f.h = max.h
       win:setFrame(f)
     else
       win:maximize()

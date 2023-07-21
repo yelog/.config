@@ -10,23 +10,23 @@ maps.n["<left>"] = { "<cmd>vertical res-5<cr>", desc = "left" }
 maps.n["<right>"] = { "<cmd>vertical res+5<cr>", desc = "right" }
 -- local neoTree = require("neo-tree")
 maps.n["<c-q>"] = {
-	function()
-		-- print(vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$'))
-		-- print(neoTree.get_prior_window())
-		-- vim.fn.getwininfo(1)
-		-- print(vim.fn.tabpagenr('$'))
+  function()
+    -- print(vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$'))
+    -- print(neoTree.get_prior_window())
+    -- vim.fn.getwininfo(1)
+    -- print(vim.fn.tabpagenr('$'))
 
-		-- if vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$') > 1 then
-		-- if vim.fn.len(vim.fn.getbufinfo({ buflisted = 1 })) > 1 then
-		-- close current file
-		-- vim.cmd("bdelete")
-		vim.cmd("Bdelete")
-		-- else
-		-- --   -- close current window
-		--   vim.cmd("close")
-		-- end
-	end,
-	desc = "Quit",
+    -- if vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$') > 1 then
+    -- if vim.fn.len(vim.fn.getbufinfo({ buflisted = 1 })) > 1 then
+    -- close current file
+    -- vim.cmd("bdelete")
+    vim.cmd("Bdelete")
+    -- else
+    -- --   -- close current window
+    --   vim.cmd("close")
+    -- end
+  end,
+  desc = "Quit",
 }
 -- maps.n["Q"] = { "<cmd>w<cr><cmd>qa<cr>", desc = "Quit" }
 
@@ -39,95 +39,95 @@ maps.n["<leader>pp"] = { "<cmd>Lazy<cr>", desc = "plug install" }
 -- lsp
 maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
 maps.n["<leader>ll"] = {
-	function()
-		vim.lsp.buf.format({ async = true })
-	end,
-	desc = "format code",
+  function()
+    vim.lsp.buf.format({ async = true })
+  end,
+  desc = "format code",
 }
 maps.v["<leader>ll"] = {
-	function()
-		vim.lsp.buf.format({ async = true })
-	end,
-	desc = "format code",
+  function()
+    vim.lsp.buf.format({ async = true })
+  end,
+  desc = "format code",
 }
 maps.n["<M-s>"] = { "<cmd>EslintFixAll<cr>", desc = "format code" }
 
 -- Telescope
 maps.n["<M-M>"] = {
-	function()
-		require("telescope.builtin").lsp_document_symbols()
-	end,
-	desc = "Search file",
+  function()
+    require("telescope.builtin").lsp_document_symbols()
+  end,
+  desc = "Search file",
 }
 maps.n["<leader>ff"] = {
-	function()
-		require("telescope.builtin").find_files()
-	end,
-	desc = "search symbols",
+  function()
+    require("telescope.builtin").find_files()
+  end,
+  desc = "search symbols",
 }
 maps.n["<leader>fb"] = {
-	function()
-		require("telescope.builtin").buffers()
-	end,
-	desc = "Search buffers",
+  function()
+    require("telescope.builtin").buffers()
+  end,
+  desc = "Search buffers",
 }
 maps.n["<leader>fn"] = {
-	function()
-		require("telescope").extensions.notify.notify()
-	end,
-	desc = "Search buffers",
+  function()
+    require("telescope").extensions.notify.notify()
+  end,
+  desc = "Search buffers",
 }
 maps.n["<leader>fr"] = {
-	function()
-		require("telescope.builtin").lsp_references()
-	end,
-	desc = "Search references",
+  function()
+    require("telescope.builtin").lsp_references()
+  end,
+  desc = "Search references",
 }
 maps.n["<leader>fk"] = {
-	function()
-		require("telescope.builtin").keymaps()
-	end,
-	desc = "Search keymap",
+  function()
+    require("telescope.builtin").keymaps()
+  end,
+  desc = "Search keymap",
 }
 maps.n["<leader>ft"] = {
-	function()
-		require("telescope.builtin").help_tags()
-	end,
-	desc = "Search tags",
+  function()
+    require("telescope.builtin").help_tags()
+  end,
+  desc = "Search tags",
 }
 maps.n["<leader>fm"] = {
-	function()
-		require("telescope.builtin").marks()
-	end,
-	desc = "Search marks",
+  function()
+    require("telescope.builtin").marks()
+  end,
+  desc = "Search marks",
 }
 maps.n["<leader>fh"] = {
-	function()
-		require("telescope.builtin").oldfiles()
-	end,
-	desc = "Search hisotry",
+  function()
+    require("telescope.builtin").oldfiles()
+  end,
+  desc = "Search hisotry",
 }
 maps.n["<leader>f;"] = {
-	function()
-		require("telescope.builtin").builtin()
-	end,
-	desc = "Search builtin",
+  function()
+    require("telescope.builtin").builtin()
+  end,
+  desc = "Search builtin",
 }
 maps.n["<leader>fs"] = {
-	function()
-		require("telescope.builtin").live_grep()
-	end,
-	desc = "Search word",
+  function()
+    require("telescope.builtin").live_grep()
+  end,
+  desc = "Search word",
 }
 maps.n["<leader>fS"] = {
-	function()
-		require("telescope.builtin").live_grep({
-			additional_args = function(args)
-				return vim.list_extend(args, { "--hidden", "--no-ignore" })
-			end,
-		})
-	end,
-	desc = "Search words in all files",
+  function()
+    require("telescope.builtin").live_grep({
+      additional_args = function(args)
+        return vim.list_extend(args, { "--hidden", "--no-ignore" })
+      end,
+    })
+  end,
+  desc = "Search words in all files",
 }
 
 -- local truezen = require('true-zen')
@@ -186,25 +186,28 @@ maps.n["<leader>gd"] = { "<cmd>GitGutterPreviewHunk<cr>", desc = "git review hun
 maps.n["<leader>gb"] = { "<cmd>Git blame<cr>", desc = "git blame" }
 
 maps.n["<leader>gw"] = {
-	function()
-		local view = require("diffview.lib").get_current_view()
-		if view then
-			vim.cmd("DiffviewClose")
-		else
-			vim.cmd("DiffviewOpen ")
-		end
-	end,
-	desc = "git diff",
+  function()
+    local view = require("diffview.lib").get_current_view()
+    if view then
+      vim.cmd("DiffviewClose")
+    else
+      vim.cmd("DiffviewOpen ")
+    end
+  end,
+  desc = "git diff",
 }
 
 -- task manager
 -- maps.n["<leader>tn"] = { "<cmd>ToDoTxtCapture<cr>", desc= "New Todo"}
 -- maps.n["<M-2>"] = { "<cmd>AerialToggle<cr>", desc= "Toggle outline"}
 maps.n["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
-maps.t["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
 
 --ChatGPT
 -- maps.n["<leader>ai"] = { "<cmd>ChatGPT<cr>", desc = "ChatGPT"}
 maps.n["<leader>ai"] = { "<cmd>NeoAIToggle<cr>", desc = "ChatGPT" }
+
+
+maps.n['<C-S-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+maps.n['<C-S-p>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 
 my.set_mappings(maps)
