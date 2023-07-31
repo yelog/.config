@@ -22,6 +22,12 @@ set commentary
 
 set relativenumber
 
+" split
+noremap <silent> <up> :action StretchSplitToTop<CR>
+noremap <silent> <down> :action StretchSplitToBottom<CR>
+noremap <silent> <right> :action StretchSplitToRight<CR>
+noremap <silent> <left> :action StretchSplitToLeft<CR>
+
 " input :actionlist view all mapping
 " store in desktop/docs/idea-vim-action-list.md
 nnoremap <silent> <leader>d :action QuickJavaDoc<CR>

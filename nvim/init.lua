@@ -25,4 +25,31 @@ require("utils.custom-color")
 -- 设置垂直分割线样式为 "|"
 -- vim.opt.fillchars:append({vert = "|"})
 
+-- 定义函数：执行Markdown预览
+function instantMarkdownPreview()
+    vim.cmd('InstantMarkdownPreview')
+end
+
+-- 定义函数：执行Lua文件预览
+function luaPreview()
+    vim.cmd('set splitright')
+    vim.cmd('vsp')
+    vim.cmd('term lua %')
+end
+
+-- 根据不同的文件类型执行不同的命令
+function executeFileTypeCommands()
+    local filetype = vim.bo.filetype
+
+    if filetype == 'markdown' then
+        instantMarkdownPreview()
+    elseif filetype == 'lua' then
+        luaPreview()
+    else
+        -- 添加其他文件类型的处理，如果需要
+    end
+end
+
+-- 创建键盘映射，绑定在Normal模式下的R键
+vim.api.nvim_set_keymap('n', 'R', '<cmd>lua executeFileTypeCommands()<cr>', { noremap = true, silent = true })
 

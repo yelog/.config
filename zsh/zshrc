@@ -146,9 +146,9 @@ function hs() {
   rm -rf $blogPath/*
   mkdir -p $blogPath
   # find and cp blog to dir
-  # find /Users/yelog/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents -name "*.md" -type f -exec sh -c 'head -n 2 "{}" | grep -A1 "^---$" | grep -q "^title:" && ln -s "{}" ~/myspace/blog/source/_posts/' \;
+  find /Users/yelog/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents -name "*.md" -type f -exec sh -c 'head -n 2 "{}" | grep -A1 "^---$" | grep -q "^title:" && ln -s "{}" ~/myspace/blog/source/_posts/' \;
   # find /Users/yelog/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents -name "*.md" -type f -exec sh -c 'head -n 2 "{}" | grep -A1 "^---$" | grep -q "^title:" && ln -s "{}" "~/myspace/blog/source/_posts/$(basename "{}")"' \;
-  find /Users/yelog/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents -name "*.md" -type f -exec sh -c 'head -n 2 "{}" | grep -A1 "^---$" | grep -q "^title:" && echo "~/myspace/blog/source/_posts/$(basename "{}")"' \;
+  # find /Users/yelog/Library/Mobile\ Documents/iCloud\~md\~obsidian/Documents -name "*.md" -type f -exec sh -c 'head -n 2 "{}" | grep -A1 "^---$" | grep -q "^title:" && echo "~/myspace/blog/source/_posts/$(basename "{}")"' \;
   hexo clean
   hexo g
   hexo s
@@ -180,6 +180,7 @@ alias sudo='sudo '
 alias lg=lazygit
 alias j=z
 alias ls=exa
+alias scp='rsync -P --rsh=ssh'
 # alias python=/Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11
 # export PYTHON_HOME=/Library/Frameworks/Python.framework/Versions/3.11
 # export PATH=$PATH:$PYTHON_HOME/bin

@@ -28,6 +28,7 @@ return {
         ensure_installed = {
           "marksman",
           "lua_ls",
+          "jsonls",
           "tsserver",
           "vuels",
           "html",
@@ -82,6 +83,15 @@ return {
         capabilities = capabilities,
       })
       lspconfig["tsserver"].setup({
+        on_attach = on_attach,
+        flags = lsp_flags,
+        settings = {
+          completions = {
+            completeFunctionCalls = true,
+          },
+        },
+      })
+      lspconfig["jsonls"].setup({
         on_attach = on_attach,
         flags = lsp_flags,
         settings = {

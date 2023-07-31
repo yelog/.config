@@ -20,6 +20,9 @@
 !/lf/
 !/TamperMonkey/
 !/joshuto/
+!/wezterm/
+!/zellij/
+!/warpd/
 !/command/
 !ideavimrc
 !init.sh

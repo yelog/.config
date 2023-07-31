@@ -23,6 +23,8 @@ font:
   # Point size
   size: 16.0
 # https://www.reddit.com/r/neovim/comments/mbj8m5/how_to_setup_ctrlshiftkey_mappings_in_neovim_and/
+# 按如下教程把5u改成6u就可以了
+# https://stackoverflow.com/questions/73793802/how-to-map-ctrlshiftkey-in-neovim-tmux-in-alacritty
 key_bindings:
   - { key: Semicolon,  mods: Control|Command,           action: ToggleViMode            }
   - { key: A,  mods: Command,           chars: "\x1ba"           }
@@ -37,9 +39,10 @@ key_bindings:
   # - { key: I,  mods: Shift|Control,           chars: "\x1b[73;5u"           }
   - { key: W,  mods: Shift|Command,           chars: "\x1bW"           }
   - { key: Back, action:  ReceiveChar}
-  - { key: N,  mods: Control|Shift,           chars: "\x1b[78;5u"           }
-  - { key: P,        mods: Control|Shift, chars: "\x1b[80;5u"                }
-  # - { key: J,        mods: Control|Shift, chars: "\x1b[74;5u"                }
+  # - { key: N,  mods: Control|Shift,           chars: "\x1b[78;6u"           }
+  - { key: P,        mods: Control|Shift, chars: "\x1b[80;6u"                }
+  # - { key: J,        mods: Control|Shift, chars: "\x1b[74;6u"                }
+  # - { key: J, mods: Control|Shift, chars: "\x1b[J" }
   # - { key: A,         mods: Alt,       chars: "\x1ba"                       }
   # - { key: B,         mods: Alt,       chars: "\x1bb"                       }
   # - { key: C,         mods: Alt,       chars: "\x1bc"                       }
@@ -53,7 +56,8 @@ key_bindings:
   # - { key: K,         mods: Alt,       chars: "\x1bk"                       }
   # - { key: L,         mods: Alt,       chars: "\x1bl"                       }
   # - { key: M,         mods: Alt,       chars: "\x1bm"                       }
-  # - { key: N,         mods: Alt,       chars: "\x1bn"                       }
+  - { key: N,         mods: Command|Shift,       chars: "\x1b[78;6u"                       }
+  # - { key: N,         mods: Alt,       action: ReceiveChar                       }
   # - { key: O,         mods: Alt,       chars: "\x1bo"                       }
   # - { key: P,         mods: Alt,       chars: "\x1bp"                       }
   # - { key: Q,         mods: Alt,       chars: "\x1bq"                       }

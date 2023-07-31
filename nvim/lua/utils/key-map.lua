@@ -207,7 +207,12 @@ maps.n["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
 maps.n["<leader>ai"] = { "<cmd>NeoAIToggle<cr>", desc = "ChatGPT" }
 
 
-maps.n['<C-S-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
-maps.n['<C-S-p>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n['<C-S-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n['<C-S-p>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n['<M-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n['<M-m>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n['<M-N>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+
+-- maps.n['R'] = { "<cmd>:set splitright<cr><cmd>vsp<cr><cmd>term lua %<cr>", desc = "run lua file" }
 
 my.set_mappings(maps)

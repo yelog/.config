@@ -15,7 +15,7 @@ function activateApp(bundleID)
   print(bundleID)
   local app = hs.application.get(bundleID)
   local appWindows = (app == nil) and {} or app:allWindows()
-  if cacheWins == nil or #cacheWins ~= #appWindows or app ~=cacheApp then
+  if cacheWins == nil or #cacheWins ~= #appWindows or app ~= cacheApp then
     print('refresh cache')
     cacheWins = appWindows
     cacheApp = app
@@ -33,9 +33,6 @@ function activateApp(bundleID)
       -- 应用激活时, 通过 cmd-w 关掉最后一个窗口时, 当前应用仍是激活状态, 所以需要启动
       hs.application.launchOrFocusByBundleID(bundleID)
     else
-      -- hs.eventtap.keyStroke({ "cmd" }, "`") -- 模拟按下 cmd+`
-      -- 显示窗口列表供选择
-      -- local choices = {}
       local focusedWin = hs.window.focusedWindow()
       local activeIndex = 1
       for i, win in ipairs(cacheWins) do
@@ -57,5 +54,20 @@ function activateApp(bundleID)
         end
       end
     end
+  end
+  local currentScreen = getCurrentScreen()
+  if currentScreen then
+    -- 可以优化为设置在屏幕中间
+    hs.mouse.setRelativePosition({ x = 20, y = 40 }, currentScreen)
+  end
+end
+
+-- 获取当前鼠标所在的屏幕
+function getCurrentScreen()
+  local win = hs.window.focusedWindow()
+  if win then
+    return win:screen()
+  else
+    return nil
   end
 end
