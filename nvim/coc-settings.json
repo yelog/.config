@@ -64,14 +64,14 @@
     "$HOME/.config/nvim/plugged/vim-snippets/UltiSnips/"
   ],
   /*"coc.preferences.formatOnSaveFiletypes": [*/
-    /*"javascript",*/
-    /*"typescript",*/
-    /*"html",*/
-    /*"css",*/
-    /*"json",*/
-    /*"python",*/
-    /*"vue",*/
-    /*"svelte"*/
+  /*"javascript",*/
+  /*"typescript",*/
+  /*"html",*/
+  /*"css",*/
+  /*"json",*/
+  /*"python",*/
+  /*"vue",*/
+  /*"svelte"*/
   /*],*/
   "yaml.format.enable": true,
   "signature.target": "float",
@@ -81,15 +81,15 @@
   "explorer.width": 38,
   "explorer.quitOnOpen": false,
   "explorer.sources": [
-		{
-			"name": "buffer",
-			"expand": false
-		},
-		{
-			"name": "file",
-			"expand": true
-		}
-	],
+    {
+      "name": "buffer",
+      "expand": false
+    },
+    {
+      "name": "file",
+      "expand": true
+    }
+  ],
   "explorer.file.column.indent.indentLine": true,
   "explorer.openAction.strategy": "select",
   "explorer.file.showHiddenFiles": false,
@@ -109,49 +109,64 @@
   "explorer.keyMappings.global": {
     "gl": false,
     "g.": "reveal:sourceWindow",
-		"u": "nodePrev",
-		"e": "nodeNext",
-		"<tab>": "actionMenu",
-		//"O": ["wait",  "expanded?", "collapse:recursive" , "expand:recursive"],
+    "u": "nodePrev",
+    "e": "nodeNext",
+    "<tab>": "actionMenu",
+    //"O": ["wait",  "expanded?", "collapse:recursive" , "expand:recursive"],
     "O": "expand:recursive",
-		"gh": "collapseRecursive",
-		"i": ["wait", "expandable?", "expand", "open"],
-		"<cr>": ["wait", "expandable?", "cd", "open"],
-		"I": "open:vsplit",
-		"o": ["wait", "expanded?", "collapse", "expand"],
-		//"O": "open:tab",
-		"n": "collapse",
-		"W": "workspaceFolders",
-		"h": "gotoParent",
-		"yp": "copyFilepath",
-		"yn": "copyFilename",
-		"yy": "copyFile",
-		"dd": "cutFile",
-		"pp": "pasteFile",
-		"dD": "deleteForever",
-		"a": "addFile",
-		"M": "addDirectory",
-		"cw": "rename",
-		".": "toggleHidden",
-		"zh": "toggleHidden",
-		"R": "refresh",
-		"?": "help",
-		"q": "quit",
-		"X": "systemExecute",
-		"gd": "listDrive",
-		"f": "search",
-		"F": "searchRecursive",
-		"B": "gotoSource:file",
-		"b": "gotoSource:buffer",
-		"[[": "sourcePrev",
-		"]]": "sourceNext",
-		"[d": "diagnosticPrev",
-		"]d": "diagnosticNext",
-		"[c": "gitPrev",
-		"]c": "gitNext",
-		"<<": "gitStage",
-		">>": "gitUnstage"
-	},
+    "gh": "collapseRecursive",
+    "i": [
+      "wait",
+      "expandable?",
+      "expand",
+      "open"
+    ],
+    "<cr>": [
+      "wait",
+      "expandable?",
+      "cd",
+      "open"
+    ],
+    "I": "open:vsplit",
+    "o": [
+      "wait",
+      "expanded?",
+      "collapse",
+      "expand"
+    ],
+    //"O": "open:tab",
+    "n": "collapse",
+    "W": "workspaceFolders",
+    "h": "gotoParent",
+    "yp": "copyFilepath",
+    "yn": "copyFilename",
+    "yy": "copyFile",
+    "dd": "cutFile",
+    "pp": "pasteFile",
+    "dD": "deleteForever",
+    "a": "addFile",
+    "M": "addDirectory",
+    "cw": "rename",
+    ".": "toggleHidden",
+    "zh": "toggleHidden",
+    "R": "refresh",
+    "?": "help",
+    "q": "quit",
+    "X": "systemExecute",
+    "gd": "listDrive",
+    "f": "search",
+    "F": "searchRecursive",
+    "B": "gotoSource:file",
+    "b": "gotoSource:buffer",
+    "[[": "sourcePrev",
+    "]]": "sourceNext",
+    "[d": "diagnosticPrev",
+    "]d": "diagnosticNext",
+    "[c": "gitPrev",
+    "]c": "gitNext",
+    "<<": "gitStage",
+    ">>": "gitUnstage"
+  },
   "flutter.outlineWidth": 40,
   "flutter.outlineIconPadding": 0,
   "flutter.UIPath": true,
@@ -184,7 +199,10 @@
   "coc-actions.hideCursor": false,
   "coc-actions.showActionKind": true,
   "eslint.format.enable": true,
-  "eslint.probe": ["vue", "javascript"],
+  "eslint.probe": [
+    "vue",
+    "javascript"
+  ],
   "eslint.autoFixOnSave": true,
   "diagnostic-languageserver.filetypes": {
     "vim": "vint",

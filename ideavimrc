@@ -80,6 +80,11 @@ nnoremap <silent> go :action FileChooser.LightEditGotoOpenedFile<CR>
 " Breakpoint
 nnoremap <silent> sb :action ToggleLineBreakpoint<CR>
 nnoremap <silent> gb :action Debugger.FocusOnBreakpoint<CR>
+" Debug
+nnoremap <silent> <leader>do :action StepOver<CR>
+nnoremap <silent> <leader>di :action StepInto<CR>
+nnoremap <silent> <leader>dr :action Resume<CR>
+
 
 vnoremap * "oyy/<c-r>o<CR>
 vnoremap # "oyy/<c-r>o<CR>N

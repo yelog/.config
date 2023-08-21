@@ -1,15 +1,15 @@
 return {
-	"jose-elias-alvarez/null-ls.nvim",
-  config = function()
-    require("null-ls").setup({
-      filetypes = { "lua" },
-      sources = {
-        require("null-ls").builtins.formatting.stylua,
-        require("null-ls").builtins.diagnostics.eslint,
-        require("null-ls").builtins.completion.spell,
-      },
-    })
-  end
+	-- "jose-elias-alvarez/null-ls.nvim",
+ --  config = function()
+ --    require("null-ls").setup({
+ --      filetypes = { "lua" },
+ --      sources = {
+ --        require("null-ls").builtins.formatting.stylua,
+ --        require("null-ls").builtins.diagnostics.eslint,
+ --        require("null-ls").builtins.completion.spell,
+ --      },
+ --    })
+ --  end
 }
 
 -- local null_ls = require("null-ls")
