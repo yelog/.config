@@ -24,7 +24,7 @@ function ExecuteFileTypeCommands()
     vim.cmd('vsp')
     vim.cmd('term node %')
   elseif filetype == 'html' then
-    vim.cmd('!open %')
+    vim.cmd('!open "%"')
   elseif filetype == 'sh' then
     vim.cmd('set splitright')
     vim.cmd('vsp')

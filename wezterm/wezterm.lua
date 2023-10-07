@@ -23,8 +23,24 @@ config.enable_tab_bar = false
 config.debug_key_events = true
 
 config.keys = {
-  { key = "i", mods = "CMD", action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
+  { key = "i", mods = "CMD",        action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
   { key = "n", mods = "CTRL|SHIFT", action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
+  { key = ";", mods = "CMD|CTRL",   action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
+  {
+    key = '1',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = '1', mods = 'OPT' },
+  },
+  {
+    key = '2',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = '2', mods = 'OPT' },
+  },
+  {
+    key = '3',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = '3', mods = 'OPT' },
+  },
 }
 
 

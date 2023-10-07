@@ -71,7 +71,7 @@ nnoremap <silent> <leader>ll :action OptimizeImports<CR>:action ReformatCode<CR>
 
 nnoremap <silent> yr :CopyReference<CR>
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
-# vim打开自动NERDTree
+" vim打开自动NERDTree
 autocmd vimenter * NERDTree
 
 nnoremap <silent> yp :CopyPath<CR>
@@ -90,8 +90,6 @@ vnoremap * "oyy/<c-r>o<CR>
 vnoremap # "oyy/<c-r>o<CR>N
 
 nnoremap <silent> <leader>ff :action GotoFile<CR>
-
-nnoremap <silent> <left> :action ResizeToolWindowRight<CR>
 
 " Better uncommenting
 "augroup uncommenting
@@ -126,6 +124,7 @@ map ,t <Plug>(easymotion-tn)
 map ,w <Plug>(easymotion-bd-w)
 
 set sneak
+set quickscope
 
 
 " jump to next change

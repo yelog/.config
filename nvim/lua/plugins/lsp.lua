@@ -22,6 +22,11 @@ return {
     end,
   },
   {
+    "pmizio/typescript-tools.nvim",
+    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+    opts = {},
+  },
+  {
     "williamboman/mason-lspconfig.nvim",
     config = function()
       require("mason-lspconfig").setup({
@@ -29,7 +34,7 @@ return {
           "marksman",
           "lua_ls",
           "jsonls",
-          "tsserver",
+          -- "tsserver",
           "vuels",
           "html",
           "eslint",
@@ -46,7 +51,7 @@ return {
 
       -- Use an on_attach function to only map the following keys
       -- after the language server attaches to the current buffer
-      local on_attach = function(client, bufnr)
+      on_attach = function(client, bufnr)
         -- Enable completion triggered by <c-x><c-o>
         vim.api.nvim_buf_set_option(bufnr, "omnifunc", "v:lua.vim.lsp.omnifunc")
 
@@ -83,15 +88,15 @@ return {
         flags = lsp_flags,
         capabilities = capabilities,
       })
-      lspconfig["tsserver"].setup({
-        on_attach = on_attach,
-        flags = lsp_flags,
-        settings = {
-          completions = {
-            completeFunctionCalls = true,
-          },
-        },
-      })
+      -- lspconfig["tsserver"].setup({
+      --   on_attach = on_attach,
+      --   flags = lsp_flags,
+      --   settings = {
+      --     completions = {
+      --       completeFunctionCalls = true,
+      --     },
+      --   },
+      -- })
       lspconfig["jsonls"].setup({
         on_attach = on_attach,
         flags = lsp_flags,
@@ -220,6 +225,32 @@ return {
       -- 		})
       -- 	end,
       -- })
+      require("typescript-tools").setup {
+        on_attach = on_attach,
+        settings = {
+          -- spawn additional tsserver instance to calculate diagnostics on it
+          separate_diagnostic_server = true,
+          -- "change"|"insert_leave" determine when the client asks the server about diagnostic
+          publish_diagnostic_on = "insert_leave",
+          -- array of strings("fix_all"|"add_missing_imports"|"remove_unused")
+          -- specify commands exposed as code_actions
+          expose_as_code_action = {},
+          -- string|nil - specify a custom path to `tsserver.js` file, if this is nil or file under path
+          -- not exists then standard path resolution strategy is applied
+          tsserver_path = nil,
+          -- specify a list of plugins to load by tsserver, e.g., for support `styled-components`
+          -- (see 💅 `styled-components` support section)
+          tsserver_plugins = {},
+          -- this value is passed to: https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes
+          -- memory limit in megabytes or "auto"(basically no limit)
+          tsserver_max_memory = "auto",
+          -- described below
+          tsserver_format_options = {},
+          tsserver_file_preferences = {},
+          -- mirror of VSCode's `typescript.suggest.completeFunctionCalls`
+          complete_function_calls = false,
+        },
+      }
     end,
   },
   {
@@ -231,6 +262,8 @@ return {
       require('mason-tool-installer').setup({
         ensure_installed = {
           'stylua',
+          'jq',
+          'prettier',
         },
       })
     end,

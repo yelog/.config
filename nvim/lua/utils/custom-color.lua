@@ -21,7 +21,7 @@ vim.fn.matchadd("ye_import3", "\\v( |^)@<=!!!(!)@!")
 -- vim.fn.matchadd("ye_link", "\\v\\[\\[(\\S|\\s)*\\]\\]")
 
 vim.cmd([[highlight ye_link guifg=#5c92fa gui=underline cterm=underline]])
-vim.fn.matchadd("ye_link", "\\v(http|https)(\\S|\\s){-}( |$)")
+vim.fn.matchadd("ye_link", "\\v(http|https):(\\S|\\s){-}( |$)")
 
 vim.cmd([[highlight MarkdownHashtag guifg=#91be3e]])
 vim.cmd([[syntax match MarkdownHashtag /#\S\+/ containedin=ALL]])

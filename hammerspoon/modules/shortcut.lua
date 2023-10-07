@@ -123,6 +123,7 @@ applications = {
   { prefix = applicationHyperKey, key = "T", message = "Terminal", bundleId = "org.alacritty" },
   { prefix = applicationHyperKey, key = "U", message = "Teams",    bundleId = "com.microsoft.teams" },
   { prefix = applicationHyperKey, key = "M", message = "Mail",     bundleId = "com.apple.mail" },
+  { prefix = applicationHyperKey, key = ";", message = "Arc",     bundleId = "company.thebrowser.Browser" },
   --{prefix = applicationHyperKey, key = "P", message="Postman", bundleId="com.postmanlabs.mac"},
   --{prefix = applicationHyperKey, key = "O", message="Word", bundleId="com.microsoft.Word"},
   --{prefix = applicationHyperKey, key = "Y", message="PyCharm", bundleId="com.jetbrains.pycharm"},

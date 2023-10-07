@@ -25,7 +25,7 @@ return {
       enable_git_status = true,
       enable_diagnostics = true,
       sort_case_insensitive = false, -- used when sorting files and directories in the tree
-      sort_function = nil, -- use a custom function for sorting files and directories in the tree
+      sort_function = nil,           -- use a custom function for sorting files and directories in the tree
       -- sort_function = function (a,b)
       --       if a.type == b.type then
       --           return a.path > b.path
@@ -75,11 +75,11 @@ return {
             added     = "✚", -- or "✚", but this is redundant info if you use git_status_colors on the name
             modified  = "", -- or "", but this is redundant info if you use git_status_colors on the name
             deleted   = "✖", -- this can only be used in the git_status source
-            renamed   = "", -- this can only be used in the git_status source
+            renamed   = "󰁕", -- this can only be used in the git_status source
             -- Status type
-            untracked = "✚",
+            untracked = "",
             ignored   = "",
-            unstaged  = "",
+            unstaged  = "󰄱",
             staged    = "",
             conflict  = "",
           }
@@ -170,9 +170,9 @@ return {
             --".null-ls_*",
           },
         },
-        follow_current_file = true, -- This will find and focus the file in the active buffer every
+        follow_current_file = true,             -- This will find and focus the file in the active buffer every
         -- time the current file is changed while the tree is open.
-        group_empty_dirs = false, -- when true, empty folders will be grouped together
+        group_empty_dirs = false,               -- when true, empty folders will be grouped together
         hijack_netrw_behavior = "open_default", -- netrw disabled, opening a directory opens neo-tree
         -- in whatever position is specified in window.position
         -- "open_current",  -- netrw disabled, opening a directory opens within the
@@ -197,7 +197,7 @@ return {
       buffers = {
         follow_current_file = true, -- This will find and focus the file in the active buffer every
         -- time the current file is changed while the tree is open.
-        group_empty_dirs = true, -- when true, empty folders will be grouped together
+        group_empty_dirs = true,    -- when true, empty folders will be grouped together
         show_unloaded = true,
         window = {
           mappings = {
