@@ -18,14 +18,32 @@ end
 -- config.color_scheme = 'AdventureTime'
 config.font = wezterm.font 'JetBrains Mono'
 config.font_size = 16
-config.color_scheme = 'Batman'
+-- config.color_scheme = 'Batman'
+config.color_scheme = 'Github Dark'
 config.enable_tab_bar = false
 config.debug_key_events = true
+-- https://wezfurlong.org/wezterm/config/lua/config/window_decorations.html?h=decorations
+config.window_decorations = "RESIZE"
 
 config.keys = {
   { key = "i", mods = "CMD",        action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
   { key = "n", mods = "CTRL|SHIFT", action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
-  { key = ";", mods = "CMD|CTRL",   action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
+  { key = ";", mods = "CMD|CTRL",   action = "ActivateCopyMode", },
+  {
+    key = "l",
+    mods = "CMD",
+    action = wezterm.action.SendKey { key = 'l', mods = 'OPT' },
+  },
+  {
+    key = "m",
+    mods = "CMD|SHIFT",
+    action = wezterm.action.SendKey { key = 'm', mods = 'OPT|SHIFT' },
+  },
+  {
+    key = "o",
+    mods = "CMD|SHIFT",
+    action = wezterm.action.SendKey { key = 'o', mods = 'OPT|SHIFT' },
+  },
   {
     key = '1',
     mods = 'CMD',

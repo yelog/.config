@@ -1,0 +1,21 @@
+{
+  "filters": [
+    {
+      "type": "blur",
+      "enabled": true, 
+      "pipeline": [
+        {
+          "name": "blur",
+          "method": "gaussian",
+          "sigma": 0
+        }
+      ]
+    },
+    {
+      "type": "brightness",
+      "enabled": true,
+      "value": 1.0
+    }
+  ]
+}
+

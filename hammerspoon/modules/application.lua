@@ -58,7 +58,7 @@ function activateApp(bundleID)
   local currentScreen = getCurrentScreen()
   if currentScreen then
     -- 可以优化为设置在屏幕中间
-    hs.mouse.setRelativePosition({ x = 20, y = 40 }, currentScreen)
+    hs.mouse.setRelativePosition({ x = 40, y = 40 }, currentScreen)
   end
 end
 

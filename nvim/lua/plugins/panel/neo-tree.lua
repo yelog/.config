@@ -17,7 +17,7 @@ return {
     vim.fn.sign_define("DiagnosticSignInfo",
       { text = " ", texthl = "DiagnosticSignInfo" })
     vim.fn.sign_define("DiagnosticSignHint",
-      { text = "", texthl = "DiagnosticSignHint" })
+      { text = "󰌵", texthl = "DiagnosticSignHint" })
 
     require("neo-tree").setup({
       close_if_last_window = true, -- Close Neo-tree if it is the last window left in the tab
@@ -54,7 +54,7 @@ return {
         icon = {
           folder_closed = "",
           folder_open = "",
-          folder_empty = "ﰊ",
+          folder_empty = "󰜌",
           -- The next two settings are only a fallback, if you use nvim-web-devicons and configure default icons there
           -- then these will never be used.
           default = "*",
@@ -77,9 +77,9 @@ return {
             deleted   = "✖", -- this can only be used in the git_status source
             renamed   = "󰁕", -- this can only be used in the git_status source
             -- Status type
-            untracked = "",
+            untracked = "",
             ignored   = "",
-            unstaged  = "󰄱",
+            unstaged  = "",
             staged    = "",
             conflict  = "",
           }
@@ -103,7 +103,7 @@ return {
           },
           ["<2-LeftMouse>"] = "open",
           ["<cr>"] = "open",
-          ["<esc>"] = "revert_preview",
+          -- ["<esc>"] = "revert_preview",
           ["P"] = { "toggle_preview", config = { use_float = true } },
           ["S"] = "open_split",
           ["s"] = "open_vsplit",
@@ -191,8 +191,17 @@ return {
             ["<c-x>"] = "clear_filter",
             ["[g"] = "prev_git_modified",
             ["]g"] = "next_git_modified",
+            ["<leader>p"] = "image_wezterm",
           }
-        }
+        },
+        commands = {
+          image_wezterm = function(state)
+            local node = state.tree:get_node()
+            if node.type == "file" then
+              require("markdown_image").PreviewImage(node.path)
+            end
+          end,
+        },
       },
       buffers = {
         follow_current_file = true, -- This will find and focus the file in the active buffer every

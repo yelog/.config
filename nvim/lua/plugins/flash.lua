@@ -1,3 +1,4 @@
+-- 通过搜索字符的方式进行跳转
 return {
 	"folke/flash.nvim",
 	event = "VeryLazy",

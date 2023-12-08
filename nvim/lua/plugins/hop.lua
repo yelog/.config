@@ -1,3 +1,4 @@
+-- 通过给任意字符块添加索引, 来进行跳转
 return {
 	"phaazon/hop.nvim",
 	branch = "v2",

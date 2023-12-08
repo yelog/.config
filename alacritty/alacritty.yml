@@ -1,24 +1,24 @@
 # Font configuration (changes require restart)
 font:
   # Normal (roman) font face
-  normal:
-    family: Hack Nerd Font Mono
-    style: Regular
-
-  # Bold font face
-  bold:
-    family: Hack Nerd Font Mono
-    style: Bold
-
-  # Italic font face
-  italic:
-    family: Hack Nerd Font Mono
-    style: Italic
-
-  # Bold italic font face
-  bold_italic:
-    family: Hack Nerd Font Mono
-    style: Bold Italic
+  # normal:
+  #   family: 'JetBrains Mono'
+  #   style: Regular
+  #
+  # # Bold font face
+  # bold:
+  #   family: 'JetBrains Mono'
+  #   style: Bold
+  #
+  # # Italic font face
+  # italic:
+  #   family: 'JetBrains Mono'
+  #   style: Italic
+  #
+  # # Bold italic font face
+  # bold_italic:
+  #   family: 'JetBrains Mono'
+  #   style: Bold Italic
 
   # Point size
   size: 16.0
@@ -30,12 +30,14 @@ key_bindings:
   - { key: A,  mods: Command,           chars: "\x1ba"           }
   - { key: D,  mods: Command,           chars: "\x1bd"           }
   - { key: S,  mods: Command,           chars: "\x1bs"           }
+  - { key: L,  mods: Command,           chars: "\x1bl"           }
   - { key: Key1,  mods: Command,           chars: "\x1b1"           }
   - { key: Key1,  mods: Alt,           chars: "\x1b1"           }
   - { key: Key2,  mods: Command,           chars: "\x1b2"           }
   - { key: Key3,  mods: Command,           chars: "\x1b3"           }
   - { key: Key4,  mods: Command,           chars: "\x1b4"           }
   - { key: M,  mods: Shift|Command,           chars: "\x1bM"           }
+  - { key: O,  mods: Shift|Command,           chars: "\x1bO"           }
   # - { key: I,  mods: Shift|Control,           chars: "\x1b[73;5u"           }
   - { key: W,  mods: Shift|Command,           chars: "\x1bW"           }
   - { key: Back, action:  ReceiveChar}

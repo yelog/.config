@@ -3,7 +3,8 @@ source ~/.config/nvim/base.vim
 nnoremap <c-p> gT
 nnoremap <c-n> gt
 nnoremap <c-q> :q<CR>
-
+"let g:surround_no_mappings = 1
+"
 set keep-english-in-normal
 set surround
 " 重命名时保持normal状态
@@ -37,10 +38,10 @@ nnoremap <silent> gD :action GotoDeclaration<CR>
 "nnoremap <silent> gi :action GotoSuperMethod<CR>
 nnoremap <silent> gf :action GotoFile<CR>
 vnoremap <silent> gf :action GotoFile<CR>
-nnoremap <silent> su :action FindUsages<CR>
+" nnoremap <silent> <leader>fu :action FindUsages<CR>
 nnoremap <silent> gu :action ShowUsages<CR>
-nnoremap <silent> se :action EvaluateExpression<CR>
-vnoremap <silent> se :action EvaluateExpression<CR>
+nnoremap <silent> <leader>se :action EvaluateExpression<CR>
+vnoremap <silent> <leader>se :action EvaluateExpression<CR>
 
 nnoremap <silent> <leader>// :action CommentByLineComment<CR>
 vnoremap <silent> <leader>/ :action ToggleBookmarkWithMnemonic<CR>
@@ -70,6 +71,8 @@ nnoremap <silent> <leader>ll :action OptimizeImports<CR>:action ReformatCode<CR>
 " autocmd FileType vue,javascript nnoremap <buffer> <leader>ll :action Javascript.Linters.EsLint.Fix<CR>
 
 nnoremap <silent> yr :CopyReference<CR>
+
+Plug 'preservim/nerdtree'
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
 " vim打开自动NERDTree
 autocmd vimenter * NERDTree
@@ -78,7 +81,7 @@ nnoremap <silent> yp :CopyPath<CR>
 nnoremap <silent> go :action FileChooser.LightEditGotoOpenedFile<CR>
 
 " Breakpoint
-nnoremap <silent> sb :action ToggleLineBreakpoint<CR>
+nnoremap <silent> <leader>sb :action ToggleLineBreakpoint<CR>
 nnoremap <silent> gb :action Debugger.FocusOnBreakpoint<CR>
 " Debug
 nnoremap <silent> <leader>do :action StepOver<CR>
@@ -123,14 +126,20 @@ map ,s <Plug>(easymotion-s2)
 map ,t <Plug>(easymotion-tn)
 map ,w <Plug>(easymotion-bd-w)
 
-set sneak
+" set sneak
 set quickscope
 
 
 " jump to next change
-noremap <leader>gj <ESC>:action JumpToNextChange<CR>
-" jump to previous change
-" noremap <leader>gk <ESC>:action JumpToLastChange<CR>
+" noremap <leader>gj :action NextChange
 " nnoremap <leader>gj :cn<CR>
 
 " nnoremap <leader>gj :action NextChange<CR>
+
+" nmap <leader><leader>s :action KJumpAction<cr>
+nmap <leader><leader>w :action KJumpAction.Word0<cr>
+nmap <leader><leader>s :action KJumpAction.KJumpAction<cr>
+nmap <leader><leader>l :action KJumpAction.Line<cr>
+noremap s :action ideavim.search<cr>
+nmap S :action ideavim.search<cr>
+" more action see table below

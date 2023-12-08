@@ -57,13 +57,19 @@ maps.n["<M-M>"] = {
   function()
     require("telescope.builtin").lsp_document_symbols()
   end,
-  desc = "Search file",
+  desc = "Search symbols",
+}
+maps.n["<M-O>"] = {
+  function()
+    require("telescope.builtin").find_files()
+  end,
+  desc = "search file",
 }
 maps.n["<leader>ff"] = {
   function()
     require("telescope.builtin").find_files()
   end,
-  desc = "search symbols",
+  desc = "search file",
 }
 maps.n["<leader>fb"] = {
   function()
@@ -148,7 +154,8 @@ maps.n["<leader>te"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer
 -- maps.n["<leader>o"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" }
 
 -- table of contents
-maps.n["<leader>ts"] = { "<cmd>AerialToggle<cr>", desc = "Toggle Structure" }
+-- maps.n["<leader>ts"] = { "<cmd>AerialToggle<cr>", desc = "Toggle Structure" }
+maps.n["<leader>ts"] = { "<cmd>SymbolsOutlineOpen<cr>", desc = "Toggle Structure" }
 
 -- bufferline
 maps.n["<c-n>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Buffer Next" }
@@ -166,6 +173,7 @@ maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" 
 maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" }
 maps.n["<leader>mc"] = { "<cmd>CheckSwitch<cr>", desc = "Checkbox Switch" }
 maps.v["<leader>mc"] = { "<cmd>CheckSwitch<cr>gv", desc = "Checkbox Switch" }
+maps.n["<M-l>"] = { "<cmd>CheckSwitch<cr>", desc = "Checkbox Switch" }
 -- maps.v["<leader>"] = { "<cmd>CheckSwitch<cr>gv", desc = "Checkbox Switch" }
 maps.n["<leader>md"] = { "<cmd>ObsidianToday<cr>", desc = "goto daily task" }
 -- maps.n["gf"] = { function()

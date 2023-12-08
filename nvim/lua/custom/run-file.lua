@@ -29,6 +29,10 @@ function ExecuteFileTypeCommands()
     vim.cmd('set splitright')
     vim.cmd('vsp')
     vim.cmd('term sh %')
+  elseif filetype == 'python' then
+    vim.cmd('set splitright')
+    vim.cmd('vsp')
+    vim.cmd('term python3 %')
   else
     -- 添加其他文件类型的处理，如果需要
   end

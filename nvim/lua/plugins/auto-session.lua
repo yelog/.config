@@ -1,3 +1,4 @@
+-- 保存当前文件打开和分屏状态
 return {
   "rmagatti/auto-session",
   config = function()

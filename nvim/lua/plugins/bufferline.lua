@@ -1,3 +1,4 @@
+-- 把 buffer 并排显示在头部
 return {
 	{
 		"akinsho/bufferline.nvim",

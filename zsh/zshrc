@@ -169,7 +169,8 @@ function hd() {
 # alias hs="hexo clean && hexo g && hexo s"
 # alias hd='hexo clean && hexo g && hexo d && git add . && git commit -m "update" && git push -f'
 alias tailf='tail -f'
-alias ra=joshuto
+# alias ra=joshuto
+alias ra=yazi
 alias s=neofetch
 alias chrome=open -a "Google Chrome"
 alias tn='tmux new -s '
@@ -216,7 +217,10 @@ export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
 [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
-nvm use v14.15.4 > /dev/null 2>&1
+nvm use v18.17.0 > /dev/null 2>&1
+# nvm use v16.20.2 > /dev/null 2>&1
+# alias npm=pnpm
+export NODE_OPTIONS=--openssl-legacy-provider
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
 # vi-mode
@@ -280,3 +284,21 @@ ssh() {
 # eval "$(starship init zsh)"
 # export STARSHIP_CONFIG=$HOME/.config/zsh/starship.toml
 
+
+
+# pnpm
+export PNPM_HOME="/Users/yelog/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+# Created by `pipx` on 2023-12-04 09:45:52
+export PATH="$PATH:/Users/yelog/.local/bin"
+
+# Created by `pipx` on 2023-12-04 09:45:56
+export PATH="$PATH:/Users/yelog/Library/Python/3.10/bin"
+
+# eval "$(luarocks path --bin)"   # you can also add LUA_PATH based on your own setup
+# set -gx DYLD_LIBRARY_PATH /opt/homebrew/Cellar/imagemagick/7.1.1-21/lib  # check your imagemagic installation path; this resolve dyld loading failure

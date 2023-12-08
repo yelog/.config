@@ -19,7 +19,7 @@ windows = {
   -- 同一应用的所有窗口自动水平均分或垂直均分
   same_space_auto_layout_grid = { prefix = windowHyperKey, key = "0", message = "" },
   -- 同一工作空间下的所有窗口自动网格式布局
-  same_application_auto_layout_horizontal_or_vertical = { prefix = windowHyperKey, key = "0", message = "" },
+  same_apleftplication_auto_layout_horizontal_or_vertical = { prefix = windowHyperKey, key = "0", message = "" },
   -- 同一工作空间下的所有窗口自动水平均分或垂直均分
   same_space_auto_layout_horizontal_or_vertical = { prefix = windowHyperKey, key = "0", message = "" },
   -- 左半屏
@@ -120,23 +120,26 @@ applications = {
   --{prefix = applicationHyperKey, key = "D", message="DataGrip", bundleId="com.jetbrains.datagrip"},
   { prefix = applicationHyperKey, key = "Z", message = "Apifox",   bundleId = "cn.apifox.app" },
   { prefix = applicationHyperKey, key = "C", message = "Calendar", bundleId = "com.apple.dt.Xcode" },
-  { prefix = applicationHyperKey, key = "T", message = "Terminal", bundleId = "org.alacritty" },
-  { prefix = applicationHyperKey, key = "U", message = "Teams",    bundleId = "com.microsoft.teams" },
+  -- { prefix = applicationHyperKey, key = "T", message = "Terminal", bundleId = "org.alacritty" },
+  { prefix = applicationHyperKey, key = "T", message = "Terminal", bundleId = "com.github.wez.wezterm" },
+  -- { prefix = applicationHyperKey, key = "T", message = "Terminal", bundleId = "net.kovidoyal.kitty" },
+  { prefix = applicationHyperKey, key = "U", message = "Teams",    bundleId = "com.microsoft.teams2" },
   { prefix = applicationHyperKey, key = "M", message = "Mail",     bundleId = "com.apple.mail" },
-  { prefix = applicationHyperKey, key = ";", message = "Arc",     bundleId = "company.thebrowser.Browser" },
+  { prefix = applicationHyperKey, key = ";", message = "Arc",      bundleId = "company.thebrowser.Browser" },
   --{prefix = applicationHyperKey, key = "P", message="Postman", bundleId="com.postmanlabs.mac"},
   --{prefix = applicationHyperKey, key = "O", message="Word", bundleId="com.microsoft.Word"},
   --{prefix = applicationHyperKey, key = "Y", message="PyCharm", bundleId="com.jetbrains.pycharm"},
   --{prefix = applicationHyperKey, key = "R", message="Redis Desktop", bundleId="me.qii404.another-redis-desktop-manager"}
   --> Recent app
-  { prefix = applicationHyperKey, key = "1", message = "PDF",      bundleId = "net.sourceforge.skim-app.skim" },
+  -- { prefix = applicationHyperKey, key = "1", message = "PDF",      bundleId = "net.sourceforge.skim-app.skim" },
+  { prefix = applicationHyperKey, key = "1", message = "腾讯会议",      bundleId = "com.tencent.meeting" },
+  -- { prefix = applicationHyperKey, key = "1", message = "zoom会议",      bundleId = "us.zoom.xos" },
 }
 
 -- 输入法切换快捷键配置
 input_methods = {
   abc = { prefix = { "Option" }, key = "J", message = "ABC" },
   chinese = { prefix = { "Option" }, key = "K", message = "简体拼音" },
-  japanese = { prefix = { "Option" }, key = "L", message = "Hiragana" },
 }
 
 -- 表情包搜索快捷键配置

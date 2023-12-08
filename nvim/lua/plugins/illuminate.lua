@@ -1,3 +1,4 @@
+-- 自动高亮当前变量的被使用的地方
 return {
   "RRethy/vim-illuminate", --> automatically highlighting other uses of the word under the cursor
   config = function()

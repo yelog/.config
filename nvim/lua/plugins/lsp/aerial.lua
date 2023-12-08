@@ -1,3 +1,4 @@
+-- 显示文件结构 <leader>ts
 return {
 	"stevearc/aerial.nvim",
 	config = function()
