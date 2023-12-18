@@ -39,15 +39,15 @@ return {
           -- "vuels",
           "html",
           "eslint",
-          -- "rust_analyzer",
+          "rust_analyzer",
         },
       })
       -- Mappings.
       -- See `:help vim.diagnostic.*` for documentation on any of the below functions
       local opts = { noremap = true, silent = true }
       vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
-      vim.keymap.set("n", "<leader>lp", vim.diagnostic.goto_prev, opts)
-      vim.keymap.set("n", "<leader>ln", vim.diagnostic.goto_next, opts)
+      vim.keymap.set("n", "<leader>lk", vim.diagnostic.goto_prev, opts)
+      vim.keymap.set("n", "<leader>lj", vim.diagnostic.goto_next, opts)
       vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, opts)
 
       -- Use an on_attach function to only map the following keys
@@ -235,14 +235,14 @@ return {
       --   on_attach = on_attach,
       --   flags = lsp_flags,
       -- })
-      -- lspconfig["rust_analyzer"].setup({
-      --   on_attach = on_attach,
-      --   flags = lsp_flags,
-      --   -- Server-specific settings...
-      --   settings = {
-      --     ["rust-analyzer"] = {},
-      --   },
-      -- })
+      lspconfig["rust_analyzer"].setup({
+        on_attach = on_attach,
+        flags = lsp_flags,
+        -- Server-specific settings...
+        settings = {
+          ["rust-analyzer"] = {},
+        },
+      })
       -- example to setup sumneko and enable call snippets
       -- local runtime_path = vim.split(package.path, ";")
       -- table.insert(runtime_path, "lua/?.lua")

@@ -44,16 +44,27 @@ return {
   --     vim.keymap.set("v", "d", "d<cmd>AutolistRecalculate<cr>")
   --   end,
   -- },
+  -- {
+  --   "suan/vim-instant-markdown",
+  --   ft = "markdown",
+  --   config = function()
+  --     -- need install: npm -g install instant-markdown-d
+  --     -- suan/vim-instant-markdown
+  --     vim.g.instant_markdown_slow = 0
+  --     vim.g.instant_markdown_autostart = 0
+  --     vim.g.instant_markdown_autoscroll = 1
+  --   end,
+  -- }, --> automatically highlighting other uses of the word under the cursor
   {
-    "suan/vim-instant-markdown",
-    ft = "markdown",
-    config = function()
-      -- suan/vim-instant-markdown
-      vim.g.instant_markdown_slow = 0
-      vim.g.instant_markdown_autostart = 0
-      vim.g.instant_markdown_autoscroll = 1
+    "iamcco/markdown-preview.nvim",
+    cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
+    ft = { "markdown" },
+    build = function()
+      vim.fn["mkdp#util#install"]()
+      -- vim.g.mkdp_theme = 'light'
+    vim.cmd([[ let g:mkdp_theme = 'light' ]])
     end,
-  }, --> automatically highlighting other uses of the word under the cursor
+  },
   {
     "tenxsoydev/vim-markdown-checkswitch",
     config = function()
@@ -66,7 +77,7 @@ return {
       -- tpope/vim-markdown
       vim.g.markdown_syntax_conceal = 0
       vim.g.markdown_fenced_languages =
-      { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "Dockerfile" }
+      { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "Dockerfile", "Rust" }
     end,
   }, --> syntax highlighting and filetype plugins for Markdown
 }

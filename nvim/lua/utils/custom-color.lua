@@ -28,4 +28,28 @@ vim.cmd([[syntax match MarkdownHashtag /#\S\+/ containedin=ALL]])
 vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('MarkdownHashtag', "\\v#[a-zA-Z-_\\u4e00-\\u9fa5]+")]])
 
 
+-- 设置自定义高亮组，用于以问号结尾的语句
+vim.cmd([[highlight QuestionSentence cterm=bold guifg=#e5c07b]])
 
+-- 添加匹配以问号结尾的语句的规则
+-- vim.cmd([[syntax match QuestionSentence /\S\+\?/ containedin=ALL]])
+-- vim.cmd([[syntax match QuestionSentence /#\S\+/ containedin=ALL]])
+
+-- 在进入或创建文件时应用规则
+vim.cmd([[autocmd! BufEnter,BufNewFile * call matchadd('QuestionSentence', "\\v[a-zA-Z-_\\u4e00-\\u9fa5]+[?]")]])
+
+
+-- Highlight today's date
+-- Set highlight
+vim.cmd([[
+  hi Today ctermfg=Green cterm=standout gui=standout
+]])
+-- Get day of today
+local today = os.date("%Y-%m-%d")
+-- autocmd，Apply highlight when opening a Markdown file
+vim.cmd(string.format([[
+  augroup MarkdownHighlight
+    autocmd!
+    autocmd FileType markdown lua vim.cmd('match Today /\\V%s/')
+  augroup END
+]], today))

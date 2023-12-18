@@ -1,7 +1,7 @@
 return {
   {
     "nvim-telescope/telescope.nvim",
-    tag = "0.1.4",
+    tag = "0.1.5",
     dependencies = { "nvim-lua/plenary.nvim", "kdheepak/lazygit.nvim" },
     config = function()
       local actions = require "telescope.actions"
@@ -12,9 +12,15 @@ return {
           prompt_prefix = " ",
           selection_caret = "❯ ",
           path_display = { "truncate" },
+          -- path_display = function(opts, path)
+          --   local tail = require("telescope.utils").path_tail(path)
+          --   -- return string.format("%s (%s)", tail, path), { { { 1, #tail }, "Constant" } }
+          --   return string.format("%s", tail), { { { 1, #tail }, "Constant" } }
+          -- end,
           selection_strategy = "reset",
           sorting_strategy = "ascending",
-          layout_strategy = "horizontal",
+          -- layout_strategy = "horizontal",
+          layout_strategy = "vertical",
           layout_config = {
             horizontal = {
               prompt_position = "top",
@@ -22,6 +28,7 @@ return {
               results_width = 0.8,
             },
             vertical = {
+              prompt_position = "top",
               mirror = false,
             },
             width = 0.87,
@@ -90,6 +97,28 @@ return {
             },
           },
         },
+        -- pickers = {
+        --   live_grep = {
+        --     entry_maker = function(entry)
+        --       local text = entry.text or ""
+        --       local filename = entry.filename or ""
+        --       local lnum = entry.lnum and (":" .. entry.lnum) or ""
+        --       local col = entry.col and (":" .. entry.col) or ""
+        --
+        --       local display_text = text
+        --       if filename ~= "" then
+        --         display_text = display_text .. " (" .. filename .. lnum .. ")"
+        --       end
+        --
+        --       local ordinal = filename .. lnum .. col .. ":" .. text
+        --       return {
+        --         ordinal = ordinal,
+        --         display = display_text,
+        --         -- 其他必要字段...
+        --       }
+        --     end
+        --   }
+        -- },
         extensions = {
           media_files = {
             -- filetypes whitelist

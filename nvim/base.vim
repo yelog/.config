@@ -82,9 +82,13 @@ noremap gh <C-w>h
 noremap gj <C-w>j
 noremap gk <C-w>k
 " 分屏大小
+noremap <M-S-k> :res -5<CR>
 noremap <up> :res -5<CR>
+noremap <M-S-j> :res +5<CR>
 noremap <down> :res +5<CR>
+noremap <M-S-h> :vertical resize-5<CR>
 noremap <left> :vertical resize-5<CR>
+noremap <M-S-l> :vertical resize+5<CR>
 noremap <right> :vertical resize+5<CR>
 map <c-w>V <c-w>s<cr>
 
@@ -119,6 +123,7 @@ noremap <C-s> :w<CR>
 " Ctrl + U or E will move up/down the view port without moving the cursor
 noremap <C-U> 5<C-y>
 noremap <C-D> 5<C-e>
+" replace by plugin surround ysiw"
 nnoremap <leader>i" viw<esc>a"<esc>hbi"<esc>lel
 nnoremap <leader>i' viw<esc>a'<esc>hbi'<esc>lel
 nnoremap <leader>i` viw<esc>a`<esc>hbi`<esc>lel
@@ -148,7 +153,8 @@ noremap <LEADER><CR> :nohlsearch<CR>
 " vim实用技巧推荐，原nnoremap<silent> <C-l> :<C-u>nohlsearch<CR><C-l>` 不知道后面 <c-l>`是干嘛的，故去掉了
 nnoremap<silent> <C-l> :<C-u>nohlsearch<CR>
 " Press space twice to jump to the next '<++>' and edit it
-autocmd FileType markdown noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
+" autocmd FileType markdown noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
+autocmd FileType markdown noremap ,f <Esc>/<++><CR>:nohlsearch<CR>"_c4l
 
 " Opening a terminal window
 "noremap <LEADER>/ :set splitright<CR>:vsplit<CR>:term<CR>
@@ -205,6 +211,9 @@ noremap <LEADER>sw :set wrap!<CR>
 " nnoremap Y :let @+=@"<CR>
 " 选中模式下 Y 复制到 Clipboard
 vnoremap Y "+y
+" set yank to clipboard
+nnoremap Y :let @+=@"<CR>
+nnoremap <M-y> :let @+=@"<CR>
 
 "nnoremap <c-p> "0p
 "vnoremap <c-p> "0p

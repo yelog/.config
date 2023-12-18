@@ -17,6 +17,7 @@ end
 -- For example, changing the color scheme:
 -- config.color_scheme = 'AdventureTime'
 config.font = wezterm.font 'JetBrains Mono'
+
 config.font_size = 16
 -- config.color_scheme = 'Batman'
 config.color_scheme = 'Github Dark'
@@ -24,6 +25,12 @@ config.enable_tab_bar = false
 config.debug_key_events = true
 -- https://wezfurlong.org/wezterm/config/lua/config/window_decorations.html?h=decorations
 config.window_decorations = "RESIZE"
+config.window_padding = {
+  left = 2,
+  right = 2,
+  top = 2,
+  bottom = 2,
+}
 
 config.keys = {
   { key = "i", mods = "CMD",        action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
@@ -45,6 +52,16 @@ config.keys = {
     action = wezterm.action.SendKey { key = 'o', mods = 'OPT|SHIFT' },
   },
   {
+    key = "f",
+    mods = "CMD|SHIFT",
+    action = wezterm.action.SendKey { key = 'f', mods = 'OPT|SHIFT' },
+  },
+  {
+    key = "r",
+    mods = "CMD|SHIFT",
+    action = wezterm.action.SendKey { key = 'r', mods = 'OPT|SHIFT' },
+  },
+  {
     key = '1',
     mods = 'CMD',
     action = wezterm.action.SendKey { key = '1', mods = 'OPT' },
@@ -58,6 +75,21 @@ config.keys = {
     key = '3',
     mods = 'CMD',
     action = wezterm.action.SendKey { key = '3', mods = 'OPT' },
+  },
+  {
+    key = 'k',
+    mods = 'CMD',
+    action = wezterm.action.ClearScrollback("ScrollbackAndViewport")
+  },
+  {
+    key = 'h',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = 'h', mods = 'OPT' },
+  },
+  {
+    key = 'y',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = 'y', mods = 'OPT' },
   },
 }
 

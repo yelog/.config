@@ -14,7 +14,8 @@ function ExecuteFileTypeCommands()
 
   -- 声明变量 content, 如果是normal模式, 赋值 %, 如果是visual模式, 赋值选中的内容
   if filetype == 'markdown' then
-    vim.cmd('InstantMarkdownPreview')
+    -- vim.cmd('InstantMarkdownPreview')
+    vim.cmd('MarkdownPreview')
   elseif filetype == 'lua' then
     vim.cmd('set splitright')
     vim.cmd('vsp')
@@ -33,6 +34,10 @@ function ExecuteFileTypeCommands()
     vim.cmd('set splitright')
     vim.cmd('vsp')
     vim.cmd('term python3 %')
+  elseif filetype == 'rust' then
+    vim.cmd('set splitright')
+    vim.cmd('vsp')
+    vim.cmd('term rustc % && ' .. vim.fn.expand('%:p:r'))
   else
     -- 添加其他文件类型的处理，如果需要
   end

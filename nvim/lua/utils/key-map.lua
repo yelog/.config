@@ -125,6 +125,12 @@ maps.n["<leader>fs"] = {
   end,
   desc = "Search word",
 }
+maps.n["<M-S-f>"] = {
+  function()
+    require("telescope.builtin").live_grep()
+  end,
+  desc = "Search word",
+}
 maps.n["<leader>fS"] = {
   function()
     require("telescope.builtin").live_grep({
@@ -155,7 +161,7 @@ maps.n["<leader>te"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer
 
 -- table of contents
 -- maps.n["<leader>ts"] = { "<cmd>AerialToggle<cr>", desc = "Toggle Structure" }
-maps.n["<leader>ts"] = { "<cmd>SymbolsOutlineOpen<cr>", desc = "Toggle Structure" }
+maps.n["<leader>ts"] = { "<cmd>SymbolsOutline<cr>", desc = "Toggle Structure" }
 
 -- bufferline
 maps.n["<c-n>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Buffer Next" }
@@ -218,6 +224,11 @@ maps.n["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
 -- maps.n["<leader>ai"] = { "<cmd>ChatGPT<cr>", desc = "ChatGPT"}
 maps.n["<leader>ai"] = { "<cmd>NeoAIToggle<cr>", desc = "ChatGPT" }
 
+-- 跳转vim分屏/tmux分屏
+maps.n["<M-h>"] = { "<cmd>lua require('tmux').move_left()<cr>", desc = "" }
+maps.n["<M-j>"] = { "<cmd>lua require('tmux').move_bottom()<cr>", desc = "" }
+maps.n["<M-k>"] = { "<cmd>lua require('tmux').move_top()<cr>", desc = "" }
+maps.n["<M-l>"] = { "<cmd>lua require('tmux').move_right()<cr>", desc = "" }
 
 -- maps.n['<C-S-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 -- maps.n['<C-S-p>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
@@ -228,3 +239,9 @@ maps.n["<leader>ai"] = { "<cmd>NeoAIToggle<cr>", desc = "ChatGPT" }
 -- maps.n['R'] = { "<cmd>:set splitright<cr><cmd>vsp<cr><cmd>term lua %<cr>", desc = "run lua file" }
 
 my.set_mappings(maps)
+
+-- 使用 Option + h/j/k/l 进行 Neovim 分屏切换
+-- vim.api.nvim_set_keymap('n', '<M-h>', ':wincmd h<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<M-j>', ':wincmd j<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<M-k>', ':wincmd k<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<M-l>', ':wincmd l<CR>', { noremap = true, silent = true })

@@ -42,9 +42,14 @@ vnoremap <silent> gf :action GotoFile<CR>
 nnoremap <silent> gu :action ShowUsages<CR>
 nnoremap <silent> <leader>se :action EvaluateExpression<CR>
 vnoremap <silent> <leader>se :action EvaluateExpression<CR>
+noremap <C-O> :action Back<CR>
+noremap <C-I> :action Forward<CR>
 
 nnoremap <silent> <leader>// :action CommentByLineComment<CR>
-vnoremap <silent> <leader>/ :action ToggleBookmarkWithMnemonic<CR>
+vnoremap <silent> <leader>/ :action CommentByLineComment<CR>
+
+" add a new class
+nmap <leader>nc <Action>(NewClass)
 
 "修改所有的关联名字
 nnoremap <Leader>rn :action RenameElement<CR>
