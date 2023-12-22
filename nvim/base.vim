@@ -116,10 +116,10 @@ noremap <C-s> :w<CR>
 " map R :source ~/.config/nvim/init.vim<CR> :nohlsearch<CR>
 "noremap J 5j
 "noremap K 5k
-"noremap n nzz
-"noremap N Nzz
-"noremap * *zz
-"noremap # #zz
+noremap n nzz
+noremap N Nzz
+noremap * *zz
+noremap # #zz
 " Ctrl + U or E will move up/down the view port without moving the cursor
 noremap <C-U> 5<C-y>
 noremap <C-D> 5<C-e>

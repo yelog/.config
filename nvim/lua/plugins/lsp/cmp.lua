@@ -2,9 +2,14 @@ return {
   {
     "L3MON4D3/LuaSnip",
     dependencies = { "rafamadriz/friendly-snippets" },
+    -- install jsregexp (optional!).
+    build = "make install_jsregexp",
     config = function()
       -- require("luasnip").filetype_extend("ruby", { "rails" })
-      require("luasnip.loaders.from_vscode").lazy_load()
+      require("luasnip.loaders.from_vscode").lazy_load {
+        exclude = { "markdown" },
+      }
+      require("luasnip.loaders.from_snipmate").lazy_load()
     end,
   },
   {
@@ -111,7 +116,7 @@ return {
           -- { name = "marksman" },
           -- { name = "tsserver" },
           -- { name = "bash-language-server" },
-          { name = "obsidian" },
+          -- { name = "obsidian" },
         }),
         sorting = {
           priority_weight = 2,
@@ -205,11 +210,11 @@ return {
     end,
   },
   'saadparwaiz1/cmp_luasnip',
-  "hrsh7th/cmp-buffer", -- nvim-cmp source for buffer words
+  "hrsh7th/cmp-buffer",     -- nvim-cmp source for buffer words
   "hrsh7th/cmp-nvim-lsp",
   "andersevenrud/cmp-tmux", -- tmux completion source for nvim-cmp
-  "hrsh7th/cmp-path", -- nvim-cmp source for filesystem paths
-  "hrsh7th/cmp-cmdline", -- use to command/search complete
+  "hrsh7th/cmp-path",       -- nvim-cmp source for filesystem paths
+  "hrsh7th/cmp-cmdline",    -- use to command/search complete
   "octaltree/cmp-look",
-  "lukas-reineke/cmp-rg", -- ripgrep source for nvim-cmp
+  "lukas-reineke/cmp-rg",   -- ripgrep source for nvim-cmp
 }

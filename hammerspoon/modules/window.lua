@@ -712,6 +712,7 @@ hs.hotkey.bind(
     if isMax then
       win:maximize()
     end
+    setMousePos()
   end
 )
 

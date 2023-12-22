@@ -55,6 +55,10 @@ function activateApp(bundleID)
       end
     end
   end
+  setMousePos()
+end
+
+function setMousePos()
   local currentScreen = getCurrentScreen()
   if currentScreen then
     -- 可以优化为设置在屏幕中间
@@ -62,7 +66,7 @@ function activateApp(bundleID)
   end
 end
 
--- 获取当前鼠标所在的屏幕
+-- 获取当前激活窗口所在的屏幕
 function getCurrentScreen()
   local win = hs.window.focusedWindow()
   if win then
