@@ -24,8 +24,8 @@ vim.cmd([[highlight ye_link guifg=#5c92fa gui=underline cterm=underline]])
 vim.fn.matchadd("ye_link", "\\v(http|https):(\\S|\\s){-}( |$)")
 
 vim.cmd([[highlight MarkdownHashtag guifg=#91be3e]])
-vim.cmd([[syntax match MarkdownHashtag /#\S\+/ containedin=ALL]])
-vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('MarkdownHashtag', "\\v#[a-zA-Z-_\\u4e00-\\u9fa5]+")]])
+vim.cmd([[syntax match MarkdownHashtag / #\S\+/ containedin=ALL]])
+vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('MarkdownHashtag', "\\v #[a-zA-Z-_\\u4e00-\\u9fa5]+")]])
 
 
 -- 设置自定义高亮组，用于以问号结尾的语句

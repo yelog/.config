@@ -38,12 +38,19 @@ maps.n["<leader>pp"] = { "<cmd>Lazy<cr>", desc = "plug install" }
 
 -- lsp
 maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
+
+-- Bind <leader>ll to format_with_lsp in all filetypes
+-- vim.api.nvim_set_keymap('n', '<leader>ll', ':lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
+
+-- Bind <leader>ll to :TableModeRealign only in Markdown files
+
 maps.n["<leader>ll"] = {
   function()
     vim.lsp.buf.format({ async = true })
   end,
   desc = "format code",
 }
+
 maps.v["<leader>ll"] = {
   function()
     vim.lsp.buf.format({ async = true })

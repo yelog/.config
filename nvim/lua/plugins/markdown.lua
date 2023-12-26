@@ -1,6 +1,16 @@
 return {
   {
     "dhruvasagar/vim-table-mode",
+    config = function()
+      vim.api.nvim_exec([[
+  augroup markdown_config
+    autocmd!
+    autocmd FileType markdown TableModeEnable
+    autocmd FileType markdown nnoremap <buffer> <leader>ll :TableModeRealign<CR>
+  augroup END
+]], false)
+    end
+
   }, --> table mode
   {
     "dkarter/bullets.vim",
@@ -62,7 +72,7 @@ return {
     build = function()
       vim.fn["mkdp#util#install"]()
       -- vim.g.mkdp_theme = 'light'
-    vim.cmd([[ let g:mkdp_theme = 'light' ]])
+      vim.cmd([[ let g:mkdp_theme = 'light' ]])
     end,
   },
   {

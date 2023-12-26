@@ -36,6 +36,8 @@ config.keys = {
   { key = "i", mods = "CMD",        action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
   { key = "n", mods = "CTRL|SHIFT", action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
   { key = ";", mods = "CMD|CTRL",   action = "ActivateCopyMode", },
+  { key = "1", mods = "CMD|CTRL",   action = wezterm.action.SendKey { key = '5', mods = 'OPT' } },
+  { key = "1", mods = "CTRL",   action = wezterm.action.SendKey { key = '1', mods = 'CTRL' } },
   {
     key = "l",
     mods = "CMD",
