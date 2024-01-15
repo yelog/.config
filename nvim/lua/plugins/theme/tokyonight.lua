@@ -36,7 +36,7 @@ return {
       ---@param hl Highlights
       ---@param c ColorScheme
       on_highlights = function(hl, c)
-        hl.markdownH1 = { fg = "#0081b4" }
+        hl.markdownH1 = { fg = "#0082b4" }
         hl.markdownH2 = { fg = "#ef9020" }
         hl.markdownH3 = { fg = "#e990ab" }
         hl.markdownH4 = { fg = "#96cbb3" }

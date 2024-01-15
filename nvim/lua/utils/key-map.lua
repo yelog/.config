@@ -38,6 +38,7 @@ maps.n["<leader>pp"] = { "<cmd>Lazy<cr>", desc = "plug install" }
 
 -- lsp
 maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
+maps.n["<M-s>"] = { "<cmd>EslintFixAll<cr>", desc = "Eslint Fix All" }
 
 -- Bind <leader>ll to format_with_lsp in all filetypes
 -- vim.api.nvim_set_keymap('n', '<leader>ll', ':lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
@@ -167,8 +168,8 @@ maps.n["<leader>te"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer
 -- maps.n["<leader>o"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" }
 
 -- table of contents
--- maps.n["<leader>ts"] = { "<cmd>AerialToggle<cr>", desc = "Toggle Structure" }
-maps.n["<leader>ts"] = { "<cmd>SymbolsOutline<cr>", desc = "Toggle Structure" }
+maps.n["<leader>ts"] = { "<cmd>AerialToggle<cr>", desc = "Toggle Structure" }
+-- maps.n["<leader>ts"] = { "<cmd>SymbolsOutline<cr>", desc = "Toggle Structure" }
 
 -- bufferline
 maps.n["<c-n>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Buffer Next" }

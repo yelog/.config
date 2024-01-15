@@ -53,3 +53,20 @@ vim.cmd(string.format([[
     autocmd FileType markdown lua vim.cmd('match Today /\\V%s/')
   augroup END
 ]], today))
+
+
+-- 设置 [!NOTE] 行的背景为淡蓝色
+vim.cmd('highlight calloutNoteBg guibg=#ADD8E6 ctermbg=lightblue')
+
+
+-- 匹配 [!NOTE] 行并应用颜色
+-- vim.cmd([[syntax match calloutNoteBg / #\S\+/ containedin=ALL]])
+-- vim.cmd([[syntax match QuestionSentence /title/ containedin=ALL]])
+-- 设置 [!NOTE] 后面的文字为深蓝色
+-- vim.cmd('highlight calloutNoteTitle guifg=#000080 ctermfg=darkblue')
+-- vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('calloutNoteTitle', "^>\s*\[!NOTE\]\s\+")]])
+vim.cmd('highlight calloutNoteTitle guifg=#00CEE3 ctermfg=darkblue')
+-- vim.cmd('highlight calloutNoteChar guifg=#F0CEE3 ctermfg=darkblue')
+-- vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('calloutNoteChar', ">\\s*\\[\\zs!NOTE", 10)]])
+vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('calloutNoteTitle', ">\\s*\\[!NOTE\\]\\s*\\zs.*$", 10)]])
+

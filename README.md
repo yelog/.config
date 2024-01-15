@@ -7,6 +7,8 @@ git clone --recursive https://github.com/yelog/.config.git ~/.config
 
 ## Import stuff
 ### neovim
+
+#### install
 ```bash
 # Download source code
 git clone https://github.com/neovim/neovim.git
@@ -20,6 +22,14 @@ make install
 sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
        https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
 ```
+
+#### lsp
+
+```bash
+# install js/ts support
+npm i -g typescript typescript-language-server
+```
+
 
 ### lazygit
 ```bash

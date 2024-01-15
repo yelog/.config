@@ -209,11 +209,9 @@ noremap <LEADER>sw :set wrap!<CR>
 
 " 普通模式下 Y 复制当前匿名寄存器到 Clipboard
 " nnoremap Y :let @+=@"<CR>
-" 选中模式下 Y 复制到 Clipboard
-vnoremap Y "+y
-" set yank to clipboard
-nnoremap Y :let @+=@"<CR>
-nnoremap <M-y> :let @+=@"<CR>
+" vnoremap Y "+y
+vnoremap Y y :call system("echo '".escape(@", "'")."' \| pbcopy")<CR>
+nnoremap Y :call system("echo '".escape(@", "'")."' \| pbcopy")<CR>
 
 "nnoremap <c-p> "0p
 "vnoremap <c-p> "0p

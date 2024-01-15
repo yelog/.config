@@ -3,12 +3,13 @@ return {
     "dhruvasagar/vim-table-mode",
     config = function()
       vim.api.nvim_exec([[
-  augroup markdown_config
-    autocmd!
-    autocmd FileType markdown TableModeEnable
-    autocmd FileType markdown nnoremap <buffer> <leader>ll :TableModeRealign<CR>
-  augroup END
-]], false)
+        augroup markdown_config
+          autocmd!
+          autocmd FileType markdown TableModeEnable
+          autocmd FileType markdown nnoremap <buffer> <leader>ll :TableModeRealign<CR>
+        augroup END
+      ]], false)
+      vim.g.table_mode_sort_map = '<leader>mts'
     end
 
   }, --> table mode
@@ -87,7 +88,7 @@ return {
       -- tpope/vim-markdown
       vim.g.markdown_syntax_conceal = 0
       vim.g.markdown_fenced_languages =
-      { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "Dockerfile", "Rust" }
+      { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "Dockerfile", "Rust", "swift" }
     end,
   }, --> syntax highlighting and filetype plugins for Markdown
 }

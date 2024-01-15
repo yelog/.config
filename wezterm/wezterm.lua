@@ -79,14 +79,19 @@ config.keys = {
     action = wezterm.action.SendKey { key = '3', mods = 'OPT' },
   },
   {
+    key = 'h',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = 'h', mods = 'OPT' },
+  },
+  {
     key = 'k',
     mods = 'CMD',
     action = wezterm.action.ClearScrollback("ScrollbackAndViewport")
   },
   {
-    key = 'h',
+    key = 's',
     mods = 'CMD',
-    action = wezterm.action.SendKey { key = 'h', mods = 'OPT' },
+    action = wezterm.action.SendKey { key = 's', mods = 'OPT' },
   },
   {
     key = 'y',

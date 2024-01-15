@@ -40,6 +40,7 @@ return {
           "html",
           "eslint",
           "rust_analyzer",
+          "swift_mesonls"
         },
       })
       -- Mappings.
@@ -241,6 +242,14 @@ return {
         -- Server-specific settings...
         settings = {
           ["rust-analyzer"] = {},
+        },
+      })
+      lspconfig["swift_mesonls"].setup({
+        on_attach = on_attach,
+        flags = lsp_flags,
+        -- Server-specific settings...
+        settings = {
+          ["swift_mesonls"] = {},
         },
       })
       -- example to setup sumneko and enable call snippets

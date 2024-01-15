@@ -17,6 +17,9 @@ noremap u u
 noremap e e
 nnoremap r r
 
+nnoremap Y :let @+=@"<CR>
+vnoremap Y "+y
+
 " multiple-cursors
 set multiple-cursors
 set commentary
