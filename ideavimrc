@@ -3,6 +3,26 @@ source ~/.config/nvim/base.vim
 nnoremap <c-p> gT
 nnoremap <c-n> gt
 nnoremap <c-q> :q<CR>
+noremap <C-U> 5<C-y>
+noremap <C-D> 5<C-e>
+" 分屏
+" map <leader>s <nop>
+map <leader>sl :set splitright<CR>:vsplit<CR>
+map <leader>sh :set nosplitright<CR>:vsplit<CR>
+map <leader>sk :set nosplitbelow<CR>:split<CR>
+map <leader>sj :set splitbelow<CR>:split<CR>
+map <leader>sH <C-w>H
+map <leader>sL <C-w>L
+map <leader>sJ <C-w>J
+map <leader>sK <C-w>K
+map <leader>so <c-w>o
+map <leader>sc <c-w>c
+" 切换分屏焦点
+noremap gl <C-w>l
+noremap gh <C-w>h
+noremap gj <C-w>j
+noremap gk <C-w>k
+
 "let g:surround_no_mappings = 1
 "
 set keep-english-in-normal
@@ -20,10 +40,15 @@ nnoremap r r
 nnoremap Y :let @+=@"<CR>
 vnoremap Y "+y
 
+" 搜索
+set hlsearch
+noremap <LEADER><CR> :nohlsearch<CR>
+
 " multiple-cursors
 set multiple-cursors
 set commentary
 
+set number
 set relativenumber
 
 " split

@@ -36,8 +36,9 @@ return {
           "jsonls",
           -- "tsserver",
           "volar",
-          -- "vuels",
+          "vuels",
           "html",
+          "svelte",
           "eslint",
           "rust_analyzer",
           "swift_mesonls"
@@ -220,6 +221,10 @@ return {
         },
       })
       lspconfig["html"].setup({
+        on_attach = on_attach,
+        flags = lsp_flags,
+      })
+      lspconfig["svelte"].setup({
         on_attach = on_attach,
         flags = lsp_flags,
       })

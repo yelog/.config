@@ -203,13 +203,13 @@ maps.n["<leader>md"] = { "<cmd>ObsidianToday<cr>", desc = "goto daily task" }
 -- git
 maps.n["<leader>gg"] = { "<cmd>LazyGit<cr>", desc = "LazyGit" }
 maps.n["<leader>gh"] = { "<cmd>LazyGitFilterCurrentFile<cr>", desc = "Current file history" }
-maps.n["<leader>gf"] = { "<cmd>GitGutterFold<cr>", desc = "git fold" }
-maps.n["<leader>gp"] = { "<cmd>GitGutterPrevHunk<cr>", desc = "git prev hunk" }
-maps.n["<leader>gn"] = { "<cmd>GitGutterNextHunk<cr>", desc = "git next hunk" }
-maps.n["<leader>gu"] = { "<cmd>GitGutterUndoHunk<cr>", desc = "git reset" }
-maps.n["<leader>gd"] = { "<cmd>GitGutterPreviewHunk<cr>", desc = "git review hunk" }
+-- maps.n["<leader>gf"] = { "<cmd>GitGutterFold<cr>", desc = "git fold" }
+-- maps.n["<leader>gp"] = { "<cmd>GitGutterPrevHunk<cr>", desc = "git prev hunk" }
+-- maps.n["<leader>gn"] = { "<cmd>GitGutterNextHunk<cr>", desc = "git next hunk" }
+-- maps.n["<leader>gu"] = { "<cmd>GitGutterUndoHunk<cr>", desc = "git reset" }
+-- maps.n["<leader>gd"] = { "<cmd>GitGutterPreviewHunk<cr>", desc = "git review hunk" }
 -- maps.n["<leader>gd"] = { "<cmd>GitGutterDiffOrig<cr>", desc = "git diff" }
-maps.n["<leader>gb"] = { "<cmd>Git blame<cr>", desc = "git blame" }
+-- maps.n["<leader>gb"] = { "<cmd>Git blame<cr>", desc = "git blame" }
 
 maps.n["<leader>gw"] = {
   function()

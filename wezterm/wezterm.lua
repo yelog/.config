@@ -16,9 +16,13 @@ end
 
 -- For example, changing the color scheme:
 -- config.color_scheme = 'AdventureTime'
-config.font = wezterm.font 'JetBrains Mono'
+-- config.font = wezterm.font 'JetBrains Mono'
+-- config.font = wezterm.font 'Noto Mono'
 
 config.font_size = 16
+
+config.window_background_opacity = 0.9
+
 -- config.color_scheme = 'Batman'
 config.color_scheme = 'Github Dark'
 config.enable_tab_bar = false
