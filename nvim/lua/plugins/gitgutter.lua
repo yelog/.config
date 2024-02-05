@@ -20,7 +20,5 @@ return {
   --   vim.api.nvim_set_hl(0, "GitGutterDelete", { fg = "#ff2222", ctermfg = 1 })
   --
   --
-  --   -- airblade/vim-rooter
-  --   vim.g.rooter_patterns = { ".git/" }
   -- end,
 }
