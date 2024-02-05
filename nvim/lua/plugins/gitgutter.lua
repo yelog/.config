@@ -19,8 +19,6 @@ return {
   --   vim.api.nvim_set_hl(0, "GitGutterChange", { fg = "#0099FF", ctermfg = 3 })
   --   vim.api.nvim_set_hl(0, "GitGutterDelete", { fg = "#ff2222", ctermfg = 1 })
   --
-  --   -- ybian/smartim
-  --   vim.g.smartim_default = "com.apple.keylayout.ABC"
   --
   --   -- airblade/vim-rooter
   --   vim.g.rooter_patterns = { ".git/" }

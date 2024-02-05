@@ -3,6 +3,7 @@ function ExecuteFileTypeCommands()
   local filetype = vim.bo.filetype
   local modeInfo = vim.api.nvim_get_mode()
   local mode = modeInfo.mode
+  local firstLine = vim.fn.getline(1)
   -- local content
 
   -- if mode == "V" or mode == "CTRL-V" or mode == "\22" then
@@ -13,7 +14,14 @@ function ExecuteFileTypeCommands()
   -- print(content)
 
   -- 声明变量 content, 如果是normal模式, 赋值 %, 如果是visual模式, 赋值选中的内容
-  if filetype == 'markdown' then
+  if filetype == 'javascript' and string.find(tostring(firstLine), "k6/http") then
+    vim.cmd('set splitright')
+    vim.cmd('vsp')
+    vim.cmd('term k6 run %')
+    -- 修复报错 connection reset by peer, 但是效果不明显
+    -- docker run --rm -i grafana/k6 run - <script.js
+    -- vim.cmd('term docker run --rm -i grafana/k6 run - < %')
+  elseif filetype == 'markdown' then
     -- vim.cmd('InstantMarkdownPreview')
     vim.cmd('MarkdownPreview')
   elseif filetype == 'lua' then
@@ -44,38 +52,38 @@ function ExecuteFileTypeCommands()
 end
 
 -- 打印 table
-function print_r ( t )  
-    local print_r_cache={}
-    local function sub_print_r(t,indent)
-        if (print_r_cache[tostring(t)]) then
-            print(indent.."*"..tostring(t))
-        else
-            print_r_cache[tostring(t)]=true
-            if (type(t)=="table") then
-                for pos,val in pairs(t) do
-                    if (type(val)=="table") then
-                        print(indent.."["..pos.."] => "..tostring(t).." {")
-                        sub_print_r(val,indent..string.rep(" ",string.len(pos)+8))
-                        print(indent..string.rep(" ",string.len(pos)+6).."}")
-                    elseif (type(val)=="string") then
-                        print(indent.."["..pos..'] => "'..val..'"')
-                    else
-                        print(indent.."["..pos.."] => "..tostring(val))
-                    end
-                end
-            else
-                print(indent..tostring(t))
-            end
-        end
-    end
-    if (type(t)=="table") then
-        print(tostring(t).." {")
-        sub_print_r(t,"  ")
-        print("}")
+function print_r(t)
+  local print_r_cache = {}
+  local function sub_print_r(t, indent)
+    if (print_r_cache[tostring(t)]) then
+      print(indent .. "*" .. tostring(t))
     else
-        sub_print_r(t,"  ")
+      print_r_cache[tostring(t)] = true
+      if (type(t) == "table") then
+        for pos, val in pairs(t) do
+          if (type(val) == "table") then
+            print(indent .. "[" .. pos .. "] => " .. tostring(t) .. " {")
+            sub_print_r(val, indent .. string.rep(" ", string.len(pos) + 8))
+            print(indent .. string.rep(" ", string.len(pos) + 6) .. "}")
+          elseif (type(val) == "string") then
+            print(indent .. "[" .. pos .. '] => "' .. val .. '"')
+          else
+            print(indent .. "[" .. pos .. "] => " .. tostring(val))
+          end
+        end
+      else
+        print(indent .. tostring(t))
+      end
     end
-    print()
+  end
+  if (type(t) == "table") then
+    print(tostring(t) .. " {")
+    sub_print_r(t, "  ")
+    print("}")
+  else
+    sub_print_r(t, "  ")
+  end
+  print()
 end
 
 -- 获取选中的内容
@@ -125,7 +133,7 @@ function getVisualSelection()
     endText = string.sub(lines[#lines], 1, ecol)
   end
 
-  local selection = {startText}
+  local selection = { startText }
   if #lines > 2 then
     vim.list_extend(selection, vim.list_slice(lines, 2, #lines - 1))
   end
@@ -141,7 +149,3 @@ vim.api.nvim_set_keymap('n', 'R', '<cmd>lua ExecuteFileTypeCommands()<cr>', { no
 -- vim.api.nvim_create_user_command('getvv', print_visual_selection, { range = true })
 -- vim.api.nvim_set_keymap('v', 'R', '<cmd>lua print_r(vim.fn.getpos("v"))<cr>', { noremap = true, silent = true })
 -- vim.api.nvim_set_keymap('v', 'R', '<cmd>lua print_r(getVisualSelection())<cr>', { noremap = true, silent = true })
-
-
-
-

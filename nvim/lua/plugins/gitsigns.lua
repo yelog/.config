@@ -84,5 +84,8 @@ return {
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
       end,
     }
+    vim.cmd([[highlight GitSignsAdd guifg=#109900]])
+    vim.cmd([[highlight GitSignsChange guifg=#0099FF]])
+    vim.cmd([[highlight GitSignsDelete guifg=#ff2222]])
   end
 }
