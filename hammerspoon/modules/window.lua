@@ -3,7 +3,7 @@
 require("modules.shortcut")
 
 -- 关闭动画持续时间
-hs.window.animationDuration = 0
+hs.window.animationDuration = 0.125
 
 -- 窗口枚举
 local AUTO_LAYOUT_TYPE = {

@@ -41,7 +41,8 @@ return {
           "svelte",
           "eslint",
           "rust_analyzer",
-          "swift_mesonls"
+          "swift_mesonls",
+          "lemminx"
         },
       })
       -- Mappings.
@@ -228,6 +229,10 @@ return {
         on_attach = on_attach,
         flags = lsp_flags,
       })
+      lspconfig["lemminx"].setup({
+        on_attach = on_attach,
+        flags = lsp_flags,
+      })
       -- lspconfig["bash-language-server"].setup({
       -- 	on_attach = on_attach,
       -- 	flags = lsp_flags,
@@ -336,4 +341,7 @@ return {
       })
     end,
   },
+  {
+    "nvimdev/lspsaga.nvim"
+  }
 }

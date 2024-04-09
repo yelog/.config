@@ -88,7 +88,7 @@ return {
       -- tpope/vim-markdown
       vim.g.markdown_syntax_conceal = 0
       vim.g.markdown_fenced_languages =
-      { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "Dockerfile", "Rust", "swift" }
+      { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "xml", "Dockerfile", "Rust", "swift" }
     end,
   }, --> syntax highlighting and filetype plugins for Markdown
 }
