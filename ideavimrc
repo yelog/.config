@@ -1,3 +1,5 @@
+" 执行 :actionlist 可以查看所有列表
+" 或者打开 track action ids 在执行对应的action, 就会在右下角显示
 source ~/.config/nvim/base.vim
 
 nnoremap <c-p> gT
@@ -93,8 +95,8 @@ nnoremap <silent> <leader>m :action popup@BookmarkContextMenu<CR>
 " lsp
 " nnoremap <silent> <leader>ln :action GotoNextError<CR>
 " nnoremap <silent> <leader>lp :action GotoPreviousError<CR>
-nnoremap <silent> <leader>gn :action JumpToNextChange<CR>
-nnoremap <silent> <leader>gp :action JumpToLastChange<CR>
+nnoremap <silent> <leader>gj :action VcsShowNextChangeMarker<CR>
+nnoremap <silent> <leader>gk :action VcsShowPrevChangeMarker<CR>
 " jump to next error
 nnoremap <leader>lj <ESC>:action GotoNextError<CR>
 " jump to previous error

@@ -13,11 +13,18 @@ return {
       auto_session_use_git_branch = nil,
       -- the configs below are lua only
       bypass_session_save_file_types = nil,
+      -- pre_save_cmds = { "Neotree left close" },
+      -- save_extra_cmds = {
+      --   "Neotree left show"
+      -- },
+      -- post_restore_cmds = {
+      --   "Neotree left show"
+      -- },
       cwd_change_handling = {
-        restore_upcoming_session = true, -- already the default, no need to specify like this, only here as an example
-        pre_cwd_changed_hook = nil, -- already the default, no need to specify like this, only here as an example
+        restore_upcoming_session = true,   -- already the default, no need to specify like this, only here as an example
+        pre_cwd_changed_hook = nil,        -- already the default, no need to specify like this, only here as an example
         post_cwd_changed_hook = function() -- example refreshing the lualine status line _after_ the cwd changes
-          require("lualine").refresh() -- refresh lualine so the new session name is displayed in the status bar
+          require("lualine").refresh()     -- refresh lualine so the new session name is displayed in the status bar
         end,
       },
     }
