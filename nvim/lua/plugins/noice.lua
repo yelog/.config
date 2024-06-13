@@ -1,6 +1,5 @@
 return {
 	"folke/noice.nvim",
-  branch = "main",
 	config = function()
 		require("noice").setup({
 			lsp = {

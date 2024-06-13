@@ -1,0 +1,88 @@
+# https://alacritty.org/config-alacritty.html
+[font]
+size = 16
+normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+# normal = { family = "JetBrains Mono", style = "Regular" }
+# normal = { family = "Hack Nerd Font", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+italic = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold_italic = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+
+[colors]
+primary = { background = "#000000" }
+
+[window]
+opacity = 0.7
+blur = true
+decorations = "None"
+
+# [[hints.enabled]]
+# regex = "(ipfs:|ipns:|magnet:|mailto:|gyyemini:|gopher:|https:|http:|news:|file:|git:|ssh:|ftp:)[^\u0000-\u001F\u007F-\u009F<>\"\\s{-}\\^⟨⟩`]+"
+# hyperlinks = true
+# command = "open"
+# post_processing = true
+
+[cursor]
+style = "Block"
+
+
+[[keyboard.bindings]]
+key = "1"
+mods = "Command"
+chars = "\u001b1"
+
+
+[[keyboard.bindings]]
+key = "2"
+mods = "Command"
+chars = "\u001b2"
+
+[[keyboard.bindings]]
+key = "3"
+mods = "Command"
+chars = "\u001b3"
+
+[[keyboard.bindings]]
+key = "4"
+mods = "Command"
+chars = "\u001b4"
+
+[[keyboard.bindings]]
+key = "A"
+mods = "Command"
+chars = "\u001ba"
+
+[[keyboard.bindings]]
+key = "D"
+mods = "Command"
+chars = "\u001bd"
+
+[[keyboard.bindings]]
+key = "F"
+mods = "Command|Shift"
+chars = "\u001bF"
+
+[[keyboard.bindings]]
+key = "S"
+mods = "Command"
+chars = "\u001bs"
+
+[[keyboard.bindings]]
+key = "L"
+mods = "Command"
+chars = "\u001bl"
+
+[[keyboard.bindings]]
+key = "M"
+mods = "Command|Shift"
+chars = "\u001bM"
+
+[[keyboard.bindings]]
+key = "O"
+mods = "Command|Shift"
+chars = "\u001bO"
+
+[[keyboard.bindings]]
+key = "Semicolon"
+mods = "Command|Control"
+action = "ToggleViMode"

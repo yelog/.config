@@ -1,5 +1,5 @@
 return {
-  "kawre/leetcode.nvim",
+ "kawre/leetcode.nvim",
   build = ":TSUpdate html",
   dependencies = {
     "nvim-telescope/telescope.nvim",
