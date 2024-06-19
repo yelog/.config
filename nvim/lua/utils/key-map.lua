@@ -121,6 +121,12 @@ maps.n["<leader>fh"] = {
   end,
   desc = "Search hisotry",
 }
+maps.n["<M-e>"] = {
+  function()
+    require("telescope.builtin").oldfiles()
+  end,
+  desc = "Search hisotry",
+}
 maps.n["<leader>f;"] = {
   function()
     require("telescope.builtin").builtin()

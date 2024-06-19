@@ -12,7 +12,7 @@ bold_italic = { family = "JetBrainsMono Nerd Font", style = "Regular" }
 primary = { background = "#000000" }
 
 [window]
-opacity = 0.7
+# opacity = 0.7
 blur = true
 decorations = "None"
 
@@ -58,6 +58,11 @@ mods = "Command"
 chars = "\u001bd"
 
 [[keyboard.bindings]]
+key = "E"
+mods = "Command"
+chars = "\u001be"
+
+[[keyboard.bindings]]
 key = "F"
 mods = "Command|Shift"
 chars = "\u001bF"
@@ -86,3 +91,8 @@ chars = "\u001bO"
 key = "Semicolon"
 mods = "Command|Control"
 action = "ToggleViMode"
+
+[[keyboard.bindings]]
+key = "1"
+mods = "Command|Control"
+chars = "\u001b5"
