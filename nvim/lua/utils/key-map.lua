@@ -31,20 +31,31 @@ maps.n["<c-q>"] = {
 -- maps.n["Q"] = { "<cmd>w<cr><cmd>qa<cr>", desc = "Quit" }
 
 -- plugin
-maps.n["<leader>pp"] = { "<cmd>Lazy<cr>", desc = "plug install" }
+maps.n["<leader>pi"] = { "<cmd>Lazy<cr>", desc = "plug install" }
 -- maps.n["<leader>pi"] = { "<cmd>PackerInstall<cr>", desc = "plug install" }
 -- maps.n["<leader>pc"] = { "<cmd>PackerClean<cr>", desc = "plug clean" }
 -- maps.n["<leader>pu"] = { "<cmd>PackerUpdate<cr>", desc = "plug update" }
 
 -- lsp
 maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
-maps.n["<M-s>"] = { "<cmd>EslintFixAll<cr>", desc = "Eslint Fix All" }
+-- maps.n["<M-s>"] = { "<cmd>EslintFixAll<cr>", desc = "Eslint Fix All" }
 
 -- Bind <leader>ll to format_with_lsp in all filetypes
 -- vim.api.nvim_set_keymap('n', '<leader>ll', ':lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
 
 -- Bind <leader>ll to :TableModeRealign only in Markdown files
 
+maps.n["<M-s>"] = {
+  function()
+    local eslintFileType = { "javascript", "typescript", "vue" }
+    if my.is_include(vim.bo.filetype, eslintFileType) then
+      vim.cmd("EslintFixAll")
+    else
+      vim.lsp.buf.format({ async = true })
+    end
+  end,
+  desc = "format code",
+}
 maps.n["<leader>ll"] = {
   function()
     vim.lsp.buf.format({ async = true })
@@ -58,7 +69,6 @@ maps.v["<leader>ll"] = {
   end,
   desc = "format code",
 }
-maps.n["<M-s>"] = { "<cmd>EslintFixAll<cr>", desc = "format code" }
 
 -- Telescope
 maps.n["<M-M>"] = {

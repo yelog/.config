@@ -42,7 +42,8 @@ return {
           "eslint",
           "rust_analyzer",
           "swift_mesonls",
-          "lemminx"
+          "lemminx",
+          "sqlls",
         },
       })
       -- Mappings.
@@ -231,6 +232,11 @@ return {
       })
       lspconfig["lemminx"].setup({
         on_attach = on_attach,
+        flags = lsp_flags,
+      })
+      lspconfig["sqlls"].setup({
+        on_attach = on_attach,
+        filetyps = { "sql" },
         flags = lsp_flags,
       })
       -- lspconfig["bash-language-server"].setup({

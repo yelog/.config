@@ -30,20 +30,30 @@ vim.cmd([[autocmd! BufEnter,BufNewFile * call matchadd('QuestionSentence', "\\v[
 
 
 -- Highlight today's date
--- Set highlight
+-- Define highlight for today's date
 vim.cmd([[
   hi Today ctermfg=Green cterm=standout gui=standout
 ]])
--- Get day of today
-local today = os.date("%Y-%m-%d")
--- autocmd，Apply highlight when opening a Markdown file
-vim.cmd(string.format([[
-  augroup MarkdownHighlight
-    autocmd!
-    autocmd FileType markdown lua vim.cmd('match Today /\\V%s/')
-  augroup END
-]], today))
 
+-- Function to update today's highlight
+local function update_highlight()
+  local today = os.date("%Y-%m-%d")
+  vim.cmd(string.format([[
+    augroup MarkdownHighlight
+      autocmd!
+      autocmd FileType markdown lua vim.cmd('match Today /\\V%s/')
+    augroup END
+  ]], today))
+end
+
+-- Initial call to set the highlight
+update_highlight()
+
+-- Set up a timer to update the highlight every minute
+local timer = vim.loop.new_timer()
+timer:start(0, 60000, vim.schedule_wrap(function()
+  update_highlight()
+end))
 
 -- 设置 [!NOTE] 行的背景为淡蓝色
 vim.cmd('highlight calloutNoteBg guibg=#ADD8E6 ctermbg=lightblue')

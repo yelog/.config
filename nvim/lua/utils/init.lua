@@ -25,4 +25,12 @@ function my.set_mappings(map_table, base)
   end
 end
 
+function my.is_include(item, table)
+    for _,v in ipairs(table) do
+      if v == item then
+          return true
+      end
+    end
+    return false
+end
 
