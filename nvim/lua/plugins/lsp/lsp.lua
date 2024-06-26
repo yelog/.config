@@ -343,6 +343,7 @@ return {
           'stylua',
           'jq',
           'prettier',
+          'sqlls',
         },
       })
     end,

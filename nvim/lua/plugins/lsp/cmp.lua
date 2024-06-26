@@ -117,6 +117,7 @@ return {
           -- { name = "tsserver" },
           -- { name = "bash-language-server" },
           -- { name = "obsidian" },
+          { name = "ottor"},
         }),
         sorting = {
           priority_weight = 2,

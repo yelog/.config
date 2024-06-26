@@ -6,7 +6,7 @@ return {
         augroup markdown_config
           autocmd!
           autocmd FileType markdown TableModeEnable
-          autocmd FileType markdown nnoremap <buffer> <leader>ll :TableModeRealign<CR>
+          autocmd FileType markdown nnoremap <buffer> <M-s> :TableModeRealign<CR>
         augroup END
       ]], false)
       vim.g.table_mode_sort_map = '<leader>mts'
@@ -88,7 +88,7 @@ return {
       -- tpope/vim-markdown
       vim.g.markdown_syntax_conceal = 0
       vim.g.markdown_fenced_languages =
-      { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "xml", "Dockerfile", "Rust", "swift" }
+      { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "xml", "Dockerfile", "Rust", "swift", "javascript" }
     end,
   }, --> syntax highlighting and filetype plugins for Markdown
 }
