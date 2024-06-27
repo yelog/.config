@@ -83,6 +83,11 @@ config.keys = {
     action = wezterm.action.SendKey { key = '3', mods = 'OPT' },
   },
   {
+    key = 'e',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = 'e', mods = 'OPT' },
+  },
+  {
     key = 'h',
     mods = 'CMD',
     action = wezterm.action.SendKey { key = 'h', mods = 'OPT' },
