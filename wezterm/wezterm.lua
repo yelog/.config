@@ -16,7 +16,7 @@ end
 
 -- For example, changing the color scheme:
 -- config.color_scheme = 'AdventureTime'
--- config.font = wezterm.font 'JetBrains Mono'
+config.font = wezterm.font 'JetBrains Mono'
 -- config.font = wezterm.font 'Noto Mono'
 
 config.font_size = 16
