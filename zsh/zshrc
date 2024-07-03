@@ -209,7 +209,7 @@ function ctl() {
   if [[ "$1" == *.* ]]; then
     docker pull $1
   else
-    proxyUrl=docker.fxxk.dedyn.io/$1
+    proxyUrl=dockerpull.com/$1
     docker pull $proxyUrl
     docker tag $proxyUrl $1
     docker rmi $proxyUrl
@@ -301,7 +301,7 @@ pastefinish() {
 zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
 
-# Auto tmux ssh hostname window title that actually works
+# WQYMgsVAWQYMgsVuto tmux ssh hostname window title that actually works
 ssh() {
   tmux rename-window "$*"
   command ssh "$@"

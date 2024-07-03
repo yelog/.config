@@ -208,10 +208,10 @@ noremap <LEADER>sw :set wrap!<CR>
 " set clipboard=unnamedplus
 
 " 普通模式下 Y 复制当前匿名寄存器到 Clipboard
-nnoremap Y :let @+=@"<CR>
-vnoremap Y "+y
-" vnoremap Y y :call system("echo '".escape(@", "'")."' \| pbcopy")<CR>
-" nnoremap Y :call system("echo '".escape(@", "'")."' \| pbcopy")<CR>
+" nnoremap Y :let @+=@"<CR>
+" vnoremap Y "+y
+vnoremap Y y :call system("echo '".escape(@", "'")."' \| pbcopy")<CR>
+nnoremap Y :call system("echo '".escape(@", "'")."' \| pbcopy")<CR>
 
 "nnoremap <c-p> "0p
 "vnoremap <c-p> "0p

@@ -13,10 +13,14 @@ if wezterm.config_builder then
 end
 
 -- This is where you actually apply your config choices
-
+-- Example: This is 中文 平安 将来
 -- For example, changing the color scheme:
 -- config.color_scheme = 'AdventureTime'
-config.font = wezterm.font 'JetBrains Mono'
+-- config.font = wezterm.font 'JetBrains Mono'
+-- config.font = wezterm.font 'JetBrainsMono Nerd Font'
+-- config.font = wezterm.font_with_fallback { 'Menlo' }
+config.font = wezterm.font_with_fallback { 'JetBrainsMono Nerd Font', 'Menlo' }
+-- config.font = wezterm.font('JetBrains Mono', { weight = 'Re' })
 -- config.font = wezterm.font 'Noto Mono'
 
 config.font_size = 16
@@ -41,7 +45,7 @@ config.keys = {
   { key = "n", mods = "CTRL|SHIFT", action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
   { key = ";", mods = "CMD|CTRL",   action = "ActivateCopyMode", },
   { key = "1", mods = "CMD|CTRL",   action = wezterm.action.SendKey { key = '5', mods = 'OPT' } },
-  { key = "1", mods = "CTRL",   action = wezterm.action.SendKey { key = '1', mods = 'CTRL' } },
+  { key = "1", mods = "CTRL",       action = wezterm.action.SendKey { key = '1', mods = 'CTRL' } },
   {
     key = "l",
     mods = "CMD",
