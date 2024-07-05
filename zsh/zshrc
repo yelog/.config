@@ -82,7 +82,6 @@ vi-mode
 kubectl
 copybuffer # ctrl + o copy command buffer to clipboard
 dirhistory # alt + left and right goto previous and next directory
-history
 )
 
 source $ZSH/oh-my-zsh.sh
