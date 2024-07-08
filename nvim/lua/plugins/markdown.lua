@@ -66,6 +66,20 @@ return {
   --     vim.g.instant_markdown_autoscroll = 1
   --   end,
   -- }, --> automatically highlighting other uses of the word under the cursor
+  -- {
+  --   'adelarsq/image_preview.nvim',
+  --   event = 'VeryLazy',
+  --   config = function()
+  --     require("image_preview").setup()
+  --   end
+  -- },
+  -- {
+  --   "yelog/markdown-preview.nvim",
+  --   -- When dev is true, This plugin will use {config.dev.path}/markdown-preview.nvim/ instead of fetching it from GitHub https://lazy.folke.io/spec/examples
+  --   -- {config.dev.path} configed by lazy.nvim in init.lua
+  --   dev = true,
+  --   -- dir = "/Users/yelog/workspace/lua/markdown-preview.nvim",
+  -- },
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
@@ -88,7 +102,8 @@ return {
       -- tpope/vim-markdown
       vim.g.markdown_syntax_conceal = 0
       vim.g.markdown_fenced_languages =
-      { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "xml", "Dockerfile", "Rust", "swift", "javascript" }
+      { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "xml", "Dockerfile", "Rust",
+        "swift", "javascript" }
     end,
   }, --> syntax highlighting and filetype plugins for Markdown
 }
