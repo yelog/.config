@@ -107,7 +107,7 @@ applications = {
   --{prefix = applicationHyperKey, key = "V", message="VSCode", bundleId="com.microsoft.VSCode"},
   { prefix = applicationHyperKey, key = "F", message = "Finder",        bundleId = "com.apple.finder" },
   -- { prefix = applicationHyperKey, key = "B", message = "Browser",        bundleId = "com.google.Chrome" },
-  { prefix = applicationHyperKey, key = "B", message = "Browser",        bundleId = "company.thebrowser.Browser" },
+  { prefix = applicationHyperKey, key = "B", message = "Browser",       bundleId = "company.thebrowser.Browser" },
   { prefix = applicationHyperKey, key = "I", message = "IntelliJ IDEA", bundleId = "com.jetbrains.intellij" },
   -- {prefix = applicationHyperKey, key = "I", message="IntelliJ IDEA", bundleId="com.jetbrains.intellij-EAP"},
   { prefix = applicationHyperKey, key = "O", message = "Obsidian",      bundleId = "md.obsidian" },
@@ -119,13 +119,13 @@ applications = {
     bundleId = "me.qii404.another-redis-desktop-manager",
   },
   --{prefix = applicationHyperKey, key = "D", message="DataGrip", bundleId="com.jetbrains.datagrip"},
-  { prefix = applicationHyperKey, key = "Z", message = "Apifox",   bundleId = "cn.apifox.app" },
+  { prefix = applicationHyperKey, key = "Z", message = "Apifox", bundleId = "cn.apifox.app" },
   { prefix = applicationHyperKey, key = "C", message = "Calendar", bundleId = "com.apple.dt.Xcode" },
   -- { prefix = applicationHyperKey, key = "T", message = "Terminal", bundleId = "org.alacritty" },
   { prefix = applicationHyperKey, key = "T", message = "Terminal", bundleId = "com.github.wez.wezterm" },
   -- { prefix = applicationHyperKey, key = "T", message = "Terminal", bundleId = "net.kovidgoyal.kitty" },
-  { prefix = applicationHyperKey, key = "U", message = "Teams",    bundleId = "com.microsoft.teams2" },
-  { prefix = applicationHyperKey, key = "M", message = "Mail",     bundleId = "com.apple.mail" },
+  { prefix = applicationHyperKey, key = "U", message = "Teams", bundleId = "com.microsoft.teams2" },
+  { prefix = applicationHyperKey, key = "M", message = "Mail", bundleId = "com.apple.mail" },
   -- { prefix = applicationHyperKey, key = ";", message = "Arc",      bundleId = "com.openai.chat" },
   --{prefix = applicationHyperKey, key = "P", message="Postman", bundleId="com.postmanlabs.mac"},
   --{prefix = applicationHyperKey, key = "O", message="Word", bundleId="com.microsoft.Word"},
@@ -133,8 +133,8 @@ applications = {
   --{prefix = applicationHyperKey, key = "R", message="Redis Desktop", bundleId="me.qii404.another-redis-desktop-manager"}
   --> Recent app
   -- { prefix = applicationHyperKey, key = "1", message = "PDF",      bundleId = "net.sourceforge.skim-app.skim" },
-  { prefix = applicationHyperKey, key = "1", message = "腾讯会议",      bundleId = "com.tencent.meeting" },
-  -- { prefix = applicationHyperKey, key = "1", message = "zoom会议",      bundleId = "us.zoom.xos" },
+  { prefix = applicationHyperKey, key = "1", message = "腾讯会议", bundleId = "com.tencent.meeting" },
+  { prefix = applicationHyperKey, key = "2", message = "zoom会议", bundleId = "us.zoom.xos" },
 }
 
 -- 输入法切换快捷键配置
