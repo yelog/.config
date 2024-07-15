@@ -195,8 +195,9 @@ alias kc='kubeSetConfig(){ if [ ! -n "$1" ]; then kubectl config current-context
 # virtual machine
 alias vmn='orb create'
 alias vms='orb list'
-alias vmi='orb'
+alias vmi='orb -u root'
 alias vmc='orb config'
+alias vmd='orb delete'
 # container
 alias cts='docker ps'
 function cti() {
