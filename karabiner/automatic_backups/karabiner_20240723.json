@@ -18,27 +18,6 @@
                 },
                 "rules": [
                     {
-                        "description": "Map ctrl-; to Esc(yelog.json)",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "semicolon",
-                                    "modifiers": {
-                                        "mandatory": [
-                                            "left_control"
-                                        ]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "escape"
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Map ctrl-h to backspace(yelog.json)",
                         "manipulators": [
                             {
@@ -53,6 +32,27 @@
                                 "to": [
                                     {
                                         "key_code": "delete_or_backspace"
+                                    }
+                                ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Map ctrl-; to Esc(yelog.json)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "semicolon",
+                                    "modifiers": {
+                                        "mandatory": [
+                                            "left_control"
+                                        ]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "escape"
                                     }
                                 ],
                                 "type": "basic"
@@ -627,21 +627,21 @@
             "simple_modifications": [
                 {
                     "from": {
-                        "key_code": "left_control"
-                    },
-                    "to": [
-                        {
-                            "key_code": "right_control"
-                        }
-                    ]
-                },
-                {
-                    "from": {
                         "key_code": "right_command"
                     },
                     "to": [
                         {
                             "key_code": "left_control"
+                        }
+                    ]
+                },
+                {
+                    "from": {
+                        "key_code": "left_control"
+                    },
+                    "to": [
+                        {
+                            "key_code": "right_control"
                         }
                     ]
                 }

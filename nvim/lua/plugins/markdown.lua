@@ -13,12 +13,12 @@ return {
     end
 
   }, --> table mode
-  -- {
-  --   "dkarter/bullets.vim",
-  --   config = function()
-  --     vim.g.bullets_enabled_file_types = { "markdown", "text", "gitcommit", "scratch" }
-  --   end,
-  -- }, --> list style
+  {
+    "dkarter/bullets.vim",
+    config = function()
+      vim.g.bullets_enabled_file_types = { "markdown", "text", "gitcommit", "scratch" }
+    end,
+  }, --> list style
   -- {
   --   "gaoDean/autolist.nvim",
   --   ft = {

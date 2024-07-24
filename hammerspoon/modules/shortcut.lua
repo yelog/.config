@@ -126,7 +126,7 @@ applications = {
   -- { prefix = applicationHyperKey, key = "T", message = "Terminal", bundleId = "net.kovidgoyal.kitty" },
   { prefix = applicationHyperKey, key = "U", message = "Teams", bundleId = "com.microsoft.teams2" },
   { prefix = applicationHyperKey, key = "M", message = "Mail", bundleId = "com.apple.mail" },
-  -- { prefix = applicationHyperKey, key = ";", message = "Arc",      bundleId = "com.openai.chat" },
+  { prefix = applicationHyperKey, key = ";", message = "Arc",      bundleId = "com.openai.chat" },
   --{prefix = applicationHyperKey, key = "P", message="Postman", bundleId="com.postmanlabs.mac"},
   --{prefix = applicationHyperKey, key = "O", message="Word", bundleId="com.microsoft.Word"},
   --{prefix = applicationHyperKey, key = "Y", message="PyCharm", bundleId="com.jetbrains.pycharm"},
