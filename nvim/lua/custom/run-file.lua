@@ -122,7 +122,7 @@ function getVisualSelection()
     ecol = nil
   end
 
-  local lines = vim.api.nvim_buf_get_lines(0, sline - 1, eline, 0)
+  local lines = vim.api.get_lines(0, sline - 1, eline, 0)
   if #lines == 0 then return end
 
   local startText, endText

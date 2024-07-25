@@ -333,3 +333,6 @@ export PATH="$PATH:/Users/yelog/Library/Python/3.10/bin"
 
 # CodeWhisperer post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.post.zsh"
+
+export GIT_TERMINAL_PROMPT=1
+export GOPRIVATE=github.com/yelog/*

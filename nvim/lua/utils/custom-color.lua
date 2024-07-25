@@ -70,3 +70,15 @@ vim.cmd('highlight calloutNoteTitle guifg=#00CEE3 ctermfg=darkblue')
 -- vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('calloutNoteChar', ">\\s*\\[\\zs!NOTE", 10)]])
 vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('calloutNoteTitle', ">\\s*\\[!NOTE\\]\\s*\\zs.*$", 10)]])
 
+
+-- 在VimEnter事件中延迟执行颜色配置
+vim.api.nvim_create_autocmd("VimEnter", {
+  callback = function()
+    vim.cmd([[highlight NeoTreeGitAdded guifg=#109900]])
+    vim.cmd([[highlight NeoTreeGitModified guifg=#0099FF]])
+    vim.cmd([[highlight NeoTreeGitDeleted guifg=#ff2222]])
+    vim.cmd([[highlight GitSignsAdd guifg=#109900]])
+    vim.cmd([[highlight GitSignsChange guifg=#0099FF]])
+    vim.cmd([[highlight GitSignsDelete guifg=#ff2222]])
+  end
+})

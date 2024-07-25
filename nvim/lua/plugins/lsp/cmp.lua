@@ -19,12 +19,6 @@ return {
       local luasnip = require("luasnip")
       local compare = require("cmp.config.compare")
 
-      local check_backspace = function()
-        local line, col = unpack(vim.api.nvim_win_get_cursor(0))
-        return col ~= 0
-            and vim.api.nvim_buf_get_lines(0, line - 1, line, true)[1]:sub(col, col):match("%s") == nil
-      end
-
       cmp.setup({
         snippet = {
           -- REQUIRED - you must specify a snippet engine
@@ -64,9 +58,6 @@ return {
               luasnip.expand_or_jump()
             elseif luasnip.expandable() then
               luasnip.expand()
-            elseif check_backspace() then
-              -- cmp.complete()
-              fallback()
             else
               fallback()
             end
@@ -117,7 +108,7 @@ return {
           -- { name = "tsserver" },
           -- { name = "bash-language-server" },
           -- { name = "obsidian" },
-          { name = "ottor"},
+          { name = "ottor" },
         }),
         sorting = {
           priority_weight = 2,
