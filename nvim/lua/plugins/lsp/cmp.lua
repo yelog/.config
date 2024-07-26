@@ -14,10 +14,15 @@ return {
   },
   {
     "hrsh7th/nvim-cmp",
+    dependencies = {
+      "luckasRanarison/tailwind-tools.nvim",
+      "onsails/lspkind-nvim",
+    },
     config = function()
       local cmp = require("cmp")
       local luasnip = require("luasnip")
       local compare = require("cmp.config.compare")
+      local lspkind = require('lspkind')
 
       cmp.setup({
         snippet = {
@@ -130,46 +135,21 @@ return {
           },
         },
         formatting = {
-          fields = { "kind", "abbr", "menu" },
-          format = function(entry, vim_item)
-            -- Kind icons
-            -- vim_item.kind = kind_icons[vim_item.kind]
+          format = lspkind.cmp_format({
+            mode = 'symbol', -- show only symbol annotations
+            maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+            -- can also be a function to dynamically calculate max width such as
+            -- maxwidth = function() return math.floor(0.45 * vim.o.columns) end,
+            ellipsis_char = '...', -- when popup menu exceed maxwidth, the truncated part would show ellipsis_char instead (must define maxwidth first)
+            show_labelDetails = true, -- show labelDetails in menu. Disabled by default
 
-            -- if entry.source.name == "cmp_tabnine" then
-            --   vim_item.kind = icons.misc.Robot
-            --   vim_item.kind_hl_group = "CmpItemKindTabnine"
+            -- The function below will be called before any actual modifications from lspkind
+            -- so that you can provide more controls on popup customization. (See [#30](https://github.com/onsails/lspkind-nvim/pull/30))
+            -- before = function(entry, vim_item)
+            --   return vim_item
             -- end
-            -- if entry.source.name == "copilot" then
-            --   vim_item.kind = icons.git.Octoface
-            --   vim_item.kind_hl_group = "CmpItemKindCopilot"
-            -- end
-            --
-            -- if entry.source.name == "emoji" then
-            --   vim_item.kind = icons.misc.Smiley
-            --   vim_item.kind_hl_group = "CmpItemKindEmoji"
-            -- end
-            --
-            -- if entry.source.name == "crates" then
-            --   vim_item.kind = icons.misc.Package
-            --   vim_item.kind_hl_group = "CmpItemKindCrate"
-            -- end
-            --
-            -- if entry.source.name == "lab.quick_data" then
-            --   vim_item.kind = icons.misc.CircuitBoard
-            --   vim_item.kind_hl_group = "CmpItemKindConstant"
-            -- end
-            --
-            -- NOTE: order matters
-            vim_item.menu = ({
-              nvim_lsp = "",
-              nvim_lua = "",
-              luasnip = "",
-              buffer = "",
-              path = "",
-              emoji = "",
-            })[entry.source.name]
-            return vim_item
-          end,
+            before = require("tailwind-tools.cmp").lspkind_format
+          })
         },
       })
 

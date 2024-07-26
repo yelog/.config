@@ -36,7 +36,7 @@ return {
           "jsonls",
           -- "tsserver",
           "volar",
-          "vuels",
+          -- "vuels",
           "html",
           "svelte",
           "eslint",
@@ -44,6 +44,7 @@ return {
           "swift_mesonls",
           "lemminx",
           "sqlls",
+          "tailwindcss",
         },
       })
       -- Mappings.
@@ -116,12 +117,13 @@ return {
         on_attach = on_attach,
         flags = lsp_flags,
       })
+      -- vue2
       -- lspconfig["vuels"].setup({
       --   filetyps = { "vue" },
       --   cmd = { "vls" },
       --   on_attach = on_attach,
       --   flags = lsp_flags,
-      --   root_dir = lspconfig.util.root_pattern("package.json", "vue.config.js"),
+      --   root_dir = lspconfig.util.root_pattern("package.json", "vite.config.ts"),
       --   settings = {
       --     config = {
       --       css = {},
@@ -169,12 +171,13 @@ return {
       --     },
       --   },
       -- })
+      -- 目前只能支持 vue3, 
       lspconfig["volar"].setup({
         filetyps = { "vue" },
-        cmd = { "vls" },
+        cmd = { 'vue-language-server', '--stdio' },
         on_attach = on_attach,
         flags = lsp_flags,
-        root_dir = lspconfig.util.root_pattern("package.json", "vue.config.js"),
+        root_dir = lspconfig.util.root_pattern("package.json"),
         settings = {
           config = {
             css = {},
@@ -237,6 +240,11 @@ return {
       lspconfig["sqlls"].setup({
         on_attach = on_attach,
         filetyps = { "sql" },
+        flags = lsp_flags,
+      })
+      lspconfig["tailwindcss"].setup({
+        on_attach = on_attach,
+        filetyps = { "vue", "html" },
         flags = lsp_flags,
       })
       -- lspconfig["bash-language-server"].setup({
@@ -344,6 +352,7 @@ return {
           'jq',
           'prettier',
           'sqlls',
+          'tailwindcss',
         },
       })
     end,

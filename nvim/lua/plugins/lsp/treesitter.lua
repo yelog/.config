@@ -17,6 +17,7 @@ return {
           "json",
           "markdown",
           "markdown_inline",
+          "vue",
         },
 
         -- Install parsers synchronously (only applied to `ensure_installed`)
