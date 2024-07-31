@@ -48,6 +48,9 @@ return {
         hl.markdownH4Delimiter = hl.markdownH4
         hl.Visual = { bg = "#6D6BC8" }
         hl.markdownBold = { bold = true, fg = "#ef9020" }
+        hl.markdownCode = { fg = "#ffb454", bg = "#354251" }
+        hl.markdownItalic = { italic = true, fg = "#d8e020" }
+        hl.markdownStrike = { fg = "#939393", strikethrough = true }
       end,
     })
     vim.cmd([[colorscheme tokyonight]])

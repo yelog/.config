@@ -14,8 +14,12 @@ vim.fn.matchadd("ye_tag", "\\v#[a-zA-Z-_\\u4e00-\\u9fa5]+")
 
 -->Strikethrough
 -- vim.cmd([[highlight markdown_strikethrough gui=strikethrough]])
-vim.api.nvim_set_hl(0, 'markdown_strikethrough', { strikethrough = true })
-vim.fn.matchadd("markdown_strikethrough", "\\v\\~\\~[a-zA-Z-_\\u4e00-\\u9fa5]+\\~\\~")
+-- vim.api.nvim_set_hl(0, 'markdown_strikethrough', { strikethrough = true })
+-- vim.fn.matchadd("markdown_strikethrough", "\\v\\~\\~[a-zA-Z-_\\u4e00-\\u9fa5]+\\~\\~")
+
+--> mark text <mark>xxx</mark>
+vim.api.nvim_set_hl(0, 'markdown_marktext', { bold = true, bg = '#FFFF00', fg = '#000000'})
+vim.fn.matchadd("markdown_marktext", "\\v\\<mark\\>高亮\\<\\/mark\\>")
 
 -->important
 vim.cmd([[highlight ye_import1 cterm=bold guifg=#efdf00]])
