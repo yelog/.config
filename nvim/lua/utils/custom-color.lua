@@ -1,13 +1,21 @@
 -- color scheme: More4 https://brandcolors.net/
 --> custom color
-vim.cmd([[highlight checkbox cterm=bold gui=bold guifg=#706357]])
-vim.fn.matchadd("checkbox", "\\v\\[ \\]")
-vim.cmd([[highlight checkbox_checked cterm=bold gui=bold guifg=#009f4d]])
-vim.fn.matchadd("checkbox_checked", "\\v\\[x\\]")
+-- vim.cmd([[highlight checkbox cterm=bold gui=bold guifg=#706357]])
+-- vim.fn.matchadd("checkbox", "\\v\\[ \\]")
+-- vim.cmd([[highlight checkbox_checked cterm=bold gui=bold guifg=#009f4d]])
+-- vim.fn.matchadd("checkbox_checked", "\\v\\[x\\]")
+
+vim.api.nvim_set_hl(0,"@text.strike",{strikethrough=true})
 
 -->tag
-vim.cmd([[highlight ye_tag guifg=#91be3e]])
+vim.cmd([[highlight ye_tag guifg=#BB9AF7 guibg=#322E45]])
 vim.fn.matchadd("ye_tag", "\\v#[a-zA-Z-_\\u4e00-\\u9fa5]+")
+
+
+-->Strikethrough
+-- vim.cmd([[highlight markdown_strikethrough gui=strikethrough]])
+vim.api.nvim_set_hl(0, 'markdown_strikethrough', { strikethrough = true })
+vim.fn.matchadd("markdown_strikethrough", "\\v\\~\\~[a-zA-Z-_\\u4e00-\\u9fa5]+\\~\\~")
 
 -->important
 vim.cmd([[highlight ye_import1 cterm=bold guifg=#efdf00]])

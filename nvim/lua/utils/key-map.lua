@@ -203,7 +203,7 @@ maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" 
 maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" }
 maps.n["<leader>mc"] = { "<cmd>CheckSwitch<cr>", desc = "Checkbox Switch" }
 maps.v["<leader>mc"] = { "<cmd>CheckSwitch<cr>gv", desc = "Checkbox Switch" }
-maps.n["<M-l>"] = { "<cmd>CheckSwitch<cr>", desc = "Checkbox Switch" }
+-- maps.n["<M-l>"] = { "<cmd>CheckSwitch<cr>", desc = "Checkbox Switch" }
 -- maps.v["<leader>"] = { "<cmd>CheckSwitch<cr>gv", desc = "Checkbox Switch" }
 maps.n["<leader>md"] = { "<cmd>ObsidianToday<cr>", desc = "goto daily task" }
 -- maps.n["gf"] = { function()

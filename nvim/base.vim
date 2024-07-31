@@ -3,7 +3,7 @@ let mapleader=' '
 set fileencodings=utf-8,ucs-bom,gb18030,gbk,gb2312,cp936
 set termencoding=utf-8
 set encoding=utf-8
-set guifont=Monaco:h11
+set guifont=JetBrainsMono\ Nerd\ Font:h16
 set exrc
 set secure
 set nu                            " 显示行号

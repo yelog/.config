@@ -19,9 +19,34 @@ end
 -- config.font = wezterm.font 'JetBrains Mono'
 -- config.font = wezterm.font 'JetBrainsMono Nerd Font'
 -- config.font = wezterm.font_with_fallback { 'Menlo' }
-config.font = wezterm.font_with_fallback { 'JetBrainsMono Nerd Font', 'Menlo' }
--- config.font = wezterm.font('JetBrains Mono', { weight = 'Re' })
+-- config.font = wezterm.font_with_fallback { 'JetBrainsMono Nerd Font', 'Menlo' }
+-- config.font = wezterm.font_with_fallback { 'Fira Code'}
+-- config.font = wezterm.font('JetBrainsMono Nerd Font', { weight = 'Regular' })
 -- config.font = wezterm.font 'Noto Mono'
+-- config.font = wezterm.font_with_fallback {
+--         "JetBrainsMono Nerd Font",
+--         "FiraCode Nerd Font",
+--
+--         -- To avoid 'Chinese characters displayed as variant (Japanese) glyphs'
+--         "Source Han Sans SC",
+--         "Source Han Sans TC"
+--       }
+
+config.font = wezterm.font_with_fallback({
+  { family = 'JetBrainsMono Nerd Font', weight = 'Regular', italic = false },
+  { family = 'Source Han Sans HW SC',   weight = 'Regular', italic = false },
+})
+
+-- config.font_rules = {
+--   {
+--     intensity = 'Bold',
+--     italic = false,
+--     font = wezterm.font {
+--       family = 'Lantinghei SC',
+--       weight = 'Bold',
+--     },
+--   }
+-- }
 
 config.font_size = 16
 
@@ -97,9 +122,19 @@ config.keys = {
     action = wezterm.action.SendKey { key = 'h', mods = 'OPT' },
   },
   {
+    key = 'j',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = 'j', mods = 'OPT' },
+  },
+  {
     key = 'k',
     mods = 'CMD',
     action = wezterm.action.ClearScrollback("ScrollbackAndViewport")
+  },
+  {
+    key = 'l',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = 'L', mods = 'OPT' },
   },
   {
     key = 's',
@@ -110,6 +145,11 @@ config.keys = {
     key = 'y',
     mods = 'CMD',
     action = wezterm.action.SendKey { key = 'y', mods = 'OPT' },
+  },
+  {
+    key = '/',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = '/', mods = 'OPT' },
   },
 }
 

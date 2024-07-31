@@ -4,8 +4,8 @@ size = 16
 normal = { family = "JetBrainsMono Nerd Font", style = "Regular" }
 # normal = { family = "JetBrains Mono", style = "Regular" }
 # normal = { family = "Hack Nerd Font", style = "Regular" }
-bold = { family = "JetBrainsMono Nerd Font", style = "Regular" }
-italic = { family = "JetBrainsMono Nerd Font", style = "Regular" }
+bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
+italic = { family = "Hack Nerd Font", style = "Italic" }
 bold_italic = { family = "JetBrainsMono Nerd Font", style = "Regular" }
 
 [colors]

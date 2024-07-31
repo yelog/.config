@@ -38,16 +38,16 @@ return {
       ---@param hl Highlights
       ---@param c ColorScheme
       on_highlights = function(hl, c)
-        hl.markdownH1 = { fg = "#0082b4" }
-        hl.markdownH2 = { fg = "#ef9020" }
-        hl.markdownH3 = { fg = "#e990ab" }
-        hl.markdownH4 = { fg = "#96cbb3" }
-        hl.markdownH1Delimiter = { fg = hl.markdownH1.fg }
-        hl.markdownH2Delimiter = { fg = hl.markdownH2.fg }
-        hl.markdownH3Delimiter = { fg = hl.markdownH3.fg }
-        hl.markdownH4Delimiter = { fg = hl.markdownH4.fg }
+        hl.markdownH1 = { fg = "#0082b4", bold = true }
+        hl.markdownH2 = { fg = "#ef9020", bold = true }
+        hl.markdownH3 = { fg = "#e990ab", bold = true }
+        hl.markdownH4 = { fg = "#96cbb3", bold = true }
+        hl.markdownH1Delimiter = hl.markdownH1
+        hl.markdownH2Delimiter = hl.markdownH2
+        hl.markdownH3Delimiter = hl.markdownH3
+        hl.markdownH4Delimiter = hl.markdownH4
         hl.Visual = { bg = "#6D6BC8" }
-        hl.markdownBold = { bold = true, fg = "#0081b4" }
+        hl.markdownBold = { bold = true, fg = "#ef9020" }
       end,
     })
     vim.cmd([[colorscheme tokyonight]])

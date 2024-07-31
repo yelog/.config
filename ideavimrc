@@ -175,6 +175,6 @@ set quickscope
 nmap <leader><leader>w :action KJumpAction.Word0<cr>
 nmap <leader><leader>s :action KJumpAction.KJumpAction<cr>
 nmap <leader><leader>l :action KJumpAction.Line<cr>
-noremap s :action ideavim.search<cr>
+noremap s :action flash.search<cr>
 nmap S :action ideavim.search<cr>
 " more action see table below
