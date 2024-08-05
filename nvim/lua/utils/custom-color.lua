@@ -5,7 +5,7 @@
 -- vim.cmd([[highlight checkbox_checked cterm=bold gui=bold guifg=#009f4d]])
 -- vim.fn.matchadd("checkbox_checked", "\\v\\[x\\]")
 
-vim.api.nvim_set_hl(0,"@text.strike",{strikethrough=true})
+vim.api.nvim_set_hl(0, "@text.strike", { strikethrough = true })
 
 -->tag
 vim.cmd([[highlight ye_tag guifg=#BB9AF7 guibg=#322E45]])
@@ -18,8 +18,12 @@ vim.fn.matchadd("ye_tag", "\\v#[a-zA-Z-_\\u4e00-\\u9fa5]+")
 -- vim.fn.matchadd("markdown_strikethrough", "\\v\\~\\~[a-zA-Z-_\\u4e00-\\u9fa5]+\\~\\~")
 
 --> mark text <mark>xxx</mark>
-vim.api.nvim_set_hl(0, 'markdown_marktext', { bold = true, bg = '#FFFF00', fg = '#000000'})
-vim.fn.matchadd("markdown_marktext", "\\v\\<mark\\>高亮\\<\\/mark\\>")
+vim.api.nvim_set_hl(0, 'markdown_marktext', { bg = '#FFFF00', fg = '#000000' })
+vim.fn.matchadd("markdown_marktext", "\\v\\<mark\\>[a-zA-Z-_\\u4e00-\\u9fa5]+\\<\\/mark\\>")
+
+-->quote
+vim.cmd([[highlight ye_quote guibg=#323f4d]])
+vim.fn.matchadd("ye_quote", "\\v^\\>(\\S|\\s)+$")
 
 -->important
 vim.cmd([[highlight ye_import1 cterm=bold guifg=#efdf00]])
@@ -33,7 +37,10 @@ vim.fn.matchadd("ye_import3", "\\v( |^)@<=!!!(!)@!")
 -- vim.fn.matchadd("ye_link", "\\v\\[\\[(\\S|\\s)*\\]\\]")
 
 vim.cmd([[highlight ye_link guifg=#5c92fa gui=underline cterm=underline]])
-vim.fn.matchadd("ye_link", "\\v(http|https):(\\S|\\s){-}( |$)")
+-- vim.fn.matchadd("ye_link", "\\v(http|https):(\\S|\\s){-}( |$)")
+-- vim.fn.matchadd("ye_link", "\\[.*\\]\\(.*\\)")
+-- vim.fn.matchadd("ye_link", "\\v\\[[^\\]]+\\]\\([^\\)]+\\)") -- 可以匹配 [xxx](xxx) 的链接, 但是会影响图片的匹配
+vim.fn.matchadd("ye_link", "\\v(^|[^!])\\zs\\[[^\\]]+\\]\\([^\\)]+\\)")
 
 -- 设置自定义高亮组，用于以问号结尾的语句
 vim.cmd([[highlight QuestionSentence cterm=bold guifg=#e5c07b]])
