@@ -34,6 +34,7 @@ end
 
 config.font = wezterm.font_with_fallback({
   { family = 'JetBrainsMono Nerd Font', weight = 'Regular', italic = false },
+  -- { family = 'CaskaydiaCove Nerd Font', weight = 'Regular', italic = false },
   { family = 'Source Han Sans HW SC',   weight = 'Regular', italic = false },
 })
 
@@ -135,6 +136,11 @@ config.keys = {
     key = 'l',
     mods = 'CMD',
     action = wezterm.action.SendKey { key = 'L', mods = 'OPT' },
+  },
+  {
+    key = 'p',
+    mods = 'CMD',
+    action = wezterm.action.SendKey { key = 'p', mods = 'OPT' },
   },
   {
     key = 's',

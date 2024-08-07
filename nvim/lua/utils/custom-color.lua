@@ -22,7 +22,8 @@ vim.api.nvim_set_hl(0, 'markdown_marktext', { bg = '#FFFF00', fg = '#000000' })
 vim.fn.matchadd("markdown_marktext", "\\v\\<mark\\>[a-zA-Z-_\\u4e00-\\u9fa5]+\\<\\/mark\\>")
 
 -->quote
-vim.cmd([[highlight ye_quote guibg=#323f4d]])
+-- vim.api.nvim_set_hl(0, 'ye_quote', { fg = '#e6e1cf', bg = '#323f4d' })
+vim.api.nvim_set_hl(0, 'ye_quote', { fg = '#e6e1cf', bg = '#252d37' })
 vim.fn.matchadd("ye_quote", "\\v^\\>(\\S|\\s)+$")
 
 -->important

@@ -103,7 +103,7 @@ return {
   --
   --       -- block_quotes = {},
   --       -- checkboxes = {},
-  --       code_blocks = {},
+  --       -- code_blocks = {},
   --       -- headings = {},
   --       -- horizontal_rules = {},
   --       -- inline_codes = {},
