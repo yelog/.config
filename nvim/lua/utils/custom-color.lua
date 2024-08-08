@@ -24,7 +24,17 @@ vim.fn.matchadd("markdown_marktext", "\\v\\<mark\\>[a-zA-Z-_\\u4e00-\\u9fa5]+\\<
 -->quote
 -- vim.api.nvim_set_hl(0, 'ye_quote', { fg = '#e6e1cf', bg = '#323f4d' })
 vim.api.nvim_set_hl(0, 'ye_quote', { fg = '#e6e1cf', bg = '#252d37' })
-vim.fn.matchadd("ye_quote", "\\v^\\>(\\S|\\s)+$")
+-- vim.fn.matchadd("ye_quote", "\\v^\\>(\\S|\\s)+$")
+-- vim.fn.nvim_buf_add_highlight(0, -1, 'ye_quote', 1, 0, -1)
+
+-->code-block 完整的, 包括换行
+-- vim.cmd([[
+--   augroup MarkdownCodeBlockHighlight
+--     autocmd!
+--     autocmd Syntax markdown syntax region ye_codeblock start="^```" end="^``` *$" keepend
+--     autocmd Syntax markdown highlight ye_codeblock guifg=#e6e1cf guibg=#323f4d
+--   augroup END
+-- ]])
 
 -->important
 vim.cmd([[highlight ye_import1 cterm=bold guifg=#efdf00]])
@@ -37,16 +47,16 @@ vim.fn.matchadd("ye_import3", "\\v( |^)@<=!!!(!)@!")
 -- vim.cmd([[highlight ye_link guifg=#5c92fa gui=underline cterm=underline]])
 -- vim.fn.matchadd("ye_link", "\\v\\[\\[(\\S|\\s)*\\]\\]")
 
-vim.cmd([[highlight ye_link guifg=#5c92fa gui=underline cterm=underline]])
+-- vim.cmd([[highlight ye_link guifg=#5c92fa gui=underline cterm=underline]])
 -- vim.fn.matchadd("ye_link", "\\v(http|https):(\\S|\\s){-}( |$)")
 -- vim.fn.matchadd("ye_link", "\\[.*\\]\\(.*\\)")
 -- vim.fn.matchadd("ye_link", "\\v\\[[^\\]]+\\]\\([^\\)]+\\)") -- 可以匹配 [xxx](xxx) 的链接, 但是会影响图片的匹配
-vim.fn.matchadd("ye_link", "\\v(^|[^!])\\zs\\[[^\\]]+\\]\\([^\\)]+\\)")
+-- vim.fn.matchadd("ye_link", "\\v(^|[^!])\\zs\\[[^\\]]+\\]\\([^\\)]+\\)")
 
--- 设置自定义高亮组，用于以问号结尾的语句
-vim.cmd([[highlight QuestionSentence cterm=bold guifg=#e5c07b]])
+-- 设置自定义高亮组，用于以问号结尾的语句, 还会导致 hardtime.nvim 失效
+-- vim.cmd([[highlight QuestionSentence cterm=bold guifg=#e5c07b]])
 -- 在进入或创建文件时应用规则
-vim.cmd([[autocmd! BufEnter,BufNewFile * call matchadd('QuestionSentence', "\\v[a-zA-Z-_\\u4e00-\\u9fa5]+[?]")]])
+-- vim.cmd([[autocmd! BufEnter,BufNewFile * call matchadd('QuestionSentence', "\\v[a-zA-Z-_\\u4e00-\\u9fa5]+[?]")]])
 
 
 -- Highlight today's date
@@ -98,7 +108,10 @@ vim.api.nvim_create_autocmd("VimEnter", {
     vim.cmd([[highlight NeoTreeGitModified guifg=#0099FF]])
     vim.cmd([[highlight NeoTreeGitDeleted guifg=#ff2222]])
     vim.cmd([[highlight GitSignsAdd guifg=#109900]])
+    vim.cmd([[highlight GitSignsStagedAdd guifg=#109900]])
     vim.cmd([[highlight GitSignsChange guifg=#0099FF]])
+    vim.cmd([[highlight GitSignsStagedChangeLn guifg=#0099FF]])
     vim.cmd([[highlight GitSignsDelete guifg=#ff2222]])
+    vim.cmd([[highlight GitSignsStagedChangeLn guifg=#ff2222]])
   end
 })

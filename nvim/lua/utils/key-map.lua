@@ -101,7 +101,13 @@ maps.n["<leader>fn"] = {
   end,
   desc = "Search buffers",
 }
-maps.n["<leader>fr"] = {
+maps.n["gd"] = {
+  function()
+    require("telescope.builtin").lsp_definitions()
+  end,
+  desc = "Search definition",
+}
+maps.n["gu"] = {
   function()
     require("telescope.builtin").lsp_references()
   end,
@@ -149,9 +155,25 @@ maps.n["<leader>fs"] = {
   end,
   desc = "Search word",
 }
+local get_selection = function()
+  return vim.fn.getregion(
+    vim.fn.getpos ".", vim.fn.getpos "v", { mode = vim.fn.mode() }
+  )
+end
+local get_cursor_word = function()
+  return vim.fn.expand("<cword>")
+end
 maps.n["<M-S-f>"] = {
   function()
+    -- require("telescope.builtin").live_grep { default_text = get_cursor_word() }
     require("telescope.builtin").live_grep()
+  end,
+  desc = "Search word",
+}
+maps.v["<M-S-f>"] = {
+  function()
+    require("telescope.builtin").live_grep { default_text = table.concat(get_selection())
+    }
   end,
   desc = "Search word",
 }

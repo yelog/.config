@@ -74,7 +74,8 @@ return {
   --   end
   -- },
   {
-    "yelog/markdown-preview.nvim",
+    "yelog/marklive.nvim",
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
     -- When dev is true, This plugin will use {config.dev.path}/markdown-preview.nvim/ instead of fetching it from GitHub https://lazy.folke.io/spec/examples
     -- {config.dev.path} configed by lazy.nvim in init.lua
     dev = true,
@@ -83,7 +84,7 @@ return {
   -- {
   --   "OXY2DEV/markview.nvim",
   --   ft = "markdown",
-  --
+  --     dev = true,
   --   dependencies = {
   --     -- You may not need this if you don't lazy load
   --     -- Or if the parsers are in your $RUNTIMEPATH
@@ -129,14 +130,14 @@ return {
       vim.g.md_checkswitch_style = "cycle"
     end,
   }, --> checkbox shortcut
-  {
-    "tpope/vim-markdown",
-    config = function()
-      -- tpope/vim-markdown
-      vim.g.markdown_syntax_conceal = 0
-      vim.g.markdown_fenced_languages =
-      { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "xml", "Dockerfile", "Rust",
-        "swift", "javascript" }
-    end,
-  }, --> syntax highlighting and filetype plugins for Markdown
+  -- {
+  --   "tpope/vim-markdown",
+  --   config = function()
+  --     -- tpope/vim-markdown
+  --     vim.g.markdown_syntax_conceal = 0
+  --     vim.g.markdown_fenced_languages =
+  --     { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "xml", "Dockerfile", "Rust",
+  --       "swift", "javascript", 'lua' }
+  --   end,
+  -- }, --> syntax highlighting and filetype plugins for Markdown
 }
