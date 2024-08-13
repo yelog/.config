@@ -13,6 +13,18 @@ local AUTO_LAYOUT_TYPE = {
   HORIZONTAL_OR_VERTICAL = "HORIZONTAL_OR_VERTICAL",
 }
 
+-- 当前激活应用窗口和上一个激活的应用窗口进行左右分屏
+if windows.last_application_left_right_layout ~= nil then
+  hs.hotkey.bind(
+    windows.last_application_left_right_layout.prefix,
+    windows.last_application_left_right_layout.key,
+    windows.last_application_left_right_layout.message,
+    function()
+      last_application_layout()
+    end
+  )
+end
+
 -- 同一应用的所有窗口自动网格式布局
 if windows.same_application_auto_layout_grid ~= nil then
   hs.hotkey.bind(
@@ -59,6 +71,65 @@ if windows.same_space_auto_layout_horizontal_or_vertical ~= nil then
       same_space(AUTO_LAYOUT_TYPE.HORIZONTAL_OR_VERTICAL)
     end
   )
+end
+
+-- 记录上次激活的窗口和前一个窗口
+local lastWindow = nil
+local previousWindow = nil
+
+-- 定义一个窗口激活的回调函数
+hs.window.filter.default:subscribe(hs.window.filter.windowFocused, function(window)
+  if lastWindow and lastWindow ~= window then
+    previousWindow = lastWindow
+  end
+  lastWindow = window
+end)
+-- 当前激活应用窗口和上一个激活的应用窗口进行左右分屏
+function last_application_layout()
+  -- -- 创建一个窗口过滤器
+  -- local wf = hs.window.filter.default
+  --
+  -- -- 获取当前窗口
+  -- local currentWindow = hs.window.focusedWindow()
+  --
+  -- -- 获取上次激活的窗口
+  -- local lastWindow = nil
+  -- local windows = wf:getWindows(hs.window.filter.sortByFocusedLast)
+  --
+  -- if #windows > 1 then
+  --   lastWindow = windows[2]
+  -- end
+  --
+  -- if currentWindow and lastWindow then
+  --   -- 获取屏幕框架
+  --   local screenFrame = currentWindow:screen():frame()
+  --
+  --   -- 设置当前窗口在屏幕的左半边
+  --   currentWindow:setFrame(hs.geometry.rect(screenFrame.x, screenFrame.y, screenFrame.w / 2, screenFrame.h))
+  --
+  --   -- 设置上次激活的窗口在屏幕的右半边
+  --   lastWindow:setFrame(hs.geometry.rect(screenFrame.x + screenFrame.w / 2, screenFrame.y, screenFrame.w / 2,
+  --     screenFrame.h))
+  --   print('last_application_layout ssuccess')
+  -- else
+  --   print('last_application_layout failed')
+  -- end
+  local currentWindow = hs.window.focusedWindow()
+
+  if currentWindow and previousWindow and currentWindow ~= previousWindow then
+    -- 获取屏幕框架
+    local screenFrame = currentWindow:screen():frame()
+
+    -- 设置当前窗口在屏幕的左半边
+    currentWindow:setFrame(hs.geometry.rect(screenFrame.x, screenFrame.y, screenFrame.w / 2, screenFrame.h))
+
+    -- 设置上次激活的窗口在屏幕的右半边
+    previousWindow:setFrame(hs.geometry.rect(screenFrame.x + screenFrame.w / 2, screenFrame.y, screenFrame.w / 2,
+      screenFrame.h))
+    print('last_application_layout ssuccess')
+  else
+    print('last_application_layout failed')
+  end
 end
 
 function same_application(auto_layout_type)
@@ -592,7 +663,6 @@ function isVerticalScreen(screen)
   end
 end
 
-
 -- 居中50% or 全屏
 hs.hotkey.bind(
   windows.center_or_fullscreen.prefix,
@@ -605,10 +675,10 @@ hs.hotkey.bind(
     local max = screen:frame()
 
     if f.w == max.w and f.h == max.h then
-      f.x = max.x + max.w/4
-      f.y = max.y + max.h/4
-      f.w = max.w/2
-      f.h = max.h/2
+      f.x = max.x + max.w / 4
+      f.y = max.y + max.h / 4
+      f.w = max.w / 2
+      f.h = max.h / 2
       win:setFrame(f)
     else
       win:maximize()
@@ -730,8 +800,9 @@ local hotkey = require "hs.hotkey"
 local axuielement = require "hs.axuielement"
 
 -- 设置将焦点切换到第二个桌面的快捷键
-hotkey.bind({"ctrl"}, "2", function()
-    local app = axuielement.applicationElement(hs.application.frontmostApplication())
-    local desktop = app:attributeValue("AXFocusedWindow"):attributeValue("AXParent"):attributeValue("AXParent"):attributeValue("AXChildren")[2]
-    desktop:setAttributeValue("AXFocused", true)
+hotkey.bind({ "ctrl" }, "2", function()
+  local app = axuielement.applicationElement(hs.application.frontmostApplication())
+  local desktop = app:attributeValue("AXFocusedWindow"):attributeValue("AXParent"):attributeValue("AXParent")
+      :attributeValue("AXChildren")[2]
+  desktop:setAttributeValue("AXFocused", true)
 end)

@@ -15,13 +15,15 @@ local windowHyperKey = { "shift", "alt", "cmd" }
 -- 窗口管理快捷键配置
 windows = {
   -- 同一应用的所有窗口自动网格式布局
-  same_application_auto_layout_grid = { prefix = windowHyperKey, key = "0", message = "" },
+  same_application_auto_layout_grid = { prefix = windowHyperKey, key = "9", message = "" },
   -- 同一应用的所有窗口自动水平均分或垂直均分
-  same_space_auto_layout_grid = { prefix = windowHyperKey, key = "0", message = "" },
+  same_space_auto_layout_grid = { prefix = windowHyperKey, key = "9", message = "" },
   -- 同一工作空间下的所有窗口自动网格式布局
-  same_apleftplication_auto_layout_horizontal_or_vertical = { prefix = windowHyperKey, key = "0", message = "" },
+  same_apleftplication_auto_layout_horizontal_or_vertical = { prefix = windowHyperKey, key = "9", message = "" },
   -- 同一工作空间下的所有窗口自动水平均分或垂直均分
-  same_space_auto_layout_horizontal_or_vertical = { prefix = windowHyperKey, key = "0", message = "" },
+  same_space_auto_layout_horizontal_or_vertical = { prefix = windowHyperKey, key = "9", message = "" },
+  -- 跟上一个应用进行左右分屏
+  last_application_left_right_layout = { prefix = windowHyperKey, key = "0", message = "" },
   -- 左半屏
   left = { prefix = windowHyperKey, key = "A", message = "Left Half" },
   -- 右半屏
@@ -59,27 +61,27 @@ windows = {
   -- 左 1/3（横屏）或上 1/3（竖屏）
   left_1_3 = {
     prefix = windowHyperKey,
-    key = "0",
+    key = "9",
     message = "Left 1/3(Horizontal screen) Or Top 1/3(Vertical screen)",
   },
   -- 中 1/3
-  middle = { prefix = windowHyperKey, key = "0", message = "Middle 1/3" },
+  middle = { prefix = windowHyperKey, key = "9", message = "Middle 1/3" },
   -- 右 1/3（横屏）或下 1/3（竖屏）
   right_1_3 = {
     prefix = windowHyperKey,
-    key = "0",
+    key = "9",
     message = "Right 1/3(Horizontal screen)Or Bottom 1/3(Vertical screen)",
   },
   -- 左 2/3（横屏）或上 2/3（竖屏）
   left_2_3 = {
     prefix = windowHyperKey,
-    key = "0",
+    key = "9",
     message = "Left 2/3(Horizontal screen) Or Top 2/3(Vertical screen)",
   },
   -- 右 2/3（横屏）或下 2/3（竖屏）
   right_2_3 = {
     prefix = windowHyperKey,
-    key = "0",
+    key = "9",
     message = "Right 2/3(Horizontal screen)Or Bottom 2/3(Vertical screen)",
   },
   -- 居中50% 或 全屏
@@ -133,7 +135,7 @@ applications = {
   --{prefix = applicationHyperKey, key = "R", message="Redis Desktop", bundleId="me.qii404.another-redis-desktop-manager"}
   --> Recent app
   -- { prefix = applicationHyperKey, key = "1", message = "PDF",      bundleId = "net.sourceforge.skim-app.skim" },
-  { prefix = applicationHyperKey, key = "1", message = "腾讯会议", bundleId = "com.tencent.meeting" },
+  { prefix = applicationHyperKey, key = "9", message = "腾讯会议", bundleId = "com.tencent.meeting" },
   { prefix = applicationHyperKey, key = "2", message = "zoom会议", bundleId = "us.zoom.xos" },
 }
 

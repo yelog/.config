@@ -34,7 +34,6 @@ end
 
 config.font = wezterm.font_with_fallback({
   { family = 'JetBrainsMono Nerd Font', weight = 'Regular', italic = false },
-  -- { family = 'CaskaydiaCove Nerd Font', weight = 'Regular', italic = false },
   { family = 'Source Han Sans HW SC',   weight = 'Regular', italic = false },
 })
 
