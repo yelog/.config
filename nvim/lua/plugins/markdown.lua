@@ -76,11 +76,23 @@ return {
   {
     "yelog/marklive.nvim",
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    lazy = true,
+    ft = "markdown",
     -- When dev is true, This plugin will use {config.dev.path}/markdown-preview.nvim/ instead of fetching it from GitHub https://lazy.folke.io/spec/examples
     -- {config.dev.path} configed by lazy.nvim in init.lua
     dev = true,
-    opts = {}
+    opts = {
+      enable = true,
+      -- show_mode = 'insert-line'
+    }
   },
+  -- {
+  --   'MeanderingProgrammer/render-markdown.nvim',
+  --   opts = {},
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+  -- },
   -- {
   --   "OXY2DEV/markview.nvim",
   --   ft = "markdown",
@@ -130,14 +142,14 @@ return {
       vim.g.md_checkswitch_style = "cycle"
     end,
   }, --> checkbox shortcut
-  -- {
-  --   "tpope/vim-markdown",
-  --   config = function()
-  --     -- tpope/vim-markdown
-  --     vim.g.markdown_syntax_conceal = 0
-  --     vim.g.markdown_fenced_languages =
-  --     { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "xml", "Dockerfile", "Rust",
-  --       "swift", "javascript", 'lua' }
-  --   end,
-  -- }, --> syntax highlighting and filetype plugins for Markdown
+  {
+    "tpope/vim-markdown",
+    config = function()
+      -- tpope/vim-markdown
+      vim.g.markdown_syntax_conceal = 0
+      vim.g.markdown_fenced_languages =
+      { "html", "python", "bash=sh", "json", "java", "js=javascript", "sql", "yaml", "xml", "Dockerfile", "Rust",
+        "swift", "javascript", 'lua' }
+    end,
+  }, --> syntax highlighting and filetype plugins for Markdown
 }

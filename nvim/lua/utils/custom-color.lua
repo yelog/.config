@@ -5,11 +5,11 @@
 -- vim.cmd([[highlight checkbox_checked cterm=bold gui=bold guifg=#009f4d]])
 -- vim.fn.matchadd("checkbox_checked", "\\v\\[x\\]")
 
-vim.api.nvim_set_hl(0, "@text.strike", { strikethrough = true })
+-- vim.api.nvim_set_hl(0, "@text.strike", { strikethrough = true })
 
 -->tag
-vim.cmd([[highlight ye_tag guifg=#BB9AF7 guibg=#322E45]])
-vim.fn.matchadd("ye_tag", "\\v#[a-zA-Z-_\\u4e00-\\u9fa5]+")
+-- vim.cmd([[highlight ye_tag guifg=#BB9AF7 guibg=#322E45]])
+-- vim.fn.matchadd("ye_tag", "\\v#[a-zA-Z-_\\u4e00-\\u9fa5]+")
 
 
 -->Strikethrough
@@ -18,12 +18,12 @@ vim.fn.matchadd("ye_tag", "\\v#[a-zA-Z-_\\u4e00-\\u9fa5]+")
 -- vim.fn.matchadd("markdown_strikethrough", "\\v\\~\\~[a-zA-Z-_\\u4e00-\\u9fa5]+\\~\\~")
 
 --> mark text <mark>xxx</mark>
-vim.api.nvim_set_hl(0, 'markdown_marktext', { bg = '#FFFF00', fg = '#000000' })
-vim.fn.matchadd("markdown_marktext", "\\v\\<mark\\>[a-zA-Z-_\\u4e00-\\u9fa5]+\\<\\/mark\\>")
+-- vim.api.nvim_set_hl(0, 'markdown_marktext', { bg = '#FFFF00', fg = '#000000' })
+-- vim.fn.matchadd("markdown_marktext", "\\v\\<mark\\>[a-zA-Z-_\\u4e00-\\u9fa5]+\\<\\/mark\\>")
 
 -->quote
 -- vim.api.nvim_set_hl(0, 'ye_quote', { fg = '#e6e1cf', bg = '#323f4d' })
-vim.api.nvim_set_hl(0, 'ye_quote', { fg = '#e6e1cf', bg = '#252d37' })
+-- vim.api.nvim_set_hl(0, 'ye_quote', { fg = '#e6e1cf', bg = '#252d37' })
 -- vim.fn.matchadd("ye_quote", "\\v^\\>(\\S|\\s)+$")
 -- vim.fn.nvim_buf_add_highlight(0, -1, 'ye_quote', 1, 0, -1)
 
@@ -86,7 +86,7 @@ timer:start(0, 60000, vim.schedule_wrap(function()
 end))
 
 -- 设置 [!NOTE] 行的背景为淡蓝色
-vim.cmd('highlight calloutNoteBg guibg=#ADD8E6 ctermbg=lightblue')
+-- vim.cmd('highlight calloutNoteBg guibg=#ADD8E6 ctermbg=lightblue')
 
 
 -- 匹配 [!NOTE] 行并应用颜色
@@ -95,10 +95,10 @@ vim.cmd('highlight calloutNoteBg guibg=#ADD8E6 ctermbg=lightblue')
 -- 设置 [!NOTE] 后面的文字为深蓝色
 -- vim.cmd('highlight calloutNoteTitle guifg=#000080 ctermfg=darkblue')
 -- vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('calloutNoteTitle', "^>\s*\[!NOTE\]\s\+")]])
-vim.cmd('highlight calloutNoteTitle guifg=#00CEE3 ctermfg=darkblue')
+-- vim.cmd('highlight calloutNoteTitle guifg=#00CEE3 ctermfg=darkblue')
 -- vim.cmd('highlight calloutNoteChar guifg=#F0CEE3 ctermfg=darkblue')
 -- vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('calloutNoteChar', ">\\s*\\[\\zs!NOTE", 10)]])
-vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('calloutNoteTitle', ">\\s*\\[!NOTE\\]\\s*\\zs.*$", 10)]])
+-- vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('calloutNoteTitle', ">\\s*\\[!NOTE\\]\\s*\\zs.*$", 10)]])
 
 
 -- 在VimEnter事件中延迟执行颜色配置
