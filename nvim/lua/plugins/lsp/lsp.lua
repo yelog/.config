@@ -171,7 +171,7 @@ return {
       --     },
       --   },
       -- })
-      -- 目前只能支持 vue3, 
+      -- 目前只能支持 vue3,
       lspconfig["volar"].setup({
         filetyps = { "vue" },
         cmd = { 'vue-language-server', '--stdio' },
