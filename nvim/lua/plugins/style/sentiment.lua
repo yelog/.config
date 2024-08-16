@@ -1,3 +1,4 @@
+-- auto highlight the pairs
 return {
   "utilyre/sentiment.nvim",
   version = "*",

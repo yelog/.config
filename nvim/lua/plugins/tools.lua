@@ -8,7 +8,6 @@ return {
     end
   },
   "itchyny/vim-cursorword",   --> Underlines the word under the cursor
-  "907th/vim-auto-save",      --> auto-save
   "dhruvasagar/vim-open-url", --> open brower with the url under the cursor
   {
     "airblade/vim-rooter",    --> Changes Vim working directory to project root
