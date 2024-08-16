@@ -1,3 +1,3 @@
 return {
-  import = "plugins.test"
+  import = "plugins.complete"
 }
