@@ -260,14 +260,14 @@ return {
       --   on_attach = on_attach,
       --   flags = lsp_flags,
       -- })
-      lspconfig["rust_analyzer"].setup({
-        on_attach = on_attach,
-        flags = lsp_flags,
-        -- Server-specific settings...
-        settings = {
-          ["rust-analyzer"] = {},
-        },
-      })
+      -- lspconfig["rust_analyzer"].setup({
+      --   on_attach = on_attach,
+      --   flags = lsp_flags,
+      --   -- Server-specific settings...
+      --   settings = {
+      --     ["rust-analyzer"] = {},
+      --   },
+      -- })
       lspconfig["swift_mesonls"].setup({
         on_attach = on_attach,
         flags = lsp_flags,

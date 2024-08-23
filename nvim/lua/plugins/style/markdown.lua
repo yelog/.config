@@ -84,6 +84,16 @@ return {
     opts = {
       enable = true,
       -- show_mode = 'insert-line'
+      -- render = {
+      --   fenced_code_block = {
+      --     icon = "📌",
+      --     -- hl_group = "markliveTag",
+      --     -- regex = "(<b>).*(</b>)",
+      --     -- render = function(rc)
+      --     --
+      --     -- end
+      --   },
+      -- }
     }
   },
   -- {
@@ -130,6 +140,7 @@ return {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
+    dev = true,
     build = function()
       vim.fn["mkdp#util#install"]()
       vim.g.mkdp_theme = 'light'

@@ -1,10 +1,10 @@
 return {
   "github/copilot.vim",
   config = function()
-    -- vim.keymap.set('i', '<C-J>', function()
+    -- vim.keymap.set('i', '<c-j>', function()
     --     vim.fn['copilot#Accept']('<CR>')
     --   end, { desc = 'copilot accept', replace_keycodes = false })
-      vim.keymap.set('i', '<right>', 'copilot#Accept("\\<CR>")', {
+      vim.keymap.set('i', '<c-j>', 'copilot#Accept("\\<CR>")', {
           expr = true,
           replace_keycodes = false
         })
