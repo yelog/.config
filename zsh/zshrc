@@ -177,8 +177,6 @@ alias tailf='tail -f'
 alias ra=yazi
 alias s=neofetch
 alias chrome=open -a "Google Chrome"
-alias tn='tmux new -s '
-alias ta='tmux a'
 alias vi=nvim
 alias v=nvim
 alias sudo='sudo '
@@ -383,3 +381,15 @@ zle -N generate_command
 
 # 绑定快捷键
 bindkey '^g' generate_command
+
+# alias tn='tmux new -s '
+# alias ta='tmux a'
+# 重写 ta, 查询是否有 daily 会话，有则进入，没有则创建
+function ta() {
+  if tmux has-session -t daily 2>/dev/null; then
+    tmux attach-session -t daily
+  else
+    tmux new-session -s daily
+  fi
+}
+

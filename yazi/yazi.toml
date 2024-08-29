@@ -1,0 +1,6 @@
+[plugin]
+
+fetchers = [
+	{ id = "git", name = "*", run = "git", prio = "normal" },
+	{ id = "git", name = "*/", run = "git", prio = "normal" },
+]

@@ -1,0 +1,4 @@
+[manager]
+append_keymap = [
+	{ on = [ "i" ], run = 'leave', desc = "Just for test!" },
+]

@@ -140,7 +140,6 @@ return {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
-    dev = true,
     build = function()
       vim.fn["mkdp#util#install"]()
       vim.g.mkdp_theme = 'light'
