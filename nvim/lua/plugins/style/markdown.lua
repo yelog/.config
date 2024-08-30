@@ -1,18 +1,17 @@
 return {
-  -- {
-  --   "dhruvasagar/vim-table-mode",
-  --   config = function()
-  --     vim.api.nvim_exec([[
-  --       augroup markdown_config
-  --         autocmd!
-  --         autocmd FileType markdown TableModeEnable
-  --         autocmd FileType markdown nnoremap <buffer> <M-s> :TableModeRealign<CR>
-  --       augroup END
-  --     ]], false)
-  --     vim.g.table_mode_sort_map = '<leader>mts'
-  --   end
-  --
-  -- }, --> table mode
+  {
+    "dhruvasagar/vim-table-mode",
+    config = function()
+      vim.api.nvim_exec([[
+        augroup markdown_config
+          autocmd!
+          autocmd FileType markdown nnoremap <buffer> <M-s> :TableModeRealign<CR>
+        augroup END
+      ]], false)
+      vim.g.table_mode_sort_map = '<leader>mts'
+    end
+
+  }, --> table mode
   {
     "dkarter/bullets.vim",
     config = function()
@@ -140,11 +139,7 @@ return {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
-    build = function()
-      vim.fn["mkdp#util#install"]()
-      vim.g.mkdp_theme = 'light'
-      -- vim.cmd([[ let g:mkdp_theme = 'light' ]])
-    end,
+    build = "npm install",
   },
   {
     "tenxsoydev/vim-markdown-checkswitch",
