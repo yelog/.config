@@ -2,7 +2,7 @@ return {
   {
     "dhruvasagar/vim-table-mode",
     config = function()
-      vim.api.nvim_exec([[
+      vim.cmd([[
         augroup markdown_config
           autocmd!
           autocmd FileType markdown nnoremap <buffer> <M-s> :TableModeRealign<CR>
@@ -13,7 +13,7 @@ return {
 
   }, --> table mode
   {
-    "dkarter/bullets.vim",
+    "bullets-vim/bullets.vim",
     config = function()
       vim.g.bullets_enabled_file_types = { "markdown", "text", "gitcommit", "scratch" }
     end,
