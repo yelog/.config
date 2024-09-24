@@ -97,43 +97,20 @@ return {
   },
   -- {
   --   'MeanderingProgrammer/render-markdown.nvim',
-  --   opts = {},
+  --   opts = {
+  --     file_types = { "markdown", "Avante" },
+  --   },
+  --   ft = { "markdown", "Avante" },
   --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
   --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
   --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
   -- },
   -- {
-  --   "OXY2DEV/markview.nvim",
-  --   ft = "markdown",
-  --     dev = true,
-  --   dependencies = {
-  --     -- You may not need this if you don't lazy load
-  --     -- Or if the parsers are in your $RUNTIMEPATH
-  --     "nvim-treesitter/nvim-treesitter",
-  --
-  --     "nvim-tree/nvim-web-devicons"
-  --   },
-  --   config = function()
-  --     require("markview").setup({
-  --       buf_ignore = { "nofile" },
-  --       modes = { "n", "no" },
-  --
-  --       options = {
-  --         on_enable = {},
-  --         on_disable = {}
-  --       },
-  --
-  --       -- block_quotes = {},
-  --       -- checkboxes = {},
-  --       -- code_blocks = {},
-  --       -- headings = {},
-  --       -- horizontal_rules = {},
-  --       -- inline_codes = {},
-  --       -- links = {},
-  --       -- list_items = {},
-  --       -- tables = {}
-  --     });
-  --   end
+  --   'MeanderingProgrammer/render-markdown.nvim',
+  --   opts = {},
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
   -- },
   {
     "iamcco/markdown-preview.nvim",

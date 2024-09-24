@@ -1,6 +1,8 @@
 -- 根据不同的文件类型执行不同的命令
 function ExecuteFileTypeCommands()
   local filetype = vim.bo.filetype
+  -- 获取文件后缀
+  local extension = vim.fn.expand('%:e')
   local modeInfo = vim.api.nvim_get_mode()
   local mode = modeInfo.mode
   local firstLine = vim.fn.getline(1)
@@ -46,6 +48,8 @@ function ExecuteFileTypeCommands()
     vim.cmd('set splitright')
     vim.cmd('vsp')
     vim.cmd('term rustc % && ' .. vim.fn.expand('%:p:r'))
+  elseif extension == 'drawio' then
+    vim.cmd('!open "%"')
   else
     -- 添加其他文件类型的处理，如果需要
   end

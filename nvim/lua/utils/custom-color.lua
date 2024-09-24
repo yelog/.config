@@ -115,3 +115,9 @@ vim.api.nvim_create_autocmd("VimEnter", {
     vim.cmd([[highlight GitSignsStagedChangeLn guifg=#ff2222]])
   end
 })
+
+vim.filetype.add({
+  extension = {
+    drawio = "xml"
+  }
+})
