@@ -12,7 +12,6 @@ return {
       auto_session_suppress_dirs = nil,
       auto_session_use_git_branch = nil,
       -- the configs below are lua only
-      bypass_session_save_file_types = nil,
       -- pre_save_cmds = { "Neotree left close" },
       -- save_extra_cmds = {
       --   "Neotree left show"

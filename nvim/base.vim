@@ -30,7 +30,7 @@ filetype on                       " 识别不同格式文件
 filetype indent on
 filetype plugin on
 filetype plugin indent on
-set mouse=a                       " 支持鼠标
+set mouse=                       " 不支持鼠标
 let &t_ut=''                      " 修复配色错误的问题
 set noexpandtab
 set expandtab
