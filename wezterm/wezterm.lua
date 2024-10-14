@@ -65,6 +65,13 @@ config.window_padding = {
   bottom = 2,
 }
 
+-- 禁用 Cmd + K 快捷键
+wezterm.on('keys', function(window, pane, key, mods)
+  if key == 'k' and mods == 'COMMAND' then
+    return true -- 拦截该按键事件
+  end
+end)
+
 config.keys = {
   { key = "i", mods = "CMD",        action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
   { key = "n", mods = "CTRL|SHIFT", action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
@@ -75,6 +82,19 @@ config.keys = {
     key = "l",
     mods = "CMD",
     action = wezterm.action.SendKey { key = 'l', mods = 'OPT' },
+  },
+  {
+    key = "k",
+    mods = "CMD",
+    action = wezterm.action.SendKey { key = 'k', mods = 'OPT' },
+  },
+  {
+    key = "RightArrow",
+    mods = "CMD",
+    action = wezterm.action.SendKey {
+      key = "RightArrow",
+      mods = "ALT"
+    },
   },
   {
     key = "m",
