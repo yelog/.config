@@ -26,6 +26,7 @@
 !/ueberzugpp/
 !/warpd/
 !/command/
+!/git/
 !ideavimrc
 !init.sh
 !starship.toml
