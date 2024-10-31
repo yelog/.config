@@ -17,6 +17,8 @@ return {
     cmd = "Copilot",
     event = "InsertEnter",
     config = function()
+      -- set lenovo proxy
+      vim.g.copilot = "http://copilot-proxy.lenovo.com:8000"
       require('copilot').setup({
         panel = {
           enabled = true,
