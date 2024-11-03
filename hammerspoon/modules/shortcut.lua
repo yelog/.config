@@ -112,6 +112,7 @@ applications = {
   { prefix = applicationHyperKey, key = "B", message = "Browser",       bundleId = "company.thebrowser.Browser" },
   { prefix = applicationHyperKey, key = "I", message = "IntelliJ IDEA", bundleId = "com.jetbrains.intellij" },
   -- {prefix = applicationHyperKey, key = "I", message="IntelliJ IDEA", bundleId="com.jetbrains.intellij-EAP"},
+  -- { prefix = applicationHyperKey, key = "I", message = "IntelliJ IDEA", bundleId = "com.todesktop.230313mzl4w4u92" },
   { prefix = applicationHyperKey, key = "O", message = "Obsidian",      bundleId = "md.obsidian" },
   { prefix = applicationHyperKey, key = "E", message = "discord",       bundleId = "com.hnc.Discord" },
   {
@@ -140,8 +141,7 @@ applications = {
 }
 
 -- 输入法切换快捷键配置
-input_methods = {
-  abc = { prefix = { "Option" }, key = "J", message = "ABC" },
+input_methods = { abc = { prefix = { "Option" }, key = "J", message = "ABC" },
   chinese = { prefix = { "Option" }, key = "K", message = "简体拼音" },
 }
 
