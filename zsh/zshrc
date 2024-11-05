@@ -326,8 +326,7 @@ export PATH="$PATH:/Users/yelog/.local/bin"
 # Created by `pipx` on 2023-12-04 09:45:56
 export PATH="$PATH:/Users/yelog/Library/Python/3.10/bin"
 
-# eval "$(luarocks path --bin)"   # you can also add LUA_PATH based on your own setup
-# set -gx DYLD_LIBRARY_PATH /opt/homebrew/Cellar/imagemagick/7.1.1-21/lib  # check your imagemagic installation path; this resolve dyld loading failure
+# set -gx DYLD_LIBRARY_PATH /opt/homebrew/Cellar/imagemagick/7.1.1-39/lib  # check your imagemagic installation path; this resolve dyld loading failure
 
 # CodeWhisperer post block. Keep at the bottom of this file.
 [[ -f "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.post.zsh" ]] && builtin source "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.post.zsh"
@@ -393,3 +392,5 @@ function ta() {
   fi
 }
 
+# neovim image.nvim
+export DYLD_FALLBACK_LIBRARY_PATH="$(brew --prefix)/lib:$DYLD_FALLBACK_LIBRARY_PATH"
