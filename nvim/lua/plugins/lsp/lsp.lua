@@ -34,7 +34,7 @@ return {
           "marksman",
           "lua_ls",
           "jsonls",
-          -- "tsserver",
+          "ts_ls",
           "volar",
           -- "vuels",
           "html",
@@ -256,10 +256,10 @@ return {
       --   on_attach = on_attach,
       --   flags = lsp_flags,
       -- })
-      -- lspconfig["tsserver"].setup({
-      --   on_attach = on_attach,
-      --   flags = lsp_flags,
-      -- })
+      lspconfig["ts_ls"].setup({
+        on_attach = on_attach,
+        flags = lsp_flags,
+      })
       -- lspconfig["rust_analyzer"].setup({
       --   on_attach = on_attach,
       --   flags = lsp_flags,

@@ -48,7 +48,7 @@ return {
       },
       submit = {
         normal = "<CR>",
-        insert = "<C-s>",
+        insert = "<CR>",
       },
       sidebar = {
         switch_windows = "<Tab>",

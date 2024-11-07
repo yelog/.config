@@ -76,7 +76,7 @@ return {
     "yelog/marklive.nvim",
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     lazy = true,
-    ft = "markdown",
+    ft = {"markdown", "Avante"},
     -- When dev is true, This plugin will use {config.dev.path}/markdown-preview.nvim/ instead of fetching it from GitHub https://lazy.folke.io/spec/examples
     -- {config.dev.path} configed by lazy.nvim in init.lua
     dev = true,
@@ -100,17 +100,12 @@ return {
   --   opts = {
   --     file_types = { "markdown", "Avante" },
   --   },
+  --   dev = true,
   --   ft = { "markdown", "Avante" },
   --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
   --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
   --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-  -- },
-  -- {
-  --   'MeanderingProgrammer/render-markdown.nvim',
-  --   opts = {},
-  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
-  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
-  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+  --
   -- },
   {
     "iamcco/markdown-preview.nvim",
