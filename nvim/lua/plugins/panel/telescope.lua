@@ -2,7 +2,11 @@ return {
   {
     "nvim-telescope/telescope.nvim",
     tag = "0.1.8",
-    dependencies = { "nvim-lua/plenary.nvim", "kdheepak/lazygit.nvim" },
+    dependencies = {
+      "nvim-lua/plenary.nvim",
+      "kdheepak/lazygit.nvim",
+      "debugloop/telescope-undo.nvim",
+    },
     config = function()
       local actions = require "telescope.actions"
 
@@ -126,7 +130,30 @@ return {
             filetypes = { "png", "webp", "jpg", "jpeg" },
             -- find command (defaults to `fd`)
             find_cmd = "rg"
-          }
+          },
+          undo = {
+            -- telescope-undo.nvim config, see below
+            side_by_side = true,
+            layout_strategy = "vertical",
+            layout_config = {
+              preview_height = 0.8,
+            },
+            mappings = {
+              i = {
+                ["<cr>"] = require("telescope-undo.actions").yank_additions,
+                ["<S-cr>"] = require("telescope-undo.actions").yank_deletions,
+                ["<C-cr>"] = require("telescope-undo.actions").restore,
+                -- alternative defaults, for users whose terminals do questionable things with modified <cr>
+                ["<C-y>"] = require("telescope-undo.actions").yank_deletions,
+                ["<C-r>"] = require("telescope-undo.actions").restore,
+              },
+              n = {
+                ["y"] = require("telescope-undo.actions").yank_additions,
+                ["Y"] = require("telescope-undo.actions").yank_deletions,
+                ["u"] = require("telescope-undo.actions").restore,
+              },
+            },
+          },
         },
         preview = {
           mime_hook = function(filepath, bufnr, opts)
