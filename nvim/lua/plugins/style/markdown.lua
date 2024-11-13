@@ -76,7 +76,7 @@ return {
     "yelog/marklive.nvim",
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
     lazy = true,
-    ft = {"markdown", "Avante"},
+    ft = { "markdown", "Avante" },
     -- When dev is true, This plugin will use {config.dev.path}/markdown-preview.nvim/ instead of fetching it from GitHub https://lazy.folke.io/spec/examples
     -- {config.dev.path} configed by lazy.nvim in init.lua
     dev = true,

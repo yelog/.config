@@ -1,0 +1,32 @@
+{
+  "bookmark_lists": [
+    {
+      "bookmarks": [
+        {
+          "content": "- [ ] prometheus 添加 mty/br",
+          "created_at": 1731381513,
+          "githash": "0ec9970",
+          "id": 1731381513,
+          "location": {
+            "col": 0,
+            "line": 119,
+            "path": "/Users/yelog/Library/Mobile Documents/iCloud~md~obsidian/Documents/daily-task/todo-list.md",
+            "project_name": "Documents",
+            "relative_path": "daily-task/todo-list.md"
+          },
+          "name": "Today",
+          "visited_at": 1731382597
+        }
+      ],
+      "id": "2024111211183335196098",
+      "is_active": true,
+      "name": "Default"
+    }
+  ],
+  "projects": [
+    {
+      "name": "Documents",
+      "path": "/Users/yelog/Library/Mobile Documents/iCloud~md~obsidian/Documents"
+    }
+  ]
+}
