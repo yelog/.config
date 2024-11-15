@@ -5,8 +5,33 @@ return {
   version = false, -- set this if you want to always pull the latest change
   opts = {
     ---@alias Provider "claude" | "openai" | "azure" | "gemini" | "cohere" | "copilot" | string
-    provider = "copilot",                 -- Recommend using Claude
+    provider = "copilot",                   -- Recommend using Claude
     auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
+    vendors = {
+      ollama = {
+        ["local"] = true,
+        endpoint = "127.0.0.1:11434/v1",
+        model = "llama3.2", -- "llama3.2",
+        parse_curl_args = function(opts, code_opts)
+          return {
+            url = opts.endpoint .. "/chat/completions",
+            headers = {
+              ["Accept"] = "application/json",
+              ["Content-Type"] = "application/json",
+            },
+            body = {
+              model = opts.model,
+              messages = require("avante.providers").copilot.parse_messages(code_opts), -- you can make your own message, but this is very advanced
+              max_tokens = 2048,
+              stream = true,
+            },
+          }
+        end,
+        parse_response_data = function(data_stream, event_state, opts)
+          require("avante.providers").openai.parse_response(data_stream, event_state, opts)
+        end,
+      },
+    },
     claude = {
       endpoint = "https://api.anthropic.com",
       model = "claude-3-5-sonnet-20240620",
@@ -15,8 +40,8 @@ return {
     },
     openai = {
       endpoint = "https://api.openai.com/v1/chat/completions", -- The full endpoint of the provider
-      model = "gpt-4o-mini",                                  -- The model name to use with this provider
-      api_key_name = "OPENAI_API_KEY",                        -- The name of the environment variable that contains the API key
+      model = "gpt-4o-mini",                                   -- The model name to use with this provider
+      api_key_name = "OPENAI_API_KEY",                         -- The name of the environment variable that contains the API key
     },
     behaviour = {
       auto_suggestions = false, -- Experimental stage
@@ -59,8 +84,8 @@ return {
     windows = {
       ---@type "right" | "left" | "top" | "bottom"
       position = "right", -- the position of the sidebar
-      wrap = true,       -- similar to vim.o.wrap
-      width = 30,        -- default % based on available width
+      wrap = true,        -- similar to vim.o.wrap
+      width = 30,         -- default % based on available width
       sidebar_header = {
         align = "center", -- left, center, right for title
         rounded = true,
@@ -89,7 +114,7 @@ return {
     "MunifTanjim/nui.nvim",
     --- The below dependencies are optional,
     "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-    "zbirenbaum/copilot.lua",     -- for providers='copilot'
+    "zbirenbaum/copilot.lua",      -- for providers='copilot'
     {
       -- support for image pasting
       "HakonHarnes/img-clip.nvim",
