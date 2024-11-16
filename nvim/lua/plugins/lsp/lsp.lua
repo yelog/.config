@@ -1,6 +1,56 @@
 return {
   "neovim/nvim-lspconfig", -- Configurations for Nvim LSP
-  "alvan/vim-closetag",    -- when "<table|", type > , will be "<table>|</table>"
+  {
+    "SmiteshP/nvim-navic",
+    config = function()
+      local navic = require("nvim-navic")
+      navic.setup {
+        icons = {
+          File          = "󰈙 ",
+          Module        = " ",
+          Namespace     = "󰌗 ",
+          Package       = " ",
+          Class         = "󰌗 ",
+          Method        = "󰆧 ",
+          Property      = " ",
+          Field         = " ",
+          Constructor   = " ",
+          Enum          = "󰕘",
+          Interface     = "󰕘",
+          Function      = "󰊕 ",
+          Variable      = "󰆧 ",
+          Constant      = "󰏿 ",
+          String        = "󰀬 ",
+          Number        = "󰎠 ",
+          Boolean       = "◩ ",
+          Array         = "󰅪 ",
+          Object        = "󰅩 ",
+          Key           = "󰌋 ",
+          Null          = "󰟢 ",
+          EnumMember    = " ",
+          Struct        = "󰌗 ",
+          Event         = " ",
+          Operator      = "󰆕 ",
+          TypeParameter = "󰊄 ",
+        },
+        lsp = {
+          auto_attach = false,
+          preference = nil,
+        },
+        highlight = false,
+        separator = " > ",
+        depth_limit = 0,
+        depth_limit_indicator = "..",
+        safe_output = true,
+        lazy_update_context = false,
+        click = false,
+        format_text = function(text)
+          return text
+        end,
+      }
+    end
+  },
+  "alvan/vim-closetag", -- when "<table|", type > , will be "<table>|</table>"
   {
     "windwp/nvim-ts-autotag",
     config = function()
@@ -54,6 +104,7 @@ return {
       vim.keymap.set("n", "<leader>lk", vim.diagnostic.goto_prev, opts)
       vim.keymap.set("n", "<leader>lj", vim.diagnostic.goto_next, opts)
       vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, opts)
+      local navic = require("nvim-navic")
 
       -- Use an on_attach function to only map the following keys
       -- after the language server attaches to the current buffer
@@ -79,6 +130,8 @@ return {
         vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
         -- vim.keymap.set("n", "gu", vim.lsp.buf.references, bufopts) --use telesscope instead
         -- vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
+
+        navic.attach(client, bufnr)
       end
 
       local lspconfig = require("lspconfig")
