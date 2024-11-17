@@ -204,8 +204,8 @@ return {
             t = "T",
           },
           mode_colors = {
-            n = "red",
-            i = "green",
+            n = "#5c92fa",
+            i = "#009f4d",
             v = "cyan",
             V = "cyan",
             ["\22"] = "cyan",
@@ -318,11 +318,10 @@ return {
         RelativePath,
         Space,
         Git,
-        Space,
-        Navic,
         { provider = "%=" }, -- Center alignment
+        Navic,
         Space,
-        LSPActive,
+        -- LSPActive,
         ScrollBar
       }
 
