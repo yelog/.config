@@ -28,6 +28,7 @@
 !/warpd/
 !/command/
 !/git/
+!/zellij/
 !ideavimrc
 !init.sh
 !starship.toml

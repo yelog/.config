@@ -84,7 +84,7 @@ return {
           "marksman",
           "lua_ls",
           "jsonls",
-          "ts_ls",
+          -- "ts_ls",
           "volar",
           -- "vuels",
           "html",
@@ -95,6 +95,7 @@ return {
           "lemminx",
           "sqlls",
           "tailwindcss",
+          "unocss",
         },
       })
       -- Mappings.
@@ -131,7 +132,9 @@ return {
         -- vim.keymap.set("n", "gu", vim.lsp.buf.references, bufopts) --use telesscope instead
         -- vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 
-        navic.attach(client, bufnr)
+        if client.server_capabilities.documentSymbolProvider then
+          navic.attach(client, bufnr)
+        end
       end
 
       local lspconfig = require("lspconfig")
@@ -300,6 +303,11 @@ return {
         filetyps = { "vue", "html" },
         flags = lsp_flags,
       })
+      lspconfig["unocss"].setup({
+        on_attach = on_attach,
+        filetyps = { "vue", "html" },
+        flags = lsp_flags,
+      })
       -- lspconfig["bash-language-server"].setup({
       -- 	on_attach = on_attach,
       -- 	flags = lsp_flags,
@@ -309,10 +317,10 @@ return {
       --   on_attach = on_attach,
       --   flags = lsp_flags,
       -- })
-      lspconfig["ts_ls"].setup({
-        on_attach = on_attach,
-        flags = lsp_flags,
-      })
+      -- lspconfig["ts_ls"].setup({
+      --   on_attach = on_attach,
+      --   flags = lsp_flags,
+      -- })
       -- lspconfig["rust_analyzer"].setup({
       --   on_attach = on_attach,
       --   flags = lsp_flags,
@@ -406,6 +414,7 @@ return {
           'prettier',
           'sqlls',
           'tailwindcss',
+          'unocss',
         },
       })
     end,

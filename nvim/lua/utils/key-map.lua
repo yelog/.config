@@ -270,8 +270,9 @@ maps.n["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
 -- maps.n["<leader>ai"] = { "<cmd>ChatGPT<cr>", desc = "ChatGPT"}
 maps.n["<leader>ai"] = { "<cmd>NeoAIToggle<cr>", desc = "ChatGPT" }
 maps.v["<M-K>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
-maps.n["<M-K>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
--- maps.n["<M-K>"] = { "V<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
+-- maps.n["<M-K>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
+maps.n["<M-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
+maps.i["<M-K>"] = { "<esc><cmd>AvanteChat<cr>", desc = "AvanteEditor" }
 
 -- 跳转vim分屏/tmux分屏
 maps.n["<M-h>"] = { "<cmd>lua require('tmux').move_left()<cr>", desc = "" }

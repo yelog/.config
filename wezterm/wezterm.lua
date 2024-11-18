@@ -49,6 +49,7 @@ config.font = wezterm.font_with_fallback({
 -- }
 
 config.font_size = 16
+config.line_height = 0.9
 
 -- config.window_background_opacity = 0.9
 
@@ -65,13 +66,6 @@ config.window_padding = {
   bottom = 2,
 }
 
--- 禁用 Cmd + K 快捷键
-wezterm.on('keys', function(window, pane, key, mods)
-  if key == 'k' and mods == 'COMMAND' then
-    return true -- 拦截该按键事件
-  end
-end)
-
 config.keys = {
   { key = "i", mods = "CMD",        action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
   { key = "n", mods = "CTRL|SHIFT", action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
@@ -83,11 +77,11 @@ config.keys = {
     mods = "CMD",
     action = wezterm.action.SendKey { key = 'l', mods = 'OPT' },
   },
-  {
-    key = "k",
-    mods = "CMD",
-    action = wezterm.action.SendKey { key = 'k', mods = 'OPT' },
-  },
+  -- {
+  --   key = "k",
+  --   mods = "CMD",
+  --   action = wezterm.action.SendKey { key = 'k', mods = 'OPT' },
+  -- },
   {
     key = "RightArrow",
     mods = "CMD",
@@ -149,7 +143,7 @@ config.keys = {
   {
     key = 'k',
     mods = 'CMD',
-    action = wezterm.action.ClearScrollback("ScrollbackAndViewport")
+    action = wezterm.action.SendKey { key = 'K', mods = 'OPT' },
   },
   {
     key = 'l',
