@@ -71,11 +71,11 @@ return {
       })
     end,
   },
-  {
-    "pmizio/typescript-tools.nvim",
-    dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-    opts = {},
-  },
+  -- {
+  --   "pmizio/typescript-tools.nvim",
+  --   dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
+  --   opts = {},
+  -- },
   {
     "williamboman/mason-lspconfig.nvim",
     config = function()
@@ -84,7 +84,7 @@ return {
           "marksman",
           "lua_ls",
           "jsonls",
-          -- "ts_ls",
+          "ts_ls",
           "volar",
           -- "vuels",
           "html",
@@ -128,7 +128,7 @@ return {
         end, bufopts)
         vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, bufopts)
         vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
-        vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, bufopts)
+        vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, bufopts)
         -- vim.keymap.set("n", "gu", vim.lsp.buf.references, bufopts) --use telesscope instead
         -- vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 
@@ -317,10 +317,21 @@ return {
       --   on_attach = on_attach,
       --   flags = lsp_flags,
       -- })
-      -- lspconfig["ts_ls"].setup({
-      --   on_attach = on_attach,
-      --   flags = lsp_flags,
-      -- })
+      lspconfig["ts_ls"].setup({
+        on_attach = on_attach,
+        flags = lsp_flags,
+        capabilities = capabilities,
+        init_options = {
+          plugins = { -- I think this was my breakthrough that made it work
+            {
+              name = "@vue/typescript-plugin",
+              location = "/Users/yelog/Library/pnpm/global/5/node_modules/@vue/language-server",
+              languages = { "vue" },
+            },
+          },
+        },
+        filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
+      })
       -- lspconfig["rust_analyzer"].setup({
       --   on_attach = on_attach,
       --   flags = lsp_flags,
@@ -373,32 +384,32 @@ return {
       -- 		})
       -- 	end,
       -- })
-      require("typescript-tools").setup {
-        on_attach = on_attach,
-        settings = {
-          -- spawn additional tsserver instance to calculate diagnostics on it
-          separate_diagnostic_server = true,
-          -- "change"|"insert_leave" determine when the client asks the server about diagnostic
-          publish_diagnostic_on = "insert_leave",
-          -- array of strings("fix_all"|"add_missing_imports"|"remove_unused")
-          -- specify commands exposed as code_actions
-          expose_as_code_action = {},
-          -- string|nil - specify a custom path to `tsserver.js` file, if this is nil or file under path
-          -- not exists then standard path resolution strategy is applied
-          tsserver_path = nil,
-          -- specify a list of plugins to load by tsserver, e.g., for support `styled-components`
-          -- (see 💅 `styled-components` support section)
-          tsserver_plugins = {},
-          -- this value is passed to: https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes
-          -- memory limit in megabytes or "auto"(basically no limit)
-          tsserver_max_memory = "auto",
-          -- described below
-          tsserver_format_options = {},
-          tsserver_file_preferences = {},
-          -- mirror of VSCode's `typescript.suggest.completeFunctionCalls`
-          complete_function_calls = false,
-        },
-      }
+      -- require("typescript-tools").setup {
+      --   on_attach = on_attach,
+      --   settings = {
+      --     -- spawn additional tsserver instance to calculate diagnostics on it
+      --     separate_diagnostic_server = true,
+      --     -- "change"|"insert_leave" determine when the client asks the server about diagnostic
+      --     publish_diagnostic_on = "insert_leave",
+      --     -- array of strings("fix_all"|"add_missing_imports"|"remove_unused")
+      --     -- specify commands exposed as code_actions
+      --     expose_as_code_action = {},
+      --     -- string|nil - specify a custom path to `tsserver.js` file, if this is nil or file under path
+      --     -- not exists then standard path resolution strategy is applied
+      --     tsserver_path = nil,
+      --     -- specify a list of plugins to load by tsserver, e.g., for support `styled-components`
+      --     -- (see 💅 `styled-components` support section)
+      --     tsserver_plugins = {},
+      --     -- this value is passed to: https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes
+      --     -- memory limit in megabytes or "auto"(basically no limit)
+      --     tsserver_max_memory = "auto",
+      --     -- described below
+      --     tsserver_format_options = {},
+      --     tsserver_file_preferences = {},
+      --     -- mirror of VSCode's `typescript.suggest.completeFunctionCalls`
+      --     complete_function_calls = false,
+      --   },
+      -- }
     end,
   },
   {

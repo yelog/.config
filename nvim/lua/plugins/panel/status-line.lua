@@ -321,7 +321,7 @@ return {
         { provider = "%=" }, -- Center alignment
         Navic,
         Space,
-        -- LSPActive,
+        LSPActive,
         ScrollBar
       }
 
