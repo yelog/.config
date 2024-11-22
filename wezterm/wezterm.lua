@@ -75,7 +75,12 @@ config.keys = {
   {
     key = "Enter",
     mods = "OPT",
-    action = wezterm.action.SendKey { key = 'l', mods = 'OPT' },
+    action = wezterm.action.SendKey { key = 'Enter', mods = 'OPT' },
+  },
+  {
+    key = "Enter",
+    mods = "OPT|SHIFT",
+    action = wezterm.action.SendKey { key = 'Enter', mods = 'OPT|SHIFT' },
   },
   {
     key = "l",

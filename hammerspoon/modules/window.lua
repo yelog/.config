@@ -13,6 +13,18 @@ local AUTO_LAYOUT_TYPE = {
   HORIZONTAL_OR_VERTICAL = "HORIZONTAL_OR_VERTICAL",
 }
 
+-- 记录上次激活的窗口和前一个窗口
+local lastWindow = nil
+local previousWindow = nil
+
+-- 定义一个窗口激活的回调函数
+hs.window.filter.default:subscribe(hs.window.filter.windowFocused, function(window)
+  if lastWindow and lastWindow ~= window then
+    previousWindow = lastWindow
+  end
+  lastWindow = window
+end)
+
 -- 当前激活应用窗口和上一个激活的应用窗口进行左右分屏
 if windows.last_application_left_right_layout ~= nil then
   hs.hotkey.bind(
@@ -20,7 +32,27 @@ if windows.last_application_left_right_layout ~= nil then
     windows.last_application_left_right_layout.key,
     windows.last_application_left_right_layout.message,
     function()
-      last_application_layout()
+      local currentWindow = hs.window.focusedWindow()
+      if currentWindow and previousWindow and currentWindow ~= previousWindow then
+        local screenFrame = currentWindow:screen():frame()
+        local currentFrame = currentWindow:frame()
+        local previousFrame = previousWindow:frame()
+
+        if currentFrame.x == screenFrame.x and currentFrame.w == screenFrame.w / 2 and
+           previousFrame.x == screenFrame.x + screenFrame.w / 2 and previousFrame.w == screenFrame.w / 2 then
+          -- 交换位置
+          currentWindow:setFrame(hs.geometry.rect(screenFrame.x + screenFrame.w / 2, screenFrame.y, screenFrame.w / 2, screenFrame.h))
+          previousWindow:setFrame(hs.geometry.rect(screenFrame.x, screenFrame.y, screenFrame.w / 2, screenFrame.h))
+        else
+          -- 设置当前窗口在屏幕的左半边
+          currentWindow:setFrame(hs.geometry.rect(screenFrame.x, screenFrame.y, screenFrame.w / 2, screenFrame.h))
+          -- 设置上次激活的窗口在屏幕的右半边
+          previousWindow:setFrame(hs.geometry.rect(screenFrame.x + screenFrame.w / 2, screenFrame.y, screenFrame.w / 2, screenFrame.h))
+        end
+        print('last_application_layout success')
+      else
+        print('last_application_layout failed')
+      end
     end
   )
 end

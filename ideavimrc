@@ -20,10 +20,10 @@ nnoremap <c-q> :q<CR>
 " map <leader>so <c-w>o
 " map <leader>sc <c-w>c
 " 切换分屏焦点
-" noremap gl <C-w>l
-" noremap gh <C-w>h
-" noremap gj <C-w>j
-" noremap gk <C-w>k
+noremap <m-l> <C-w>l
+noremap <m-h> <C-w>h
+noremap <m-j> <C-w>j
+noremap <m-k> <C-w>k
 
 "let g:surround_no_mappings = 1
 "

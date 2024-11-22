@@ -1,3 +1,9 @@
+# Download Znap, if it's not there yet.
+[[ -r ~/Repos/znap/znap.zsh ]] ||
+    git clone --depth 1 -- \
+        https://github.com/marlonrichert/zsh-snap.git ~/Repos/znap
+source ~/Repos/znap/znap.zsh  # Start Znap
+
 # CodeWhisperer pre block. Keep at the top of this file.
 [[ -f "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.pre.zsh" ]] && builtin source "${HOME}/Library/Application Support/codewhisperer/shell/zshrc.pre.zsh"
 # Initialization code that may require console input (password prompts, [y/n]
@@ -71,7 +77,7 @@ ZSH_THEME="powerlevel10k/powerlevel10k"
 # Add wisely, as too many plugins slow down shell startup.
 plugins=(
 git
-zsh-autosuggestions
+# zsh-autosuggestions
 history-substring-search
 zsh-syntax-highlighting
 sudo
@@ -394,3 +400,5 @@ function ta() {
 
 # neovim image.nvim
 export DYLD_FALLBACK_LIBRARY_PATH="$(brew --prefix)/lib:$DYLD_FALLBACK_LIBRARY_PATH"
+
+source /Users/yelog/Repos/marlonrichert/zsh-autocomplete/zsh-autocomplete.plugin.zsh
