@@ -249,17 +249,18 @@ maps.n["<leader>gh"] = { "<cmd>LazyGitFilterCurrentFile<cr>", desc = "Current fi
 -- maps.n["<leader>gd"] = { "<cmd>GitGutterDiffOrig<cr>", desc = "git diff" }
 -- maps.n["<leader>gb"] = { "<cmd>Git blame<cr>", desc = "git blame" }
 
-maps.n["<leader>gw"] = {
-  function()
-    local view = require("diffview.lib").get_current_view()
-    if view then
-      vim.cmd("DiffviewClose")
-    else
-      vim.cmd("DiffviewOpen ")
-    end
-  end,
-  desc = "git diff",
-}
+-- use gisign
+-- maps.n["<leader>gw"] = {
+--   function()
+--     local view = require("diffview.lib").get_current_view()
+--     if view then
+--       vim.cmd("DiffviewClose")
+--     else
+--       vim.cmd("DiffviewOpen ")
+--     end
+--   end,
+--   desc = "git diff",
+-- }
 
 -- task manager
 -- maps.n["<leader>tn"] = { "<cmd>ToDoTxtCapture<cr>", desc= "New Todo"}
