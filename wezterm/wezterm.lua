@@ -87,11 +87,6 @@ config.keys = {
     mods = "CMD",
     action = wezterm.action.SendKey { key = 'l', mods = 'OPT' },
   },
-  -- {
-  --   key = "k",
-  --   mods = "CMD",
-  --   action = wezterm.action.SendKey { key = 'k', mods = 'OPT' },
-  -- },
   {
     key = "RightArrow",
     mods = "CMD",
@@ -153,7 +148,12 @@ config.keys = {
   {
     key = 'k',
     mods = 'CMD',
-    action = wezterm.action.SendKey { key = 'K', mods = 'OPT' },
+    action = wezterm.action.SendKey { key = 'z', mods = 'OPT' },
+  },
+  {
+    key = 'k',
+    mods = 'CMD|SHIFT',
+    action = wezterm.action.SendKey { key = 'z', mods = 'OPT|SHIFT' },
   },
   {
     key = 'l',

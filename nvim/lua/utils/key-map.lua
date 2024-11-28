@@ -38,14 +38,14 @@ maps.n["<leader>pi"] = { "<cmd>Lazy<cr>", desc = "plug install" }
 
 -- lsp
 maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
--- maps.n["<M-s>"] = { "<cmd>EslintFixAll<cr>", desc = "Eslint Fix All" }
+-- maps.n["<D-s>"] = { "<cmd>EslintFixAll<cr>", desc = "Eslint Fix All" }
 
 -- Bind <leader>ll to format_with_lsp in all filetypes
 -- vim.api.nvim_set_keymap('n', '<leader>ll', ':lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
 
 -- Bind <leader>ll to :TableModeRealign only in Markdown files
 
-maps.n["<M-s>"] = {
+maps.n["<D-s>"] = {
   function()
     local eslintFileType = { "javascript", "typescript", "vue" }
     if my.is_include(vim.bo.filetype, eslintFileType) then
@@ -71,13 +71,13 @@ maps.v["<leader>ll"] = {
 }
 
 -- Telescope
-maps.n["<M-M>"] = {
+maps.n["<D-M>"] = {
   function()
     require("telescope.builtin").lsp_document_symbols()
   end,
   desc = "Search symbols",
 }
-maps.n["<M-O>"] = {
+maps.n["<D-O>"] = {
   function()
     require("telescope.builtin").find_files()
   end,
@@ -137,7 +137,7 @@ maps.n["<leader>fh"] = {
   end,
   desc = "Search hisotry",
 }
-maps.n["<M-e>"] = {
+maps.n["<D-e>"] = {
   function()
     require("telescope.builtin").oldfiles()
   end,
@@ -163,14 +163,14 @@ end
 local get_cursor_word = function()
   return vim.fn.expand("<cword>")
 end
-maps.n["<M-S-f>"] = {
+maps.n["<D-S-f>"] = {
   function()
     -- require("telescope.builtin").live_grep { default_text = get_cursor_word() }
     require("telescope.builtin").live_grep()
   end,
   desc = "Search word",
 }
-maps.v["<M-S-f>"] = {
+maps.v["<D-S-f>"] = {
   function()
     require("telescope.builtin").live_grep { default_text = table.concat(get_selection())
     }
@@ -199,10 +199,10 @@ maps.n["<leader>za"] = { "<cmd>TZAtaraxis<cr>", desc = "" }
 -- neo-tree
 -- maps.n["<leader>e"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }
 -- maps.n["<leader>e"] = { "<cmd>Neotree toggle<cr>", desc = "Toggle Explorer" }
-maps.n["<M-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+maps.n["<D-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 maps.n["<leader>te"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
--- maps.n["<M-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
--- maps.n["<M-2>"] = { "<cmd>Neotree float toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n["<D-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n["<D-2>"] = { "<cmd>Neotree float toggle<cr>", desc = "Toggle Explorer" }
 -- maps.n["<leader>o"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" }
 
 -- table of contents
@@ -225,7 +225,7 @@ maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" 
 maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" }
 maps.n["<leader>mc"] = { "<cmd>CheckSwitch<cr>", desc = "Checkbox Switch" }
 maps.v["<leader>mc"] = { "<cmd>CheckSwitch<cr>gv", desc = "Checkbox Switch" }
--- maps.n["<M-l>"] = { "<cmd>CheckSwitch<cr>", desc = "Checkbox Switch" }
+-- maps.n["<D-l>"] = { "<cmd>CheckSwitch<cr>", desc = "Checkbox Switch" }
 -- maps.v["<leader>"] = { "<cmd>CheckSwitch<cr>gv", desc = "Checkbox Switch" }
 maps.n["<leader>md"] = { "<cmd>ObsidianToday<cr>", desc = "goto daily task" }
 -- maps.n["gf"] = { function()
@@ -264,22 +264,18 @@ maps.n["<leader>gh"] = { "<cmd>LazyGitFilterCurrentFile<cr>", desc = "Current fi
 
 -- task manager
 -- maps.n["<leader>tn"] = { "<cmd>ToDoTxtCapture<cr>", desc= "New Todo"}
--- maps.n["<M-2>"] = { "<cmd>AerialToggle<cr>", desc= "Toggle outline"}
-maps.n["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
+-- maps.n["<D-2>"] = { "<cmd>AerialToggle<cr>", desc= "Toggle outline"}
+maps.n["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
 
 --ChatGPT
 -- maps.n["<leader>ai"] = { "<cmd>ChatGPT<cr>", desc = "ChatGPT"}
-maps.n["<leader>ai"] = { "<cmd>NeoAIToggle<cr>", desc = "ChatGPT" }
-maps.v["<M-K>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
--- maps.n["<M-K>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
-maps.n["<M-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
-maps.i["<M-K>"] = { "<esc><cmd>AvanteChat<cr>", desc = "AvanteEditor" }
-
--- 跳转vim分屏/tmux分屏
-maps.n["<M-h>"] = { "<cmd>lua require('tmux').move_left()<cr>", desc = "" }
-maps.n["<M-j>"] = { "<cmd>lua require('tmux').move_bottom()<cr>", desc = "" }
-maps.n["<M-k>"] = { "<cmd>lua require('tmux').move_top()<cr>", desc = "" }
-maps.n["<M-l>"] = { "<cmd>lua require('tmux').move_right()<cr>", desc = "" }
+-- maps.n["<leader>ai"] = { "<cmd>NeoAIToggle<cr>", desc = "ChatGPT" }
+maps.i["<D-k>"] = { "<esc>V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
+maps.n["<D-k>"] = { "V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
+maps.v["<D-k>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
+maps.i["<D-K>"] = { "<esc><cmd>AvanteChat<cr>", desc = "AvanteEditor" }
+maps.n["<D-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
+maps.v["<D-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
 
 -- 跳转vim分屏/tmux分屏
 maps.n["<M-h>"] = { "<cmd>lua require('tmux').move_left()<cr>", desc = "" }
@@ -289,16 +285,16 @@ maps.n["<M-l>"] = { "<cmd>lua require('tmux').move_right()<cr>", desc = "" }
 
 -- maps.n['<C-S-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 -- maps.n['<C-S-p>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
--- maps.n['<M-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
--- maps.n['<M-m>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
--- maps.n['<M-N>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n['<D-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n['<D-m>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n['<D-N>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 
 -- maps.n['R'] = { "<cmd>:set splitright<cr><cmd>vsp<cr><cmd>term lua %<cr>", desc = "run lua file" }
 
 my.set_mappings(maps)
 
 -- 使用 Option + h/j/k/l 进行 Neovim 分屏切换
--- vim.api.nvim_set_keymap('n', '<M-h>', ':wincmd h<CR>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<M-j>', ':wincmd j<CR>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<M-k>', ':wincmd k<CR>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<M-l>', ':wincmd l<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<D-h>', ':wincmd h<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<D-j>', ':wincmd j<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<D-k>', ':wincmd k<CR>', { noremap = true, silent = true })
+-- vim.api.nvim_set_keymap('n', '<D-l>', ':wincmd l<CR>', { noremap = true, silent = true })
