@@ -48,7 +48,9 @@ maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
 maps.n["<D-s>"] = {
   function()
     local eslintFileType = { "javascript", "typescript", "vue" }
-    if my.is_include(vim.bo.filetype, eslintFileType) then
+    if vim.bo.filetype == "markdown" then
+      vim.cmd("TableModeRealign")
+    elseif my.is_include(vim.bo.filetype, eslintFileType) then
       vim.cmd("EslintFixAll")
     else
       vim.lsp.buf.format({ async = true })
