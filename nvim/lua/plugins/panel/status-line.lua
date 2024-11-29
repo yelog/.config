@@ -40,7 +40,7 @@ return {
   --   end,
   -- },
   {
-    "rebelot/heirline.nvim",
+    "rebelot/heirline.nvim", -- https://github.com/rebelot/heirline.nvim
     -- You can optionally lazy-load heirline on UiEnter
     -- to make sure all required plugins and colorschemes are loaded before setup
     -- event = "UiEnter",
@@ -280,6 +280,14 @@ return {
           return { fg = icon_color, bold = true }
         end,
       }
+
+      local FileType = {
+        provider = function()
+          return "[" .. string.upper(vim.bo.filetype) .. "]"
+        end,
+        hl = { fg = utils.get_highlight("Type").fg, bold = true },
+      }
+
       local Space = {
         provider = " ", -- 使用显式的 3 个空格作为间距
       }
@@ -320,6 +328,8 @@ return {
         Git,
         { provider = "%=" }, -- Center alignment
         Navic,
+        Space,
+        FileType,
         Space,
         LSPActive,
         ScrollBar

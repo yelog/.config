@@ -189,6 +189,7 @@ alias sudo='sudo '
 alias lg=lazygit
 alias j=z
 alias ls='eza --icons -lh --time-style=iso'
+alias cat='bat'
 alias scp='rsync -P --rsh=ssh'
 # alias python=/Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11
 # export PYTHON_HOME=/Library/Frameworks/Python.framework/Versions/3.11

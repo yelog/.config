@@ -93,7 +93,6 @@ return {
           "rust_analyzer",
           "swift_mesonls",
           "lemminx",
-          "sqlls",
           "tailwindcss",
           "unocss",
         },
@@ -293,11 +292,6 @@ return {
         on_attach = on_attach,
         flags = lsp_flags,
       })
-      lspconfig["sqlls"].setup({
-        on_attach = on_attach,
-        filetyps = { "sql" },
-        flags = lsp_flags,
-      })
       lspconfig["tailwindcss"].setup({
         on_attach = on_attach,
         filetyps = { "vue", "html" },
@@ -423,7 +417,6 @@ return {
           'stylua',
           'jq',
           'prettier',
-          'sqlls',
           'tailwindcss',
           'unocss',
         },
