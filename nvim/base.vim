@@ -17,7 +17,7 @@ set smartindent                   " 开启新行时使用智能自动缩进
 set incsearch                     " 输入搜索内容时就显示搜索结果
 set autochdir                     " 自动切换当前目录为当前文件所在的目录
 set cmdheight=1                   " 设定命令行的行数为 1
-set laststatus=2                  " 显示状态栏 默认值为 1, 无法显示状态栏
+set laststatus=3                 " 显示状态栏 默认值为 1, 无法显示状态栏 https://github.com/yetone/avante.nvim
 set completeopt=longest,noinsert,menuone,noselect,preview
 "set complete+=k                   " 启用字典补全
 "set relativenumber                " 设置相对行号
