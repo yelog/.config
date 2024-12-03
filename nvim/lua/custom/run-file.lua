@@ -44,6 +44,8 @@ function ExecuteFileTypeCommands()
     vim.cmd('set splitright')
     vim.cmd('vsp')
     vim.cmd('term python3 %')
+  elseif filetype == 'http' then
+    vim.cmd('Rest run')
   elseif filetype == 'rust' then
     vim.cmd('set splitright')
     vim.cmd('vsp')

@@ -222,6 +222,10 @@ maps.n["<leader>bcl"] = { "<cmd>BufferLineCloseLeft<cr>", desc = "Buffer Close L
 maps.n["<leader>bcr"] = { "<cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Right" }
 -- maps.n["<c-q>"] = { "<cmd>bdelete<cr>", desc = "Buffer Close" }
 
+-- rebelot/heirline.nvim
+-- maps.n["<c-n>"] = { "<cmd>bnext<cr>", desc = "Buffer Next" }
+-- maps.n["<c-p>"] = { "<cmd>bprevious<cr>", desc = "Buffer Previous" }
+
 -- markdown
 maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" }
 maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" }
@@ -267,7 +271,7 @@ maps.n["<leader>gh"] = { "<cmd>LazyGitFilterCurrentFile<cr>", desc = "Current fi
 -- task manager
 -- maps.n["<leader>tn"] = { "<cmd>ToDoTxtCapture<cr>", desc= "New Todo"}
 -- maps.n["<D-2>"] = { "<cmd>AerialToggle<cr>", desc= "Toggle outline"}
-maps.n["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
+-- maps.n["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
 
 --ChatGPT
 -- maps.n["<leader>ai"] = { "<cmd>ChatGPT<cr>", desc = "ChatGPT"}
