@@ -111,6 +111,7 @@ map tml :+tabmove<CR>
 " 'V
 map <leader>S :w<CR>
 noremap <C-s> :w<CR>
+imap <D-s> <esc><D-s>
 " map Q :q<CR>
 " noremap <C-q> :qa<CR>
 " map R :source ~/.config/nvim/init.vim<CR> :nohlsearch<CR>

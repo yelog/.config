@@ -29,6 +29,7 @@
 !/command/
 !/git/
 !/zellij/
+!/aerospace/
 !ideavimrc
 !init.sh
 !starship.toml
