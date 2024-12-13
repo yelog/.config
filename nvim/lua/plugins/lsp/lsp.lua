@@ -424,7 +424,7 @@ return {
     end,
   },
   {
-    "nvimdev/lspsaga.nvim"
+    "nvimdev/lspsaga.nvim" -- 显示文件路径
   },
   -- {
   --   "nabekou29/js-i18n.nvim",
