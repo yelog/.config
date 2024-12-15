@@ -282,6 +282,17 @@ maps.v["<D-k>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
 maps.i["<D-K>"] = { "<esc><cmd>AvanteChat<cr>", desc = "AvanteEditor" }
 maps.n["<D-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
 maps.v["<D-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
+maps.i["<right>"] = {
+  function()
+    local copilot = require("copilot.suggestion")
+    if (copilot.is_visible()) then
+      copilot.accept()
+    else
+      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Right>", true, true, true), "n", true)
+    end
+  end,
+  desc = "Accept Copilot Or Right"
+}
 
 -- 跳转vim分屏/tmux分屏
 maps.n["<M-h>"] = { "<cmd>lua require('tmux').move_left()<cr>", desc = "" }

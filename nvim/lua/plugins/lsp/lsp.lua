@@ -78,6 +78,7 @@ return {
   -- },
   {
     "williamboman/mason-lspconfig.nvim",
+    dependencies = { 'saghen/blink.cmp' },
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = {
@@ -143,7 +144,8 @@ return {
       }
 
       -- Set up lspconfig.
-      local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
       lspconfig["marksman"].setup({
         on_attach = on_attach,
         flags = lsp_flags,
