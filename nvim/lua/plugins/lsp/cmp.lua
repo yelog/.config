@@ -212,28 +212,6 @@ return {
       -- your own keymap.
       keymap = {
         preset = 'default',
-        -- ['<TAB'] = {
-        --   function(cmp)
-        --     if cmp.visible() then
-        --       cmp.select_next_item()
-        --     else
-        --       cmp.complete()
-        --     end
-        --   end,
-        --   'snippet_next',
-        --   'fallback'
-        -- },
-        -- ['<S-TAB>'] = {
-        --   function(cmp)
-        --     if cmp.visible() then
-        --       cmp.select_prev_item()
-        --     else
-        --       cmp.complete()
-        --     end
-        --   end,
-        --   'snippet_prev',
-        --   'fallback'
-        -- },
         ["<S-Tab>"] = { "select_prev", "fallback" },
         ["<Tab>"] = { "select_next", "fallback" },
         ['<CR>'] = {
