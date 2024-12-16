@@ -31,10 +31,20 @@ end
 --         "Source Han Sans SC",
 --         "Source Han Sans TC"
 --       }
-
+-- "ExtraLight"
+-- "Light"
+-- "DemiLight"
+-- "Book"
+-- "Regular"
+-- "Medium"
+-- "DemiBold"
+-- "Bold"
+-- "ExtraBold"
+-- "Black"
+-- "ExtraBlack".
 config.font = wezterm.font_with_fallback({
-  { family = 'JetBrainsMono Nerd Font', weight = 'Regular', italic = false },
-  { family = 'Source Han Sans HW SC',   weight = 'Regular', italic = false },
+  { family = 'JetBrainsMono Nerd Font', weight = 'Medium', italic = false },
+  { family = 'Source Han Sans HW SC',   weight = 'Medium', italic = false },
 })
 
 -- config.font_rules = {
@@ -103,7 +113,7 @@ config.keys = {
   {
     key = "o",
     mods = "CMD|SHIFT",
-    action = wezterm.action.SendKey { key = 'o', mods = 'OPT|SHIFT' },
+    action = wezterm.action.SendKey { key = 'o', mods = 'CMD|SHIFT' },
   },
   {
     key = "f",
@@ -118,7 +128,7 @@ config.keys = {
   {
     key = '1',
     mods = 'CMD',
-    action = wezterm.action.SendKey { key = '1', mods = 'OPT' },
+    action = wezterm.action.SendKey { key = '1', mods = 'CMD' },
   },
   {
     key = '2',
