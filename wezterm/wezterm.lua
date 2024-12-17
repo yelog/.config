@@ -116,7 +116,7 @@ config.keys = {
   {
     key = "o",
     mods = "CMD|SHIFT",
-    action = wezterm.action.SendKey { key = 'o', mods = 'CMD|SHIFT' },
+    action = wezterm.action.SendKey { key = 'o', mods = 'OPT|SHIFT' },
   },
   {
     key = "f",
@@ -131,7 +131,7 @@ config.keys = {
   {
     key = '1',
     mods = 'CMD',
-    action = wezterm.action.SendKey { key = '1', mods = 'CMD' },
+    action = wezterm.action.SendKey { key = '1', mods = 'OPT' },
   },
   {
     key = '2',

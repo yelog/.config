@@ -73,13 +73,13 @@ maps.v["<leader>ll"] = {
 }
 
 -- Telescope
-maps.n["<D-M>"] = {
+maps.n["<M-M>"] = {
   function()
     require("telescope.builtin").lsp_document_symbols()
   end,
   desc = "Search symbols",
 }
-maps.n["<D-O>"] = {
+maps.n["<M-O>"] = {
   function()
     require("telescope.builtin").find_files()
   end,
@@ -139,7 +139,7 @@ maps.n["<leader>fh"] = {
   end,
   desc = "Search hisotry",
 }
-maps.n["<D-e>"] = {
+maps.n["<M-e>"] = {
   function()
     require("telescope.builtin").oldfiles()
   end,
@@ -165,14 +165,14 @@ end
 local get_cursor_word = function()
   return vim.fn.expand("<cword>")
 end
-maps.n["<D-S-f>"] = {
+maps.n["<M-S-f>"] = {
   function()
     -- require("telescope.builtin").live_grep { default_text = get_cursor_word() }
     require("telescope.builtin").live_grep()
   end,
   desc = "Search word",
 }
-maps.v["<D-S-f>"] = {
+maps.v["<M-S-f>"] = {
   function()
     require("telescope.builtin").live_grep { default_text = table.concat(get_selection())
     }
@@ -197,15 +197,6 @@ maps.v["<leader>zn"] = { "<cmd>'<,'>TZNarrow<cr>", desc = "" }
 maps.n["<leader>zf"] = { "<cmd>TZFocus<cr>", desc = "" }
 maps.n["<leader>zm"] = { "<cmd>TZMinimalist<cr>", desc = "" }
 maps.n["<leader>za"] = { "<cmd>TZAtaraxis<cr>", desc = "" }
-
--- neo-tree
--- maps.n["<leader>e"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }
--- maps.n["<leader>e"] = { "<cmd>Neotree toggle<cr>", desc = "Toggle Explorer" }
-maps.n["<D-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
-maps.n["<leader>te"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
--- maps.n["<D-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
--- maps.n["<D-2>"] = { "<cmd>Neotree float toggle<cr>", desc = "Toggle Explorer" }
--- maps.n["<leader>o"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" }
 
 -- table of contents
 maps.n["<leader>ts"] = { "<cmd>AerialToggle<cr>", desc = "Toggle Structure" }
@@ -268,23 +259,32 @@ maps.n["<leader>md"] = { "<cmd>ObsidianToday<cr>", desc = "goto daily task" }
 --   desc = "git diff",
 -- }
 
+-- neo-tree
+-- maps.n["<leader>e"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }
+-- maps.n["<leader>e"] = { "<cmd>Neotree toggle<cr>", desc = "Toggle Explorer" }
+maps.n["<M-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+maps.n["<leader>te"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n["<D-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n["<D-2>"] = { "<cmd>Neotree float toggle<cr>", desc = "Toggle Explorer" }
+-- maps.n["<leader>o"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" }
+
 -- task manager
 -- maps.n["<leader>tn"] = { "<cmd>ToDoTxtCapture<cr>", desc= "New Todo"}
 -- maps.n["<D-2>"] = { "<cmd>AerialToggle<cr>", desc= "Toggle outline"}
-maps.n["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
-maps.t["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
-maps.i["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
-maps.v["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
+maps.n["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
+maps.t["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
+maps.i["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
+maps.v["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
 
 --ChatGPT
 -- maps.n["<leader>ai"] = { "<cmd>ChatGPT<cr>", desc = "ChatGPT"}
 -- maps.n["<leader>ai"] = { "<cmd>NeoAIToggle<cr>", desc = "ChatGPT" }
-maps.i["<D-k>"] = { "<esc>V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
-maps.n["<D-k>"] = { "V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
-maps.v["<D-k>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
-maps.i["<D-K>"] = { "<esc><cmd>AvanteChat<cr>", desc = "AvanteEditor" }
-maps.n["<D-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
-maps.v["<D-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
+maps.i["<M-z>"] = { "<esc>V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
+maps.n["<M-z>"] = { "V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
+maps.v["<M-z>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
+maps.i["<M-Z>"] = { "<esc><cmd>AvanteChat<cr>", desc = "AvanteEditor" }
+maps.n["<M-Z>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
+maps.v["<M-Z>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
 maps.i["<right>"] = {
   function()
     local copilot = require("copilot.suggestion")

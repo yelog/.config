@@ -112,6 +112,7 @@ map tml :+tabmove<CR>
 map <leader>S :w<CR>
 noremap <C-s> :w<CR>
 imap <D-s> <esc><D-s>
+imap <M-s> <esc><M-s>
 " map Q :q<CR>
 " noremap <C-q> :qa<CR>
 " map R :source ~/.config/nvim/init.vim<CR> :nohlsearch<CR>

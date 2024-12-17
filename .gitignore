@@ -30,6 +30,7 @@
 !/git/
 !/zellij/
 !/aerospace/
+!/neovide/
 !ideavimrc
 !init.sh
 !starship.toml
