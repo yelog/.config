@@ -76,6 +76,9 @@ config.window_padding = {
   bottom = 2,
 }
 
+config.enable_kitty_keyboard = true
+config.enable_csi_u_key_encoding = false
+
 config.keys = {
   { key = "i", mods = "CMD",        action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
   { key = "n", mods = "CTRL|SHIFT", action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
