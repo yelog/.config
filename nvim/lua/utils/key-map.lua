@@ -45,7 +45,7 @@ maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
 
 -- Bind <leader>ll to :TableModeRealign only in Markdown files
 
-maps.n["<D-s>"] = {
+maps.n["<M-s>"] = {
   function()
     local eslintFileType = { "javascript", "typescript", "vue" }
     if vim.bo.filetype == "markdown" then
