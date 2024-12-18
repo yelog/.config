@@ -82,7 +82,6 @@ config.enable_csi_u_key_encoding = false
 config.keys = {
   { key = "i", mods = "CMD",        action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
   { key = "n", mods = "CTRL|SHIFT", action = wezterm.action.SplitHorizontal { domain = 'CurrentPaneDomain' }, },
-  { key = "1", mods = "CTRL",       action = wezterm.action.SendKey { key = '1', mods = 'CTRL' } },
   {
     key = "Enter",
     mods = "OPT",
@@ -198,11 +197,6 @@ config.keys = {
   },
   { key = ';', mods = "CMD|CTRL", action = "ActivateCopyMode", },
   {
-    key = '1',
-    mods = "CMD|CTRL",
-    action = wezterm.action.SendKey { key = '1', mods = 'OPT' }
-  },
-  {
     key = 'n',
     mods = 'CMD|CTRL',
     action = wezterm.action.SendKey { key = 'n', mods = 'OPT|SHIFT' },
@@ -237,51 +231,51 @@ config.keys = {
     mods = 'CMD|CTRL',
     action = wezterm.action.SendKey { key = 'r', mods = 'OPT|SHIFT' },
   },
-  {
-    key = '1',
-    mods = "CMD|CTRL",
-    action = wezterm.action.SendKey { key = '1', mods = 'OPT' }
-  },
-  {
-    key = '2',
-    mods = "CMD|CTRL",
-    action = wezterm.action.SendKey { key = '2', mods = 'OPT' }
-  },
-  {
-    key = '3',
-    mods = "CMD|CTRL",
-    action = wezterm.action.SendKey { key = '3', mods = 'OPT' }
-  },
-  {
-    key = '4',
-    mods = "CMD|CTRL",
-    action = wezterm.action.SendKey { key = '4', mods = 'OPT' }
-  },
-  {
-    key = '5',
-    mods = "CMD|CTRL",
-    action = wezterm.action.SendKey { key = '5', mods = 'OPT' }
-  },
-  {
-    key = '6',
-    mods = "CMD|CTRL",
-    action = wezterm.action.SendKey { key = '6', mods = 'OPT' }
-  },
-  {
-    key = '7',
-    mods = "CMD|CTRL",
-    action = wezterm.action.SendKey { key = '7', mods = 'OPT' }
-  },
-  {
-    key = '8',
-    mods = "CMD|CTRL",
-    action = wezterm.action.SendKey { key = '8', mods = 'OPT' }
-  },
-  {
-    key = '9',
-    mods = "CMD|CTRL",
-    action = wezterm.action.SendKey { key = '9', mods = 'OPT' }
-  },
+  -- {
+  --   key = '1',
+  --   mods = "CMD|CTRL",
+  --   action = wezterm.action.SendKey { key = '1', mods = 'CTRL' }
+  -- },
+  -- {
+  --   key = '2',
+  --   mods = "CMD|CTRL",
+  --   action = wezterm.action.SendKey { key = '2', mods = 'CTRL' }
+  -- },
+  -- {
+  --   key = '3',
+  --   mods = "CMD|CTRL",
+  --   action = wezterm.action.SendKey { key = '3', mods = 'OPT' }
+  -- },
+  -- {
+  --   key = '4',
+  --   mods = "CMD|CTRL",
+  --   action = wezterm.action.SendKey { key = '4', mods = 'OPT' }
+  -- },
+  -- {
+  --   key = '5',
+  --   mods = "CMD|CTRL",
+  --   action = wezterm.action.SendKey { key = '5', mods = 'OPT' }
+  -- },
+  -- {
+  --   key = '6',
+  --   mods = "CMD|CTRL",
+  --   action = wezterm.action.SendKey { key = '6', mods = 'OPT' }
+  -- },
+  -- {
+  --   key = '7',
+  --   mods = "CMD|CTRL",
+  --   action = wezterm.action.SendKey { key = '7', mods = 'OPT' }
+  -- },
+  -- {
+  --   key = '8',
+  --   mods = "CMD|CTRL",
+  --   action = wezterm.action.SendKey { key = '8', mods = 'OPT' }
+  -- },
+  -- {
+  --   key = '9',
+  --   mods = "CMD|CTRL",
+  --   action = wezterm.action.SendKey { key = '9', mods = 'OPT' }
+  -- },
 }
 
 

@@ -141,7 +141,10 @@ maps.n["<leader>fh"] = {
 }
 maps.n["<M-e>"] = {
   function()
-    require("telescope.builtin").oldfiles()
+    require("telescope.builtin").oldfiles({
+      cwd_only = true,                       -- 仅显示当前工作目录下的文件
+      prompt_title = "Project Recent Files", -- 自定义提示标题
+    })
   end,
   desc = "Search hisotry",
 }
