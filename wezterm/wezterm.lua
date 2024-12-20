@@ -67,7 +67,7 @@ config.line_height = 0.9
 config.window_background_image = "/Users/yelog/Documents/image/Genshin Impact/官方宣传图系列壁纸/璃月概念组图/南天门-1920x1080.png"
 config.window_background_image_hsb = {
   -- 可以设置图像的透明度、亮度等属性
-  brightness = 0.09, -- 调整亮度
+  brightness = 0.05, -- 调整亮度
   saturation = 1,    -- 饱和度
   hue = 1.0,         -- 色调
 }

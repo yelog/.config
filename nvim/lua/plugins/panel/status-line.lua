@@ -319,6 +319,7 @@ return {
 
 
       local StatusLine = {
+        hl = { bg = "NONE" }, -- 背景色设置为 NONE，让背景透明
         ViMode,
         -- Space,
         -- FileIcon,

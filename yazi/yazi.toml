@@ -1,9 +1,9 @@
-[plugin]
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*"
+run  = "git"
 
-fetchers = [
-	{ id = "git", name = "*", run = "git", prio = "normal" },
-	{ id = "git", name = "*/", run = "git", prio = "normal" },
-]
-
-[preview]
-image_delay = 0.5
+[[plugin.prepend_fetchers]]
+id   = "git"
+name = "*/"
+run  = "git"
