@@ -2,4 +2,4 @@
 deps = []
 
 [plugin]
-deps = [{ use = "yazi-rs/plugins:smart-enter", rev = "7afba3a" }, { use = "yazi-rs/plugins:git", rev = "7afba3a" }]
+deps = [{ use = "yazi-rs/plugins:smart-enter", rev = "7afba3a" }, { use = "yazi-rs/plugins:git", rev = "7afba3a" }, { use = "Rolv-Apneseth/starship", rev = "247f49d" }]

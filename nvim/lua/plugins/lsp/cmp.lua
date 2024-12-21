@@ -214,6 +214,8 @@ return {
         preset = 'default',
         ["<S-Tab>"] = { "select_prev", "fallback" },
         ["<Tab>"] = { "select_next", "fallback" },
+        ["<UP>"] = { "select_prev", "fallback" },
+        ["<DOWN>"] = { "select_next", "fallback" },
         ['<CR>'] = {
           function(cmp)
             if cmp.snippet_active() then
