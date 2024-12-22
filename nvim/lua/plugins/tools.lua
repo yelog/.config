@@ -7,7 +7,6 @@ return {
       vim.g.smartim_default = "com.apple.keylayout.ABC"
     end
   },
-  "itchyny/vim-cursorword",   --> Underlines the word under the cursor
   "dhruvasagar/vim-open-url", --> open brower with the url under the cursor
   {
     "airblade/vim-rooter",    --> Changes Vim working directory to project root
@@ -17,6 +16,5 @@ return {
     end
   },
   -------------- decoration --------------
-  "lilydjwg/colorizer",                --> show color by color code
   "jeffkreeftmeijer/vim-numbertoggle", --> Toggles between hybrid and absolute line numbers automatically
 }

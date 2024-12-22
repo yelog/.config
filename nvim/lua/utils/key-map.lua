@@ -165,9 +165,9 @@ local get_selection = function()
     vim.fn.getpos ".", vim.fn.getpos "v", { mode = vim.fn.mode() }
   )
 end
-local get_cursor_word = function()
-  return vim.fn.expand("<cword>")
-end
+-- local get_cursor_word = function()
+--   return vim.fn.expand("<cword>")
+-- end
 maps.n["<M-S-f>"] = {
   function()
     -- require("telescope.builtin").live_grep { default_text = get_cursor_word() }
