@@ -34,3 +34,7 @@ function my.is_include(item, table)
     return false
 end
 
+function my.is_kitty()
+  return vim.fn.getenv("TERM") == "xterm-kitty"
+end
+

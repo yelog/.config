@@ -87,6 +87,14 @@ return {
 
         -- Text object
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+
+        -- auto add staging area
+        vim.api.nvim_create_autocmd('BufWritePost', {
+          buffer = bufnr,
+          callback = function()
+            gs.stage_hunk()
+          end
+        })
       end,
     }
   end

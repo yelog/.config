@@ -45,6 +45,25 @@ maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
 
 -- Bind <leader>ll to :TableModeRealign only in Markdown files
 
+local api = require('Comment.api')
+local esc = vim.api.nvim_replace_termcodes(
+  '<ESC>', true, false, true
+)
+maps.n["<M-/>"] = {
+  function()
+    api.toggle.linewise.current()
+  end,
+  desc = "set comments"
+}
+maps.v["<M-/>"] = {
+  function()
+    -- api.toggle.blockwise.current()
+    vim.api.nvim_feedkeys(esc, 'nx', false)
+    api.toggle.linewise(vim.fn.visualmode())
+  end,
+  desc = "set comments"
+}
+
 maps.n["<M-s>"] = {
   function()
     local eslintFileType = { "javascript", "typescript", "vue" }
@@ -73,13 +92,13 @@ maps.v["<leader>ll"] = {
 }
 
 -- Telescope
-maps.n["<M-M>"] = {
+maps.n["<M-S-M>"] = {
   function()
     require("telescope.builtin").lsp_document_symbols()
   end,
   desc = "Search symbols",
 }
-maps.n["<M-O>"] = {
+maps.n["<M-S-O>"] = {
   function()
     require("telescope.builtin").find_files()
   end,
@@ -168,14 +187,14 @@ end
 -- local get_cursor_word = function()
 --   return vim.fn.expand("<cword>")
 -- end
-maps.n["<M-S-f>"] = {
+maps.n["<M-S-F>"] = {
   function()
     -- require("telescope.builtin").live_grep { default_text = get_cursor_word() }
     require("telescope.builtin").live_grep()
   end,
   desc = "Search word",
 }
-maps.v["<M-S-f>"] = {
+maps.v["<M-S-F>"] = {
   function()
     require("telescope.builtin").live_grep { default_text = table.concat(get_selection())
     }
@@ -313,6 +332,24 @@ maps.n["<M-l>"] = { "<cmd>lua require('tmux').move_right()<cr>", desc = "" }
 -- maps.n['<D-N>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 
 -- maps.n['R'] = { "<cmd>:set splitright<cr><cmd>vsp<cr><cmd>term lua %<cr>", desc = "run lua file" }
+
+
+-- Check if the terminal is Kitty
+--maps.n["<leader>tp"] = { function()
+--  print(vim.fn.getenv("TERM"))
+--end,
+--desc= "Check Terminal" }
+if my.is_kitty() then
+  for mode, mappings in pairs(maps) do
+    for key, mapping in pairs(mappings) do
+      if key:find("<M-") then
+        local new_key = key:gsub("<M%-", "<D-")
+        maps[mode][new_key] = mapping
+        maps[mode][key] = nil
+      end
+    end
+  end
+end
 
 my.set_mappings(maps)
 

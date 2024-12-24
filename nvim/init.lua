@@ -14,15 +14,15 @@ if not vim.loop.fs_stat(lazypath) then
   })
 end
 vim.opt.rtp:prepend(lazypath)
+require("utils")
 require("lazy").setup("plugins", {
   dev = {
     path = "~/workspace/vi"
   }
 })
 
-require("utils")
-require("utils.key-map")
-require("utils.custom-color")
+require("key-map")
+require("custom-color")
 require("custom.run-file")
 vim.g.LanguageClient_serverCommands = {
   sql = { 'sql-language-server', 'up', '--method', 'stdio' },
