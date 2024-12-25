@@ -1175,7 +1175,7 @@ window-inherit-font-size = true
 # 
 # macOS: To hide the titlebar without removing the native window borders
 #        or rounded corners, use `macos-titlebar-style = hidden` instead.
-window-decoration = true
+window-decoration = false
 
 # The font that will be used for the application's window and tab titles.
 # 

@@ -320,10 +320,10 @@ maps.i["<right>"] = {
 }
 
 -- 跳转vim分屏/tmux分屏
-maps.n["<M-h>"] = { "<cmd>lua require('tmux').move_left()<cr>", desc = "" }
-maps.n["<M-j>"] = { "<cmd>lua require('tmux').move_bottom()<cr>", desc = "" }
-maps.n["<M-k>"] = { "<cmd>lua require('tmux').move_top()<cr>", desc = "" }
-maps.n["<M-l>"] = { "<cmd>lua require('tmux').move_right()<cr>", desc = "" }
+maps.n["<M-h>"] = { "<cmd>lua require('smart-splits').move_cursor_left()<cr>", desc = "" }
+maps.n["<M-j>"] = { "<cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
+maps.n["<M-k>"] = { "<cmd>lua require('smart-splits').move_cursor_up()<cr>", desc = "" }
+maps.n["<M-l>"] = { "<cmd>lua require('smart-splits').move_cursor_right()<cr>", desc = "" }
 
 -- maps.n['<C-S-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 -- maps.n['<C-S-p>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }

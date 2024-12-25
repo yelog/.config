@@ -21,7 +21,7 @@ require("lazy").setup("plugins", {
   }
 })
 
-require("key-map")
+require("key-map-wezterm")
 require("custom-color")
 require("custom.run-file")
 vim.g.LanguageClient_serverCommands = {

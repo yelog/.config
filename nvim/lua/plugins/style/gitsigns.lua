@@ -89,11 +89,21 @@ return {
         map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
 
         -- auto add staging area
-        vim.api.nvim_create_autocmd('BufWritePost', {
+        -- vim.api.nvim_create_autocmd('BufWritePost', {
+        --   buffer = bufnr,
+        --   callback = function()
+        --     gs.stage_hunk()
+        --   end
+        -- })
+        -- 自动暂存更改/新增/删除
+        vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "BufWritePost" }, {
           buffer = bufnr,
           callback = function()
-            gs.stage_hunk()
-          end
+            vim.schedule(function()
+              -- 暂存所有更改的 hunk
+              gs.stage_hunk()
+            end)
+          end,
         })
       end,
     }
