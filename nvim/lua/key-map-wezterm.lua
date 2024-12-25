@@ -49,13 +49,13 @@ local api = require('Comment.api')
 local esc = vim.api.nvim_replace_termcodes(
   '<ESC>', true, false, true
 )
-maps.n["<D-/>"] = {
+maps.n["<M-/>"] = {
   function()
     api.toggle.linewise.current()
   end,
   desc = "set comments"
 }
-maps.v["<D-/>"] = {
+maps.v["<M-/>"] = {
   function()
     -- api.toggle.blockwise.current()
     vim.api.nvim_feedkeys(esc, 'nx', false)
@@ -64,7 +64,7 @@ maps.v["<D-/>"] = {
   desc = "set comments"
 }
 
-maps.n["<D-s>"] = {
+maps.n["<M-s>"] = {
   function()
     local eslintFileType = { "javascript", "typescript", "vue" }
     if vim.bo.filetype == "markdown" then
@@ -92,13 +92,13 @@ maps.v["<leader>ll"] = {
 }
 
 -- Telescope
-maps.n["<D-S-M>"] = {
+maps.n["<M-S-M>"] = {
   function()
     require("telescope.builtin").lsp_document_symbols()
   end,
   desc = "Search symbols",
 }
-maps.n["<D-S-O>"] = {
+maps.n["<M-S-O>"] = {
   function()
     require("telescope.builtin").find_files()
   end,
@@ -158,7 +158,7 @@ maps.n["<leader>fh"] = {
   end,
   desc = "Search hisotry",
 }
-maps.n["<D-e>"] = {
+maps.n["<M-e>"] = {
   function()
     require("telescope.builtin").oldfiles({
       cwd_only = true,                       -- 仅显示当前工作目录下的文件
@@ -187,14 +187,14 @@ end
 -- local get_cursor_word = function()
 --   return vim.fn.expand("<cword>")
 -- end
-maps.n["<D-S-F>"] = {
+maps.n["<M-S-F>"] = {
   function()
     -- require("telescope.builtin").live_grep { default_text = get_cursor_word() }
     require("telescope.builtin").live_grep()
   end,
   desc = "Search word",
 }
-maps.v["<D-S-F>"] = {
+maps.v["<M-S-F>"] = {
   function()
     require("telescope.builtin").live_grep { default_text = table.concat(get_selection())
     }
@@ -284,7 +284,7 @@ maps.n["<leader>md"] = { "<cmd>ObsidianToday<cr>", desc = "goto daily task" }
 -- neo-tree
 -- maps.n["<leader>e"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }
 -- maps.n["<leader>e"] = { "<cmd>Neotree toggle<cr>", desc = "Toggle Explorer" }
-maps.n["<D-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
+maps.n["<M-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 maps.n["<leader>te"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 -- maps.n["<D-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 -- maps.n["<D-2>"] = { "<cmd>Neotree float toggle<cr>", desc = "Toggle Explorer" }
@@ -293,20 +293,20 @@ maps.n["<leader>te"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer
 -- task manager
 -- maps.n["<leader>tn"] = { "<cmd>ToDoTxtCapture<cr>", desc= "New Todo"}
 -- maps.n["<D-2>"] = { "<cmd>AerialToggle<cr>", desc= "Toggle outline"}
-maps.n["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
-maps.t["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
-maps.i["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
-maps.v["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
+maps.n["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
+maps.t["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
+maps.i["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
+maps.v["<M-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
 
 --ChatGPT
 -- maps.n["<leader>ai"] = { "<cmd>ChatGPT<cr>", desc = "ChatGPT"}
 -- maps.n["<leader>ai"] = { "<cmd>NeoAIToggle<cr>", desc = "ChatGPT" }
-maps.i["<D-k>"] = { "<esc>V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
-maps.n["<D-k>"] = { "V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
-maps.v["<D-k>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
-maps.i["<D-K>"] = { "<esc><cmd>AvanteChat<cr>", desc = "AvanteEditor" }
-maps.n["<D-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
-maps.v["<D-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
+maps.i["<M-z>"] = { "<esc>V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
+maps.n["<M-z>"] = { "V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
+maps.v["<M-z>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
+maps.i["<M-Z>"] = { "<esc><cmd>AvanteChat<cr>", desc = "AvanteEditor" }
+maps.n["<M-Z>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
+maps.v["<M-Z>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
 maps.i["<right>"] = {
   function()
     local copilot = require("copilot.suggestion")
@@ -342,7 +342,7 @@ maps.n["<M-l>"] = { "<cmd>lua require('tmux').move_right()<cr>", desc = "" }
 -- if my.is_kitty() then
 --   for mode, mappings in pairs(maps) do
 --     for key, mapping in pairs(mappings) do
---       if key:find("<D-") then
+--       if key:find("<M-") then
 --         local new_key = key:gsub("<M%-", "<D-")
 --         maps[mode][new_key] = mapping
 --         maps[mode][key] = nil
