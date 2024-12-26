@@ -96,6 +96,7 @@ return {
           "lemminx",
           "tailwindcss",
           "unocss",
+          "dockerls",
         },
       })
       -- Mappings.
@@ -302,6 +303,11 @@ return {
       lspconfig["unocss"].setup({
         on_attach = on_attach,
         filetyps = { "vue", "html" },
+        flags = lsp_flags,
+      })
+      lspconfig["dockerls"].setup({
+        on_attach = on_attach,
+        filetyps = { "dockerfile" },
         flags = lsp_flags,
       })
       -- lspconfig["bash-language-server"].setup({
