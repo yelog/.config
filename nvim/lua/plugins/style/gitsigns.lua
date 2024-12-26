@@ -95,16 +95,16 @@ return {
         --     gs.stage_hunk()
         --   end
         -- })
-        -- 自动暂存更改/新增/删除
-        vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "BufWritePost" }, {
-          buffer = bufnr,
-          callback = function()
-            vim.schedule(function()
-              -- 暂存所有更改的 hunk
-              gs.stage_hunk()
-            end)
-          end,
-        })
+        -- -- 自动暂存更改/新增/删除
+        -- vim.api.nvim_create_autocmd({ "TextChanged", "TextChangedI", "BufWritePost" }, {
+        --   buffer = bufnr,
+        --   callback = function()
+        --     vim.schedule(function()
+        --       -- 暂存所有更改的 hunk
+        --       gs.stage_hunk()
+        --     end)
+        --   end,
+        -- })
       end,
     }
   end

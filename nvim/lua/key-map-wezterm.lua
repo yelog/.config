@@ -324,11 +324,19 @@ maps.n["<C-h>"] = { "<cmd>lua require('smart-splits').move_cursor_left()<cr>", d
 maps.n["<C-j>"] = { "<cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
 maps.n["<C-k>"] = { "<cmd>lua require('smart-splits').move_cursor_up()<cr>", desc = "" }
 maps.n["<C-l>"] = { "<cmd>lua require('smart-splits').move_cursor_right()<cr>", desc = "" }
+maps.t["<C-h>"] = { "<cmd>lua require('smart-splits').move_cursor_left()<cr>", desc = "" }
+maps.t["<C-j>"] = { "<cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
+maps.t["<C-k>"] = { "<cmd>lua require('smart-splits').move_cursor_up()<cr>", desc = "" }
+maps.t["<C-l>"] = { "<cmd>lua require('smart-splits').move_cursor_right()<cr>", desc = "" }
 
 maps.n["<M-h>"] = { "<cmd>lua require('smart-splits').resize_left()<cr>", desc = "" }
 maps.n["<M-j>"] = { "<cmd>lua require('smart-splits').resize_down()<cr>", desc = "" }
 maps.n["<M-k>"] = { "<cmd>lua require('smart-splits').resize_up()<cr>", desc = "" }
 maps.n["<M-l>"] = { "<cmd>lua require('smart-splits').resize_right()<cr>", desc = "" }
+maps.t["<M-h>"] = { "<cmd>lua require('smart-splits').resize_left()<cr>", desc = "" }
+maps.t["<M-j>"] = { "<cmd>lua require('smart-splits').resize_down()<cr>", desc = "" }
+maps.t["<M-k>"] = { "<cmd>lua require('smart-splits').resize_up()<cr>", desc = "" }
+maps.t["<M-l>"] = { "<cmd>lua require('smart-splits').resize_right()<cr>", desc = "" }
 
 
 -- maps.n['<C-S-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
@@ -340,11 +348,6 @@ maps.n["<M-l>"] = { "<cmd>lua require('smart-splits').resize_right()<cr>", desc 
 -- maps.n['R'] = { "<cmd>:set splitright<cr><cmd>vsp<cr><cmd>term lua %<cr>", desc = "run lua file" }
 
 
--- Check if the terminal is Kitty
---maps.n["<leader>tp"] = { function()
---  print(vim.fn.getenv("TERM"))
---end,
---desc= "Check Terminal" }
 -- if my.is_kitty() then
 --   for mode, mappings in pairs(maps) do
 --     for key, mapping in pairs(mappings) do

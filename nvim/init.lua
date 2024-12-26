@@ -21,7 +21,15 @@ require("lazy").setup("plugins", {
   }
 })
 
-require("key-map-wezterm")
+-- Check if the terminal is WezTerm
+vim.api.nvim_set_keymap('n', '<leader>tp', ':lua print(os.getenv("WEZTERM_EXECUTABLE"))<CR>',
+  { noremap = true, silent = true, desc = "Check Terminal" })
+
+if my.is_wezterm() then
+  require("key-map-wezterm")
+else
+  require("key-map")
+end
 require("custom-color")
 require("custom.run-file")
 vim.g.LanguageClient_serverCommands = {

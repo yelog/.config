@@ -240,6 +240,29 @@ return {
         nerd_font_variant = 'mono'
       },
 
+      completion = {
+        -- 'prefix' will fuzzy match on the text before the cursor
+        -- 'full' will fuzzy match on the text before *and* after the cursor
+        -- example: 'foo_|_bar' will match 'foo_' for 'prefix' and 'foo__bar' for 'full'
+        keyword = { range = 'full' },
+
+        -- Disable auto brackets
+        -- NOTE: some LSPs may add auto brackets themselves anyway
+        accept = { auto_brackets = { enabled = false }, },
+
+        -- Insert completion item on selection, don't select by default
+        list = { selection = 'auto_insert' },
+        -- or set per mode
+        -- list = { selection = function(ctx) return ctx.mode == 'cmdline' and 'auto_insert' or 'preselect' end },
+
+        -- Show documentation when selecting a completion item
+        documentation = { auto_show = true, auto_show_delay_ms = 500 },
+
+        -- Display a preview of the selected item on the current line
+        ghost_text = { enabled = true },
+      },
+
+
       -- default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, via `opts_extend`
       sources = {
@@ -247,7 +270,6 @@ return {
         -- optionally disable cmdline completions
         -- cmdline = {},
       },
-
       -- experimental signature help support
       -- signature = { enabled = true }
     },
