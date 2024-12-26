@@ -320,10 +320,22 @@ maps.i["<right>"] = {
 }
 
 -- 跳转vim分屏/tmux分屏
-maps.n["<M-h>"] = { "<cmd>lua require('smart-splits').move_cursor_left()<cr>", desc = "" }
-maps.n["<M-j>"] = { "<cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
-maps.n["<M-k>"] = { "<cmd>lua require('smart-splits').move_cursor_up()<cr>", desc = "" }
-maps.n["<M-l>"] = { "<cmd>lua require('smart-splits').move_cursor_right()<cr>", desc = "" }
+maps.n["<D-C-h>"] = { "<cmd>lua require('smart-splits').move_cursor_left()<cr>", desc = "" }
+maps.n["<D-C-j>"] = { "<cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
+maps.n["<D-C-k>"] = { "<cmd>lua require('smart-splits').move_cursor_up()<cr>", desc = "" }
+maps.n["<D-C-l>"] = { "<cmd>lua require('smart-splits').move_cursor_right()<cr>", desc = "" }
+maps.t["<D-C-h>"] = { "<cmd>lua require('smart-splits').move_cursor_left()<cr>", desc = "" }
+maps.t["<D-C-j>"] = { "<cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
+maps.t["<D-C-k>"] = { "<cmd>lua require('smart-splits').move_cursor_up()<cr>", desc = "" }
+maps.t["<D-C-l>"] = { "<cmd>lua require('smart-splits').move_cursor_right()<cr>", desc = "" }
+maps.n["<D-C-S-h>"] = { "<cmd>lua require('smart-splits').resize_left()<cr>", desc = "" }
+maps.n["<D-C-S-j>"] = { "<cmd>lua require('smart-splits').resize_down()<cr>", desc = "" }
+maps.n["<D-C-S-k>"] = { "<cmd>lua require('smart-splits').resize_up()<cr>", desc = "" }
+maps.n["<D-C-S-l>"] = { "<cmd>lua require('smart-splits').resize_right()<cr>", desc = "" }
+maps.t["<D-C-S-h>"] = { "<cmd>lua require('smart-splits').resize_left()<cr>", desc = "" }
+maps.t["<D-C-S-j>"] = { "<cmd>lua require('smart-splits').resize_down()<cr>", desc = "" }
+maps.t["<D-C-S-k>"] = { "<cmd>lua require('smart-splits').resize_up()<cr>", desc = "" }
+maps.t["<D-C-S-l>"] = { "<cmd>lua require('smart-splits').resize_right()<cr>", desc = "" }
 
 -- maps.n['<C-S-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 -- maps.n['<C-S-p>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
