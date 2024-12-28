@@ -31,6 +31,8 @@
 !/zellij/
 !/aerospace/
 !/neovide/
+!/neofetch/
+!/fastfetch/
 !ideavimrc
 !init.sh
 !starship.toml

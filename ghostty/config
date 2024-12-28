@@ -265,7 +265,7 @@ grapheme-width-method = unicode
 # 
 # Any additional colors specified via background, foreground, palette, etc.
 # will override the colors specified in the theme.
-theme = 
+theme = tokyonight
 
 # Background color for the window.
 background = #282c34

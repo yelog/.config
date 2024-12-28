@@ -431,9 +431,9 @@ return {
       })
     end,
   },
-  {
-    "nvimdev/lspsaga.nvim" -- 显示文件路径
-  },
+  -- {
+  --   "nvimdev/lspsaga.nvim" -- 显示文件路径
+  -- },
   -- {
   --   "nabekou29/js-i18n.nvim",
   --   dependencies = {

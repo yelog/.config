@@ -100,13 +100,14 @@ maps.n["<M-S-M>"] = {
 }
 maps.n["<M-S-O>"] = {
   function()
-    require("telescope.builtin").find_files()
+    -- require("telescope.builtin").find_files()
+    require('fzf-lua').files()
   end,
   desc = "search file",
 }
 maps.n["<leader>ff"] = {
   function()
-    require("telescope.builtin").find_files()
+    require('fzf-lua').files()
   end,
   desc = "search file",
 }
@@ -175,7 +176,8 @@ maps.n["<leader>f;"] = {
 }
 maps.n["<leader>fs"] = {
   function()
-    require("telescope.builtin").live_grep()
+    -- require("telescope.builtin").live_grep()
+    require('fzf-lua').live_grep()
   end,
   desc = "Search word",
 }
@@ -190,14 +192,16 @@ end
 maps.n["<M-S-F>"] = {
   function()
     -- require("telescope.builtin").live_grep { default_text = get_cursor_word() }
-    require("telescope.builtin").live_grep()
+    -- require("telescope.builtin").live_grep()
+    require('fzf-lua').live_grep()
   end,
   desc = "Search word",
 }
 maps.v["<M-S-F>"] = {
   function()
-    require("telescope.builtin").live_grep { default_text = table.concat(get_selection())
-    }
+    -- require("telescope.builtin").live_grep { default_text = table.concat(get_selection())
+    -- }
+    require('fzf-lua').grep_visual()
   end,
   desc = "Search word",
 }
