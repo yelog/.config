@@ -111,8 +111,7 @@ applications = {
   -- { prefix = applicationHyperKey, key = "B", message = "Browser",        bundleId = "com.google.Chrome" },
   { prefix = applicationHyperKey, key = "B", message = "Browser",       bundleId = "company.thebrowser.Browser" },
   { prefix = applicationHyperKey, key = "I", message = "IntelliJ IDEA", bundleId = "com.jetbrains.intellij" },
-  -- {prefix = applicationHyperKey, key = "I", message="IntelliJ IDEA", bundleId="com.jetbrains.intellij-EAP"},
-  -- { prefix = applicationHyperKey, key = "I", message = "IntelliJ IDEA", bundleId = "com.todesktop.230313mzl4w4u92" },
+  -- {prefix = applicationHyperKey, key = "I", message="IntelliJ IDEA", bundleId="com.jetbrains.intellij-EAP"}, { prefix = applicationHyperKey, key = "I", message = "IntelliJ IDEA", bundleId = "com.todesktop.230313mzl4w4u92" },
   { prefix = applicationHyperKey, key = "O", message = "Obsidian",      bundleId = "md.obsidian" },
   { prefix = applicationHyperKey, key = "E", message = "discord",       bundleId = "com.hnc.Discord" },
   {
