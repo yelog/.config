@@ -133,7 +133,7 @@ maps.n["gd"] = {
 }
 maps.n["gu"] = {
   function()
-    require("telescope.builtin").lsp_references()
+    require('fzf-lua').lsp_references()
   end,
   desc = "Search references",
 }
