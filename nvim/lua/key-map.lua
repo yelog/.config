@@ -230,8 +230,11 @@ maps.n["<leader>ts"] = { "<cmd>AerialToggle<cr>", desc = "Toggle Structure" }
 -- maps.n["<leader>ts"] = { "<cmd>SymbolsOutline<cr>", desc = "Toggle Structure" }
 
 -- bufferline
-maps.n["<c-n>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Buffer Next" }
-maps.n["<c-p>"] = { "<cmd>BufferLineCyclePrev<cr>", desc = "Buffer Previous" }
+-- maps.n["<c-n>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Buffer Next" }
+-- maps.n["<c-p>"] = { "<cmd>BufferLineCyclePrev<cr>", desc = "Buffer Previous" }
+-- rebelot/heirline.nvim
+maps.n["<c-n>"] = { "<cmd>bnext<cr>", desc = "Buffer Next" }
+maps.n["<c-p>"] = { "<cmd>bprevious<cr>", desc = "Buffer Previous" }
 maps.n["<leader>bn"] = { "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Next" }
 maps.n["<leader>bp"] = { "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Previous" }
 maps.n["<leader>bo"] = { "<cmd>BufferLineCloseLeft<cr><cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Others" }
@@ -240,9 +243,6 @@ maps.n["<leader>bcl"] = { "<cmd>BufferLineCloseLeft<cr>", desc = "Buffer Close L
 maps.n["<leader>bcr"] = { "<cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Right" }
 -- maps.n["<c-q>"] = { "<cmd>bdelete<cr>", desc = "Buffer Close" }
 
--- rebelot/heirline.nvim
--- maps.n["<c-n>"] = { "<cmd>bnext<cr>", desc = "Buffer Next" }
--- maps.n["<c-p>"] = { "<cmd>bprevious<cr>", desc = "Buffer Previous" }
 
 -- markdown
 maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" }
