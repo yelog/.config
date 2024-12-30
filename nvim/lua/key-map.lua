@@ -114,7 +114,8 @@ maps.n["<leader>ff"] = {
 }
 maps.n["<leader>fb"] = {
   function()
-    require("telescope.builtin").buffers()
+    -- require("telescope.builtin").buffers()
+    require('fzf-lua').buffers()
   end,
   desc = "Search buffers",
 }
@@ -138,13 +139,13 @@ maps.n["gu"] = {
 }
 maps.n["<leader>fk"] = {
   function()
-    require("telescope.builtin").keymaps()
+    require('fzf-lua').keymaps()
   end,
   desc = "Search keymap",
 }
 maps.n["<leader>ft"] = {
   function()
-    require("telescope.builtin").help_tags()
+    require('fzf-lua').tags()
   end,
   desc = "Search tags",
 }

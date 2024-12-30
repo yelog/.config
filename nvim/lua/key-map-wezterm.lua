@@ -131,7 +131,7 @@ maps.n["gd"] = {
 }
 maps.n["gu"] = {
   function()
-    require("telescope.builtin").lsp_references()
+    require('fzf-lua').lsp_references()
   end,
   desc = "Search references",
 }
@@ -143,7 +143,7 @@ maps.n["<leader>fk"] = {
 }
 maps.n["<leader>ft"] = {
   function()
-    require("telescope.builtin").help_tags()
+    require('fzf-lua').tags()
   end,
   desc = "Search tags",
 }
