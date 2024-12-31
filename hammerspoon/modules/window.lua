@@ -1,6 +1,6 @@
 -- 窗口管理
 
-require("modules.shortcut")
+require("modules.key-map")
 
 -- 关闭动画持续时间
 hs.window.animationDuration = 0.125
@@ -39,15 +39,17 @@ if windows.last_application_left_right_layout ~= nil then
         local previousFrame = previousWindow:frame()
 
         if currentFrame.x == screenFrame.x and currentFrame.w == screenFrame.w / 2 and
-           previousFrame.x == screenFrame.x + screenFrame.w / 2 and previousFrame.w == screenFrame.w / 2 then
+            previousFrame.x == screenFrame.x + screenFrame.w / 2 and previousFrame.w == screenFrame.w / 2 then
           -- 交换位置
-          currentWindow:setFrame(hs.geometry.rect(screenFrame.x + screenFrame.w / 2, screenFrame.y, screenFrame.w / 2, screenFrame.h))
+          currentWindow:setFrame(hs.geometry.rect(screenFrame.x + screenFrame.w / 2, screenFrame.y, screenFrame.w / 2,
+            screenFrame.h))
           previousWindow:setFrame(hs.geometry.rect(screenFrame.x, screenFrame.y, screenFrame.w / 2, screenFrame.h))
         else
           -- 设置当前窗口在屏幕的左半边
           currentWindow:setFrame(hs.geometry.rect(screenFrame.x, screenFrame.y, screenFrame.w / 2, screenFrame.h))
           -- 设置上次激活的窗口在屏幕的右半边
-          previousWindow:setFrame(hs.geometry.rect(screenFrame.x + screenFrame.w / 2, screenFrame.y, screenFrame.w / 2, screenFrame.h))
+          previousWindow:setFrame(hs.geometry.rect(screenFrame.x + screenFrame.w / 2, screenFrame.y, screenFrame.w / 2,
+            screenFrame.h))
         end
         print('last_application_layout success')
       else
@@ -421,32 +423,36 @@ if windows.top_right then
 end
 
 -- 左下角
-hs.hotkey.bind(windows.left_bottom.prefix, windows.left_bottom.key, windows.left_bottom.message, function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
+if windows.left_bottom ~= nil then
+  hs.hotkey.bind(windows.left_bottom.prefix, windows.left_bottom.key, windows.left_bottom.message, function()
+    local win = hs.window.focusedWindow()
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:frame()
 
-  f.x = max.x
-  f.y = max.y + (max.h / 2)
-  f.w = max.w / 2
-  f.h = max.h / 2
-  win:setFrame(f)
-end)
+    f.x = max.x
+    f.y = max.y + (max.h / 2)
+    f.w = max.w / 2
+    f.h = max.h / 2
+    win:setFrame(f)
+  end)
+end
 
 -- 右下角
--- hs.hotkey.bind(windows.right_bottom.prefix, windows.right_bottom.key, windows.right_bottom.message, function()
---   local win = hs.window.focusedWindow()
---   local f = win:frame()
---   local screen = win:screen()
---   local max = screen:frame()
---
---   f.x = max.x + (max.w / 2)
---   f.y = max.y + (max.h / 2)
---   f.w = max.w / 2
---   f.h = max.h / 2
---   win:setFrame(f)
--- end)
+if windows.right_bottom ~= nil then
+  hs.hotkey.bind(windows.right_bottom.prefix, windows.right_bottom.key, windows.right_bottom.message, function()
+    local win = hs.window.focusedWindow()
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:frame()
+
+    f.x = max.x + (max.w / 2)
+    f.y = max.y + (max.h / 2)
+    f.w = max.w / 2
+    f.h = max.h / 2
+    win:setFrame(f)
+  end)
+end
 
 -- 1/9
 if windows.one then
@@ -577,114 +583,124 @@ hs.hotkey.bind(windows.nine.prefix, windows.nine.key, windows.nine.message, func
 end)
 
 -- 左 1/3（横屏）或上 1/3（竖屏）
-hs.hotkey.bind(windows.left_1_3.prefix, windows.left_1_3.key, windows.left_1_3.message, function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
-  -- 如果为竖屏
-  if isVerticalScreen(screen) then
-    f.x = max.x
-    f.y = max.y
-    f.w = max.w
-    f.h = max.h / 3
-    -- 如果为横屏
-  else
-    f.x = max.x
-    f.y = max.y
-    f.w = max.w / 3
-    f.h = max.h
-  end
-  win:setFrame(f)
-end)
+if windows.left_1_3 ~= nil then
+  hs.hotkey.bind(windows.left_1_3.prefix, windows.left_1_3.key, windows.left_1_3.message, function()
+    local win = hs.window.focusedWindow()
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:frame()
+    -- 如果为竖屏
+    if isVerticalScreen(screen) then
+      f.x = max.x
+      f.y = max.y
+      f.w = max.w
+      f.h = max.h / 3
+      -- 如果为横屏
+    else
+      f.x = max.x
+      f.y = max.y
+      f.w = max.w / 3
+      f.h = max.h
+    end
+    win:setFrame(f)
+  end)
+end
 
 -- 中 1/3
-hs.hotkey.bind(windows.middle.prefix, windows.middle.key, windows.middle.message, function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
-  -- 如果为竖屏
-  if isVerticalScreen(screen) then
-    f.x = max.x
-    f.y = max.y + (max.h / 3)
-    f.w = max.w
-    f.h = max.h / 3
-    -- 如果为横屏
-  else
-    f.x = max.x + (max.w / 3)
-    f.y = max.y
-    f.w = max.w / 3
-    f.h = max.h
-  end
-  win:setFrame(f)
-end)
+if windows.middle ~= nil then
+  hs.hotkey.bind(windows.middle.prefix, windows.middle.key, windows.middle.message, function()
+    local win = hs.window.focusedWindow()
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:frame()
+    -- 如果为竖屏
+    if isVerticalScreen(screen) then
+      f.x = max.x
+      f.y = max.y + (max.h / 3)
+      f.w = max.w
+      f.h = max.h / 3
+      -- 如果为横屏
+    else
+      f.x = max.x + (max.w / 3)
+      f.y = max.y
+      f.w = max.w / 3
+      f.h = max.h
+    end
+    win:setFrame(f)
+  end)
+end
 
 -- 右 1/3（横屏）或下 1/3（竖屏）
-hs.hotkey.bind(windows.right_1_3.prefix, windows.right_1_3.key, windows.right_1_3.message, function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
-  -- 如果为竖屏
-  if isVerticalScreen(screen) then
-    f.x = max.x
-    f.y = max.y + (max.h / 3 * 2)
-    f.w = max.w
-    f.h = max.h / 3
-    -- 如果为横屏
-  else
-    f.x = max.x + (max.w / 3 * 2)
-    f.y = max.y
-    f.w = max.w / 3
-    f.h = max.h
-  end
-  win:setFrame(f)
-end)
+if windows.right_1_3 ~= nil then
+  hs.hotkey.bind(windows.right_1_3.prefix, windows.right_1_3.key, windows.right_1_3.message, function()
+    local win = hs.window.focusedWindow()
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:frame()
+    -- 如果为竖屏
+    if isVerticalScreen(screen) then
+      f.x = max.x
+      f.y = max.y + (max.h / 3 * 2)
+      f.w = max.w
+      f.h = max.h / 3
+      -- 如果为横屏
+    else
+      f.x = max.x + (max.w / 3 * 2)
+      f.y = max.y
+      f.w = max.w / 3
+      f.h = max.h
+    end
+    win:setFrame(f)
+  end)
+end
 
 -- 左 2/3（横屏）或上 2/3（竖屏）
-hs.hotkey.bind(windows.left_2_3.prefix, windows.left_2_3.key, windows.left_2_3.message, function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
-  -- 如果为竖屏
-  if isVerticalScreen(screen) then
-    f.x = max.x
-    f.y = max.y
-    f.w = max.w
-    f.h = max.h / 3 * 2
-    -- 如果为横屏
-  else
-    f.x = max.x
-    f.y = max.y
-    f.w = max.w / 3 * 2
-    f.h = max.h
-  end
-  win:setFrame(f)
-end)
+if windows.left_2_3 ~= nil then
+  hs.hotkey.bind(windows.left_2_3.prefix, windows.left_2_3.key, windows.left_2_3.message, function()
+    local win = hs.window.focusedWindow()
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:frame()
+    -- 如果为竖屏
+    if isVerticalScreen(screen) then
+      f.x = max.x
+      f.y = max.y
+      f.w = max.w
+      f.h = max.h / 3 * 2
+      -- 如果为横屏
+    else
+      f.x = max.x
+      f.y = max.y
+      f.w = max.w / 3 * 2
+      f.h = max.h
+    end
+    win:setFrame(f)
+  end)
+end
 
 -- 右 2/3（横屏）或下 2/3（竖屏）
-hs.hotkey.bind(windows.right_2_3.prefix, windows.right_2_3.key, windows.right_2_3.message, function()
-  local win = hs.window.focusedWindow()
-  local f = win:frame()
-  local screen = win:screen()
-  local max = screen:frame()
-  -- 如果为竖屏
-  if isVerticalScreen(screen) then
-    f.x = max.x
-    f.y = max.y + (max.h / 3)
-    f.w = max.w
-    f.h = max.h / 3 * 2
-    -- 如果为横屏
-  else
-    f.x = max.x + (max.w / 3)
-    f.y = max.y
-    f.w = max.w / 3 * 2
-    f.h = max.h
-  end
-  win:setFrame(f)
-end)
+if windows.right_2_3 ~= nil then
+  hs.hotkey.bind(windows.right_2_3.prefix, windows.right_2_3.key, windows.right_2_3.message, function()
+    local win = hs.window.focusedWindow()
+    local f = win:frame()
+    local screen = win:screen()
+    local max = screen:frame()
+    -- 如果为竖屏
+    if isVerticalScreen(screen) then
+      f.x = max.x
+      f.y = max.y + (max.h / 3)
+      f.w = max.w
+      f.h = max.h / 3 * 2
+      -- 如果为横屏
+    else
+      f.x = max.x + (max.w / 3)
+      f.y = max.y
+      f.w = max.w / 3 * 2
+      f.h = max.h
+    end
+    win:setFrame(f)
+  end)
+end
 
 -- 判断指定屏幕是否为竖屏
 function isVerticalScreen(screen)
@@ -696,39 +712,42 @@ function isVerticalScreen(screen)
 end
 
 -- 居中50% or 全屏
-hs.hotkey.bind(
-  windows.center_or_fullscreen.prefix,
-  windows.center_or_fullscreen.key,
-  windows.center_or_fullscreen.message,
-  function()
-    local win = hs.window.focusedWindow()
-    local f = win:frame()
-    local screen = win:screen()
-    local max = screen:frame()
+if windows.center_or_fullscreen ~= nil then
+  hs.hotkey.bind(
+    windows.center_or_fullscreen.prefix,
+    windows.center_or_fullscreen.key,
+    windows.center_or_fullscreen.message,
+    function()
+      local win = hs.window.focusedWindow()
+      local f = win:frame()
+      local screen = win:screen()
+      local max = screen:frame()
 
-    if f.w == max.w and f.h == max.h then
-      f.x = max.x + max.w / 4
-      f.y = max.y + max.h / 4
-      f.w = max.w / 2
-      f.h = max.h / 2
-      win:setFrame(f)
-    else
-      win:maximize()
+      if f.w == max.w and f.h == max.h then
+        f.x = max.x + max.w / 4
+        f.y = max.y + max.h / 4
+        f.w = max.w / 2
+        f.h = max.h / 2
+        win:setFrame(f)
+      else
+        win:maximize()
+      end
+
+      -- -- for stage mode
+      -- local stageWidth = 170
+      -- if f.w == max.w and f.h == max.h then
+      --   f.x = max.x + stageWidth
+      --   f.y = max.y
+      --   f.w = max.w - stageWidth
+      --   f.h = max.h
+      --   win:setFrame(f)
+      -- else
+      --   win:maximize()
+      -- end
     end
+  )
+end
 
-    -- -- for stage mode
-    -- local stageWidth = 170
-    -- if f.w == max.w and f.h == max.h then
-    --   f.x = max.x + stageWidth
-    --   f.y = max.y
-    --   f.w = max.w - stageWidth
-    --   f.h = max.h
-    --   win:setFrame(f)
-    -- else
-    --   win:maximize()
-    -- end
-  end
-)
 -- 最大化
 --hs.hotkey.bind(windows.max.prefix, windows.max.key, windows.max.message, function()
 --local win = hs.window.focusedWindow()
@@ -773,68 +792,66 @@ hs.hotkey.bind(windows.narrow.prefix, windows.narrow.key, windows.narrow.message
 end)
 
 -- 将窗口移动到上方屏幕
-hs.hotkey.bind(windows.to_up.prefix, windows.to_up.key, windows.to_up.message, function()
-  local win = hs.window.focusedWindow()
-  if win then
-    win:moveOneScreenNorth()
-  end
-end)
+if windows.to_up ~= nil then
+  hs.hotkey.bind(windows.to_up.prefix, windows.to_up.key, windows.to_up.message, function()
+    local win = hs.window.focusedWindow()
+    if win then
+      win:moveOneScreenNorth()
+    end
+  end)
+end
 
 -- 将窗口移动到下方屏幕
-hs.hotkey.bind(windows.to_down.prefix, windows.to_down.key, windows.to_down.message, function()
-  local win = hs.window.focusedWindow()
-  if win then
-    win:moveOneScreenSouth()
-  end
-end)
+if windows.to_down ~= nil then
+  hs.hotkey.bind(windows.to_down.prefix, windows.to_down.key, windows.to_down.message, function()
+    local win = hs.window.focusedWindow()
+    if win then
+      win:moveOneScreenSouth()
+    end
+  end)
+end
 
 -- 将窗口移动到左侧屏幕
-hs.hotkey.bind(windows.to_left.prefix, windows.to_left.key, windows.to_left.message, function()
-  local win = hs.window.focusedWindow()
-  if win then
-    win:moveOneScreenWest()
-  end
-end)
-
--- 将窗口移动到右侧屏幕
-hs.hotkey.bind(windows.to_right.prefix, windows.to_right.key, windows.to_right.message, function()
-  local win = hs.window.focusedWindow()
-  if win then
-    win:moveOneScreenEast()
-  end
-end)
-
--- 将窗口移动到右侧屏幕
-hs.hotkey.bind(
-  windows.switchNextScreen.prefix,
-  windows.switchNextScreen.key,
-  windows.switchNextScreen.message,
-  function()
-    -- get the focused window
+if windows.to_left ~= nil then
+  hs.hotkey.bind(windows.to_left.prefix, windows.to_left.key, windows.to_left.message, function()
     local win = hs.window.focusedWindow()
-    -- get the screen where the focused window is displayed, a.k.a. current screen
-    local screen = win:screen()
-    local f = win:frame()
-    local max = screen:frame()
-    -- compute the unitRect of the focused window relative to the current screen
-    -- and move the window to the next screen setting the same unitRect
-    local isMax = f.w == max.w and f.h == max.h
-    win:move(f:toUnitRect(screen:frame()), screen:next(), true, 0)
-    if isMax then
-      win:maximize()
+    if win then
+      win:moveOneScreenWest()
     end
-    setMousePos()
-  end
-)
+  end)
+end
 
--- 配置快捷键
-local hotkey = require "hs.hotkey"
-local axuielement = require "hs.axuielement"
+-- 将窗口移动到右侧屏幕
+if windows.to_right ~= nil then
+  hs.hotkey.bind(windows.to_right.prefix, windows.to_right.key, windows.to_right.message, function()
+    local win = hs.window.focusedWindow()
+    if win then
+      win:moveOneScreenEast()
+    end
+  end)
+end
 
--- 设置将焦点切换到第二个桌面的快捷键
-hotkey.bind({ "ctrl" }, "2", function()
-  local app = axuielement.applicationElement(hs.application.frontmostApplication())
-  local desktop = app:attributeValue("AXFocusedWindow"):attributeValue("AXParent"):attributeValue("AXParent")
-      :attributeValue("AXChildren")[2]
-  desktop:setAttributeValue("AXFocused", true)
-end)
+-- 将窗口移动到右侧屏幕
+if windows.switchNextScreen ~= nil then
+  hs.hotkey.bind(
+    windows.switchNextScreen.prefix,
+    windows.switchNextScreen.key,
+    windows.switchNextScreen.message,
+    function()
+      -- get the focused window
+      local win = hs.window.focusedWindow()
+      -- get the screen where the focused window is displayed, a.k.a. current screen
+      local screen = win:screen()
+      local f = win:frame()
+      local max = screen:frame()
+      -- compute the unitRect of the focused window relative to the current screen
+      -- and move the window to the next screen setting the same unitRect
+      local isMax = f.w == max.w and f.h == max.h
+      win:move(f:toUnitRect(screen:frame()), screen:next(), true, 0)
+      if isMax then
+        win:maximize()
+      end
+      setMousePos()
+    end
+  )
+end

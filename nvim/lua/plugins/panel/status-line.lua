@@ -289,7 +289,7 @@ return {
       }
 
       local Space = {
-        provider = " ", -- 使用显式的 3 个空格作为间距
+        provider = " ", -- 使用显式的 1 个空格作为间距
       }
 
       -- I take no credits for this! 🦁
@@ -414,8 +414,9 @@ return {
           end,
           name = "heirline_tabline_buffer_callback",
         },
-        TablineBufnr,
+        -- TablineBufnr, // buffer number
         FileIcon, -- turns out the version defined in #crash-course-part-ii-filename-and-friends can be reutilized as is here!
+        Space,
         TablineFileName,
         TablineFileFlags,
       }
@@ -521,7 +522,7 @@ return {
         -- TabpageClose,
       }
 
-      local TabLine = { BufferLine, TabPages }
+      local TabLine = { TabLineOffset, BufferLine, TabPages }
 
       -- Yep, with heirline we're driving manual!
       vim.o.showtabline = 2

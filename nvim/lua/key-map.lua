@@ -163,9 +163,14 @@ maps.n["<leader>fh"] = {
 }
 maps.n["<D-e>"] = {
   function()
-    require("telescope.builtin").oldfiles({
-      cwd_only = true,                       -- 仅显示当前工作目录下的文件
-      prompt_title = "Project Recent Files", -- 自定义提示标题
+    -- require("telescope.builtin").oldfiles({
+    --   cwd_only = true,                       -- 仅显示当前工作目录下的文件
+    --   prompt_title = "Project Recent Files", -- 自定义提示标题
+    -- })
+    require('fzf-lua').oldfiles({
+      prompt                  = 'History❯ ',
+      cwd_only                = true,
+      include_current_session = true,
     })
   end,
   desc = "Search hisotry",

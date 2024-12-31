@@ -6,9 +6,11 @@ git clone --recursive https://github.com/yelog/.config.git ~/.config
 ```
 
 ## Import stuff
+
 ### neovim
 
 #### install
+
 ```bash
 # Download source code
 git clone https://github.com/neovim/neovim.git
@@ -32,6 +34,7 @@ npm i -g typescript typescript-language-server
 
 
 ### lazygit
+
 ```bash
 yum install dnf
 dnf install 'dnf-command(copr)'
@@ -40,12 +43,14 @@ dnf install -y lazygit
 ```
 
 ### neofetch
+
 ```bash
 dnf copr enable konimex/neofetch
 dnf install neofetch
 ```
 
 ### zsh
+
 [github](https://github.com/ohmyzsh/ohmyzsh.git)
 ```bash
 # 安装zsh
@@ -69,8 +74,6 @@ git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-m
 # syntax
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 ```
-### neovim
-[install](https://github.com/neovim/neovim/wiki/Installing-Neovim)
 
 ### ranger
 
@@ -79,6 +82,7 @@ pip install ranger-fm
 
 ```
 ### tmux
+
 [install tmux](https://github.com/tmux/tmux/wiki/Installing)
 
 ```bash
@@ -86,6 +90,7 @@ ln ~/.config/tmux/tmux.conf ~/.tmux.conf
 ```
 
 ### rainbarf
+
 ```bash
 # Download source code
 git clone https://github.com/creaktive/rainbarf.git
@@ -94,6 +99,10 @@ yum install -y perl-Module-Build perl-Test-Simple
 # install
 perl Build.PL
 ./Build test
-./Build install
+./Bauild install
 ```
+
+# HammerSpoon
+
+[[hammerspoon-配置]]
 
