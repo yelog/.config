@@ -30,7 +30,7 @@ _G.windows = {
   -- 右下角
   right_bottom = { prefix = supperKey, key = "C", message = "Right Bottom" },
   -- 跟上一个应用进行左右分屏
-  last_application_left_right_layout = { prefix = supperKey, key = "0", message = "" },
+  last_application_left_right_layout = { prefix = supperKey, key = "0", message = "Left and right split screen" },
   -- 1/9
   one = { prefix = supperKey, key = "1", message = "1/9" },
   -- 2/9
