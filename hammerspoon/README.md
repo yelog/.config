@@ -1,5 +1,7 @@
 # hammerspoon 配置
 
+这套窗口管理的操作逻辑指哪打哪, 一个快捷键到达目的地, 就可以进行摸鱼、记笔记、执行命令、写代码等
+
 主要分为两个方面, 窗口和应用快捷键, 分为四个文件
 1. `init.lua` 加载其他模块
 2. `modules/key-map.lua` 定义快捷键
@@ -9,6 +11,8 @@
 快捷键修改和在 `./modules/key-map.lua`
 
 > 如下 `supperKey` 默认为 `cmd+shift+alt`, 同样可以在 `key-map.lua` 中修改, 并且如果需要更多快捷键, 推荐窗口和应用使用不同的 `supperKey`
+
+> 我的 supperKey 是通过 `Karabiner-Elements` 将 `Caps` 的长按改为 `cmd+shift+alt`, 所以如下的所有的组合键都是两个按键的组合, 如果感兴趣, 可以查看当前仓库下的 `Karabiner-Elements` 配置 `../karabiner/assets/complex_modifications/yelog.json`
 
 > 我的 `supperKey + hjkl` 通过 `Karabiner-Elements` 全局改为方向键了, 所以没有在如下使用, 如果没有占用, 可以绑定其他常用的应用
 
@@ -51,5 +55,5 @@
 
 # 致谢
 
-- https://github.com/KURANADO2/hammerspoon-kuranado
+- [KURANADO2/hammerspoon-kuranado](https://github.com/KURANADO2/hammerspoon-kuranado)
 
