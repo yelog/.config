@@ -723,27 +723,30 @@ if windows.center_or_fullscreen ~= nil then
       local screen = win:screen()
       local max = screen:frame()
 
-      if f.w == max.w and f.h == max.h then
-        f.x = max.x + max.w / 4
-        f.y = max.y + max.h / 4
-        f.w = max.w / 2
-        f.h = max.h / 2
-        win:setFrame(f)
-      else
-        win:maximize()
-      end
 
-      -- -- for stage mode
-      -- local stageWidth = 170
-      -- if f.w == max.w and f.h == max.h then
-      --   f.x = max.x + stageWidth
-      --   f.y = max.y
-      --   f.w = max.w - stageWidth
-      --   f.h = max.h
-      --   win:setFrame(f)
-      -- else
-      --   win:maximize()
-      -- end
+      if isStageManager() then
+        -- for stage mode
+        local stageWidth = 170
+        if f.w == max.w and f.h == max.h then
+          f.x = max.x + stageWidth
+          f.y = max.y
+          f.w = max.w - stageWidth
+          f.h = max.h
+          win:setFrame(f)
+        else
+          win:maximize()
+        end
+      else
+        if f.w == max.w and f.h == max.h then
+          f.x = max.x + max.w / 4
+          f.y = max.y + max.h / 4
+          f.w = max.w / 2
+          f.h = max.h / 2
+          win:setFrame(f)
+        else
+          win:maximize()
+        end
+      end
     end
   )
 end

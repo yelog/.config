@@ -4,6 +4,10 @@ local supperKey = { "shift", "alt", "cmd" }
 hs.hotkey.bind(supperKey, "R", "Reload Configuration", function()
   hs.reload()
 end)
+-- Toggle Stage Manager
+hs.hotkey.bind(supperKey, ".", "Toggle Stage Manager", function()
+  toggleStageManager()
+end)
 
 -- 窗口管理快捷键配置
 _G.windows = {
@@ -112,21 +116,21 @@ _G.applications = {
     bundleId = "me.qii404.another-redis-desktop-manager",
   },
   --{prefix = supperKey, key = "D", message="DataGrip", bundleId="com.jetbrains.datagrip"},
-  { prefix = supperKey, key = "O", message = "Apifox", bundleId = "cn.apifox.app" },
+  { prefix = supperKey, key = "O", message = "Apifox",   bundleId = "cn.apifox.app" },
   -- { prefix = supperKey, key = "C", message = "Xcode", bundleId = "com.apple.dt.Xcode" },
   -- { prefix = supperKey, key = "T", message = "Terminal", bundleId = "org.alacritty" },
   -- { prefix = supperKey, key = "T", message = "Terminal", bundleId = "com.github.wez.wezterm" },
   { prefix = supperKey, key = "T", message = "Terminal", bundleId = "net.kovidgoyal.kitty" },
   -- { prefix = supperKey, key = "T", message = "Terminal", bundleId = "com.mitchellh.ghostty" },
-  { prefix = supperKey, key = "U", message = "Teams", bundleId = "com.microsoft.teams2" },
-  { prefix = supperKey, key = "M", message = "Mail", bundleId = "com.apple.mail" },
-  { prefix = supperKey, key = ";", message = "ChatGPT", bundleId = "com.openai.chat" },
+  { prefix = supperKey, key = "U", message = "Teams",    bundleId = "com.microsoft.teams2" },
+  { prefix = supperKey, key = "M", message = "Mail",     bundleId = "com.apple.mail" },
+  { prefix = supperKey, key = ";", message = "ChatGPT",  bundleId = "com.openai.chat" },
   --{prefix = supperKey, key = "P", message="Postman", bundleId="com.postmanlabs.mac"},
   --{prefix = supperKey, key = "O", message="Word", bundleId="com.microsoft.Word"},
   --{prefix = supperKey, key = "Y", message="PyCharm", bundleId="com.jetbrains.pycharm"},
   --{prefix = supperKey, key = "R", message="Redis Desktop", bundleId="me.qii404.another-redis-desktop-manager"}
   --> Recent app
-  { prefix = supperKey, key = "P", message = "PDF", bundleId = "net.sourceforge.skim-app.skim" },
+  { prefix = supperKey, key = "P", message = "PDF",      bundleId = "net.sourceforge.skim-app.skim" },
   -- { prefix = supperKey, key = ",", message = "腾讯会议", bundleId = "com.tencent.meeting" },
   -- { prefix = supperKey, key = ".", message = "zoom会议", bundleId = "us.zoom.xos" },
 }

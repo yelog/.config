@@ -19,3 +19,38 @@ function _G.setMousePos()
     hs.mouse.setRelativePosition({ x = 40, y = 40 }, currentScreen)
   end
 end
+
+-- todo 自动判断当前是否开启了 StatgeManager
+function _G.isStageManager()
+  -- 根据下面代码判断
+  local output = hs.execute('/usr/bin/defaults read com.apple.WindowManager GloballyEnabled')
+  return string.find(output, '1')
+end
+
+local defaultsPath = '/usr/bin/defaults'
+local stageManagerDomain = 'com.apple.WindowManager'
+local stageEnabledKey = 'GloballyEnabled'
+
+function _G.toggleStageManager()
+  hs.task.new(
+    defaultsPath,
+    function(exitCode, stdOut, stdErr)
+      hs.task.new(
+        defaultsPath,
+        nil,
+        {
+          'write',
+          stageManagerDomain,
+          stageEnabledKey,
+          '-int',
+          string.find(stdOut, '0') and '1' or '0'
+        }
+      ):start()
+    end,
+    {
+      'read',
+      stageManagerDomain,
+      stageEnabledKey
+    }
+  ):start()
+end
