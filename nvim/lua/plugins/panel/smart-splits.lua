@@ -1,7 +1,7 @@
 return {
   'mrjones2014/smart-splits.nvim',
-  tag = 'v1.0.0',
-  lazy = false,
+  -- tag = 'v1.0.0',
+  -- lazy = false,
   config = function()
     require('smart-splits').setup({
       -- Ignored buffer types (only while resizing)

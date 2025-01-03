@@ -858,3 +858,58 @@ if windows.switchNextScreen ~= nil then
     end
   )
 end
+--
+-- -- 保存当前激活窗口的边框对象
+-- local activeAppBorder = nil
+--
+-- -- 边框样式设置
+-- local borderWidth = 4
+-- local borderColor = {["red"]=0, ["green"]=1, ["blue"]=0, ["alpha"]=0.8}
+--
+-- -- 移除现有的边框
+-- local function removeBorder()
+--     if activeAppBorder then
+--         activeAppBorder:delete()
+--         activeAppBorder = nil
+--     end
+-- end
+--
+-- -- 给当前激活的窗口添加绿色边框
+-- local function addBorderToActiveWindow()
+--     -- 移除旧边框
+--     removeBorder()
+--
+--     -- 获取当前激活的窗口
+--     local win = hs.window.focusedWindow()
+--     if not win then return end
+--
+--     -- 获取窗口的边界框
+--     local frame = win:frame()
+--
+--     -- 创建一个新的边框
+--     activeAppBorder = hs.drawing.rectangle(frame)
+--     activeAppBorder:setStrokeColor(borderColor)
+--     activeAppBorder:setStrokeWidth(borderWidth)
+--     activeAppBorder:setFill(false)
+--     activeAppBorder:setLevel(hs.drawing.windowLevels.overlay)
+--     activeAppBorder:setRoundedRectRadii(8, 8) -- 圆角矩形（可选）
+--     activeAppBorder:show()
+-- end
+--
+-- -- 监听窗口焦点变化
+-- hs.window.filter.default:subscribe(hs.window.filter.windowFocused, function()
+--     addBorderToActiveWindow()
+-- end)
+--
+-- -- 监听窗口失焦
+-- hs.window.filter.default:subscribe(hs.window.filter.windowUnfocused, function()
+--     removeBorder()
+-- end)
+--
+-- -- 监听窗口大小或位置变化
+-- hs.window.filter.default:subscribe(hs.window.filter.windowMoved, function()
+--     addBorderToActiveWindow()
+-- end)
+--
+-- -- 启动时给当前窗口加边框
+-- addBorderToActiveWindow()
