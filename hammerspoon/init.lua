@@ -1,8 +1,12 @@
 require("modules.app")
 require("modules.window")
+require("modules.countdown")
+
+-- 禁用按键绑定的消息提示
+hs.hotkey.alertDuration = 0
 
 -- 获取当前激活窗口所在的屏幕
-function getCurrentScreen()
+local function getCurrentScreen()
   local win = hs.window.focusedWindow()
   if win then
     return win:screen()
@@ -31,7 +35,7 @@ local defaultsPath = '/usr/bin/defaults'
 local stageManagerDomain = 'com.apple.WindowManager'
 local stageEnabledKey = 'GloballyEnabled'
 
--- 切换 StageManager
+-- 切换是否启用 StageManager
 function _G.toggleStageManager()
   hs.task.new(
     defaultsPath,

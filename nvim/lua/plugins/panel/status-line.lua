@@ -390,13 +390,14 @@ return {
         end,
         hl = function(self)
           if self.is_active then
-            return "underline"
+            return "TabLineSel"
+            -- return "underline"
             -- return "TabLineSel"
             -- why not?
             -- elseif not vim.api.nvim_buf_is_loaded(self.bufnr) then
             --     return { fg = "gray" }
           else
-            return "TabLine"
+            return { bg = "black"}
           end
         end,
         on_click = {
@@ -448,8 +449,7 @@ return {
       -- The final touch!
       local TablineBufferBlock = utils.surround({ "", "" }, function(self)
         if self.is_active then
-          -- return utils.get_highlight("TabLineSel").bg
-          return utils.get_highlight("TabLine").bg
+          return utils.get_highlight("TabLineSel").bg
         else
           return utils.get_highlight("TabLine").bg
         end

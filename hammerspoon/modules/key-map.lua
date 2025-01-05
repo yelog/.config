@@ -1,4 +1,5 @@
-local hyperKey = { "shift", "alt", "cmd" }
+_G.hyperKey = { "shift", "alt", "cmd" }
+_G.superKey = { "shift", "alt", "cmd", "ctrl" }
 
 -- 重载配置
 hs.hotkey.bind(hyperKey, "R", "Reload Configuration", function()
