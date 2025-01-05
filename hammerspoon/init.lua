@@ -31,6 +31,7 @@ local defaultsPath = '/usr/bin/defaults'
 local stageManagerDomain = 'com.apple.WindowManager'
 local stageEnabledKey = 'GloballyEnabled'
 
+-- 切换 StageManager
 function _G.toggleStageManager()
   hs.task.new(
     defaultsPath,
