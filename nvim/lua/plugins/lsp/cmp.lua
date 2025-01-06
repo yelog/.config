@@ -228,6 +228,13 @@ return {
           'snippet_forward',
           'fallback'
         },
+        cmdline = {
+          preset = 'enter',
+          ["<S-Tab>"] = { "select_prev", "fallback" },
+          ["<Tab>"] = { "select_next", "fallback" },
+          ["<UP>"] = { "select_prev", "fallback" },
+          ["<DOWN>"] = { "select_next", "fallback" },
+        }
       },
 
       appearance = {
