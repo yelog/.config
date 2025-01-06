@@ -11,23 +11,47 @@ maps.n["<right>"] = { "<cmd>vertical res+5<cr>", desc = "right" }
 -- local neoTree = require("neo-tree")
 maps.n["<c-q>"] = {
   function()
-    -- print(vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$'))
-    -- print(neoTree.get_prior_window())
-    -- vim.fn.getwininfo(1)
-    -- print(vim.fn.tabpagenr('$'))
-
-    -- if vim.fn.tabpagewinnr(vim.fn.tabpagenr(), '$') > 1 then
-    -- if vim.fn.len(vim.fn.getbufinfo({ buflisted = 1 })) > 1 then
-    -- close current file
-    -- vim.cmd("bdelete")
-    vim.cmd("Bdelete")
-    -- else
-    -- --   -- close current window
-    --   vim.cmd("close")
-    -- end
+    -- print('split_type: ' .. split_type())
+    -- print("Hsplit: " .. (vim.fn.winnr('$') > 1 and "Yes" or "No"))
+    local type = split_type()
+    if  type == "No Split" or type == 'Unknown Split'  then
+      vim.cmd("Bdelete")
+      print("close buffer")
+    else
+      vim.cmd("q")
+    end
   end,
   desc = "Quit",
 }
+-- 判断当前分屏类型
+function split_type()
+  local win_count = #vim.api.nvim_list_wins()
+  if win_count == 1 then
+    return "No Split"
+  end
+
+  -- 获取当前窗口的宽度和高度
+  local current_win = vim.api.nvim_get_current_win()
+  local current_width = vim.api.nvim_win_get_width(current_win)
+  local current_height = vim.api.nvim_win_get_height(current_win)
+
+  -- 遍历所有窗口，判断分屏方向
+  for _, win in ipairs(vim.api.nvim_list_wins()) do
+    if win ~= current_win then
+      local width = vim.api.nvim_win_get_width(win)
+      local height = vim.api.nvim_win_get_height(win)
+
+      if current_width == width then
+        return "Horizontal Split"
+      elseif current_height == height then
+        return "Vertical Split"
+      end
+    end
+  end
+
+  return "Unknown Split"
+end
+
 -- maps.n["Q"] = { "<cmd>w<cr><cmd>qa<cr>", desc = "Quit" }
 
 -- plugin
