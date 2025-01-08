@@ -1,7 +1,7 @@
 return {
   "yetone/avante.nvim",
   event = "VeryLazy",
-  lazy = false,
+  lazy = true,     -- 启动加载需要800ms, 所以改为懒加载
   version = false, -- set this if you want to always pull the latest change
   opts = {
     ---@alias Provider "claude" | "openai" | "azure" | "gemini" | "cohere" | "copilot" | string
@@ -37,6 +37,12 @@ return {
         parse_response_data = function(data_stream, event_state, opts)
           require("avante.providers").openai.parse_response(data_stream, event_state, opts)
         end,
+      },
+      deepseek = {
+        __inherited_from = "openai",
+        api_key_name = "avante.nvim",
+        endpoint = "https://api.deepseek.com",
+        model = "deepseek-coder",
       },
     },
     ---Specify the special dual_boost mode

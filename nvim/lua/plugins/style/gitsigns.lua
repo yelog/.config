@@ -105,6 +105,20 @@ return {
         --     end)
         --   end,
         -- })
+        -- 自动将修改、删除、添加的文件添加到 Git 暂存区
+        vim.api.nvim_create_autocmd({ "BufWritePost", "BufDelete", "BufNewFile" }, {
+          pattern = "*",              -- 作用于所有文件
+          callback = function()
+            local file = vim.fn.expand('%:p') -- 获取当前文件的完整路径
+            local git_root = vim.fn.systemlist('git rev-parse --show-toplevel')[1]
+
+            if vim.v.shell_error == 0 and file:find(git_root, 1, true) == 1 then
+              -- 当前文件在 Git 仓库内
+              vim.fn.system('git add ' .. vim.fn.shellescape(file))
+              print("✅ Auto git add: " .. file)
+            end
+          end,
+        })
       end,
     }
   end
