@@ -132,6 +132,22 @@ autoload -U compinit
 compinit
 
 # [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+fzf_cd_and_search() {
+    local dir=${1:-.}
+    cd "$dir" || return
+
+    local file
+    file=$(fzf --preview="bat --style=numbers --color=always --line-range=:500 {} 2>/dev/null" \
+        --preview-window=right:50%:wrap) || return
+    if [ -n "$file" ]; then
+        cd "$(dirname "$file")"
+        echo "Changed directory to $(pwd)"
+    fi
+}
+
+# 将函数绑定到快捷键 Ctrl+F
+zle -N fzf_cd_and_search
+bindkey '^F' fzf_cd_and_search
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -261,7 +277,8 @@ fi
 
 nvm use v18.20.4 > /dev/null 2>&1
 # nvm use v16.20.2 > /dev/null 2>&1
-# alias npm=pnpm
+alias npm=pnpm
+alias dev='pnpm dev'
 export NODE_OPTIONS=--openssl-legacy-provider
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
 
