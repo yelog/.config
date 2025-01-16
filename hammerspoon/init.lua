@@ -1,6 +1,7 @@
 require("modules.app")
 require("modules.window")
 require("modules.countdown")
+require("modules.time")
 
 -- 禁用按键绑定的消息提示
 hs.hotkey.alertDuration = 0

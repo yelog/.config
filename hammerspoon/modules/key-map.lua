@@ -136,3 +136,7 @@ _G.applications = {
   -- { prefix = hyperKey, key = ",", message = "腾讯会议", bundleId = "com.tencent.meeting" },
   -- { prefix = hyperKey, key = ".", message = "zoom会议", bundleId = "us.zoom.xos" },
 }
+
+_G.time = {
+  currentTime = { prefix = hyperKey, key = "space", message = "Current Time" },
+}

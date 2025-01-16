@@ -346,7 +346,7 @@ return {
         Space,
         FileType,
         Space,
-        LSPActive,
+        -- LSPActive,
         ScrollBar
       }
 
