@@ -277,7 +277,7 @@ fi
 
 nvm use v18.20.4 > /dev/null 2>&1
 # nvm use v16.20.2 > /dev/null 2>&1
-alias npm=pnpm
+# alias npm=pnpm
 alias dev='pnpm dev'
 export NODE_OPTIONS=--openssl-legacy-provider
 typeset -g POWERLEVEL9K_INSTANT_PROMPT=quiet
@@ -428,49 +428,49 @@ function ta() {
 # neovim image.nvim
 export DYLD_FALLBACK_LIBRARY_PATH="$(brew --prefix)/lib:$DYLD_FALLBACK_LIBRARY_PATH"
 
-# >>>>>>>>>>>>>>>>>>>>>> zsh-autocomplete >>>>>>>>>>>>>>>>>>>>>>
-# 期望:
-# 1. 目录文件也要竖排.. 最好不要分组
-# 2. 什么都没输入, 应该显示历史记录, 输入了内容就变成命令补全
-# 3. alias 能看到是什么
-source /Users/yelog/Repos/marlonrichert/zsh-autocomplete/zsh-autocomplete.plugin.zsh
-# 历史记录模式, 不再显示参数补全
-# zstyle ':autocomplete:*' default-context history-incremental-search-backward
-# 设定补全参数
-zstyle ':autocomplete:*' min-input 1
-zstyle ':autocomplete:*' delay 0.05
-# 设定显示的行数
-zstyle ':autocomplete:*:*' list-lines                        'reply=7'
-zstyle ':autocomplete:recent-paths:*'                        list-lines 8
-zstyle ':autocomplete:history-incremental-search-backward:*' list-lines 8
-zstyle ':autocomplete:history-search-backward:*'             list-lines 8
-
-# Tab按键进入菜单进行循环
-bindkey '\t' menu-select "$terminfo[kcbt]" menu-select
-bindkey -M menuselect '\t' menu-complete "$terminfo[kcbt]" reverse-menu-complete
-# 不要绑定快捷键
-# bindkey '^R' .history-incremental-search-backward
-# bindkey '^S' .history-incremental-search-forward
-# 左右永远是编辑dyn_stack
-#bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
-#bindkey -M menuselect  '^[[C'  .forward-char  '^[OC'  .forward-char
-
-# 文件颜色
-# export LS_COLORS='di=38;2;140;170;238:fi=38;2;181;191;226:ln=38;2;129;200;190:no=38;2;198;208;245'
-# zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
-zstyle ':completion:*:default' list-colors "=*=38;2;115;121;148"
-# 分组设置
-# zstyle ':completion:*' group-name '' # 自动使用匹配的名称
-# zstyle ':completion:*:*:-command-:*:*' group-order builtins functions commands
-zstyle ':completion:*' format '%F{#a5adce}%d%f'
-
-# 文件显示详情
-# zstyle ':completion:*' long-listing true
-# zstyle ':completion:*' file-list all
-# 不显示 expansion & 展开 alias
-zstyle ':completion:*' completer \
-        _expand_alias _complete _complete:-fuzzy _correct _approximate _ignored
-[ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
+# # >>>>>>>>>>>>>>>>>>>>>> zsh-autocomplete >>>>>>>>>>>>>>>>>>>>>>
+# # 期望:
+# # 1. 目录文件也要竖排.. 最好不要分组
+# # 2. 什么都没输入, 应该显示历史记录, 输入了内容就变成命令补全
+# # 3. alias 能看到是什么
+# source /Users/yelog/Repos/marlonrichert/zsh-autocomplete/zsh-autocomplete.plugin.zsh
+# # 历史记录模式, 不再显示参数补全
+# # zstyle ':autocomplete:*' default-context history-incremental-search-backward
+# # 设定补全参数
+# zstyle ':autocomplete:*' min-input 1
+# zstyle ':autocomplete:*' delay 0.05
+# # 设定显示的行数
+# zstyle ':autocomplete:*:*' list-lines                        'reply=7'
+# zstyle ':autocomplete:recent-paths:*'                        list-lines 8
+# zstyle ':autocomplete:history-incremental-search-backward:*' list-lines 8
+# zstyle ':autocomplete:history-search-backward:*'             list-lines 8
+#
+# # Tab按键进入菜单进行循环
+# bindkey '\t' menu-select "$terminfo[kcbt]" menu-select
+# bindkey -M menuselect '\t' menu-complete "$terminfo[kcbt]" reverse-menu-complete
+# # 不要绑定快捷键
+# # bindkey '^R' .history-incremental-search-backward
+# # bindkey '^S' .history-incremental-search-forward
+# # 左右永远是编辑dyn_stack
+# #bindkey -M menuselect  '^[[D' .backward-char  '^[OD' .backward-char
+# #bindkey -M menuselect  '^[[C'  .forward-char  '^[OC'  .forward-char
+#
+# # 文件颜色
+# # export LS_COLORS='di=38;2;140;170;238:fi=38;2;181;191;226:ln=38;2;129;200;190:no=38;2;198;208;245'
+# # zstyle ':completion:*:default' list-colors ${(s.:.)LS_COLORS}
+# zstyle ':completion:*:default' list-colors "=*=38;2;115;121;148"
+# # 分组设置
+# # zstyle ':completion:*' group-name '' # 自动使用匹配的名称
+# # zstyle ':completion:*:*:-command-:*:*' group-order builtins functions commands
+# zstyle ':completion:*' format '%F{#a5adce}%d%f'
+#
+# # 文件显示详情
+# # zstyle ':completion:*' long-listing true
+# # zstyle ':completion:*' file-list all
+# # 不显示 expansion & 展开 alias
+# zstyle ':completion:*' completer \
+#         _expand_alias _complete _complete:-fuzzy _correct _approximate _ignored
+# [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"  # This loads nvm bash_completion
 
 # fnm
 FNM_PATH="/Users/yelog/.local/share/fnm"
