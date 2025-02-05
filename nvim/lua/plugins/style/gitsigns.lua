@@ -1,5 +1,5 @@
 return {
-  "lewis6991/gitsigns.nvim",
+  "lewis6991/gitsigns.nvim", -- https://github.com/lewis6991/gitsigns.nvim
   config = function()
     require('gitsigns').setup {
       signs                        = {
@@ -62,31 +62,33 @@ return {
           if vim.wo.diff then return ']c' end
           vim.schedule(function() gs.next_hunk() end)
           return '<Ignore>'
-        end, { expr = true })
+        end, { expr = true, desc = 'Next Hunk' })
 
         map('n', '<leader>gk', function()
           if vim.wo.diff then return '[c' end
           vim.schedule(function() gs.prev_hunk() end)
           return '<Ignore>'
-        end, { expr = true })
+        end, { expr = true, desc = 'Previous Hunk' })
 
         -- Actions
-        map('n', '<leader>gs', gs.stage_hunk)
-        map('n', '<leader>gr', gs.reset_hunk)
-        map('v', '<leader>gs', function() gs.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
-        map('v', '<leader>gr', function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end)
-        map('n', '<leader>gS', gs.stage_buffer)
-        map('n', '<leader>gu', gs.undo_stage_hunk)
-        map('n', '<leader>gR', gs.reset_buffer)
-        map('n', '<leader>gp', gs.preview_hunk)
-        map('n', '<leader>gb', function() gs.blame_line { full = true } end)
-        map('n', '<leader>tb', gs.toggle_current_line_blame)
-        map('n', '<leader>gd', gs.diffthis)
-        map('n', '<leader>gD', function() gs.diffthis('~') end)
-        map('n', '<leader>td', gs.toggle_deleted)
+        map('n', '<leader>gs', gs.stage_hunk, { desc = 'Git Stage Hunk' })
+        map('n', '<leader>gr', gs.reset_hunk, { desc = 'Git Reset Hunk' })
+        map('v', '<leader>gs', function() gs.stage_hunk { vim.fn.line('.'), vim.fn.line('v') } end,
+          { desc = 'Git Stage Hunk' })
+        map('v', '<leader>gr', function() gs.reset_hunk { vim.fn.line('.'), vim.fn.line('v') } end,
+          { desc = 'Git Reset Hunk' })
+        map('n', '<leader>gS', gs.stage_buffer, { desc = 'Git Stage Buffer' })
+        map('n', '<leader>gu', gs.undo_stage_hunk, { desc = 'Git Undo Stage Hunk' })
+        map('n', '<leader>gR', gs.reset_buffer, { desc = 'Git Reset Buffer' })
+        map('n', '<leader>gp', gs.preview_hunk, { desc = 'Git Preview Hunk' })
+        map('n', '<leader>gb', function() gs.blame_line { full = true } end, { desc = 'Git Blame Line' })
+        map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'Git Toggle Current Line Blame' })
+        map('n', '<leader>gd', gs.diffthis, { desc = 'Git Diff This' })
+        map('n', '<leader>gD', function() gs.diffthis('~') end, { desc = 'Git Diff This ~' })
+        map('n', '<leader>td', gs.toggle_deleted, { desc = 'Git Toggle Deleted' })
 
         -- Text object
-        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>')
+        map({ 'o', 'x' }, 'ih', ':<C-U>Gitsigns select_hunk<CR>', { desc = 'Git Select Hunk' })
 
         -- auto add staging area
         -- vim.api.nvim_create_autocmd('BufWritePost', {
@@ -106,19 +108,20 @@ return {
         --   end,
         -- })
         -- 自动将修改、删除、添加的文件添加到 Git 暂存区
-        vim.api.nvim_create_autocmd({ "BufWritePost", "BufDelete", "BufNewFile" }, {
-          pattern = "*",              -- 作用于所有文件
-          callback = function()
-            local file = vim.fn.expand('%:p') -- 获取当前文件的完整路径
-            local git_root = vim.fn.systemlist('git rev-parse --show-toplevel')[1]
-
-            if vim.v.shell_error == 0 and file:find(git_root, 1, true) == 1 then
-              -- 当前文件在 Git 仓库内
-              vim.fn.system('git add ' .. vim.fn.shellescape(file))
-              print("✅ Auto git add: " .. file)
-            end
-          end,
-        })
+        -- 2025-02-05 暂时屏蔽, 会导致 prev_hunk 无法正常工作
+        -- vim.api.nvim_create_autocmd({ "BufWritePost", "BufDelete", "BufNewFile" }, {
+        --   pattern = "*",                      -- 作用于所有文件
+        --   callback = function()
+        --     local file = vim.fn.expand('%:p') -- 获取当前文件的完整路径
+        --     local git_root = vim.fn.systemlist('git rev-parse --show-toplevel')[1]
+        --
+        --     if vim.v.shell_error == 0 and file:find(git_root, 1, true) == 1 then
+        --       -- 当前文件在 Git 仓库内
+        --       vim.fn.system('git add ' .. vim.fn.shellescape(file))
+        --       print("✅ Auto git add: " .. file)
+        --     end
+        --   end,
+        -- })
       end,
     }
   end

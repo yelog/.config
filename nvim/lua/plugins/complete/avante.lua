@@ -158,23 +158,46 @@ return {
     "hrsh7th/nvim-cmp",            -- autocompletion for avante commands and mentions
     "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
     "zbirenbaum/copilot.lua",      -- for providers='copilot'
-    -- {
-    --   -- support for image pasting
-    --   "HakonHarnes/img-clip.nvim",
-    --   event = "VeryLazy",
-    --   opts = {
-    --     -- recommended settings
-    --     default = {
-    --       embed_image_as_base64 = false,
-    --       prompt_for_file_name = false,
-    --       drag_and_drop = {
-    --         insert_mode = true,
-    --       },
-    --       -- required for Windows users
-    --       use_absolute_path = true,
-    --     },
-    --   },
-    -- },
+    {
+      -- support for image pasting
+      "HakonHarnes/img-clip.nvim",
+      event = "VeryLazy",
+      opts = {
+        -- recommended settings
+        default = {
+          dir_path = "assets", ---@type string | fun(): string
+          extension = "png", ---@type string | fun(): string
+          file_name = "%Y-%m-%d-%H-%M-%S", ---@type string | fun(): string
+          use_absolute_path = false, ---@type boolean | fun(): boolean
+          relative_to_current_file = false, ---@type boolean | fun(): boolean,
+          -- template options
+          template = "$FILE_PATH", ---@type string | fun(context: table): string
+          url_encode_path = false, ---@type boolean | fun(): boolean
+          relative_template_path = true, ---@type boolean | fun(): boolean
+          use_cursor_in_template = true, ---@type boolean | fun(): boolean
+          insert_mode_after_paste = true, ---@type boolean | fun(): boolean
+
+          -- prompt options
+          prompt_for_file_name = true, ---@type boolean | fun(): boolean
+          show_dir_path_in_prompt = false, ---@type boolean | fun(): boolean
+
+          -- base64 options
+          max_base64_size = 10, ---@type number | fun(): number
+          embed_image_as_base64 = false, ---@type boolean | fun(): boolean
+
+          -- image options
+          process_cmd = "", ---@type string | fun(): string
+          copy_images = false, ---@type boolean | fun(): boolean
+          download_images = true, ---@type boolean | fun(): boolean
+
+          -- drag and drop options
+          drag_and_drop = {
+            enabled = true, ---@type boolean | fun(): boolean
+            insert_mode = false, ---@type boolean | fun(): boolean
+          },
+        },
+      },
+    },
     {
       -- Make sure to set this up properly if you have lazy=true
       'MeanderingProgrammer/render-markdown.nvim',
