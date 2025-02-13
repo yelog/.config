@@ -11,7 +11,7 @@ return {
         ]])
       vim.g.table_mode_sort_map = '<leader>mts'
     end
-  },   --> table mode
+  }, --> table mode
   {
     "bullets-vim/bullets.vim",
     config = function()
@@ -81,18 +81,15 @@ return {
     -- {config.dev.path} configed by lazy.nvim in init.lua
     dev = true,
     opts = {
+      -- is enable
       enable = true,
-      -- show_mode = 'insert-line'
-      -- render = {
-      --   fenced_code_block = {
-      --     icon = "📌",
-      --     -- hl_group = "markliveTag",
-      --     -- regex = "(<b>).*(</b>)",
-      --     -- render = function(rc)
-      --     --
-      --     -- end
-      --   },
-      -- }
+      -- show mode
+      -- 1. 'insert-line': default value, show origin content of current line when insert mode and cursor is on the line
+      -- 2. 'normal-line': show origin content of current line when normal mode and cursor is on the line
+      -- 3. 'insert-all': show origin content of all when insert mode
+      -- show_mode = 'insert-line',
+      show_mode = 'normal-line',
+      filetype = { 'markdown' }, -- or {"*.md", "*.wiki"}
     }
   },
   -- {

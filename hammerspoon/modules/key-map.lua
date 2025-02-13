@@ -102,7 +102,7 @@ _G.windows = {
 -- 应用切换快捷键配置, 可以通过此命令获取bundleId: osascript -e 'id of app "Apifox"'
 _G.applications = {
   { prefix = hyperKey, key = "V", message = "WeChat",        bundleId = "com.tencent.xinWeChat" },
-  { prefix = hyperKey, key = "N", message = "QQ",            bundleId = "com.tencent.qq" },
+  -- { prefix = hyperKey, key = "N", message = "QQ",            bundleId = "com.tencent.qq" },
   --{prefix = hyperKey, key = "V", message="VSCode", bundleId="com.microsoft.VSCode"},
   { prefix = hyperKey, key = "F", message = "Finder",        bundleId = "com.apple.finder" },
   -- { prefix = hyperKey, key = "B", message = "Browser",        bundleId = "com.google.Chrome" },
@@ -111,12 +111,12 @@ _G.applications = {
   -- {prefix = hyperKey, key = "I", message="IntelliJ IDEA", bundleId="com.jetbrains.intellij-EAP"}, { prefix = hyperKey, key = "I", message = "IntelliJ IDEA", bundleId = "com.todesktop.230313mzl4w4u92" },
   -- { prefix = hyperKey, key = "O", message = "Obsidian",      bundleId = "md.obsidian" },
   { prefix = hyperKey, key = "Y", message = "discord",       bundleId = "com.hnc.Discord" },
-  {
-    prefix = hyperKey,
-    key = "N",
-    message = "Redis Desktop Manager",
-    bundleId = "me.qii404.another-redis-desktop-manager",
-  },
+  -- {
+  --   prefix = hyperKey,
+  --   key = "N",
+  --   message = "Redis Desktop Manager",
+  --   bundleId = "me.qii404.another-redis-desktop-manager",
+  -- },
   --{prefix = hyperKey, key = "D", message="DataGrip", bundleId="com.jetbrains.datagrip"},
   { prefix = hyperKey, key = "O", message = "Apifox",   bundleId = "cn.apifox.app" },
   -- { prefix = hyperKey, key = "C", message = "Xcode", bundleId = "com.apple.dt.Xcode" },
@@ -132,7 +132,7 @@ _G.applications = {
   --{prefix = hyperKey, key = "Y", message="PyCharm", bundleId="com.jetbrains.pycharm"},
   --{prefix = hyperKey, key = "R", message="Redis Desktop", bundleId="me.qii404.another-redis-desktop-manager"}
   --> Recent app
-  { prefix = hyperKey, key = "P", message = "PDF",      bundleId = "net.sourceforge.skim-app.skim" },
+  -- { prefix = hyperKey, key = "P", message = "PDF",      bundleId = "net.sourceforge.skim-app.skim" },
   -- { prefix = hyperKey, key = ",", message = "腾讯会议", bundleId = "com.tencent.meeting" },
   -- { prefix = hyperKey, key = ".", message = "zoom会议", bundleId = "us.zoom.xos" },
 }
