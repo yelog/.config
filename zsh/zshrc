@@ -204,6 +204,7 @@ alias v=nvim
 alias sudo='sudo '
 alias lg=lazygit
 alias j=z
+alias J=z
 alias ls='eza --icons -lh --time-style=iso'
 alias cat='bat'
 alias scp='rsync -P --rsh=ssh'

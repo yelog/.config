@@ -2,7 +2,7 @@ _G.hyperKey = { "shift", "alt", "cmd" }
 _G.superKey = { "shift", "alt", "cmd", "ctrl" }
 
 -- 重载配置
-hs.hotkey.bind(hyperKey, "R", "Reload Configuration", function()
+hs.hotkey.bind(superKey, "R", "Reload Configuration", function()
   hs.reload()
   hs.notify.new({ title = "Hammerspoon", informativeText = "Configuration Reload" }):send()
 end)
@@ -111,22 +111,24 @@ _G.applications = {
   -- {prefix = hyperKey, key = "I", message="IntelliJ IDEA", bundleId="com.jetbrains.intellij-EAP"}, { prefix = hyperKey, key = "I", message = "IntelliJ IDEA", bundleId = "com.todesktop.230313mzl4w4u92" },
   -- { prefix = hyperKey, key = "O", message = "Obsidian",      bundleId = "md.obsidian" },
   { prefix = hyperKey, key = "Y", message = "discord",       bundleId = "com.hnc.Discord" },
-  -- {
-  --   prefix = hyperKey,
-  --   key = "N",
-  --   message = "Redis Desktop Manager",
-  --   bundleId = "me.qii404.another-redis-desktop-manager",
-  -- },
+  {
+    prefix = hyperKey,
+    key = "R",
+    message = "Redis Desktop Manager",
+    bundleId = "me.qii404.another-redis-desktop-manager",
+  },
   --{prefix = hyperKey, key = "D", message="DataGrip", bundleId="com.jetbrains.datagrip"},
-  { prefix = hyperKey, key = "O", message = "Apifox",   bundleId = "cn.apifox.app" },
+  { prefix = hyperKey, key = "O", message = "Apifox",        bundleId = "cn.apifox.app" },
   -- { prefix = hyperKey, key = "C", message = "Xcode", bundleId = "com.apple.dt.Xcode" },
   -- { prefix = hyperKey, key = "T", message = "Terminal", bundleId = "org.alacritty" },
   -- { prefix = hyperKey, key = "T", message = "Terminal", bundleId = "com.github.wez.wezterm" },
-  { prefix = hyperKey, key = "T", message = "Terminal", bundleId = "net.kovidgoyal.kitty" },
+  { prefix = hyperKey, key = "T", message = "Terminal",      bundleId = "net.kovidgoyal.kitty" },
   -- { prefix = hyperKey, key = "T", message = "Terminal", bundleId = "com.mitchellh.ghostty" },
-  { prefix = hyperKey, key = "U", message = "Teams",    bundleId = "com.microsoft.teams2" },
-  { prefix = hyperKey, key = "M", message = "Mail",     bundleId = "com.apple.mail" },
-  { prefix = hyperKey, key = ";", message = "ChatGPT",  bundleId = "com.openai.chat" },
+  { prefix = hyperKey, key = "U", message = "Teams",         bundleId = "com.microsoft.teams2" },
+  { prefix = hyperKey, key = "M", message = "Mail",          bundleId = "com.apple.mail" },
+  -- { prefix = hyperKey, key = ";", message = "ChatGPT",  bundleId = "com.openai.chat" },
+  { prefix = hyperKey, key = ";", message = "ChatGPT",       bundleId = "com.tencent.yuanbao" },
+  -- { prefix = hyperKey, key = ";", message = "Browser",        bundleId = "com.google.Chrome" },
   --{prefix = hyperKey, key = "P", message="Postman", bundleId="com.postmanlabs.mac"},
   --{prefix = hyperKey, key = "O", message="Word", bundleId="com.microsoft.Word"},
   --{prefix = hyperKey, key = "Y", message="PyCharm", bundleId="com.jetbrains.pycharm"},
