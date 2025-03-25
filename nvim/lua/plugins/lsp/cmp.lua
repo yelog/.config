@@ -193,7 +193,11 @@ return {
     'saghen/blink.cmp',
     lazy = false, -- lazy loading handled internally
     -- optional: provides snippets for the snippet source
-    dependencies = 'rafamadriz/friendly-snippets',
+    dependencies = {
+      'rafamadriz/friendly-snippets',
+      'Kaiser-Yang/blink-cmp-avante',
+      -- 'windwp/nvim-autopairs'
+    },
 
     -- use a release tag to download pre-built binaries
     -- v0.8.1 会闪退
@@ -219,6 +223,7 @@ return {
         ["<DOWN>"] = { "select_next", "fallback" },
         ['<CR>'] = {
           function(cmp)
+            -- local cmp_autopairs = require("nvim-autopairs.completion.cmp")
             if cmp.snippet_active() then
               return cmp.accept()
             else
@@ -273,11 +278,20 @@ return {
       -- default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, via `opts_extend`
       sources = {
-        default = { 'lsp', 'path', 'snippets', 'buffer' },
+        default = { 'avante', 'lsp', 'path', 'snippets', 'buffer' },
         -- optionally disable cmdline completions
         -- cmdline = {},
         per_filetype = {
           codecompanion = { "codecompanion" },
+        },
+        providers = {
+          avante = {
+            module = 'blink-cmp-avante',
+            name = 'Avante',
+            opts = {
+              -- options for blink-cmp-avante
+            }
+          }
         }
       },
       -- experimental signature help support

@@ -14,7 +14,7 @@ maps.n["<c-q>"] = {
     -- print('split_type: ' .. split_type())
     -- print("Hsplit: " .. (vim.fn.winnr('$') > 1 and "Yes" or "No"))
     local type = split_type()
-    if  type == "No Split" or type == 'Unknown Split'  then
+    if type == "No Split" or type == 'Unknown Split' then
       vim.cmd("Bdelete")
       print("close buffer")
     else
@@ -115,43 +115,34 @@ maps.v["<leader>ll"] = {
   desc = "format code",
 }
 
--- Telescope
+-- fzf-lua
 maps.n["<D-S-M>"] = {
   function()
-    require("telescope.builtin").lsp_document_symbols()
+    require("fzf-lua").lsp_document_symbols()
   end,
   desc = "Search symbols",
 }
 maps.n["<D-S-O>"] = {
   function()
-    -- require("telescope.builtin").find_files()
-    require('fzf-lua').files()
+    require('fzf-lua').files({ resume = true })
   end,
   desc = "search file",
 }
 maps.n["<leader>ff"] = {
   function()
-    -- require("telescope.builtin").find_files()
     require('fzf-lua').files()
   end,
   desc = "search file",
 }
 maps.n["<leader>fb"] = {
   function()
-    -- require("telescope.builtin").buffers()
     require('fzf-lua').buffers()
-  end,
-  desc = "Search buffers",
-}
-maps.n["<leader>fn"] = {
-  function()
-    require("telescope").extensions.notify.notify()
   end,
   desc = "Search buffers",
 }
 maps.n["gd"] = {
   function()
-    require("telescope.builtin").lsp_definitions()
+    require("fzf-lua").lsp_definitions()
   end,
   desc = "Search definition",
 }
@@ -175,22 +166,22 @@ maps.n["<leader>ft"] = {
 }
 maps.n["<leader>fm"] = {
   function()
-    require("telescope.builtin").marks()
+    require("fzf-lua").marks()
   end,
   desc = "Search marks",
 }
 maps.n["<leader>fh"] = {
   function()
-    require("telescope.builtin").oldfiles()
+    require('fzf-lua').oldfiles({
+      prompt                  = 'History❯ ',
+      cwd_only                = true,
+      include_current_session = true,
+    })
   end,
   desc = "Search hisotry",
 }
 maps.n["<D-e>"] = {
   function()
-    -- require("telescope.builtin").oldfiles({
-    --   cwd_only = true,                       -- 仅显示当前工作目录下的文件
-    --   prompt_title = "Project Recent Files", -- 自定义提示标题
-    -- })
     require('fzf-lua').oldfiles({
       prompt                  = 'History❯ ',
       cwd_only                = true,
@@ -201,50 +192,27 @@ maps.n["<D-e>"] = {
 }
 maps.n["<leader>f;"] = {
   function()
-    require("telescope.builtin").builtin()
+    require("fzf-lua").builtin()
   end,
   desc = "Search builtin",
 }
 maps.n["<leader>fs"] = {
   function()
-    -- require("telescope.builtin").live_grep()
     require('fzf-lua').live_grep()
   end,
   desc = "Search word",
 }
-local get_selection = function()
-  return vim.fn.getregion(
-    vim.fn.getpos ".", vim.fn.getpos "v", { mode = vim.fn.mode() }
-  )
-end
--- local get_cursor_word = function()
---   return vim.fn.expand("<cword>")
--- end
 maps.n["<D-S-F>"] = {
   function()
-    -- require("telescope.builtin").live_grep { default_text = get_cursor_word() }
-    -- require("telescope.builtin").live_grep()
     require('fzf-lua').live_grep()
   end,
   desc = "Search word",
 }
 maps.v["<D-S-F>"] = {
   function()
-    -- require("telescope.builtin").live_grep { default_text = table.concat(get_selection())
-    -- }
     require('fzf-lua').grep_visual()
   end,
   desc = "Search word",
-}
-maps.n["<leader>fS"] = {
-  function()
-    require("telescope.builtin").live_grep({
-      additional_args = function(args)
-        return vim.list_extend(args, { "--hidden", "--no-ignore" })
-      end,
-    })
-  end,
-  desc = "Search words in all files",
 }
 
 -- local truezen = require('true-zen')
