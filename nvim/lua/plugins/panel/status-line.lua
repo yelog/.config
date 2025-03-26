@@ -39,6 +39,111 @@ return {
   --     })
   --   end,
   -- },
+  -- {
+  --   'b0o/incline.nvim',
+  --   depencencies = {
+  --     'nvim-tree/nvim-web-devicons',
+  --     'SmiteshP/nvim-navic'
+  --   },
+  --   config = function()
+  --     local helpers = require 'incline.helpers'
+  --     local devicons = require 'nvim-web-devicons'
+  --     local navic = require 'nvim-navic'
+  --     require('incline').setup {
+  --       debounce_threshold = {
+  --         falling = 50,
+  --         rising = 10
+  --       },
+  --       hide = {
+  --         cursorline = false,
+  --         focused_win = false,
+  --         only_win = false
+  --       },
+  --       highlight = {
+  --         groups = {
+  --           InclineNormal = {
+  --             default = true,
+  --             group = "NormalFloat"
+  --           },
+  --           InclineNormalNC = {
+  --             default = true,
+  --             group = "NormalFloat"
+  --           }
+  --         }
+  --       },
+  --       ignore = {
+  --         buftypes = "special",
+  --         filetypes = {},
+  --         floating_wins = true,
+  --         unlisted_buffers = true,
+  --         wintypes = "special"
+  --       },
+  --       render = function(props)
+  --         local filename = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(props.buf), ':t')
+  --         if filename == '' then
+  --           filename = '[No Name]'
+  --         end
+  --         local ft_icon, ft_color = devicons.get_icon_color(filename)
+  --         local modified = vim.bo[props.buf].modified
+  --         local res = {
+  --           ft_icon and { ' ', ft_icon, ' ', guibg = ft_color, guifg = helpers.contrast_color(ft_color) } or '',
+  --           ' ',
+  --           { filename, gui = modified and 'bold,italic' or 'bold' },
+  --           guibg = '#44406e',
+  --         }
+  --         if props.focused then
+  --           for _, item in ipairs(navic.get_data(props.buf) or {}) do
+  --             table.insert(res, {
+  --               { ' > ',     group = 'NavicSeparator' },
+  --               { item.icon, group = 'NavicIcons' .. item.type },
+  --               { item.name, group = 'NavicText' },
+  --             })
+  --           end
+  --         end
+  --         table.insert(res, ' ')
+  --         return res
+  --       end,
+  --       window = {
+  --         margin = {
+  --           horizontal = 1,
+  --           vertical = 0
+  --         },
+  --         options = {
+  --           signcolumn = "no",
+  --           wrap = false
+  --         },
+  --         overlap = {
+  --           borders = true,
+  --           statusline = false,
+  --           tabline = false,
+  --           winbar = false
+  --         },
+  --         padding = 0,
+  --         padding_char = " ",
+  --         placement = {
+  --           horizontal = "right",
+  --           vertical = "top"
+  --         },
+  --         width = "fit",
+  --         winhighlight = {
+  --           active = {
+  --             EndOfBuffer = "None",
+  --             Normal = "InclineNormal",
+  --             Search = "None"
+  --           },
+  --           inactive = {
+  --             EndOfBuffer = "None",
+  --             Normal = "InclineNormalNC",
+  --             Search = "None"
+  --           }
+  --         },
+  --         zindex = 50
+  --       }
+  --     }
+  --   end,
+  --   -- Optional: Lazy load Incline
+  --   event = 'VeryLazy',
+  -- },
   {
     "rebelot/heirline.nvim", -- https://github.com/rebelot/heirline.nvim
     -- You can optionally lazy-load heirline on UiEnter

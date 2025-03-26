@@ -128,7 +128,10 @@ return {
           print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
         end, bufopts)
         vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, bufopts)
-        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
+        -- vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
+        vim.keymap.set("n", "<leader>rn", function()
+          return ":IncRename " .. vim.fn.expand("<cword>")
+        end, { expr = true })
         vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, bufopts)
         -- vim.keymap.set("n", "gu", vim.lsp.buf.references, bufopts) --use telesscope instead
         -- vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
@@ -431,6 +434,12 @@ return {
       })
     end,
   },
+  {
+    "smjonas/inc-rename.nvim",
+    config = function()
+      require("inc_rename").setup()
+    end,
+  }
   -- {
   --   "nvimdev/lspsaga.nvim" -- 显示文件路径
   -- },
