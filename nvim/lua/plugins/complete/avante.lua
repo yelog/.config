@@ -102,7 +102,7 @@ return {
       },
       submit = {
         normal = "<CR>",
-        insert = "<CR>",
+        insert = "<C-s>",
       },
       sidebar = {
         apply_all = "A",

@@ -124,7 +124,7 @@ maps.n["<D-S-M>"] = {
 }
 maps.n["<D-S-O>"] = {
   function()
-    require('fzf-lua').files({ resume = true })
+    require('fzf-lua').files()
   end,
   desc = "search file",
 }
@@ -322,7 +322,7 @@ maps.i["<right>"] = {
   desc = "Accept Copilot Or Right"
 }
 
--- 跳转vim分屏/tmux分屏
+-- 跳转vim分屏/(tmux,kitty)分屏
 maps.n["<D-C-h>"] = { "<cmd>lua require('smart-splits').move_cursor_left()<cr>", desc = "" }
 maps.n["<D-C-j>"] = { "<cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
 maps.n["<D-C-k>"] = { "<cmd>lua require('smart-splits').move_cursor_up()<cr>", desc = "" }
@@ -331,6 +331,10 @@ maps.t["<D-C-h>"] = { "<cmd>lua require('smart-splits').move_cursor_left()<cr>",
 maps.t["<D-C-j>"] = { "<cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
 maps.t["<D-C-k>"] = { "<cmd>lua require('smart-splits').move_cursor_up()<cr>", desc = "" }
 maps.t["<D-C-l>"] = { "<cmd>lua require('smart-splits').move_cursor_right()<cr>", desc = "" }
+maps.i["<D-C-h>"] = { "<esc><cmd>lua require('smart-splits').move_cursor_left()<cr>", desc = "" }
+maps.i["<D-C-j>"] = { "<esc><cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
+maps.i["<D-C-k>"] = { "<esc><cmd>lua require('smart-splits').move_cursor_up()<cr>", desc = "" }
+maps.i["<D-C-l>"] = { "<esc><cmd>lua require('smart-splits').move_cursor_right()<cr>", desc = "" }
 maps.n["<D-C-S-h>"] = { "<cmd>lua require('smart-splits').resize_left()<cr>", desc = "" }
 maps.n["<D-C-S-j>"] = { "<cmd>lua require('smart-splits').resize_down()<cr>", desc = "" }
 maps.n["<D-C-S-k>"] = { "<cmd>lua require('smart-splits').resize_up()<cr>", desc = "" }
@@ -339,6 +343,10 @@ maps.t["<D-C-S-h>"] = { "<cmd>lua require('smart-splits').resize_left()<cr>", de
 maps.t["<D-C-S-j>"] = { "<cmd>lua require('smart-splits').resize_down()<cr>", desc = "" }
 maps.t["<D-C-S-k>"] = { "<cmd>lua require('smart-splits').resize_up()<cr>", desc = "" }
 maps.t["<D-C-S-l>"] = { "<cmd>lua require('smart-splits').resize_right()<cr>", desc = "" }
+maps.i["<D-C-S-h>"] = { "<esc><cmd>lua require('smart-splits').resize_left()<cr>", desc = "" }
+maps.i["<D-C-S-j>"] = { "<esc><cmd>lua require('smart-splits').resize_down()<cr>", desc = "" }
+maps.i["<D-C-S-k>"] = { "<esc><cmd>lua require('smart-splits').resize_up()<cr>", desc = "" }
+maps.i["<D-C-S-l>"] = { "<esc><cmd>lua require('smart-splits').resize_right()<cr>", desc = "" }
 
 -- maps.n['<C-S-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
 -- maps.n['<C-S-p>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
