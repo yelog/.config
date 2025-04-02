@@ -1,0 +1,25 @@
+{
+  "mcpServers": {
+    "fetch": {
+      "command": "uvx",
+      "args": [
+        "mcp-server-fetch"
+      ]
+    },
+    "markdownify": {
+      "command": "node",
+      "args": [
+        "/Users/yelog/workspace/ai/markdownify-mcp/dist/index.js"
+      ],
+      "env": {
+        "UV_PATH": "/Users/yelog/.local/bin/uv"
+      }
+    },
+    "hacker-news": {
+      "command": "node",
+      "args": [
+        "/Users/yelog/workspace/ai/hn-server/build/index.js"
+      ]
+    }
+  }
+}

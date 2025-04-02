@@ -485,3 +485,5 @@ function chpwd() {
   # 执行 ~/.config/kitty/set_tab_title.sh
   sh ~/.config/kitty/set_tab_title.sh
 }
+
+. "$HOME/.local/share/../bin/env"

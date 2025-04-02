@@ -10,6 +10,9 @@ if [[ "$(uname -a)" == *"Darwin"* ]]; then
   # map zsh
   ln -s ~/.config/zsh/zshrc ~/.zshrc
 
+  # map mcp
+  ln -s ~/.config/mcp/mcpservers.json ~/mcpservers.json
+
   brew install zsh
   # set default zsh
   chsh -s /usr/local/bin/zsh

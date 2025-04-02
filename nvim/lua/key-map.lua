@@ -8,23 +8,9 @@ maps.n["<up>"] = { "<cmd>res-5<cr>", desc = "up" }
 maps.n["<down>"] = { "<cmd>res+5<cr>", desc = "down" }
 maps.n["<left>"] = { "<cmd>vertical res-5<cr>", desc = "left" }
 maps.n["<right>"] = { "<cmd>vertical res+5<cr>", desc = "right" }
--- local neoTree = require("neo-tree")
-maps.n["<c-q>"] = {
-  function()
-    -- print('split_type: ' .. split_type())
-    -- print("Hsplit: " .. (vim.fn.winnr('$') > 1 and "Yes" or "No"))
-    local type = split_type()
-    if type == "No Split" or type == 'Unknown Split' then
-      vim.cmd("Bdelete")
-      print("close buffer")
-    else
-      vim.cmd("q")
-    end
-  end,
-  desc = "Quit",
-}
+
 -- 判断当前分屏类型
-function split_type()
+local function split_type()
   local win_count = #vim.api.nvim_list_wins()
   if win_count == 1 then
     return "No Split"
@@ -41,7 +27,9 @@ function split_type()
       local width = vim.api.nvim_win_get_width(win)
       local height = vim.api.nvim_win_get_height(win)
 
-      if current_width == width then
+      if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "neo-tree" then
+        return "neo-tree"
+      elseif current_width == width then
         return "Horizontal Split"
       elseif current_height == height then
         return "Vertical Split"
@@ -51,6 +39,20 @@ function split_type()
 
   return "Unknown Split"
 end
+
+maps.n["<c-q>"] = {
+  function()
+    local type = split_type()
+    if vim.bo.filetype == 'neo-tree' or type == "neo-tree" then
+      vim.cmd("Neotree close")
+    elseif type == "No Split" or type == 'Unknown Split' then
+      vim.cmd("Bdelete")
+    else
+      vim.cmd("q")
+    end
+  end,
+  desc = "Quit",
+}
 
 -- maps.n["Q"] = { "<cmd>w<cr><cmd>qa<cr>", desc = "Quit" }
 

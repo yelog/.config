@@ -34,6 +34,7 @@
 !/neovide/
 !/neofetch/
 !/fastfetch/
+!/mcp/
 !ideavimrc
 !init.sh
 !starship.toml

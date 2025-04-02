@@ -135,7 +135,7 @@ _G.applications = {
   --{prefix = hyperKey, key = "R", message="Redis Desktop", bundleId="me.qii404.another-redis-desktop-manager"}
   --> Recent app
   -- { prefix = hyperKey, key = "P", message = "PDF",      bundleId = "net.sourceforge.skim-app.skim" },
-  -- { prefix = hyperKey, key = ",", message = "腾讯会议", bundleId = "com.tencent.meeting" },
+  { prefix = hyperKey, key = ",", message = "腾讯会议", bundleId = "com.tencent.meeting" },
   -- { prefix = hyperKey, key = ".", message = "zoom会议", bundleId = "us.zoom.xos" },
 }
 
