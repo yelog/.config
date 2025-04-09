@@ -1,25 +1,16 @@
 {
   "mcpServers": {
-    "fetch": {
+    "postgres": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-postgres",
+        "postgresql://a_appconnect:a_appconnect@1234@10.196.174.39:5432/moss_biz?currentSchema=tools"
+      ]
+    },
+    "git": {
       "command": "uvx",
-      "args": [
-        "mcp-server-fetch"
-      ]
-    },
-    "markdownify": {
-      "command": "node",
-      "args": [
-        "/Users/yelog/workspace/ai/markdownify-mcp/dist/index.js"
-      ],
-      "env": {
-        "UV_PATH": "/Users/yelog/.local/bin/uv"
-      }
-    },
-    "hacker-news": {
-      "command": "node",
-      "args": [
-        "/Users/yelog/workspace/ai/hn-server/build/index.js"
-      ]
+      "args": ["mcp-server-git", "--repository", "/path/to/git/repo"]
     }
   }
 }

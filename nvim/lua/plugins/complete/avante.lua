@@ -8,12 +8,12 @@ return {
     provider = "copilot",                  -- Recommend using Claude
     auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     -- provider = "ollama",
-    claude = {
-      endpoint = "https://api.anthropic.com",
-      model = "claude-3-5-sonnet-20241022",
-      temperature = 0,
-      max_tokens = 4096,
-    },
+    -- claude = {
+    --   endpoint = "https://api.anthropic.com",
+    --   model = "claude-3-5-sonnet-20241022",
+    --   temperature = 0,
+    --   max_tokens = 4096,
+    -- },
     -- copilot = {
     --   endpoint = 'https://api.githubcopilot.com/',
     --   model = 'claude-3.5-sonnet',
@@ -52,6 +52,13 @@ return {
         api_key_name = "avante.nvim",
         endpoint = "https://api.deepseek.com",
         model = "deepseek-coder",
+      },
+      openrouter = {
+        __inherited_from = 'openai',
+        endpoint = 'https://openrouter.ai/api/v1',
+        api_key_name = 'OPENROUTER_API_KEY_CHRIS',
+        -- model = 'deepseek/deepseek-r1',
+        model = 'anthropic/claude-3.7-sonnet',
       },
     },
     ---Specify the special dual_boost mode
@@ -155,6 +162,17 @@ return {
       --- Disable by setting to -1.
       override_timeoutlen = 500,
     },
+    -- The system_prompt type supports both a string and a function that returns a string. Using a function here allows dynamically updating the prompt with mcphub
+    system_prompt = function()
+      local hub = require("mcphub").get_hub_instance()
+      return hub:get_active_servers_prompt()
+    end,
+    -- The custom_tools type supports both a list and a function that returns a list. Using a function here prevents requiring mcphub before it's loaded
+    custom_tools = function()
+      return {
+        require("mcphub.extensions.avante").mcp_tool(),
+      }
+    end,
   },
   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
   build = "make",
