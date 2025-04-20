@@ -173,7 +173,9 @@ nmap <leader><leader>w :action KJumpAction.Word0<cr>
 nmap <leader><leader>s :action KJumpAction.KJumpAction<cr>
 nmap <leader><leader>l :action KJumpAction.Line<cr>
 
-map s <Action>(flash.search)
+nmap s <Action>(flash.search)
+xmap s <Action>(flash.search)
+" xnoremap s <Action>(flash.search)
 " map f <Action>(flash.find)
 
 set quickscope
