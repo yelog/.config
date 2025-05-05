@@ -306,9 +306,18 @@ maps.v["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
 --ChatGPT
 -- maps.n["<leader>ai"] = { "<cmd>ChatGPT<cr>", desc = "ChatGPT"}
 -- maps.n["<leader>ai"] = { "<cmd>NeoAIToggle<cr>", desc = "ChatGPT" }
+local avanteApi = require("avante.api")
 maps.i["<D-k>"] = { "<esc>V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
 maps.n["<D-k>"] = { "V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
-maps.v["<D-k>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
+-- maps.v["<D-k>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
+maps.v["<D-k>"] = {
+  function()
+    -- 直接使用 <cmd>AvanteEdit<cr>会导致选中区域丢失
+    -- 从 <leader>fk 中摘抄的如下代码
+    avanteApi.edit()
+  end,
+  desc = "AvanteEditor"
+}
 maps.i["<D-K>"] = { "<esc><cmd>AvanteChat<cr>", desc = "AvanteEditor" }
 maps.n["<D-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
 maps.v["<D-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }

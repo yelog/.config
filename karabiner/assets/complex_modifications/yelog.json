@@ -40,7 +40,7 @@
             "key_code": "h",
             "modifiers": {
               "mandatory": [
-                "right_control"
+                "left_control"
               ]
             }
           },
@@ -61,7 +61,7 @@
             "key_code": "semicolon",
             "modifiers": {
               "mandatory": [
-                "right_control"
+                "left_control"
               ]
             }
           },

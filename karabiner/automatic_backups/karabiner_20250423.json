@@ -4,19 +4,6 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Map ctrl-h to backspace(yelog.json)",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "h",
-                                    "modifiers": { "mandatory": ["left_control"] }
-                                },
-                                "to": [{ "key_code": "delete_or_backspace" }],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
                         "description": "Map ctrl-; to Esc(yelog.json)",
                         "manipulators": [
                             {
@@ -86,6 +73,19 @@
                                         "key_code": "caps_lock"
                                     }
                                 ],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
+                        "description": "Map ctrl-h to backspace(yelog.json)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "h",
+                                    "modifiers": { "mandatory": ["right_control"] }
+                                },
+                                "to": [{ "key_code": "delete_or_backspace" }],
                                 "type": "basic"
                             }
                         ]
@@ -186,12 +186,12 @@
             "selected": true,
             "simple_modifications": [
                 {
-                    "from": { "key_code": "left_control" },
-                    "to": [{ "key_code": "right_option" }]
-                },
-                {
                     "from": { "key_code": "right_command" },
                     "to": [{ "key_code": "left_control" }]
+                },
+                {
+                    "from": { "key_code": "left_control" },
+                    "to": [{ "key_code": "right_option" }]
                 }
             ],
             "virtual_hid_keyboard": {
