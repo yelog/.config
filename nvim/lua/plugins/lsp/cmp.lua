@@ -196,6 +196,7 @@ return {
     dependencies = {
       'rafamadriz/friendly-snippets',
       'Kaiser-Yang/blink-cmp-avante',
+      -- 'Exafunction/codeium.nvim',
       -- 'windwp/nvim-autopairs'
     },
 
@@ -291,7 +292,8 @@ return {
             opts = {
               -- options for blink-cmp-avante
             }
-          }
+          },
+          -- codeium = { name = 'Codeium', module = 'codeium.blink', async = true }
         }
       },
       -- experimental signature help support
