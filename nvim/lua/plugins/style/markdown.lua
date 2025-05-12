@@ -89,7 +89,7 @@ return {
       -- 3. 'insert-all': show origin content of all when insert mode
       -- show_mode = 'insert-line',
       show_mode = 'normal-line',
-      filetype = { 'markdown' }, -- or {"*.md", "*.wiki"}
+      filetype = { "markdown", "Avante" }, -- or {"*.md", "*.wiki"}
     }
   },
   -- {
@@ -109,9 +109,9 @@ return {
   --   },
   --   dev = true,
   --   ft = { "markdown", "Avante" },
-  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
   --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
-  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
   --
   -- },
   {
