@@ -72,6 +72,19 @@ return {
   --     require("image_preview").setup()
   --   end
   -- },
+  -- {
+  --   'MeanderingProgrammer/render-markdown.nvim',
+  --   opts = {
+  --     file_types = { "markdown", "Avante" },
+  --     heading = { enabled = false }
+  --   },
+  --   dev = true,
+  --   ft = { "markdown", "Avante" },
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+  --
+  -- },
   {
     "yelog/marklive.nvim",
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
@@ -92,28 +105,6 @@ return {
       filetype = { "markdown", "Avante" }, -- or {"*.md", "*.wiki"}
     }
   },
-  -- {
-  --    "OXY2DEV/markview.nvim",
-  --   lazy = false,      -- Recommended
-  --   -- ft = "markdown" -- If you decide to lazy-load anyway
-  --
-  --   dependencies = {
-  --       "nvim-treesitter/nvim-treesitter",
-  --       "nvim-tree/nvim-web-devicons"
-  --   }
-  -- },
-  -- {
-  --   'MeanderingProgrammer/render-markdown.nvim',
-  --   opts = {
-  --     file_types = { "markdown", "Avante" },
-  --   },
-  --   dev = true,
-  --   ft = { "markdown", "Avante" },
-  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
-  --   -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
-  --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
-  --
-  -- },
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
@@ -126,14 +117,14 @@ return {
       vim.g.md_checkswitch_style = "cycle"
     end,
   }, --> checkbox shortcut
-  {
-    "tpope/vim-markdown",
-    config = function()
-      -- tpope/vim-markdown
-      vim.g.markdown_syntax_conceal = 0
-      vim.g.markdown_fenced_languages =
-      { "html", "python", "bash=sh", "json", "java", "javascript", "js=javascript", "sql", "yaml", "xml", "Dockerfile",
-        "Rust", "swift", "lua", "typescript", "ts=typescript" }
-    end,
-  }, --> syntax highlighting and filetype plugins for Markdown
+  -- {
+  --   "tpope/vim-markdown",
+  --   config = function()
+  --     -- tpope/vim-markdown
+  --     vim.g.markdown_syntax_conceal = 0
+  --     vim.g.markdown_fenced_languages =
+  --     { "html", "python", "bash=sh", "json", "java", "javascript", "js=javascript", "sql", "yaml", "xml", "Dockerfile",
+  --       "Rust", "swift", "lua", "typescript", "ts=typescript" }
+  --   end,
+  -- }, --> syntax highlighting and filetype plugins for Markdown
 }

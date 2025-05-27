@@ -2,7 +2,12 @@ return {
   "nvim-treesitter/playground", --> automatically highlighting other uses of the word under the cursor
   {
     "nvim-treesitter/nvim-treesitter",
+    build = ":TSUpdate",
     config = function()
+      -- markdown 中的代码块高亮
+      vim.g.markdown_fenced_languages =
+      { "html", "python", "bash=sh", "json", "java", "javascript", "js=javascript", "sql", "yaml", "xml", "Dockerfile",
+        "Rust", "swift", "lua", "typescript", "ts=typescript" }
       require("nvim-treesitter.configs").setup({
         -- A list of parser names, or "all"
         ensure_installed = {
