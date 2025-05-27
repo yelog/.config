@@ -1,3 +1,40 @@
+-- 检查光标是否在 http 块内
+local function is_cursor_in_http_block()
+  local api = vim.api
+  local bufnr = api.nvim_get_current_buf()
+  local cursor = api.nvim_win_get_cursor(0)
+  local cur_line = cursor[1]
+
+  local lines = api.nvim_buf_get_lines(bufnr, 0, -1, false)
+
+  local start_line = nil
+  local end_line = nil
+
+  -- 向上查找 ```http
+  for i = cur_line - 1, 1, -1 do
+    local line = lines[i]
+    if line:match("^```http%s*$") then
+      start_line = i
+      break
+    end
+  end
+
+  -- 向下查找 ```
+  for i = cur_line, #lines do
+    local line = lines[i]
+    if line:match("^```%s*$") then
+      end_line = i
+      break
+    end
+  end
+
+  if start_line and end_line and start_line < cur_line and cur_line < end_line then
+    return true
+  else
+    return false
+  end
+end
+
 -- 根据不同的文件类型执行不同的命令
 function ExecuteFileTypeCommands()
   local filetype = vim.bo.filetype
@@ -24,8 +61,15 @@ function ExecuteFileTypeCommands()
     -- docker run --rm -i grafana/k6 run - <script.js
     -- vim.cmd('term docker run --rm -i grafana/k6 run - < %')
   elseif filetype == 'markdown' then
-    -- vim.cmd('InstantMarkdownPreview')
-    vim.cmd('MarkdownPreview')
+    if is_cursor_in_http_block() then
+      require('kulala').run()
+    else
+      -- vim.cmd('InstantMarkdownPreview')
+      vim.cmd('MarkdownPreview')
+    end
+  elseif filetype == 'http' then
+    -- vim.cmd('Rest run')
+    require('kulala').run()
   elseif filetype == 'lua' then
     vim.cmd('set splitright')
     vim.cmd('vsp')
@@ -44,8 +88,6 @@ function ExecuteFileTypeCommands()
     vim.cmd('set splitright')
     vim.cmd('vsp')
     vim.cmd('term python3 %')
-  elseif filetype == 'http' then
-    vim.cmd('Rest run')
   elseif filetype == 'rust' then
     vim.cmd('set splitright')
     vim.cmd('vsp')

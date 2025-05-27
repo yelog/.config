@@ -1,5 +1,6 @@
 return {
   "neovim/nvim-lspconfig", -- Configurations for Nvim LSP
+  -- 'nvim-java/nvim-java',
   {
     "SmiteshP/nvim-navic",
     config = function()
@@ -141,11 +142,13 @@ return {
         end
       end
 
+      -- require('java').setup()
       local lspconfig = require("lspconfig")
       local lsp_flags = {
         -- This is the default in Nvim 0.7+
         debounce_text_changes = 150,
       }
+      -- lspconfig.jdtls.setup({})
 
       -- Set up lspconfig.
       -- local capabilities = require("cmp_nvim_lsp").default_capabilities()

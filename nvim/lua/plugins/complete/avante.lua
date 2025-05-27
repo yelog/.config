@@ -15,15 +15,14 @@ return {
     --   temperature = 0,
     --   max_tokens = 4096,
     -- },
-    -- copilot = {
-    --   endpoint = 'https://api.githubcopilot.com/',
-    --   model = 'claude-3.5-sonnet',
-    --   proxy = nil,              -- [protocol://]host[:port] Use this proxy
-    --   allow_insecure = false,   -- Do not allow insecure server connections
-    --   timeout = 30000,          -- Timeout in milliseconds
-    --   temperature = 0.1,        -- kinda creative
-    --   max_tokens = 8192,
-    -- },
+    copilot = {
+      endpoint = 'https://api.githubcopilot.com/',
+      model = 'gpt-4.1',
+      allow_insecure = true,   -- Do not allow insecure server connections
+      timeout = 30000,          -- Timeout in milliseconds
+      temperature = 0.1,        -- kinda creative
+      max_tokens = 8192,
+    },
     vendors = {
       ollama = {
         -- ["local"] = true,
@@ -164,16 +163,16 @@ return {
       override_timeoutlen = 500,
     },
     -- The system_prompt type supports both a string and a function that returns a string. Using a function here allows dynamically updating the prompt with mcphub
-    system_prompt = function()
-      local hub = require("mcphub").get_hub_instance()
-      return hub:get_active_servers_prompt()
-    end,
-    -- The custom_tools type supports both a list and a function that returns a list. Using a function here prevents requiring mcphub before it's loaded
-    custom_tools = function()
-      return {
-        require("mcphub.extensions.avante").mcp_tool(),
-      }
-    end,
+    -- system_prompt = function()
+    --   local hub = require("mcphub").get_hub_instance()
+    --   return hub:get_active_servers_prompt()
+    -- end,
+    -- -- The custom_tools type supports both a list and a function that returns a list. Using a function here prevents requiring mcphub before it's loaded
+    -- custom_tools = function()
+    --   return {
+    --     require("mcphub.extensions.avante").mcp_tool(),
+    --   }
+    -- end,
   },
   -- if you want to build from source then do `make BUILD_FROM_SOURCE=true`
   build = "make",

@@ -133,8 +133,7 @@ return {
       vim.g.markdown_syntax_conceal = 0
       vim.g.markdown_fenced_languages =
       { "html", "python", "bash=sh", "json", "java", "javascript", "js=javascript", "sql", "yaml", "xml", "Dockerfile",
-        "Rust",
-        "swift", 'lua', "typescript", "ts=typescript" }
+        "Rust", "swift", "lua", "typescript", "ts=typescript" }
     end,
   }, --> syntax highlighting and filetype plugins for Markdown
 }
