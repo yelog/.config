@@ -121,3 +121,35 @@ vim.filetype.add({
     drawio = "xml"
   }
 })
+
+local custom_highlights = {
+  markdownBold = { bold = true, fg = "#ef9020" },
+  markdownItalic = { italic = true, fg = "#d8e020" },
+  markdownStrike = { fg = "#939393", strikethrough = true },
+  markdownLinkText = { fg = '#5c92fa', underline = true },
+  markdownLinkTextDelimiter = { fg = '#5c92fa', underline = true },
+  markdownCode = { fg = "#00c4b0", bg = "#1f262f" },
+  markdownBlockquote = { fg = '#e6e1cf' },
+  markdownFootnote = { fg = '#5c92fa' },
+  markdownH1 = { fg = '#ff6f61', bold = true },
+  markdownH1Delimiter = { fg = '#ff6f61', bold = true },
+  markdownH2 = { fg = "#f7c59f", bold = true },
+  markdownH2Delimiter = { fg = "#f7c59f", bold = true },
+  markdownH3 = { fg = "#00a79d", bold = true },
+  markdownH3Delimiter = { fg = "#00a79d", bold = true },
+  markdownH4 = { fg = "#6b5b95", bold = true },
+  markdownH4Delimiter = { fg = "#6b5b95", bold = true },
+  markdownH5 = { fg = "#92a8d1", bold = true },
+  markdownH5Delimiter = { fg = "#92a8d1", bold = true },
+  markdownH6 = { fg = "#E8DAEF", bold = true },
+  markdownH6Delimiter = { fg = "#E8DAEF", bold = true },
+  -- extend
+  markliveMarkText = { bg = '#FFFF00', fg = '#000000' },
+  markliveTag = { fg = '#BB9AF7', bg = '#322E45' },
+  markliveUser = { fg = '#FC7A07' },
+  markliveCalloutNote = { fg = '#047AFF' },
+  markliveCalloutError = { fg = '#FB464C' },
+  markliveCalloutTip = { fg = '#53DFDD' },
+  markliveCalloutWarning = { fg = '#E9973F' },
+  list_marker_minus = { fg = '#E9AD5B' }
+}

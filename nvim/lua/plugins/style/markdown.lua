@@ -76,7 +76,26 @@ return {
   --   'MeanderingProgrammer/render-markdown.nvim',
   --   opts = {
   --     file_types = { "markdown", "Avante" },
-  --     heading = { enabled = false }
+  --     checkbox = {
+  --       unchecked = {
+  --         icon = '',
+  --       },
+  --       checked = {
+  --         icon = '󰄲'
+  --       },
+  --       indeterminate = {
+  --         icon = '󰡖'
+  --       },
+  --     },
+  --     bullet = {
+  --       icons = { '', '', '', '◇' },
+  --       scope_highlight = {
+  --         "list_marker_minus",
+  --         "list_marker_minus",
+  --         "list_marker_minus",
+  --         "list_marker_minus"
+  --       }
+  --     }
   --   },
   --   dev = true,
   --   ft = { "markdown", "Avante" },
