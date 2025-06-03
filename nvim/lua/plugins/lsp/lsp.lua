@@ -51,7 +51,6 @@ return {
       }
     end
   },
-  "alvan/vim-closetag", -- when "<table|", type > , will be "<table>|</table>"
   {
     "windwp/nvim-ts-autotag",
     config = function()
