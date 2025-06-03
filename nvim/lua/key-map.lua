@@ -46,15 +46,15 @@ maps.n["<c-q>"] = {
     if vim.bo.filetype == 'neo-tree' or type == "neo-tree" then
       vim.cmd("Neotree close")
     elseif type == "No Split" or type == 'Unknown Split' then
-      vim.cmd("Bdelete")
+      -- close the current buffer
+      vim.cmd("bdelete")
     else
+      -- close the current split
       vim.cmd("q")
     end
   end,
   desc = "Quit",
 }
-
--- maps.n["Q"] = { "<cmd>w<cr><cmd>qa<cr>", desc = "Quit" }
 
 -- plugin
 maps.n["<leader>pi"] = { "<cmd>Lazy<cr>", desc = "plug install" }
@@ -239,12 +239,13 @@ maps.n["<leader>ts"] = { "<cmd>AerialToggle<cr>", desc = "Toggle Structure" }
 -- rebelot/heirline.nvim
 maps.n["<c-n>"] = { "<cmd>bnext<cr>", desc = "Buffer Next" }
 maps.n["<c-p>"] = { "<cmd>bprevious<cr>", desc = "Buffer Previous" }
-maps.n["<leader>bn"] = { "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Next" }
-maps.n["<leader>bp"] = { "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Previous" }
-maps.n["<leader>bo"] = { "<cmd>BufferLineCloseLeft<cr><cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Others" }
-maps.n["<leader>bc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Buffer Close Pick" }
-maps.n["<leader>bcl"] = { "<cmd>BufferLineCloseLeft<cr>", desc = "Buffer Close Left" }
-maps.n["<leader>bcr"] = { "<cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Right" }
+-- maps.n["<leader>bn"] = { "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Next" }
+-- maps.n["<leader>bp"] = { "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Previous" }
+-- maps.n["<leader>bo"] = { "<cmd>Bdelete<cr>", desc = "Buffer Close Others" }
+maps.n["<leader>bo"] = { "<cmd>%bd | e# | bd#<cr>", desc = "Buffer Close Others" }
+-- maps.n["<leader>bc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Buffer Close Pick" }
+-- maps.n["<leader>bcl"] = { "<cmd>BufferLineCloseLeft<cr>", desc = "Buffer Close Left" }
+-- maps.n["<leader>bcr"] = { "<cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Right" }
 -- maps.n["<c-q>"] = { "<cmd>bdelete<cr>", desc = "Buffer Close" }
 
 

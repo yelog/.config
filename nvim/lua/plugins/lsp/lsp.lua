@@ -59,7 +59,7 @@ return {
     end,
   },
   {
-    "williamboman/mason.nvim",
+    "mason-org/mason.nvim",
     config = function()
       require("mason").setup({
         ui = {
@@ -73,7 +73,7 @@ return {
     end,
   },
   {
-    "williamboman/mason-lspconfig.nvim",
+    "mason-org/mason-lspconfig.nvim",
     dependencies = { 'saghen/blink.cmp' },
     config = function()
       require("mason-lspconfig").setup({
@@ -93,8 +93,12 @@ return {
       -- See `:help vim.diagnostic.*` for documentation on any of the below functions
       local opts = { noremap = true, silent = true }
       vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
-      vim.keymap.set("n", "<leader>lk", vim.diagnostic.goto_prev, opts)
-      vim.keymap.set("n", "<leader>lj", vim.diagnostic.goto_next, opts)
+      vim.keymap.set("n", "<leader>lk", function()
+        vim.diagnostic.jump({ count = -1, float = true })
+      end, opts)
+      vim.keymap.set("n", "<leader>lj", function()
+        vim.diagnostic.jump({ count = 1, float = true })
+      end, opts)
       vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, opts)
       local navic = require("nvim-navic")
 
