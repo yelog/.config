@@ -2,7 +2,7 @@
 # If you encounter any issues, please make an issue at https://github.com/yazi-rs/schemas.
 "$schema" = "https://yazi-rs.github.io/schemas/keymap.json"
 
-[manager]
+[mgr]
 
 keymap = [
   { on = "S", run = 'shell "$SHELL" --block --confirm' },
@@ -35,7 +35,7 @@ keymap = [
 
 	# Navigation
 	{ on = "h", run = "leave", desc = "Go back to the parent directory" },
-  { on = "l", run = 'plugin smart-enter' },
+  { on = "l", run = 'plugin smart-enter', desc= "Enter the child directory, or open the file" },
 	# { on = "l", run = "enter", desc = "Enter the child directory" },
 
 	{ on = "<Left>",  run = "leave", desc = "Go back to the parent directory" },

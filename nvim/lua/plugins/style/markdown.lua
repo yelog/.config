@@ -137,6 +137,15 @@ return {
     end,
   }, --> checkbox shortcut
   -- {
+  --   "bngarren/checkmate.nvim",
+  --   ft = "markdown", -- Lazy loads for Markdown files matching patterns in 'files'
+  --   opts = {
+  --     files = { "*.md" }
+  --     -- your configuration here
+  --     -- or leave empty to use defaults
+  --   },
+  -- },
+  -- {
   --   "tpope/vim-markdown",
   --   config = function()
   --     -- tpope/vim-markdown
