@@ -5,7 +5,6 @@
 [manager]
 
 keymap = [
-  { on = "l", run = 'plugin smart-enter' },
   { on = "S", run = 'shell "$SHELL" --block --confirm' },
 	{ on = "<Esc>", run = "escape",             desc = "Exit visual mode, clear selected, or cancel search" },
 	{ on = "<C-[>", run = "escape",             desc = "Exit visual mode, clear selected, or cancel search" },
@@ -36,7 +35,8 @@ keymap = [
 
 	# Navigation
 	{ on = "h", run = "leave", desc = "Go back to the parent directory" },
-	{ on = "l", run = "enter", desc = "Enter the child directory" },
+  { on = "l", run = 'plugin smart-enter' },
+	# { on = "l", run = "enter", desc = "Enter the child directory" },
 
 	{ on = "<Left>",  run = "leave", desc = "Go back to the parent directory" },
 	{ on = "<Right>", run = "enter", desc = "Enter the child directory" },

@@ -86,6 +86,7 @@ return {
           "marksman",
           "lua_ls",
           "jsonls",
+          "yamlls",
           "ts_ls",
           "volar",
           -- "vuels",
@@ -168,6 +169,15 @@ return {
       --   },
       -- })
       lspconfig["jsonls"].setup({
+        on_attach = on_attach,
+        flags = lsp_flags,
+        settings = {
+          completions = {
+            completeFunctionCalls = true,
+          },
+        },
+      })
+      lspconfig["yamlls"].setup({
         on_attach = on_attach,
         flags = lsp_flags,
         settings = {
