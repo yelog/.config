@@ -88,8 +88,8 @@ return {
           "jsonls",
           "yamlls",
           "ts_ls",
-          "volar",
-          -- "vuels",
+          -- "volar",
+          "vue_ls",
           "html",
           "svelte",
           "eslint",
@@ -192,66 +192,12 @@ return {
         flags = lsp_flags,
       })
       -- vue2
-      -- lspconfig["vuels"].setup({
-      --   filetyps = { "vue" },
-      --   cmd = { "vls" },
-      --   on_attach = on_attach,
-      --   flags = lsp_flags,
-      --   root_dir = lspconfig.util.root_pattern("package.json", "vite.config.ts"),
-      --   settings = {
-      --     config = {
-      --       css = {},
-      --       emmet = {},
-      --       html = {
-      --         suggest = {},
-      --       },
-      --       javascript = {
-      --         format = {},
-      --       },
-      --       stylusSupremacy = {},
-      --       typescript = {
-      --         format = {
-      --           enable = true,
-      --         },
-      --       },
-      --       vetur = {
-      --         completion = {
-      --           autoImport = true,
-      --           tagCasing = "kebab",
-      --           useScaffoldSnippets = true,
-      --         },
-      --         format = {
-      --           defaultFormatter = {
-      --             html = "none",
-      --             js = "prettier",
-      --             ts = "prettier",
-      --           },
-      --           -- defaultFormatterOptions = {},
-      --           -- scriptInitialIndent = false,
-      --           -- styleInitialIndent = false
-      --         },
-      --         useWorkspaceDependencies = false,
-      --         validation = {
-      --           script = true,
-      --           style = true,
-      --           template = true,
-      --           templateProps = true,
-      --           interpolation = true,
-      --         },
-      --         exprimental = {
-      --           templateInterpolationService = true,
-      --         },
-      --       },
-      --     },
-      --   },
-      -- })
-      -- 目前只能支持 vue3,
-      lspconfig["volar"].setup({
+      lspconfig["vue_ls"].setup({
         filetyps = { "vue" },
-        cmd = { 'vue-language-server', '--stdio' },
+        cmd = { "vls" },
         on_attach = on_attach,
         flags = lsp_flags,
-        root_dir = lspconfig.util.root_pattern("package.json"),
+        root_dir = lspconfig.util.root_pattern("package.json", "vite.config.ts"),
         settings = {
           config = {
             css = {},
@@ -299,6 +245,60 @@ return {
           },
         },
       })
+      -- 目前只能支持 vue3,
+      -- lspconfig["volar"].setup({
+      --   filetyps = { "vue" },
+      --   cmd = { 'vue-language-server', '--stdio' },
+      --   on_attach = on_attach,
+      --   flags = lsp_flags,
+      --   root_dir = lspconfig.util.root_pattern("package.json"),
+      --   settings = {
+      --     config = {
+      --       css = {},
+      --       emmet = {},
+      --       html = {
+      --         suggest = {},
+      --       },
+      --       javascript = {
+      --         format = {},
+      --       },
+      --       stylusSupremacy = {},
+      --       typescript = {
+      --         format = {
+      --           enable = true,
+      --         },
+      --       },
+      --       vetur = {
+      --         completion = {
+      --           autoImport = true,
+      --           tagCasing = "kebab",
+      --           useScaffoldSnippets = true,
+      --         },
+      --         format = {
+      --           defaultFormatter = {
+      --             html = "none",
+      --             js = "prettier",
+      --             ts = "prettier",
+      --           },
+      --           -- defaultFormatterOptions = {},
+      --           -- scriptInitialIndent = false,
+      --           -- styleInitialIndent = false
+      --         },
+      --         useWorkspaceDependencies = false,
+      --         validation = {
+      --           script = true,
+      --           style = true,
+      --           template = true,
+      --           templateProps = true,
+      --           interpolation = true,
+      --         },
+      --         exprimental = {
+      --           templateInterpolationService = true,
+      --         },
+      --       },
+      --     },
+      --   },
+      -- })
       lspconfig["html"].setup({
         on_attach = on_attach,
         flags = lsp_flags,

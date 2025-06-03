@@ -15,15 +15,17 @@ return {
     --   temperature = 0,
     --   max_tokens = 4096,
     -- },
-    copilot = {
-      endpoint = 'https://api.githubcopilot.com/',
-      model = 'gpt-4.1',
-      allow_insecure = true,   -- Do not allow insecure server connections
-      timeout = 30000,          -- Timeout in milliseconds
-      temperature = 0.1,        -- kinda creative
-      max_tokens = 8192,
-    },
-    vendors = {
+    providers = {
+      copilot = {
+        endpoint = 'https://api.githubcopilot.com/',
+        model = 'gpt-4.1',
+        extra_reqeust_body = {
+          allow_insecure = true, -- Do not allow insecure server connections
+          timeout = 30000,     -- Timeout in milliseconds
+          temperature = 0.1,   -- kinda creative
+          max_tokens = 8192,
+        }
+      },
       ollama = {
         -- ["local"] = true,
         endpoint = "127.0.0.1:11434/v1",
