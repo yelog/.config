@@ -96,7 +96,7 @@ maps.n["<D-s>"] = {
     if vim.bo.filetype == "markdown" then
       vim.cmd("TableModeRealign")
     elseif my.is_include(vim.bo.filetype, eslintFileType) then
-      vim.cmd("EslintFixAll")
+      vim.cmd("LspEslintFixAll")
     else
       vim.lsp.buf.format({ async = true })
     end

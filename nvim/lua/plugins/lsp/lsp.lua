@@ -72,30 +72,18 @@ return {
       })
     end,
   },
-  -- {
-  --   "pmizio/typescript-tools.nvim",
-  --   dependencies = { "nvim-lua/plenary.nvim", "neovim/nvim-lspconfig" },
-  --   opts = {},
-  -- },
   {
     "williamboman/mason-lspconfig.nvim",
     dependencies = { 'saghen/blink.cmp' },
     config = function()
       require("mason-lspconfig").setup({
+        -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
         ensure_installed = {
-          "marksman",
           "lua_ls",
           "jsonls",
-          "yamlls",
-          "ts_ls",
-          -- "volar",
           "vue_ls",
-          "html",
-          "svelte",
           "eslint",
           "rust_analyzer",
-          "swift_mesonls",
-          "lemminx",
           "tailwindcss",
           "unocss",
           "dockerls",
@@ -144,7 +132,7 @@ return {
       end
 
       -- require('java').setup()
-      local lspconfig = require("lspconfig")
+      -- local lspconfig = require("lspconfig")
       local lsp_flags = {
         -- This is the default in Nvim 0.7+
         debounce_text_changes = 150,
@@ -154,234 +142,80 @@ return {
       -- Set up lspconfig.
       -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local capabilities = require('blink.cmp').get_lsp_capabilities()
-      lspconfig["marksman"].setup({
+      vim.lsp.config('jsonls', {
         on_attach = on_attach,
         flags = lsp_flags,
         capabilities = capabilities,
-      })
-      -- lspconfig["tsserver"].setup({
-      --   on_attach = on_attach,
-      --   flags = lsp_flags,
-      --   settings = {
-      --     completions = {
-      --       completeFunctionCalls = true,
-      --     },
-      --   },
-      -- })
-      lspconfig["jsonls"].setup({
-        on_attach = on_attach,
-        flags = lsp_flags,
         settings = {
           completions = {
             completeFunctionCalls = true,
           },
-        },
+        }
       })
-      lspconfig["yamlls"].setup({
-        on_attach = on_attach,
-        flags = lsp_flags,
-        settings = {
-          completions = {
-            completeFunctionCalls = true,
-          },
-        },
+
+      -- local base_on_attach = vim.lsp.config.eslint.on_attach
+      vim.lsp.config("eslint", {
+        -- auto fix on save
+        -- on_attach = function(client, bufnr)
+        --   if not base_on_attach then return end
+        --
+        --   base_on_attach(client, bufnr)
+        --   vim.api.nvim_create_autocmd("BufWritePre", {
+        --     buffer = bufnr,
+        --     command = "LspEslintFixAll",
+        --   })
+        -- end,
       })
-      lspconfig["eslint"].setup({
-        filetyps = { "vue", "javascript", "typescript" },
-        on_attach = on_attach,
-        flags = lsp_flags,
-      })
-      -- vue2
-      lspconfig["vue_ls"].setup({
-        filetyps = { "vue" },
-        cmd = { "vls" },
-        on_attach = on_attach,
-        flags = lsp_flags,
-        root_dir = lspconfig.util.root_pattern("package.json", "vite.config.ts"),
-        settings = {
-          config = {
-            css = {},
-            emmet = {},
-            html = {
-              suggest = {},
-            },
-            javascript = {
-              format = {},
-            },
-            stylusSupremacy = {},
-            typescript = {
-              format = {
-                enable = true,
-              },
-            },
-            vetur = {
-              completion = {
-                autoImport = true,
-                tagCasing = "kebab",
-                useScaffoldSnippets = true,
-              },
-              format = {
-                defaultFormatter = {
-                  html = "none",
-                  js = "prettier",
-                  ts = "prettier",
-                },
-                -- defaultFormatterOptions = {},
-                -- scriptInitialIndent = false,
-                -- styleInitialIndent = false
-              },
-              useWorkspaceDependencies = false,
-              validation = {
-                script = true,
-                style = true,
-                template = true,
-                templateProps = true,
-                interpolation = true,
-              },
-              exprimental = {
-                templateInterpolationService = true,
-              },
-            },
-          },
-        },
-      })
-      -- 目前只能支持 vue3,
-      -- lspconfig["volar"].setup({
-      --   filetyps = { "vue" },
-      --   cmd = { 'vue-language-server', '--stdio' },
-      --   on_attach = on_attach,
-      --   flags = lsp_flags,
-      --   root_dir = lspconfig.util.root_pattern("package.json"),
-      --   settings = {
-      --     config = {
-      --       css = {},
-      --       emmet = {},
-      --       html = {
-      --         suggest = {},
-      --       },
-      --       javascript = {
-      --         format = {},
-      --       },
-      --       stylusSupremacy = {},
-      --       typescript = {
-      --         format = {
-      --           enable = true,
-      --         },
-      --       },
-      --       vetur = {
-      --         completion = {
-      --           autoImport = true,
-      --           tagCasing = "kebab",
-      --           useScaffoldSnippets = true,
-      --         },
-      --         format = {
-      --           defaultFormatter = {
-      --             html = "none",
-      --             js = "prettier",
-      --             ts = "prettier",
-      --           },
-      --           -- defaultFormatterOptions = {},
-      --           -- scriptInitialIndent = false,
-      --           -- styleInitialIndent = false
-      --         },
-      --         useWorkspaceDependencies = false,
-      --         validation = {
-      --           script = true,
-      --           style = true,
-      --           template = true,
-      --           templateProps = true,
-      --           interpolation = true,
-      --         },
-      --         exprimental = {
-      --           templateInterpolationService = true,
-      --         },
-      --       },
-      --     },
-      --   },
-      -- })
-      lspconfig["html"].setup({
-        on_attach = on_attach,
-        flags = lsp_flags,
-      })
-      lspconfig["svelte"].setup({
-        on_attach = on_attach,
-        flags = lsp_flags,
-      })
-      lspconfig["lemminx"].setup({
-        on_attach = on_attach,
-        flags = lsp_flags,
-      })
-      lspconfig["tailwindcss"].setup({
-        on_attach = on_attach,
-        filetyps = { "vue", "html" },
-        flags = lsp_flags,
-      })
-      lspconfig["unocss"].setup({
-        on_attach = on_attach,
-        filetyps = { "vue", "html" },
-        flags = lsp_flags,
-      })
-      lspconfig["dockerls"].setup({
-        on_attach = on_attach,
-        filetyps = { "dockerfile" },
-        flags = lsp_flags,
-      })
-      -- lspconfig["bash-language-server"].setup({
-      -- 	on_attach = on_attach,
-      -- 	flags = lsp_flags,
-      -- 	capabilities = capabilities,
-      -- })
-      -- lspconfig["pyright"].setup({
-      --   on_attach = on_attach,
-      --   flags = lsp_flags,
-      -- })
-      lspconfig["ts_ls"].setup({
-        on_attach = on_attach,
-        flags = lsp_flags,
-        capabilities = capabilities,
+      -- vue3 rename volar -> vue_ls https://github.com/mason-org/mason-lspconfig.nvim/pull/561
+      vim.lsp.config('vue_ls', {
+        -- add filetypes for typescript, javascript and vue
+        filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
         init_options = {
-          plugins = { -- I think this was my breakthrough that made it work
-            {
-              name = "@vue/typescript-plugin",
-              location = "/Users/yelog/Library/pnpm/global/5/node_modules/@vue/language-server",
-              languages = { "vue" },
-            },
+          vue = {
+            -- disable hybrid mode
+            hybridMode = false,
           },
         },
-        filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
       })
-      lspconfig["rust_analyzer"].setup({
-        on_attach = on_attach,
-        flags = lsp_flags,
-        -- Server-specific settings...
+      vim.lsp.enable('tailwindcss')
+      vim.lsp.enable('unocss')
+      vim.lsp.config('dockerls', {
         settings = {
-          ["rust-analyzer"] = {},
-        },
+          docker = {
+            languageserver = {
+              formatter = {
+                ignoreMultilineInstructions = true,
+              },
+            },
+          }
+        }
       })
-      lspconfig["swift_mesonls"].setup({
-        on_attach = on_attach,
-        flags = lsp_flags,
-        -- Server-specific settings...
+      vim.lsp.config('rust_analyzer', {
         settings = {
-          ["swift_mesonls"] = {},
-        },
+          ['rust-analyzer'] = {
+            diagnostics = {
+              enable = false,
+            }
+          }
+        }
       })
       -- example to setup sumneko and enable call snippets
       -- local runtime_path = vim.split(package.path, ";")
       -- table.insert(runtime_path, "lua/?.lua")
       -- table.insert(runtime_path, "lua/?/init.lua")
 
-      local runtime_path = vim.split(package.path, ";")
-      lspconfig["lua_ls"].setup({
+      vim.lsp.config('lua_ls', {
         on_attach = on_attach,
+        flags = lsp_flags,
+        capabilities = capabilities,
         settings = {
           Lua = {
             runtime = {
               version = "LuaJIT",
-              path = runtime_path,
+              path = vim.split(package.path, ";"),
             },
             diagnostics = {
-              globals = { "vim" },
+              globals = { 'vim' },
             },
             workspace = {
               library = vim.api.nvim_get_runtime_file("", true),
@@ -393,58 +227,6 @@ return {
           },
         },
       })
-      -- vim.api.nvim_create_autocmd("FileType", {
-      -- 	pattern = "sh",
-      -- 	callback = function()
-      -- 		vim.lsp.start({
-      -- 			name = "bash-language-server",
-      -- 			cmd = { "bash-language-server", "start" },
-      -- 		})
-      -- 	end,
-      -- })
-      -- require("typescript-tools").setup {
-      --   on_attach = on_attach,
-      --   settings = {
-      --     -- spawn additional tsserver instance to calculate diagnostics on it
-      --     separate_diagnostic_server = true,
-      --     -- "change"|"insert_leave" determine when the client asks the server about diagnostic
-      --     publish_diagnostic_on = "insert_leave",
-      --     -- array of strings("fix_all"|"add_missing_imports"|"remove_unused")
-      --     -- specify commands exposed as code_actions
-      --     expose_as_code_action = {},
-      --     -- string|nil - specify a custom path to `tsserver.js` file, if this is nil or file under path
-      --     -- not exists then standard path resolution strategy is applied
-      --     tsserver_path = nil,
-      --     -- specify a list of plugins to load by tsserver, e.g., for support `styled-components`
-      --     -- (see 💅 `styled-components` support section)
-      --     tsserver_plugins = {},
-      --     -- this value is passed to: https://nodejs.org/api/cli.html#--max-old-space-sizesize-in-megabytes
-      --     -- memory limit in megabytes or "auto"(basically no limit)
-      --     tsserver_max_memory = "auto",
-      --     -- described below
-      --     tsserver_format_options = {},
-      --     tsserver_file_preferences = {},
-      --     -- mirror of VSCode's `typescript.suggest.completeFunctionCalls`
-      --     complete_function_calls = false,
-      --   },
-      -- }
-    end,
-  },
-  {
-    'WhoIsSethDaniel/mason-tool-installer.nvim',
-    requires = {
-      'williamboman/mason.nvim',
-    },
-    config = function()
-      require('mason-tool-installer').setup({
-        ensure_installed = {
-          'stylua',
-          'jq',
-          'prettier',
-          'tailwindcss',
-          'unocss',
-        },
-      })
     end,
   },
   {
@@ -453,33 +235,4 @@ return {
       require("inc_rename").setup()
     end,
   }
-  -- {
-  --   "nvimdev/lspsaga.nvim" -- 显示文件路径
-  -- },
-  -- {
-  --   "nabekou29/js-i18n.nvim",
-  --   dependencies = {
-  --     "neovim/nvim-lspconfig",
-  --     "nvim-treesitter/nvim-treesitter",
-  --     "nvim-lua/plenary.nvim",
-  --   },
-  --   event = { "BufReadPre", "BufNewFile" },
-  --   opts = {
-  --     primary_language = {},                               -- The default language to display (initial setting for displaying virtual text, etc.)
-  --     translation_source = { "**/{locales,messages}/*.ts" }, -- Pattern for translation resources
-  --     key_separator = ".",                                 -- Key separator
-  --     virt_text = {
-  --       enabled = true,                                    -- Enable virtual text display
-  --       format = ...,                                      -- Format function for virtual text
-  --       conceal_key = false,                               -- Hide keys and display only translations
-  --       fallback = false,                                  -- Fallback if the selected virtual text cannot be displayed
-  --       max_length = 0,                                    -- Maximum length of virtual text. 0 means unlimited.
-  --       max_width = 0,                                     -- Maximum width of virtual text. 0 means unlimited. (`max_length` takes precedence.)
-  --     },
-  --     diagnostic = {
-  --       enabled = true,                      -- Enable the display of diagnostic information
-  --       severity = vim.diagnostic.severity.WARN, -- Severity level of diagnostic information
-  --     },
-  --   }
-  -- }
 }
