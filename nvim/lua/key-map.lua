@@ -242,7 +242,8 @@ maps.n["<c-p>"] = { "<cmd>bprevious<cr>", desc = "Buffer Previous" }
 -- maps.n["<leader>bn"] = { "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Next" }
 -- maps.n["<leader>bp"] = { "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Previous" }
 -- maps.n["<leader>bo"] = { "<cmd>Bdelete<cr>", desc = "Buffer Close Others" }
-maps.n["<leader>bo"] = { "<cmd>%bd | e# | bd#<cr>", desc = "Buffer Close Others" }
+-- maps.n["<leader>bo"] = { "<cmd>%bd | e# | bd#<cr>", desc = "Buffer Close Others" }
+maps.n["<leader>bo"] = { function() Snacks.bufdelete.other() end, desc = "Buffer Close Others" }
 -- maps.n["<leader>bc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Buffer Close Pick" }
 -- maps.n["<leader>bcl"] = { "<cmd>BufferLineCloseLeft<cr>", desc = "Buffer Close Left" }
 -- maps.n["<leader>bcr"] = { "<cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Right" }

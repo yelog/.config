@@ -80,7 +80,7 @@ return {
         ensure_installed = {
           "lua_ls",
           "jsonls",
-          "vtsls",
+          "vue_ls",
           "eslint",
           "rust_analyzer",
           "tailwindcss",
@@ -169,38 +169,15 @@ return {
         --   })
         -- end,
       })
-      vim.lsp.config("vtsls", {
-        filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
-        settings = {
-          vtsls = { tsserver = { globalPlugins = {} } },
-          typescript = {
-            inlayHints = {
-              parameterNames = { enabled = "literals" },
-              parameterTypes = { enabled = true },
-              variableTypes = { enabled = true },
-              propertyDeclarationTypes = { enabled = true },
-              functionLikeReturnTypes = { enabled = true },
-              enumMemberValues = { enabled = true },
-            },
+      vim.lsp.config('vue_ls', {
+        -- add filetypes for typescript, javascript and vue
+        filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+        init_options = {
+          vue = {
+            -- disable hybrid mode
+            hybridMode = false,
           },
         },
-        before_init = function(_, config)
-          table.insert(config.settings.vtsls.tsserver.globalPlugins, {
-            name = "@vue/typescript-plugin",
-            location = vim.fn.expand(
-              "$MASON/packages/vue-language-server/node_modules/@vue/language-server"
-            ),
-            languages = { "vue" },
-            configNamespace = "typescript",
-            enableForWorkspaceTypeScriptVersions = true,
-          })
-        end,
-        on_attach = on_attach,
-        -- on_attach = function(client)
-        --   client.server_capabilities.documentFormattingProvider = false
-        --   client.server_capabilities.documentRangeFormattingProvider = false
-        -- end,
-        capabilities = capabilities,
       })
       vim.lsp.enable('tailwindcss')
       vim.lsp.enable('unocss')
