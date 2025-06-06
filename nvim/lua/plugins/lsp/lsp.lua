@@ -78,6 +78,7 @@ return {
       require("mason-lspconfig").setup({
         -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
         ensure_installed = {
+          "marksman",
           "lua_ls",
           "jsonls",
           "vue_ls",
@@ -145,6 +146,7 @@ return {
       -- Set up lspconfig.
       -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local capabilities = require('blink.cmp').get_lsp_capabilities()
+      vim.lsp.enable('marksman')
       vim.lsp.config('jsonls', {
         on_attach = on_attach,
         flags = lsp_flags,
@@ -172,6 +174,7 @@ return {
       vim.lsp.config('vue_ls', {
         -- add filetypes for typescript, javascript and vue
         filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+        on_attach = on_attach,
         init_options = {
           vue = {
             -- disable hybrid mode

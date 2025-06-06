@@ -1,0 +1,24 @@
+customCommands:
+  - key: '-'
+    command: git merge --ff-only {{.SelectedLocalBranch.Name}}
+    context: localBranches
+    description: Merge using --ff-only
+
+gui:
+  nerdFontsVersion: "3"
+  commitHashLength: 0
+  sidePanelWidth: 0.3 # gives you more space to show things side-by-side
+  authorColors:
+    'yangyj13': '#FFD700'
+    'yelog': '#FFD700'
+  commitAuthorShortLength: 8
+
+# git:
+#   paging:
+#     colorArg: always
+#     pager: delta --dark --paging=never
+
+git:
+  paging:
+    colorArg: never
+    pager: ydiff -p cat -s --wrap --width={{columnWidth}}
