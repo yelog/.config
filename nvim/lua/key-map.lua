@@ -221,6 +221,13 @@ maps.v["<D-S-F>"] = {
   desc = "Search word",
 }
 
+maps.n["<leader>ce"] = {
+  function()
+    require("kulala").set_selected_env()
+  end,
+  desc = "Select kulala environment",
+}
+
 -- local truezen = require('true-zen')
 --> true-zen
 maps.n["<leader>zn"] = { "<cmd>TZNarrow<cr>", desc = "" }

@@ -102,6 +102,20 @@ return {
       vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, opts)
       local navic = require("nvim-navic")
 
+      -- show tips of diagnostic on the end of line
+      vim.diagnostic.config({
+        virtual_text = {
+          prefix = '>',       -- 图标或字符，可以用 "", "●", ">>" 等
+          spacing = 4,
+          severity = nil,     -- 只显示特定级别，如 vim.diagnostic.severity.ERROR
+          source = "if_many", -- 显示 diagnostic 来源
+        },
+        signs = true,         -- 左侧 gutter 的符号
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
+      })
+
       -- Use an on_attach function to only map the following keys
       -- after the language server attaches to the current buffer
       on_attach = function(client, bufnr)
