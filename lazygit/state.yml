@@ -1,12 +1,19 @@
 lastupdatecheck: 0
 recentrepos:
     - /Users/yelog/.config
-    - /Users/yelog/Library/Mobile Documents/iCloud~md~obsidian/Documents
     - /Users/yelog/workspace/lenovo/moss/moss-web
-    - /Users/yelog/workspace/lenovo/moss/moss-docs
+    - /Users/yelog/workspace/lenovo/lemes-docker
     - /Users/yelog/workspace/lenovo/moss/moss-devops
-    - /Users/yelog/workspace/web/tomato-work
+    - /Users/yelog/workspace/lenovo/moss/moss-docs
+    - /Users/yelog/workspace/lenovo/moss/moss-devops-web
+    - /Users/yelog/Library/Mobile Documents/iCloud~md~obsidian/Documents
+    - /Users/yelog/workspace/lenovo/moss/moss-cloud
     - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/devicemate
+    - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/mes-mbg
+    - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/eom
+    - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/mes-isg
+    - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/mes
+    - /Users/yelog/workspace/web/tomato-work
     - /Users/yelog/workspace/web/moss-web-vite
     - /Users/yelog/workspace/vi/marklive.nvim
     - /Users/yelog/workspace/lua/LazyVim
@@ -15,9 +22,6 @@ recentrepos:
     - /Users/yelog/workspace/lenovo/lemes-job-pcg
     - /Users/yelog/workspace/lenovo/lemes-job-system-executor
     - /Users/yelog/workspace/java/vim-flash
-    - /Users/yelog/workspace/lenovo/moss/moss-devops-web
-    - /Users/yelog/workspace/lenovo/lemes-docker
-    - /Users/yelog/workspace/lenovo/moss/moss-cloud
     - /Users/yelog/workspace/lenovo/lemes-run
     - /Users/yelog/workspace/web/test-vue3-low-chrome
     - /Users/yelog/workspace/java/jetcache

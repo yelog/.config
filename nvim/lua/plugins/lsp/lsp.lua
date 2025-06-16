@@ -2,6 +2,25 @@ return {
   "neovim/nvim-lspconfig", -- Configurations for Nvim LSP
   -- 'nvim-java/nvim-java',
   {
+    "maan2003/lsp_lines.nvim", -- multi-line diagnostics
+    config = function()
+      -- show tips of diagnostic on the end of line
+      vim.diagnostic.config({
+        virtual_lines = true, -- 在行尾显示诊断信息
+        -- virtual_text = {
+        --   prefix = '>',       -- 图标或字符，可以用 "", "●", ">>" 等
+        --   spacing = 4,
+        --   severity = nil,     -- 只显示特定级别，如 vim.diagnostic.severity.ERROR
+        --   source = "if_many", -- 显示 diagnostic 来源
+        -- },
+        signs = true, -- 左侧 gutter 的符号
+        underline = true,
+        update_in_insert = false,
+        severity_sort = true,
+      })
+    end
+  },
+  {
     "SmiteshP/nvim-navic",
     config = function()
       local navic = require("nvim-navic")
@@ -92,7 +111,7 @@ return {
       -- Mappings.
       -- See `:help vim.diagnostic.*` for documentation on any of the below functions
       local opts = { noremap = true, silent = true }
-      vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
+      -- vim.keymap.set("n", "<leader>e", vim.diagnostic.open_float, opts)
       vim.keymap.set("n", "<leader>lk", function()
         vim.diagnostic.jump({ count = -1, float = true })
       end, opts)
@@ -101,20 +120,6 @@ return {
       end, opts)
       vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, opts)
       local navic = require("nvim-navic")
-
-      -- show tips of diagnostic on the end of line
-      vim.diagnostic.config({
-        virtual_text = {
-          prefix = '>',       -- 图标或字符，可以用 "", "●", ">>" 等
-          spacing = 4,
-          severity = nil,     -- 只显示特定级别，如 vim.diagnostic.severity.ERROR
-          source = "if_many", -- 显示 diagnostic 来源
-        },
-        signs = true,         -- 左侧 gutter 的符号
-        underline = true,
-        update_in_insert = false,
-        severity_sort = true,
-      })
 
       -- Use an on_attach function to only map the following keys
       -- after the language server attaches to the current buffer
@@ -127,7 +132,7 @@ return {
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
         -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
         -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts) --use telescope instead
-        vim.keymap.set("n", "gD", vim.lsp.buf.implementation, bufopts)
+        -- vim.keymap.set("n", "gD", vim.lsp.buf.implementation, bufopts)
         vim.keymap.set("n", "<M-p>", vim.lsp.buf.hover, bufopts)
         vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
         vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, bufopts)

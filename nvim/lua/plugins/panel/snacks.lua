@@ -16,13 +16,13 @@ return {
     -- scroll = { enabled = true },
     statuscolumn = { enabled = true },
     words = {
-      debounce = 200,        -- time in ms to wait before updating
-      notify_jump = false,   -- show a notification when jumping
-      notify_end = true,     -- show a notification when reaching the end
-      foldopen = true,       -- open folds after jumping
-      jumplist = true,       -- set jump point before jumping
+      debounce = 200,            -- time in ms to wait before updating
+      notify_jump = false,       -- show a notification when jumping
+      notify_end = true,         -- show a notification when reaching the end
+      foldopen = true,           -- open folds after jumping
+      jumplist = true,           -- set jump point before jumping
       modes = { "n", "i", "c" }, -- modes to show references
-      filter = function(buf) -- what buffers to enable `snacks.words`
+      filter = function(buf)     -- what buffers to enable `snacks.words`
         return vim.g.snacks_words ~= false and vim.b[buf].snacks_words ~= false
       end,
     },
@@ -49,24 +49,35 @@ return {
     -- }
   },
   keys = {
-    { "<leader>z",  function() Snacks.zen() end,                     desc = "Toggle Zen Mode" },
-    { "<leader>Z",  function() Snacks.zen.zoom() end,                desc = "Toggle Zoom" },
-    { "<leader>.",  function() Snacks.scratch() end,                 desc = "Toggle Scratch Buffer" },
-    { "<leader>S",  function() Snacks.scratch.select() end,          desc = "Select Scratch Buffer" },
-    { "<leader>n",  function() Snacks.notifier.show_history() end,   desc = "Notification History" },
-    { "<leader>bd", function() Snacks.bufdelete() end,               desc = "Delete Buffer" },
-    { "<leader>cR", function() Snacks.rename.rename_file() end,      desc = "Rename File" },
-    { "<leader>gB", function() Snacks.gitbrowse() end,               desc = "Git Browse" },
-    { "<leader>gb", function() Snacks.git.blame_line() end,          desc = "Git Blame Line" },
-    { "<leader>gf", function() Snacks.lazygit.log_file() end,        desc = "Lazygit Current File History" },
-    { "<leader>gg", function() Snacks.lazygit() end,                 desc = "Lazygit" },
+    { "<leader>z",  function() Snacks.zen() end,                          desc = "Toggle Zen Mode" },
+    { "<leader>Z",  function() Snacks.zen.zoom() end,                     desc = "Toggle Zoom" },
+    { "<leader>.",  function() Snacks.scratch() end,                      desc = "Toggle Scratch Buffer" },
+    { "<leader>S",  function() Snacks.scratch.select() end,               desc = "Select Scratch Buffer" },
+    { "<leader>n",  function() Snacks.notifier.show_history() end,        desc = "Notification History" },
+    { "<leader>bd", function() Snacks.bufdelete() end,                    desc = "Delete Buffer" },
+    { "<leader>cR", function() Snacks.rename.rename_file() end,           desc = "Rename File" },
+    { "<leader>gB", function() Snacks.gitbrowse() end,                    desc = "Git Browse" },
+    { "<leader>gb", function() Snacks.git.blame_line() end,               desc = "Git Blame Line" },
+    { "<leader>gf", function() Snacks.lazygit.log_file() end,             desc = "Lazygit Current File History" },
+    { "<leader>gg", function() Snacks.lazygit() end,                      desc = "Lazygit" },
     -- { "<D-g>",      function() Snacks.lazygit() end,         desc = "Toggle Lazygit" },
-    { "<leader>gl", function() Snacks.lazygit.log() end,             desc = "Lazygit Log (cwd)" },
-    { "<leader>un", function() Snacks.notifier.hide() end,           desc = "Dismiss All Notifications" },
-    { "<c-/>",      function() Snacks.terminal() end,                desc = "Toggle Terminal" },
-    { "<c-_>",      function() Snacks.terminal() end,                desc = "which_key_ignore" },
-    { "]]",         function() Snacks.words.jump(vim.v.count1) end,  desc = "Next Reference",              mode = { "n", "t" } },
-    { "[[",         function() Snacks.words.jump(-vim.v.count1) end, desc = "Prev Reference",              mode = { "n", "t" } },
+    { "<leader>gl", function() Snacks.lazygit.log() end,                  desc = "Lazygit Log (cwd)" },
+    -- { "<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log" },
+    { "<leader>fi", function() Snacks.picker.icons() end,                 desc = "Icons" },
+    { "<leader>fj", function() Snacks.picker.jumps() end,                 desc = "Jumps" },
+    { "<leader>un", function() Snacks.notifier.hide() end,                desc = "Dismiss All Notifications" },
+    { "<c-/>",      function() Snacks.terminal() end,                     desc = "Toggle Terminal" },
+    { "<c-_>",      function() Snacks.terminal() end,                     desc = "which_key_ignore" },
+    { "]]",         function() Snacks.words.jump(vim.v.count1) end,       desc = "Next Reference",              mode = { "n", "t" } },
+    { "[[",         function() Snacks.words.jump(-vim.v.count1) end,      desc = "Prev Reference",              mode = { "n", "t" } },
+    -- LSP
+    -- { "gd",         function() Snacks.picker.lsp_definitions() end,       desc = "Goto Definition" },
+    -- { "gD",         function() Snacks.picker.lsp_declarations() end,      desc = "Goto Declaration" },
+    -- { "gu",         function() Snacks.picker.lsp_references() end,        nowait = true,                        desc = "References" },
+    -- { "gI",         function() Snacks.picker.lsp_implementations() end,   desc = "Goto Implementation" },
+    -- { "gy",         function() Snacks.picker.lsp_type_definitions() end,  desc = "Goto T[y]pe Definition" },
+    -- { "<leader>ss", function() Snacks.picker.lsp_symbols() end,           desc = "LSP Symbols" },
+    -- { "<leader>sS", function() Snacks.picker.lsp_workspace_symbols() end, desc = "LSP Workspace Symbols" },
     {
       "<leader>N",
       desc = "Neovim News",

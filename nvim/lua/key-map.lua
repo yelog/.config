@@ -152,6 +152,12 @@ maps.n["gd"] = {
   end,
   desc = "Search definition",
 }
+maps.n["gD"] = {
+  function()
+    require("fzf-lua").lsp_implementations()
+  end,
+  desc = "Search definition",
+}
 maps.n["gu"] = {
   function()
     require('fzf-lua').lsp_references()

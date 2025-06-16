@@ -131,23 +131,23 @@ export PATH="$PATH:$HOME/.rvm/bin"
 autoload -U compinit
 compinit
 
-# [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-fzf_cd_and_search() {
-    local dir=${1:-.}
-    cd "$dir" || return
-
-    local file
-    file=$(fzf --preview="bat --style=numbers --color=always --line-range=:500 {} 2>/dev/null" \
-        --preview-window=right:50%:wrap) || return
-    if [ -n "$file" ]; then
-        cd "$(dirname "$file")"
-        echo "Changed directory to $(pwd)"
-    fi
-}
-
-# 将函数绑定到快捷键 Ctrl+F
-zle -N fzf_cd_and_search
-bindkey '^F' fzf_cd_and_search
+[ -f ~/.config/zsh/fzf.sh ] && source ~/.config/zsh/fzf.sh
+# fzf_cd_and_search() {
+#     local dir=${1:-.}
+#     cd "$dir" || return
+#
+#     local file
+#     file=$(fzf --preview="bat --style=numbers --color=always --line-range=:500 {} 2>/dev/null" \
+#         --preview-window=right:50%:wrap) || return
+#     if [ -n "$file" ]; then
+#         cd "$(dirname "$file")"
+#         echo "Changed directory to $(pwd)"
+#     fi
+# }
+#
+# # 将函数绑定到快捷键 Ctrl+F
+# zle -N fzf_cd_and_search
+# bindkey '^F' fzf_cd_and_search
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -487,3 +487,7 @@ function chpwd() {
 }
 
 . "$HOME/.local/share/../bin/env"
+
+#THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
+export SDKMAN_DIR="$HOME/.sdkman"
+[[ -s "$HOME/.sdkman/bin/sdkman-init.sh" ]] && source "$HOME/.sdkman/bin/sdkman-init.sh"
