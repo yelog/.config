@@ -32,6 +32,7 @@ else
 end
 require("custom-color")
 require("custom.run-file")
+require("custom.foldding")
 vim.g.LanguageClient_serverCommands = {
   sql = { 'sql-language-server', 'up', '--method', 'stdio' },
 }
