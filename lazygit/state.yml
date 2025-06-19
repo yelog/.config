@@ -1,13 +1,15 @@
 lastupdatecheck: 0
 recentrepos:
     - /Users/yelog/.config
-    - /Users/yelog/Library/Mobile Documents/iCloud~md~obsidian/Documents
     - /Users/yelog/workspace/lenovo/moss/moss-cloud
-    - /Users/yelog/workspace/lenovo/moss/moss-docs
     - /Users/yelog/workspace/lenovo/moss/moss-web
+    - /Users/yelog/Library/Mobile Documents/iCloud~md~obsidian/Documents
+    - /Users/yelog/workspace/web/ant-design-vue
+    - /Users/yelog/myspace/ant-design-vue
+    - /Users/yelog/workspace/lenovo/moss/moss-devops-web
+    - /Users/yelog/workspace/lenovo/moss/moss-docs
     - /Users/yelog/workspace/lenovo/lemes-docker
     - /Users/yelog/workspace/lenovo/moss/moss-devops
-    - /Users/yelog/workspace/lenovo/moss/moss-devops-web
     - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/devicemate
     - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/mes-mbg
     - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/eom
@@ -29,7 +31,6 @@ recentrepos:
     - /Users/yelog/workspace/python/selenium-test
     - /Users/yelog/workspace/java/springboot-redis-caffeine-cache
     - /Users/yelog/workspace/lenovo/moss/only-moss-web
-    - /Users/yelog/workspace/web/ant-design-vue
     - /Users/yelog/workspace/ai/markdownify-mcp
     - /Users/yelog/myspace/blog
     - /Users/yelog/workspace/lenovo/moss/moss-service-devicemate

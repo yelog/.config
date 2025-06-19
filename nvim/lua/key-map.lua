@@ -236,11 +236,13 @@ maps.n["<leader>ce"] = {
 
 -- local truezen = require('true-zen')
 --> true-zen
-maps.n["<leader>zn"] = { "<cmd>TZNarrow<cr>", desc = "" }
-maps.v["<leader>zn"] = { "<cmd>'<,'>TZNarrow<cr>", desc = "" }
-maps.n["<leader>zf"] = { "<cmd>TZFocus<cr>", desc = "" }
-maps.n["<leader>zm"] = { "<cmd>TZMinimalist<cr>", desc = "" }
-maps.n["<leader>za"] = { "<cmd>TZAtaraxis<cr>", desc = "" }
+-- maps.n["<leader>zn"] = { "<cmd>TZNarrow<cr>", desc = "" }
+-- maps.v["<leader>zn"] = { "<cmd>'<,'>TZNarrow<cr>", desc = "" }
+-- maps.n["<leader>zf"] = { "<cmd>TZFocus<cr>", desc = "" }
+-- maps.n["<leader>zm"] = { "<cmd>TZMinimalist<cr>", desc = "" }
+-- maps.n["<leader>za"] = { "<cmd>TZAtaraxis<cr>", desc = "" }
+
+maps.n["<leader>sd"] = { "<cmd>Autosession delete<cr>", desc = "Autosession delete" }
 
 -- table of contents
 maps.n["<leader>ts"] = { "<cmd>AerialToggle<cr>", desc = "Toggle Structure" }
