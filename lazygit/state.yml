@@ -1,9 +1,10 @@
 lastupdatecheck: 0
 recentrepos:
     - /Users/yelog/.config
-    - /Users/yelog/workspace/lenovo/moss/moss-cloud
     - /Users/yelog/workspace/lenovo/moss/moss-web
+    - /Users/yelog/workspace/lenovo/moss/moss-portal
     - /Users/yelog/Library/Mobile Documents/iCloud~md~obsidian/Documents
+    - /Users/yelog/workspace/lenovo/moss/moss-cloud
     - /Users/yelog/workspace/web/ant-design-vue
     - /Users/yelog/myspace/ant-design-vue
     - /Users/yelog/workspace/lenovo/moss/moss-devops-web
