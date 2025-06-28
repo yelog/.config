@@ -7,3 +7,7 @@ th.git.modified = ui.Style():fg("blue")
 th.git.deleted = ui.Style():fg("red"):bold()
 
 require("git"):setup {}
+
+require("quicklook"):setup({
+  showPreviewNotification = true,
+})

@@ -1,14 +1,17 @@
 lastupdatecheck: 0
 recentrepos:
     - /Users/yelog/.config
-    - /Users/yelog/workspace/lenovo/moss/moss-web
-    - /Users/yelog/workspace/lenovo/moss/moss-portal
     - /Users/yelog/Library/Mobile Documents/iCloud~md~obsidian/Documents
+    - /Users/yelog/workspace/java/vim-flash
+    - /Users/yelog/workspace/vi/flash.nvim
+    - /Users/yelog/workspace/lenovo/moss/moss-portal
+    - /Users/yelog/workspace/lenovo/moss/moss-web
     - /Users/yelog/workspace/lenovo/moss/moss-cloud
+    - /Users/yelog/workspace/lenovo/lemes-job-system-executor
+    - /Users/yelog/workspace/lenovo/moss/moss-docs
     - /Users/yelog/workspace/web/ant-design-vue
     - /Users/yelog/myspace/ant-design-vue
     - /Users/yelog/workspace/lenovo/moss/moss-devops-web
-    - /Users/yelog/workspace/lenovo/moss/moss-docs
     - /Users/yelog/workspace/lenovo/lemes-docker
     - /Users/yelog/workspace/lenovo/moss/moss-devops
     - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/devicemate
@@ -23,8 +26,6 @@ recentrepos:
     - /Users/yelog/workspace/web/vue-vben-admin
     - /Users/yelog/workspace/vi/render-markdown.nvim
     - /Users/yelog/workspace/lenovo/lemes-job-pcg
-    - /Users/yelog/workspace/lenovo/lemes-job-system-executor
-    - /Users/yelog/workspace/java/vim-flash
     - /Users/yelog/workspace/lenovo/lemes-run
     - /Users/yelog/workspace/web/test-vue3-low-chrome
     - /Users/yelog/workspace/java/jetcache

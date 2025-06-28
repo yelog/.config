@@ -93,13 +93,13 @@ noremap <right> :vertical resize+5<CR>
 map <c-w>V <c-w>s<cr>
 
 " 标签页
-map ti :tabe<CR>
-"map th :-tabnext<CR>
-map th gT
-"map tl :+tabnext<CR>
-map tl gt
-map tmh :-tabmove<CR>
-map tml :+tabmove<CR>
+" map ti :tabe<CR>
+" "map th :-tabnext<CR>
+" map th gT
+" "map tl :+tabnext<CR>
+" map tl gt
+" map tmh :-tabmove<CR>
+" map tml :+tabmove<CR>
 
 "nnoremap <c-p> gT
 "nnoremap <c-n> gt

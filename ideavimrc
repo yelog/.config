@@ -151,15 +151,15 @@ let g:EasyMotion_do_mapping = 0
 let g:EasyMotion_do_shade = 0
 let g:EasyMotion_smartcase = 1
 let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
-map , <Plug>(easymotion-prefix)
-map ,j <Plug>(easymotion-j)
-map ,k <Plug>(easymotion-k)
-map ,l <Plug>(easymotion-lineforward)
-map ,h <Plug>(easymotion-linebackward)
-"map ;s <Plug>(easymotion-sn)
-map ,s <Plug>(easymotion-s2)
-map ,t <Plug>(easymotion-tn)
-map ,w <Plug>(easymotion-bd-w)
+" map , <Plug>(easymotion-prefix)
+" map ,j <Plug>(easymotion-j)
+" map ,k <Plug>(easymotion-k)
+" map ,l <Plug>(easymotion-lineforward)
+" map ,h <Plug>(easymotion-linebackward)
+" "map ;s <Plug>(easymotion-sn)
+" map ,s <Plug>(easymotion-s2)
+" map ,t <Plug>(easymotion-tn)
+" map ,w <Plug>(easymotion-bd-w)
 
 
 " jump to next change
@@ -169,12 +169,32 @@ map ,w <Plug>(easymotion-bd-w)
 " nnoremap <leader>gj :action NextChange<CR>
 
 " nmap <leader><leader>s :action KJumpAction<cr>
-nmap <leader><leader>w :action KJumpAction.Word0<cr>
-nmap <leader><leader>s :action KJumpAction.KJumpAction<cr>
-nmap <leader><leader>l :action KJumpAction.Line<cr>
+" nmap <leader><leader>w :action KJumpAction.Word0<cr>
+" nmap <leader><leader>s :action KJumpAction.KJumpAction<cr>
+" nmap <leader><leader>l :action KJumpAction.Line<cr>
 
+" Search for string in visible area and jump
 nmap s <Action>(flash.search)
 xmap s <Action>(flash.search)
+" find for char in characters to the right of the current cursor
+nmap f <Action>(flash.find)
+xmap f <Action>(flash.find)
+" find for char in characters to the left of the current cursor
+nmap F <Action>(flash.find_backward)
+xmap F <Action>(flash.find_backward)
+" till for char in characters to the right of the current cursor
+nmap t <Action>(flash.till)
+xmap t <Action>(flash.till)
+" till for char in characters to the left of the current cursor
+nmap T <Action>(flash.till_backward)
+xmap T <Action>(flash.till_backward)
+" Repeat the last f/F/t/T search
+nmap ; <Action>(flash.repeat)
+xmap ; <Action>(flash.repeat)
+" Repeat the last f/F/t/T search backward
+nmap , <Action>(flash.repeat_backward)
+xmap , <Action>(flash.repeat_backward)
+
 " xnoremap s <Action>(flash.search)
 " map f <Action>(flash.find)
 

@@ -8,5 +8,10 @@ use = "yazi-rs/plugins:smart-enter"
 rev = "63f9650"
 hash = "a7ab702e1ef0c097defbc976ed34c186"
 
+[[plugin.deps]]
+use = "sunruisjtu2020/quicklook"
+rev = "901e7a4"
+hash = "fd314a7aa9d7f25162c6c757c1956ca8"
+
 [flavor]
 deps = []

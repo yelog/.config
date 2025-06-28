@@ -106,6 +106,8 @@ return {
           "tailwindcss",
           "unocss",
           "dockerls",
+          "vimls",
+          -- "kotlin_lsp",
         },
       })
       -- Mappings.
@@ -208,6 +210,8 @@ return {
       })
       vim.lsp.enable('tailwindcss')
       vim.lsp.enable('unocss')
+      vim.lsp.enable('vimls')
+      -- vim.lsp.enable('kotlin_lsp')
       vim.lsp.config('dockerls', {
         settings = {
           docker = {

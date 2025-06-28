@@ -160,6 +160,9 @@ keymap = [
 	{ on = "~",    run = "help", desc = "Open help" },
 	{ on = "<F1>", run = "help", desc = "Open help" },
 ]
+prepend_keymap = [
+  { on = "I", run = "plugin quicklook", desc = "QuickLook Preview", block = false }
+]
 
 [tasks]
 
