@@ -545,14 +545,16 @@ fzf-completion() {
 }
 
 [ -z "$fzf_default_completion" ] && {
-  binding=$(bindkey '^I')
+  binding=$(bindkey '^P')
   [[ $binding =~ 'undefined-key' ]] || fzf_default_completion=$binding[(s: :w)2]
   unset binding
 }
 
 # Normal widget
 zle     -N   fzf-completion
-bindkey '^I' fzf-completion
+bindkey -M emacs '^P' fzf-completion
+bindkey -M vicmd '^P' fzf-completion
+bindkey -M viins '^P' fzf-completion
 fi
 
 } always {
@@ -560,4 +562,31 @@ fi
   eval $__fzf_completion_options
   'unset' '__fzf_completion_options'
 }
+
+# Ctrl-P: 补全 ls 的参数
+# __fzf_cmd_options() {
+#   local cmd=$(echo $LBUFFER | awk '{print $1}')
+#
+#   local opts
+#   case "$cmd" in
+#     ls)
+#       opts=$(ls --help | grep -oE -- '--[a-zA-Z0-9=-]+' | sort -u)
+#       ;;
+#     git)
+#       opts=$(git --help -a | grep '^  ' | awk '{print $1}' | sort -u)
+#       ;;
+#     *)
+#       opts=""
+#       ;;
+#   esac
+#
+#   local selected=$(echo "$opts" | fzf --height=40% --reverse --prompt="$cmd options> ")
+#   [[ -n $selected ]] && LBUFFER="$LBUFFER$selected " && zle reset-prompt
+# }
+# 将函数绑定到 Ctrl-P（你可以改成别的组合键）
+# zle -N __fzf_cmd_options
+# bindkey -M emacs '^P' __fzf_cmd_options
+# bindkey -M vicmd '^P' __fzf_cmd_options
+# bindkey -M viins '^P' __fzf_cmd_options
+
 ### end: completion.zsh ###
