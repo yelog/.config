@@ -201,6 +201,7 @@ return {
         -- add filetypes for typescript, javascript and vue
         filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
         on_attach = on_attach,
+        capabilities = capabilities,
         init_options = {
           vue = {
             -- disable hybrid mode

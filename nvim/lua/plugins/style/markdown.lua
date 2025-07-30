@@ -2,13 +2,13 @@ return {
   {
     "dhruvasagar/vim-table-mode",
     config = function()
-      vim.cmd([[
-          augroup markdown_config
-            autocmd!
-            autocmd FileType markdown TableModeEnable
-            " autocmd FileType markdown nnoremap <buffer> <M-s> :TableModeRealign<CR>
-          augroup END
-        ]])
+      -- vim.cmd([[
+      --     augroup markdown_config
+      --       autocmd!
+      --       autocmd FileType markdown TableModeEnable
+      --       " autocmd FileType markdown nnoremap <buffer> <M-s> :TableModeRealign<CR>
+      --     augroup END
+      --   ]])
       vim.g.table_mode_sort_map = '<leader>mts'
     end
   }, --> table mode
@@ -76,26 +76,6 @@ return {
   --   'MeanderingProgrammer/render-markdown.nvim',
   --   opts = {
   --     file_types = { "markdown", "Avante" },
-  --     checkbox = {
-  --       unchecked = {
-  --         icon = '',
-  --       },
-  --       checked = {
-  --         icon = '󰄲'
-  --       },
-  --       indeterminate = {
-  --         icon = '󰡖'
-  --       },
-  --     },
-  --     bullet = {
-  --       icons = { '', '', '', '◇' },
-  --       scope_highlight = {
-  --         "list_marker_minus",
-  --         "list_marker_minus",
-  --         "list_marker_minus",
-  --         "list_marker_minus"
-  --       }
-  --     }
   --   },
   --   dev = true,
   --   ft = { "markdown", "Avante" },
@@ -141,7 +121,7 @@ return {
     -- Optional: Key mappings
     keys = {
       {
-        '<CR>',
+        '<D-l>',
         '<Cmd>CheckboxCycleNext<CR>',
         desc = 'Checkbox Next',
         ft = { 'markdown' },

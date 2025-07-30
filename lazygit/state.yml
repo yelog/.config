@@ -1,31 +1,32 @@
 lastupdatecheck: 0
 recentrepos:
     - /Users/yelog/.config
+    - /Users/yelog/workspace/vi/marklive.nvim
+    - /Users/yelog/workspace/vi/render-markdown.nvim
     - /Users/yelog/Library/Mobile Documents/iCloud~md~obsidian/Documents
-    - /Users/yelog/workspace/lenovo/moss/moss-web
-    - /Users/yelog/workspace/lenovo/maas-web
     - /Users/yelog/workspace/java/vim-flash
+    - /Users/yelog/workspace/lenovo/moss/moss-docs
+    - /Users/yelog/workspace/lenovo/lemes-docker
+    - /Users/yelog/workspace/lenovo/moss/moss-web
+    - /Users/yelog/workspace/lenovo/moss/moss-devops
+    - /Users/yelog/workspace/lenovo/lemes-isg-client
+    - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/mes
+    - /Users/yelog/workspace/lenovo/maas-web
     - /Users/yelog/workspace/vi/flash.nvim
     - /Users/yelog/workspace/lenovo/moss/moss-portal
     - /Users/yelog/workspace/lenovo/moss/moss-cloud
     - /Users/yelog/workspace/lenovo/lemes-job-system-executor
-    - /Users/yelog/workspace/lenovo/moss/moss-docs
     - /Users/yelog/workspace/web/ant-design-vue
     - /Users/yelog/myspace/ant-design-vue
     - /Users/yelog/workspace/lenovo/moss/moss-devops-web
-    - /Users/yelog/workspace/lenovo/lemes-docker
-    - /Users/yelog/workspace/lenovo/moss/moss-devops
     - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/devicemate
     - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/mes-mbg
     - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/eom
     - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/mes-isg
-    - /Users/yelog/workspace/lenovo/moss/moss-web/src/views/mes
     - /Users/yelog/workspace/web/tomato-work
     - /Users/yelog/workspace/web/moss-web-vite
-    - /Users/yelog/workspace/vi/marklive.nvim
     - /Users/yelog/workspace/lua/LazyVim
     - /Users/yelog/workspace/web/vue-vben-admin
-    - /Users/yelog/workspace/vi/render-markdown.nvim
     - /Users/yelog/workspace/lenovo/lemes-job-pcg
     - /Users/yelog/workspace/lenovo/lemes-run
     - /Users/yelog/workspace/web/test-vue3-low-chrome
@@ -54,7 +55,6 @@ recentrepos:
     - /Users/yelog/workspace/lenovo/lemes-web/src/views/pcg
     - /Users/yelog/workspace/web/redis-mate
     - /Users/yelog/workspace/rust/rust-redis-desktop
-    - /Users/yelog/workspace/lenovo/lemes-isg-client
     - /Users/yelog/workspace/web/test1
     - /Users/yelog/workspace/lenovo/moss/moss-service-mes-isg
 startuppopupversion: 5
