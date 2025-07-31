@@ -110,32 +110,32 @@ return {
     ft = { "markdown" },
     build = "npm install",
   },
-  {
-    'epilande/checkbox-cycle.nvim',
-    ft = 'markdown',
-    -- Optional: Configuration
-    opts = {
-      -- Example: Custom states
-      states = { '[ ]', '[x]' },
-    },
-    -- Optional: Key mappings
-    keys = {
-      {
-        '<D-l>',
-        '<Cmd>CheckboxCycleNext<CR>',
-        desc = 'Checkbox Next',
-        ft = { 'markdown' },
-        mode = { 'n', 'v' },
-      },
-      {
-        '<S-CR>',
-        '<Cmd>CheckboxCyclePrev<CR>',
-        desc = 'Checkbox Previous',
-        ft = { 'markdown' },
-        mode = { 'n', 'v' },
-      },
-    },
-  },
+  -- {
+  --   'epilande/checkbox-cycle.nvim',
+  --   ft = 'markdown',
+  --   -- Optional: Configuration
+  --   opts = {
+  --     -- Example: Custom states
+  --     states = { '[ ]', '[x]' },
+  --   },
+  --   -- Optional: Key mappings
+  --   keys = {
+  --     {
+  --       '<D-l>',
+  --       '<Cmd>CheckboxCycleNext<CR>',
+  --       desc = 'Checkbox Next',
+  --       ft = { 'markdown' },
+  --       mode = { 'n', 'v' },
+  --     },
+  --     {
+  --       '<S-CR>',
+  --       '<Cmd>CheckboxCyclePrev<CR>',
+  --       desc = 'Checkbox Previous',
+  --       ft = { 'markdown' },
+  --       mode = { 'n', 'v' },
+  --     },
+  --   },
+  -- },
   -- {
   --   "bngarren/checkmate.nvim",
   --   ft = "markdown", -- Lazy loads for Markdown files matching patterns in 'files'

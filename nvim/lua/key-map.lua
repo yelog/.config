@@ -356,6 +356,8 @@ maps.i["<right>"] = {
   desc = "Accept Copilot Or Right"
 }
 
+maps.n["<D-l>"] = { "<cmd>MarkliveTaskToggle<cr>", desc = "Marklive Toggle Task" }
+
 -- 跳转vim分屏/(tmux,kitty)分屏
 maps.n["<D-C-h>"] = { "<cmd>lua require('smart-splits').move_cursor_left()<cr>", desc = "" }
 maps.n["<D-C-j>"] = { "<cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
