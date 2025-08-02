@@ -202,7 +202,7 @@ return {
 
     -- use a release tag to download pre-built binaries
     -- v0.8.1 会闪退
-    version = '0.9.3',
+    version = '1.*',
     -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
     -- build = 'cargo build --release',
     -- If you use nix, you can build from source using latest nightly rust with:
@@ -234,7 +234,9 @@ return {
           'snippet_forward',
           'fallback'
         },
-        cmdline = {
+      },
+      cmdline = {
+        keymap = {
           preset = 'enter',
           ["<S-Tab>"] = { "select_prev", "fallback" },
           ["<Tab>"] = { "select_next", "fallback" },
@@ -264,7 +266,7 @@ return {
         accept = { auto_brackets = { enabled = false }, },
 
         -- Insert completion item on selection, don't select by default
-        list = { selection = 'auto_insert' },
+        list = { selection = { preselect = true, auto_insert = true } },
         -- or set per mode
         -- list = { selection = function(ctx) return ctx.mode == 'cmdline' and 'auto_insert' or 'preselect' end },
 
