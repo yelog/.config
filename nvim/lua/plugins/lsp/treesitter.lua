@@ -10,8 +10,11 @@ return {
       { "html", "python", "bash=sh", "json", "java", "javascript", "js=javascript", "sql", "yaml", "xml", "Dockerfile",
         "Rust", "swift", "lua", "typescript", "ts=typescript", "vim" }
       require("nvim-treesitter.configs").setup({
+        modules = {},
+        ignore_install = {},
         -- A list of parser names, or "all"
         ensure_installed = {
+          "java",
           "javascript",
           "typescript",
           "bash",
