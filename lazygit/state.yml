@@ -1,6 +1,8 @@
 lastupdatecheck: 0
 recentrepos:
     - /Users/yelog/.config
+    - /Users/yelog/workspace/web/vue-vben-admin
+    - /Users/yelog/workspace/rust/r-nacos
     - /Users/yelog/workspace/lenovo/moss/moss-web
     - /Users/yelog/Library/Mobile Documents/iCloud~md~obsidian/Documents
     - /Users/yelog/workspace/vi/marklive.nvim
@@ -26,7 +28,6 @@ recentrepos:
     - /Users/yelog/workspace/web/tomato-work
     - /Users/yelog/workspace/web/moss-web-vite
     - /Users/yelog/workspace/lua/LazyVim
-    - /Users/yelog/workspace/web/vue-vben-admin
     - /Users/yelog/workspace/lenovo/lemes-job-pcg
     - /Users/yelog/workspace/lenovo/lemes-run
     - /Users/yelog/workspace/web/test-vue3-low-chrome
@@ -45,7 +46,6 @@ recentrepos:
     - /Users/yelog/workspace/lenovo/lemes-cloud
     - /Users/yelog/myspace/blog/themes/3-hexo
     - /Users/yelog/workspace/lenovo/lemes-cloud/lemes-business-dpms/lemes-service-dms
-    - /Users/yelog/workspace/rust/r-nacos
     - /Users/yelog/workspace/rust/wezterm
     - /Users/yelog/workspace/web/canvas-test
     - /Users/yelog/workspace/rust/row
