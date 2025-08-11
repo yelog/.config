@@ -18,7 +18,9 @@ return {
     providers = {
       copilot = {
         endpoint = 'https://api.githubcopilot.com/',
-        model = 'gpt-4.1',
+        -- model = 'gpt-4.1',
+        -- model = 'gpt-5',
+        model = 'o4-mini',
         extra_reqeust_body = {
           allow_insecure = true, -- Do not allow insecure server connections
           timeout = 30000,     -- Timeout in milliseconds

@@ -186,18 +186,19 @@ return {
       })
 
       -- local base_on_attach = vim.lsp.config.eslint.on_attach
-      vim.lsp.config("eslint", {
-        -- auto fix on save
-        -- on_attach = function(client, bufnr)
-        --   if not base_on_attach then return end
-        --
-        --   base_on_attach(client, bufnr)
-        --   vim.api.nvim_create_autocmd("BufWritePre", {
-        --     buffer = bufnr,
-        --     command = "LspEslintFixAll",
-        --   })
-        -- end,
-      })
+      vim.lsp.enable('eslint')
+      -- vim.lsp.config("eslint", {
+      -- auto fix on save
+      -- on_attach = function(client, bufnr)
+      --   if not base_on_attach then return end
+      --
+      --   base_on_attach(client, bufnr)
+      --   vim.api.nvim_create_autocmd("BufWritePre", {
+      --     buffer = bufnr,
+      --     command = "LspEslintFixAll",
+      --   })
+      -- end,
+      -- })
       -- If you are using mason.nvim, you can get the ts_plugin_path like this
       -- For Mason v1,
       -- local mason_registry = require('mason-registry')
@@ -206,7 +207,8 @@ return {
       -- local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
       -- or even
       -- local vue_language_server_path = vim.fn.stdpath('data') .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
-      local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
+      local vue_language_server_path = vim.fn.expand '$MASON/packages' ..
+      '/vue-language-server' .. '/node_modules/@vue/language-server'
       local vue_plugin = {
         name = '@vue/typescript-plugin',
         location = vue_language_server_path,
