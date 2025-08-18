@@ -110,7 +110,7 @@ map <c-w>V <c-w>s<cr>
 "map <LEADER>rc :e ~/.config/nvim/init.vim<CR>
 " 'V
 map <leader>S :w<CR>
-noremap <C-s> :w<CR>
+" noremap <C-s> :w<CR>
 imap <D-s> <esc><D-s>
 imap <M-s> <esc><M-s>
 " map Q :q<CR>
