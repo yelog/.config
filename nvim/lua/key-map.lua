@@ -121,13 +121,30 @@ maps.v["<leader>ll"] = {
 maps.n["<D-S-M>"] = {
   function()
     if vim.bo.filetype == "http" then
-      require('kulala').search()
+      require("kulala").search()
     else
-      require("fzf-lua").lsp_document_symbols()
+      local clients = vim.lsp.get_clients({ bufnr = 0 })
+
+
+      local supports_document_symbols = false
+
+      for _, client in ipairs(clients) do
+        if client.server_capabilities.documentSymbolProvider then
+          supports_document_symbols = true
+          break
+        end
+      end
+
+      if supports_document_symbols then
+        require("fzf-lua").lsp_document_symbols()
+      else
+        require("fzf-lua").treesitter()
+      end
     end
   end,
   desc = "Search symbols",
 }
+
 maps.n["<D-S-O>"] = {
   function()
     require('fzf-lua').files()

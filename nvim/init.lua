@@ -62,3 +62,6 @@ vim.api.nvim_create_autocmd("VimEnter", {
     vim.fn.system("sh ~/.config/kitty/set_nvim_title.sh")
   end
 })
+
+-- fix throw error when open java file
+vim.g.java_ignore_markdown = 1
