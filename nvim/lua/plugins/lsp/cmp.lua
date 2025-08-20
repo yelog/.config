@@ -6,6 +6,7 @@ return {
     dependencies = {
       'rafamadriz/friendly-snippets',
       'Kaiser-Yang/blink-cmp-avante',
+      { 'L3MON4D3/LuaSnip', version = 'v2.*' }
       -- 'Exafunction/codeium.nvim',
       -- 'windwp/nvim-autopairs'
     },
@@ -28,7 +29,8 @@ return {
       -- your own keymap.
       keymap = {
         preset = 'default',
-        ["<Tab>"] = { "select_and_accept", "fallback" },
+        -- ["<Tab>"] = { "select_next", "fallback" },
+        -- ["<S-Tab>"] = { "select_prev", "fallback" },
         ["<CR>"] = { "select_and_accept", "fallback" },
       },
       cmdline = {
@@ -98,10 +100,11 @@ return {
           },
         },
       },
+      snippets = { preset = 'luasnip' },
       -- default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, via `opts_extend`
       sources = {
-        default = { 'avante', 'lsp', 'path', 'snippets', 'buffer' },
+        default = { 'snippets', 'avante', 'lsp', 'path', 'buffer' },
         -- optionally disable cmdline completions
         -- cmdline = {},
         providers = {

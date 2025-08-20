@@ -137,7 +137,7 @@ return {
         -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts) --use telescope instead
         -- vim.keymap.set("n", "gD", vim.lsp.buf.implementation, bufopts)
         vim.keymap.set("n", "<M-p>", vim.lsp.buf.hover, bufopts)
-        vim.keymap.set("n", "<C-k>", vim.lsp.buf.signature_help, bufopts)
+        vim.keymap.set({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help, bufopts)
         vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, bufopts)
         vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, bufopts)
         vim.keymap.set("n", "<leader>wl", function()
@@ -208,7 +208,7 @@ return {
       -- or even
       -- local vue_language_server_path = vim.fn.stdpath('data') .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
       local vue_language_server_path = vim.fn.expand '$MASON/packages' ..
-      '/vue-language-server' .. '/node_modules/@vue/language-server'
+          '/vue-language-server' .. '/node_modules/@vue/language-server'
       local vue_plugin = {
         name = '@vue/typescript-plugin',
         location = vue_language_server_path,
