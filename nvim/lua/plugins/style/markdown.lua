@@ -12,12 +12,12 @@ return {
       vim.g.table_mode_sort_map = '<leader>mts'
     end
   }, --> table mode
-  {
-    "bullets-vim/bullets.vim",
-    config = function()
-      vim.g.bullets_enabled_file_types = { "markdown", "text", "gitcommit", "scratch" }
-    end,
-  }, --> list style
+  -- {
+  --   "bullets-vim/bullets.vim",
+  --   config = function()
+  --     vim.g.bullets_enabled_file_types = { "markdown", "text", "gitcommit", "scratch" }
+  --   end,
+  -- }, --> list style
   -- {
   --   "gaoDean/autolist.nvim",
   --   ft = {
