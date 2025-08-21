@@ -131,7 +131,8 @@ keymap = [
 	{ on = [ "g", "d" ],       run = "cd ~/Downloads",   desc = "Goto ~/Downloads" },
 	{ on = [ "g", "w" ],       run = "cd ~/workspace/",   desc = "Goto ~/Downloads" },
 	{ on = [ "g", "b" ],       run = "cd ~/myspace/blog",   desc = "Goto ~/blog" },
-	{ on = [ "g", "o" ],       run = "cd ~/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents",   desc = "Goto ~/obsidian" },
+	{ on = [ "g", "o" ],       run = "cd ~/Library/Mobile\\ Documents/iCloud~md~obsidian/Documents",   desc = "Goto obsidian" },
+	{ on = [ "g", "x" ],       run = "cd ~/Library/Mobile\\ Documents/iCloud~com~west2online~ClashX/Documents",   desc = "Goto clashx" },
 	{ on = [ "g", "<Space>" ], run = "cd --interactive", desc = "Jump interactively" },
 
 	# Tabs
