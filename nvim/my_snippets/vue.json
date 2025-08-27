@@ -1,0 +1,243 @@
+{
+  "i18n": {
+    "prefix": [
+      "t",
+      "t()"
+    ],
+    "body": [
+      "t('$1')$0"
+    ]
+  },
+  "import i18n": {
+    "prefix": [
+      "import i18n"
+    ],
+    "body": [
+      "import { t } from '@/hooks/web/useI18n';$0"
+    ]
+  },
+  "function": {
+    "prefix": [
+      "f",
+      "fun",
+      "function"
+    ],
+    "body": [
+      "function ${1:functionName}(${2:params}) {",
+      "  $0",
+      "}"
+    ]
+  },
+  "arrow function": {
+    "prefix": [
+      "af",
+      "afun",
+      "arrow function"
+    ],
+    "body": [
+      "const ${1:functionName} = (${2:params}) => {",
+      "  $0",
+      "};"
+    ]
+  },
+  "interface": {
+    "prefix": [
+      "int",
+      "interface"
+    ],
+    "body": [
+      "interface ${1:InterfaceName} {",
+      "  $0",
+      "}"
+    ]
+  },
+  "http": {
+    "prefix": [
+      "http",
+      "http.get",
+      "http.post"
+    ],
+    "body": [
+      "import { defHttp } from '@/utils/http/axios';",
+      "",
+      "export const ${1:functionName} = (${2:params}) =>defHttp.${3|get,post,put,delete|}({ url: '${4:url}', ${5|params,data|}: $2 });$0"
+    ]
+  },
+  "template": {
+    "prefix": [
+      "template"
+    ],
+    "body": [
+      "<template>",
+      "  $0",
+      "</template>",
+      "",
+      "<script lang=\"ts\" setup>",
+      "",
+      "</script>",
+      "",
+      "<style lang=\"less\" scoped>",
+      "",
+      "</style>"
+    ]
+  },
+  "BasicTable": {
+    "prefix": [
+      "table",
+      "BasicTable"
+    ],
+    "body": [
+      "<BasicTable @register=\"registerTable\">",
+      "  <template #toolbar>",
+      "    <a-button type=\"primary\" @click=\"handleCreate\">{{ t('common.addText') }}</a-button>",
+      "  </template>",
+      "  <template #bodyCell=\"{ column, record }\">",
+      "    <template v-if=\"column.key === 'action'\">",
+      "      <TableAction",
+      "        :actions=\"[",
+      "          { label: t('common.editText'), onClick: handleEdit.bind(null, record) },",
+      "          {",
+      "            label: t('common.delText'),",
+      "            color: 'error',",
+      "            popConfirm: {",
+      "              title: t('common.deleteConfirm'),",
+      "              placement: 'left',",
+      "              confirm: handleDelete.bind(null, record),",
+      "            },",
+      "          },",
+      "        ]\"",
+      "      />",
+      "    </template>",
+      "  </template>",
+      "</BasicTable>",
+      "$0"
+    ]
+  },
+  "RegisterTable": {
+    "prefix": [
+      "registerTable",
+      "useTable"
+    ],
+    "body": [
+      "const [registerTable, { reload }] = useTable({",
+      "  api: ${1:page},",
+      "  columns,",
+      "  formConfig: {",
+      "    labelWidth: 120,",
+      "    schemas: searchFormSchema,",
+      "  },",
+      "  useSearchForm: true,",
+      "  showTableSetting: true,",
+      "  bordered: true,",
+      "  showIndexColumn: false,",
+      "  actionColumn: {",
+      "    width: 100,",
+      "    title: t('common.action'),",
+      "    dataIndex: 'action',",
+      "    fixed: 'right',",
+      "  },",
+      "});",
+      "$0"
+    ]
+  },
+  "BasicModal": {
+    "prefix": [
+      "modal",
+      "BasicModal"
+    ],
+    "body": [
+      "<BasicModal",
+      "  v-bind=\"\\$attrs\"",
+      "  :title=\"getTitle\"",
+      "  width=\"800px\"",
+      "  @register=\"registerModal\"",
+      "  @ok=\"handleSubmit\"",
+      ">",
+      "  ${1:<BasicForm @register=\"registerForm\" />}",
+      "</BasicModal>$0"
+    ]
+  },
+  "RegisterForm": {
+    "prefix": [
+      "registerForm",
+      "useForm"
+    ],
+    "body": [
+      "const [registerForm, { resetFields, setFieldsValue, validate }] = useForm({",
+      "  labelWidth: 90,",
+      "  baseColProps: { span: 24 },",
+      "  schemas: formSchema,",
+      "  showActionButtonGroup: false,",
+      "});"
+    ]
+  },
+  "RegisterModal": {
+    "prefix": [
+      "registerModal",
+      "useModalInner"
+    ],
+    "body": [
+      "const [registerModal, { setModalProps, closeModal }] = useModalInner(async (data) => {",
+      "  resetFields();",
+      "  setModalProps({ confirmLoading: false });",
+      "  isUpdate.value = !!data?.isUpdate;",
+      "",
+      "  if (unref(isUpdate)) {",
+      "    setFieldsValue({",
+      "      ...data.record,",
+      "    });",
+      "  }",
+      "});"
+    ]
+  },
+  "getTitle": {
+    "prefix": [
+      "getTitle"
+    ],
+    "body": [
+      "const getTitle = computed(() => (unref(isUpdate) ? t('common.editText') : t('common.addText')));"
+    ]
+  },
+  "FormSchema": {
+    "prefix": [
+      "formSchema",
+      "schema"
+    ],
+    "body": [
+      "import { FormSchema } from '@/components/Table';",
+      "",
+      "export const formSchema: FormSchema[] = [",
+      "  {",
+      "    field: 'id',",
+      "    component: 'Input',",
+      "    show: false,",
+      "  },",
+      "  {",
+      "    field: '${1:title}',",
+      "    label: t('${2:system.notice.title}'),",
+      "    required: true,",
+      "    component: '${3:Input}',",
+      "  },",
+      "  $0",
+      "];"
+    ]
+  },
+  "Columns": {
+    "prefix": [
+      "columns",
+      "tableColumns"
+    ],
+    "body": [
+      "import { BasicColumn } from '@/components/Table';",
+      "",
+      "export const columns: BasicColumn[] = [",
+      "  {",
+      "    title: t('${1:system.notice.title}'),",
+      "    dataIndex: '${2:title}',",
+      "    width: 200,",
+      "  },",
+      "  $0",
+      "];"
+    ]
+  }
+}
