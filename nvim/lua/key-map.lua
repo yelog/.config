@@ -373,8 +373,10 @@ maps.i["<right>"] = {
   desc = "Accept Copilot Or Right"
 }
 
-maps.n["<cr>"] = { "<cmd>MarkliveTaskToggle<cr>", desc = "Marklive Toggle Task" }
-maps.v["<cr>"] = { "<cmd>MarkliveTaskToggle<cr>", desc = "Marklive Toggle Task" }
+maps.n["<D-l>"] = { "<cmd>MarkliveTaskToggle<cr>", desc = "Marklive Toggle Task" }
+maps.v["<D-l>"] = { "<cmd>MarkliveTaskToggle<cr>", desc = "Marklive Toggle Task" }
+
+maps.t["<C-g>"] = { "<cmd>LLMAppHandler CommitMsg<cr>", desc = "Marklive Toggle Task" }
 
 -- 跳转vim分屏/(tmux,kitty)分屏
 maps.n["<D-C-h>"] = { "<cmd>lua require('smart-splits').move_cursor_left()<cr>", desc = "" }
