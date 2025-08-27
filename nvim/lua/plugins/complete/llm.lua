@@ -122,9 +122,9 @@ Based on this format, generate appropriate commit messages. Respond with message
 
                 vim.api.nvim_command(cmd)
                 -- just for lazygit
-                vim.schedule(function()
-                  vim.api.nvim_command("LazyGit")
-                end)
+                -- vim.schedule(function()
+                --   vim.api.nvim_command("LazyGit")
+                -- end)
               end,
             },
           },
