@@ -108,6 +108,7 @@ return {
           "unocss",
           "dockerls",
           "vimls",
+          "jdtls",
           -- "kotlin_lsp",
         },
       })
@@ -242,6 +243,7 @@ return {
       vim.lsp.enable('tailwindcss')
       vim.lsp.enable('unocss')
       vim.lsp.enable('vimls')
+      vim.lsp.enable('jdtls')
       -- vim.lsp.enable('kotlin_lsp')
       vim.lsp.config('dockerls', {
         settings = {
