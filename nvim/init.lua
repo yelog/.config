@@ -15,9 +15,29 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 require("utils")
-require("lazy").setup("plugins", {
+
+-- Auto load plugins and subspecs
+local function get_plugin_specs()
+  local plugin_dir = vim.fn.stdpath("config") .. "/lua/plugins"
+  local files = vim.fn.globpath(plugin_dir, "**/*.lua", true, true)
+
+  local specs = {}
+  for _, file in ipairs(files) do
+    local rel_path = file:gsub(plugin_dir .. "/", ""):gsub("%.lua$", "")
+    local module_name = "plugins." .. rel_path:gsub("/", ".")
+    table.insert(specs, { import = module_name })
+  end
+
+  return specs
+end
+
+require("lazy").setup({
+  spec = get_plugin_specs(),
   dev = {
     path = "~/workspace/vi"
+  },
+  checker = {
+    enabled = false
   }
 })
 
