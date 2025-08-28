@@ -42,4 +42,5 @@
 /nvim/plugged/
 /nvim/tmp/
 /nvim/plugin/
+/nvim/lazy-lock.json
 /lazygit/state.yml

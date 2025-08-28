@@ -1,13 +1,13 @@
-local maps = { i = {}, n = {}, v = {}, t = {}, [""] = {} }
-
-maps[""]["<Space>"] = "<Nop>"
+local map = vim.keymap.set
+-- leader 空格无效化
+map("", "<Space>", "<Nop>", { desc = "Disable <Space>" })
 
 -- Base
-maps.n["Q"] = { "<cmd>qa<cr>", desc = "Quit" }
-maps.n["<up>"] = { "<cmd>res-5<cr>", desc = "up" }
-maps.n["<down>"] = { "<cmd>res+5<cr>", desc = "down" }
-maps.n["<left>"] = { "<cmd>vertical res-5<cr>", desc = "left" }
-maps.n["<right>"] = { "<cmd>vertical res+5<cr>", desc = "right" }
+map("n", "Q", "<cmd>qa<cr>", { desc = "Quit" })
+map("n", "<up>", "<cmd>res-5<cr>", { desc = "Resize up" })
+map("n", "<down>", "<cmd>res+5<cr>", { desc = "Resize down" })
+map("n", "<left>", "<cmd>vertical res-5<cr>", { desc = "Resize left" })
+map("n", "<right>", "<cmd>vertical res+5<cr>", { desc = "Resize right" })
 
 -- 判断当前分屏类型
 local function split_type()
@@ -39,401 +39,148 @@ local function split_type()
 
   return "Unknown Split"
 end
-
-maps.n["<c-q>"] = {
-  function()
-    local type = split_type()
-    if vim.bo.filetype == 'neo-tree' or type == "neo-tree" then
-      vim.cmd("Neotree close")
-    elseif type == "No Split" or type == 'Unknown Split' then
-      -- close the current buffer
-      vim.cmd("bdelete")
-    else
-      -- close the current split
-      vim.cmd("q")
-    end
-  end,
-  desc = "Quit",
-}
+map("n", "<c-q>", function()
+  local type = split_type()
+  if vim.bo.filetype == 'neo-tree' or type == "neo-tree" then
+    vim.cmd("Neotree close")
+  elseif type == "No Split" or type == 'Unknown Split' then
+    vim.cmd("bdelete")
+  else
+    vim.cmd("q")
+  end
+end, { desc = "Smart Quit" })
 
 -- plugin
-maps.n["<leader>pi"] = { "<cmd>Lazy<cr>", desc = "plug install" }
--- maps.n["<leader>pi"] = { "<cmd>PackerInstall<cr>", desc = "plug install" }
--- maps.n["<leader>pc"] = { "<cmd>PackerClean<cr>", desc = "plug clean" }
--- maps.n["<leader>pu"] = { "<cmd>PackerUpdate<cr>", desc = "plug update" }
+map("n", "<leader>pi", function() vim.cmd("Lazy") end, { desc = "Plugin install (Lazy)" })
+map("n", "<leader>li", function() vim.cmd("Mason") end, { desc = "Mason dashboard" })
 
--- lsp
-maps.n["<leader>li"] = { "<cmd>Mason<cr>", desc = "Mason dashboard" }
--- maps.n["<D-s>"] = { "<cmd>EslintFixAll<cr>", desc = "Eslint Fix All" }
-
--- Bind <leader>ll to format_with_lsp in all filetypes
--- vim.api.nvim_set_keymap('n', '<leader>ll', ':lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
-
--- Bind <leader>ll to :TableModeRealign only in Markdown files
-
+-- comment.nvim
 local api = require('Comment.api')
-local esc = vim.api.nvim_replace_termcodes(
-  '<ESC>', true, false, true
-)
-maps.n["<D-/>"] = {
-  function()
-    api.toggle.linewise.current()
-  end,
-  desc = "set comments"
-}
-maps.v["<D-/>"] = {
-  function()
-    -- api.toggle.blockwise.current()
-    vim.api.nvim_feedkeys(esc, 'nx', false)
-    api.toggle.linewise(vim.fn.visualmode())
-  end,
-  desc = "set comments"
-}
+local esc = vim.api.nvim_replace_termcodes('<ESC>', true, false, true)
+map("n", "<D-/>", function() api.toggle.linewise.current() end, { desc = "Toggle comment" })
+map("v", "<D-/>", function()
+  vim.api.nvim_feedkeys(esc, 'nx', false)
+  api.toggle.linewise(vim.fn.visualmode())
+end, { desc = "Toggle comment" })
 
-maps.n["<D-s>"] = {
-  function()
-    local eslintFileType = { "javascript", "typescript", "vue" }
-    if vim.bo.filetype == "markdown" then
-      vim.cmd("TableModeRealign")
-    elseif my.is_include(vim.bo.filetype, eslintFileType) then
-      vim.cmd("LspEslintFixAll")
-    else
-      vim.lsp.buf.format({ async = true })
-    end
-  end,
-  desc = "format code",
-}
-maps.n["<leader>ll"] = {
-  function()
+-- format
+map("n", "<D-s>", function()
+  local eslintFileType = { "javascript", "typescript", "vue" }
+  if vim.bo.filetype == "markdown" then
+    vim.cmd("TableModeRealign")
+  elseif my.is_include(vim.bo.filetype, eslintFileType) then
+    vim.cmd("LspEslintFixAll")
+  else
     vim.lsp.buf.format({ async = true })
-  end,
-  desc = "format code",
-}
+  end
+end, { desc = "Format code" })
 
-maps.v["<leader>ll"] = {
-  function()
-    vim.lsp.buf.format({ async = true })
-  end,
-  desc = "format code",
-}
+map({ "n", "v" }, "<leader>ll", function()
+  vim.lsp.buf.format({ async = true })
+end, { desc = "Format code" })
 
--- fzf-lua
-maps.n["<D-S-M>"] = {
-  function()
-    if vim.bo.filetype == "http" then
-      require("kulala").search()
-    else
-      local clients = vim.lsp.get_clients({ bufnr = 0 })
-
-
-      local supports_document_symbols = false
-
-      for _, client in ipairs(clients) do
-        if client.server_capabilities.documentSymbolProvider then
-          supports_document_symbols = true
-          break
-        end
-      end
-
-      if supports_document_symbols then
-        require("fzf-lua").lsp_document_symbols()
-      else
-        require("fzf-lua").treesitter()
+-- fzf-lua（全部改成 function() ... end）
+map("n", "<D-S-M>", function()
+  if vim.bo.filetype == "http" then
+    require("kulala").search()
+  else
+    local clients = vim.lsp.get_clients({ bufnr = 0 })
+    local supports_document_symbols = false
+    for _, client in ipairs(clients) do
+      if client.server_capabilities.documentSymbolProvider then
+        supports_document_symbols = true
+        break
       end
     end
-  end,
-  desc = "Search symbols",
-}
+    if supports_document_symbols then
+      require("fzf-lua").lsp_document_symbols()
+    else
+      require("fzf-lua").treesitter()
+    end
+  end
+end, { desc = "Search symbols" })
 
-maps.n["<D-S-O>"] = {
-  function()
-    require('fzf-lua').files()
-  end,
-  desc = "search file",
-}
-maps.n["<leader>ff"] = {
-  function()
-    require('fzf-lua').files()
-  end,
-  desc = "search file",
-}
-maps.n["<leader>fb"] = {
-  function()
-    require('fzf-lua').buffers()
-  end,
-  desc = "Search buffers",
-}
-maps.n["gd"] = {
-  function()
-    require("fzf-lua").lsp_definitions()
-  end,
-  desc = "Search definition",
-}
-maps.n["gD"] = {
-  function()
-    require("fzf-lua").lsp_implementations()
-  end,
-  desc = "Search definition",
-}
-maps.n["gu"] = {
-  function()
-    require('fzf-lua').lsp_references()
-  end,
-  desc = "Search references",
-}
-maps.n["<leader>fk"] = {
-  function()
-    require('fzf-lua').keymaps()
-  end,
-  desc = "Search keymap",
-}
-maps.n["<leader>ft"] = {
-  function()
-    require('fzf-lua').tags()
-  end,
-  desc = "Search tags",
-}
-maps.n["<leader>fm"] = {
-  function()
-    require("fzf-lua").marks()
-  end,
-  desc = "Search marks",
-}
-maps.n["<leader>fh"] = {
-  function()
-    require('fzf-lua').oldfiles({
-      prompt                  = 'History❯ ',
-      cwd_only                = true,
-      include_current_session = true,
-    })
-  end,
-  desc = "Search hisotry",
-}
-maps.n["<D-e>"] = {
-  function()
-    require('fzf-lua').oldfiles({
-      prompt                  = 'History❯ ',
-      cwd_only                = true,
-      include_current_session = true,
-    })
-  end,
-  desc = "Search hisotry",
-}
-maps.n["<leader>f;"] = {
-  function()
-    require("fzf-lua").builtin()
-  end,
-  desc = "Search builtin",
-}
-maps.n["<leader>fs"] = {
-  function()
-    require('fzf-lua').live_grep()
-  end,
-  desc = "Search word",
-}
-maps.n["<D-S-F>"] = {
-  function()
-    require('fzf-lua').live_grep()
-  end,
-  desc = "Search word",
-}
-maps.v["<D-S-F>"] = {
-  function()
-    require('fzf-lua').grep_visual()
-  end,
-  desc = "Search word",
-}
+map("n", "<D-S-O>", function() require("fzf-lua").files() end, { desc = "Search file" })
+map("n", "<leader>ff", function() require("fzf-lua").files() end, { desc = "Search file" })
+map("n", "<leader>fb", function() require("fzf-lua").buffers() end, { desc = "Search buffers" })
+map("n", "gd", function() require("fzf-lua").lsp_definitions() end, { desc = "Goto definition" })
+map("n", "gD", function() require("fzf-lua").lsp_implementations() end, { desc = "Goto implementation" })
+map("n", "gu", function() require("fzf-lua").lsp_references() end, { desc = "Goto references" })
+map("n", "<leader>fk", function() require("fzf-lua").keymaps() end, { desc = "Search keymaps" })
+map("n", "<leader>ft", function() require("fzf-lua").tags() end, { desc = "Search tags" })
+map("n", "<leader>fm", function() require("fzf-lua").marks() end, { desc = "Search marks" })
+map("n", "<leader>fh", function()
+  require("fzf-lua").oldfiles({ prompt = "History❯ ", cwd_only = true, include_current_session = true })
+end, { desc = "Search history" })
+map("n", "<D-e>", function()
+  require("fzf-lua").oldfiles({ prompt = "History❯ ", cwd_only = true, include_current_session = true })
+end, { desc = "Search history" })
+map("n", "<leader>f;", function() require("fzf-lua").builtin() end, { desc = "Search builtin" })
+map("n", "<leader>fs", function() require("fzf-lua").live_grep() end, { desc = "Search word" })
+map("n", "<D-S-F>", function() require("fzf-lua").live_grep() end, { desc = "Search word" })
+map("v", "<D-S-F>", function() require("fzf-lua").grep_visual() end, { desc = "Search word (visual)" })
 
-maps.n["<leader>ce"] = {
-  function()
-    require("kulala").set_selected_env()
-  end,
-  desc = "Select kulala environment",
-}
+-- kulala
+map("n", "<leader>ce", function() require("kulala").set_selected_env() end, { desc = "Select kulala env" })
 
--- local truezen = require('true-zen')
---> true-zen
--- maps.n["<leader>zn"] = { "<cmd>TZNarrow<cr>", desc = "" }
--- maps.v["<leader>zn"] = { "<cmd>'<,'>TZNarrow<cr>", desc = "" }
--- maps.n["<leader>zf"] = { "<cmd>TZFocus<cr>", desc = "" }
--- maps.n["<leader>zm"] = { "<cmd>TZMinimalist<cr>", desc = "" }
--- maps.n["<leader>za"] = { "<cmd>TZAtaraxis<cr>", desc = "" }
+-- autosession
+map("n", "<leader>sd", function() vim.cmd("Autosession delete") end, { desc = "Delete session" })
 
-maps.n["<leader>sd"] = { "<cmd>Autosession delete<cr>", desc = "Autosession delete" }
-
--- table of contents
-maps.n["<leader>ts"] = { "<cmd>AerialToggle<cr>", desc = "Toggle Structure" }
--- maps.n["<leader>ts"] = { "<cmd>SymbolsOutline<cr>", desc = "Toggle Structure" }
+-- aerial
+map("n", "<leader>ts", function() vim.cmd("AerialToggle") end, { desc = "Toggle structure (Aerial)" })
 
 -- bufferline
--- maps.n["<c-n>"] = { "<cmd>BufferLineCycleNext<cr>", desc = "Buffer Next" }
--- maps.n["<c-p>"] = { "<cmd>BufferLineCyclePrev<cr>", desc = "Buffer Previous" }
--- rebelot/heirline.nvim
-maps.n["<c-n>"] = { "<cmd>bnext<cr>", desc = "Buffer Next" }
-maps.n["<c-p>"] = { "<cmd>bprevious<cr>", desc = "Buffer Previous" }
--- maps.n["<leader>bn"] = { "<cmd>BufferLineMoveNext<cr>", desc = "Buffer Move Next" }
--- maps.n["<leader>bp"] = { "<cmd>BufferLineMovePrev<cr>", desc = "Buffer Move Previous" }
--- maps.n["<leader>bo"] = { "<cmd>Bdelete<cr>", desc = "Buffer Close Others" }
--- maps.n["<leader>bo"] = { "<cmd>%bd | e# | bd#<cr>", desc = "Buffer Close Others" }
-maps.n["<leader>bo"] = { function() Snacks.bufdelete.other() end, desc = "Buffer Close Others" }
--- maps.n["<leader>bc"] = { "<cmd>BufferLinePickClose<cr>", desc = "Buffer Close Pick" }
--- maps.n["<leader>bcl"] = { "<cmd>BufferLineCloseLeft<cr>", desc = "Buffer Close Left" }
--- maps.n["<leader>bcr"] = { "<cmd>BufferLineCloseRight<cr>", desc = "Buffer Close Right" }
--- maps.n["<c-q>"] = { "<cmd>bdelete<cr>", desc = "Buffer Close" }
-
+map("n", "<c-n>", function() vim.cmd("bnext") end, { desc = "Next buffer" })
+map("n", "<c-p>", function() vim.cmd("bprevious") end, { desc = "Prev buffer" })
+map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Close other buffers" })
 
 -- markdown
-maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" }
-maps.n["<leader>tm"] = { "<cmd>TableModeToggle<cr>", desc = "Table Mode Toggle" }
--- maps.n["<leader>mc"] = { "<cmd>CheckSwitch<cr>", desc = "Checkbox Switch" }
--- maps.v["<leader>mc"] = { "<cmd>CheckSwitch<cr>gv", desc = "Checkbox Switch" }
--- maps.n["<D-l>"] = { "<cmd>CheckSwitch<cr>", desc = "Checkbox Switch" }
--- maps.v["<leader>"] = { "<cmd>CheckSwitch<cr>gv", desc = "Checkbox Switch" }
-maps.n["<leader>md"] = { "<cmd>ObsidianToday<cr>", desc = "goto daily task" }
--- maps.n["gf"] = { function()
---   if require("obsidian").util.cursor_on_markdown_link() then
---     return "<cmd>ObsidianFollowLink<CR>"
---   else
---     return "gf"
---   end
--- end,
---   desc = "goto file",
--- }
-
--- git
--- maps.n["<leader>gg"] = { "<cmd>LazyGit<cr>", desc = "LazyGit" }
--- maps.n["<leader>gh"] = { "<cmd>LazyGitFilterCurrentFile<cr>", desc = "Current file history" }
--- maps.n["<leader>gf"] = { "<cmd>GitGutterFold<cr>", desc = "git fold" }
--- maps.n["<leader>gp"] = { "<cmd>GitGutterPrevHunk<cr>", desc = "git prev hunk" }
--- maps.n["<leader>gn"] = { "<cmd>GitGutterNextHunk<cr>", desc = "git next hunk" }
--- maps.n["<leader>gu"] = { "<cmd>GitGutterUndoHunk<cr>", desc = "git reset" }
--- maps.n["<leader>gd"] = { "<cmd>GitGutterPreviewHunk<cr>", desc = "git review hunk" }
--- maps.n["<leader>gd"] = { "<cmd>GitGutterDiffOrig<cr>", desc = "git diff" }
--- maps.n["<leader>gb"] = { "<cmd>Git blame<cr>", desc = "git blame" }
-
--- use gisign
--- maps.n["<leader>gw"] = {
---   function()
---     local view = require("diffview.lib").get_current_view()
---     if view then
---       vim.cmd("DiffviewClose")
---     else
---       vim.cmd("DiffviewOpen ")
---     end
---   end,
---   desc = "git diff",
--- }
+map("n", "<leader>tm", function() vim.cmd("TableModeToggle") end, { desc = "Table Mode Toggle" })
+map("n", "<leader>md", function() vim.cmd("ObsidianToday") end, { desc = "Goto daily task" })
 
 -- neo-tree
--- maps.n["<leader>e"] = { function() require("telescope.builtin").find_files() end, desc = "Search file" }
--- maps.n["<leader>e"] = { "<cmd>Neotree toggle<cr>", desc = "Toggle Explorer" }
--- maps.n["<D-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
-maps.n["<D-1>"] = { "<cmd>Yazi<cr>", desc = "Toggle Explorer" }
--- maps.n["<leader>te"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
-maps.n["<leader>te"] = { "<cmd>Yazi<cr>", desc = "Toggle Explorer" }
--- maps.n["<D-1>"] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
--- maps.n["<D-2>"] = { "<cmd>Neotree float toggle<cr>", desc = "Toggle Explorer" }
--- maps.n["<leader>o"] = { "<cmd>Neotree focus<cr>", desc = "Focus Explorer" }
+map("n", "<D-1>", function() vim.cmd("Yazi") end, { desc = "Toggle Explorer" })
+map("n", "<leader>te", function() vim.cmd("Yazi") end, { desc = "Toggle Explorer" })
 
--- task manager
--- maps.n["<leader>tn"] = { "<cmd>ToDoTxtCapture<cr>", desc= "New Todo"}
--- maps.n["<D-2>"] = { "<cmd>AerialToggle<cr>", desc= "Toggle outline"}
-maps.n["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
-maps.t["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
-maps.i["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
-maps.v["<D-2>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle outline" }
+-- toggleterm
+map({ "n", "t", "i", "v" }, "<D-2>", function() vim.cmd("ToggleTerm") end, { desc = "Toggle terminal" })
 
---ChatGPT
--- maps.n["<leader>ai"] = { "<cmd>ChatGPT<cr>", desc = "ChatGPT"}
--- maps.n["<leader>ai"] = { "<cmd>NeoAIToggle<cr>", desc = "ChatGPT" }
+-- ChatGPT (avante)
 local avanteApi = require("avante.api")
-maps.i["<D-k>"] = { "<esc>V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
-maps.n["<D-k>"] = { "V<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
--- maps.v["<D-k>"] = { "<cmd>AvanteEdit<cr>", desc = "AvanteEditor" }
-maps.v["<D-k>"] = {
-  function()
-    -- 直接使用 <cmd>AvanteEdit<cr>会导致选中区域丢失
-    -- 从 <leader>fk 中摘抄的如下代码
-    avanteApi.edit()
-  end,
-  desc = "AvanteEditor"
-}
-maps.i["<D-K>"] = { "<esc><cmd>AvanteChat<cr>", desc = "AvanteEditor" }
-maps.n["<D-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
-maps.v["<D-K>"] = { "<cmd>AvanteChat<cr>", desc = "AvanteEditor" }
-maps.i["<right>"] = {
-  function()
-    local copilot = require("copilot.suggestion")
-    if (copilot.is_visible()) then
-      copilot.accept()
-    else
-      vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Right>", true, true, true), "n", true)
-    end
-  end,
-  desc = "Accept Copilot Or Right"
-}
+map("i", "<D-k>", "<esc>V<cmd>AvanteEdit<cr>", { desc = "Avante edit" })
+map("n", "<D-k>", "V<cmd>AvanteEdit<cr>", { desc = "Avante edit" })
+map("v", "<D-k>", function() avanteApi.edit() end, { desc = "Avante edit" })
+map({ "i", "n", "v" }, "<D-K>", function() vim.cmd("AvanteChat") end, { desc = "Avante chat" })
 
-maps.n["<D-l>"] = { "<cmd>MarkliveTaskToggle<cr>", desc = "Marklive Toggle Task" }
-maps.v["<D-l>"] = { "<cmd>MarkliveTaskToggle<cr>", desc = "Marklive Toggle Task" }
+-- copilot (保持 function)
+map("i", "<right>", function()
+  local copilot = require("copilot.suggestion")
+  if copilot.is_visible() then
+    copilot.accept()
+  else
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Right>", true, true, true), "n", true)
+  end
+end, { desc = "Accept Copilot or move right" })
 
-maps.t["<C-g>"] = { "<cmd>LLMAppHandler CommitMsg<cr>", desc = "Marklive Toggle Task" }
+-- marklive
+map({ "n", "v" }, "<D-l>", function() vim.cmd("MarkliveTaskToggle") end, { desc = "Marklive toggle task" })
+map("t", "<C-g>", function() vim.cmd("LLMAppHandler CommitMsg") end, { desc = "Generate commit msg (LLMApp)" })
 
--- 跳转vim分屏/(tmux,kitty)分屏
-maps.n["<D-C-h>"] = { "<cmd>lua require('smart-splits').move_cursor_left()<cr>", desc = "" }
-maps.n["<D-C-j>"] = { "<cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
-maps.n["<D-C-k>"] = { "<cmd>lua require('smart-splits').move_cursor_up()<cr>", desc = "" }
-maps.n["<D-C-l>"] = { "<cmd>lua require('smart-splits').move_cursor_right()<cr>", desc = "" }
-maps.t["<D-C-h>"] = { "<cmd>lua require('smart-splits').move_cursor_left()<cr>", desc = "" }
-maps.t["<D-C-j>"] = { "<cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
-maps.t["<D-C-k>"] = { "<cmd>lua require('smart-splits').move_cursor_up()<cr>", desc = "" }
-maps.t["<D-C-l>"] = { "<cmd>lua require('smart-splits').move_cursor_right()<cr>", desc = "" }
-maps.i["<D-C-h>"] = { "<esc><cmd>lua require('smart-splits').move_cursor_left()<cr>", desc = "" }
-maps.i["<D-C-j>"] = { "<esc><cmd>lua require('smart-splits').move_cursor_down()<cr>", desc = "" }
-maps.i["<D-C-k>"] = { "<esc><cmd>lua require('smart-splits').move_cursor_up()<cr>", desc = "" }
-maps.i["<D-C-l>"] = { "<esc><cmd>lua require('smart-splits').move_cursor_right()<cr>", desc = "" }
-maps.n["<D-C-S-h>"] = { "<cmd>lua require('smart-splits').resize_left()<cr>", desc = "" }
-maps.n["<D-C-S-j>"] = { "<cmd>lua require('smart-splits').resize_down()<cr>", desc = "" }
-maps.n["<D-C-S-k>"] = { "<cmd>lua require('smart-splits').resize_up()<cr>", desc = "" }
-maps.n["<D-C-S-l>"] = { "<cmd>lua require('smart-splits').resize_right()<cr>", desc = "" }
-maps.t["<D-C-S-h>"] = { "<cmd>lua require('smart-splits').resize_left()<cr>", desc = "" }
-maps.t["<D-C-S-j>"] = { "<cmd>lua require('smart-splits').resize_down()<cr>", desc = "" }
-maps.t["<D-C-S-k>"] = { "<cmd>lua require('smart-splits').resize_up()<cr>", desc = "" }
-maps.t["<D-C-S-l>"] = { "<cmd>lua require('smart-splits').resize_right()<cr>", desc = "" }
-maps.i["<D-C-S-h>"] = { "<esc><cmd>lua require('smart-splits').resize_left()<cr>", desc = "" }
-maps.i["<D-C-S-j>"] = { "<esc><cmd>lua require('smart-splits').resize_down()<cr>", desc = "" }
-maps.i["<D-C-S-k>"] = { "<esc><cmd>lua require('smart-splits').resize_up()<cr>", desc = "" }
-maps.i["<D-C-S-l>"] = { "<esc><cmd>lua require('smart-splits').resize_right()<cr>", desc = "" }
+-- smart-splits 全部改 function()
+map({ "n", "t" }, "<D-C-h>", function() require("smart-splits").move_cursor_left() end, { desc = "Move left split" })
+map({ "n", "t" }, "<D-C-j>", function() require("smart-splits").move_cursor_down() end, { desc = "Move down split" })
+map({ "n", "t" }, "<D-C-k>", function() require("smart-splits").move_cursor_up() end, { desc = "Move up split" })
+map({ "n", "t" }, "<D-C-l>", function() require("smart-splits").move_cursor_right() end, { desc = "Move right split" })
+map("i", "<D-C-h>", function() require("smart-splits").move_cursor_left() end, { desc = "Move left split" })
+map("i", "<D-C-j>", function() require("smart-splits").move_cursor_down() end, { desc = "Move down split" })
+map("i", "<D-C-k>", function() require("smart-splits").move_cursor_up() end, { desc = "Move up split" })
+map("i", "<D-C-l>", function() require("smart-splits").move_cursor_right() end, { desc = "Move right split" })
 
--- maps.n['<C-S-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
--- maps.n['<C-S-p>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
--- maps.n['<D-n>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
--- maps.n['<D-m>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
--- maps.n['<D-N>'] = { "<cmd>Neotree left toggle<cr>", desc = "Toggle Explorer" }
-
--- maps.n['R'] = { "<cmd>:set splitright<cr><cmd>vsp<cr><cmd>term lua %<cr>", desc = "run lua file" }
-
-
--- Check if the terminal is Kitty
---maps.n["<leader>tp"] = { function()
---  print(vim.fn.getenv("TERM"))
---end,
---desc= "Check Terminal" }
--- if my.is_kitty() then
---   for mode, mappings in pairs(maps) do
---     for key, mapping in pairs(mappings) do
---       if key:find("<D-") then
---         local new_key = key:gsub("<M%-", "<D-")
---         maps[mode][new_key] = mapping
---         maps[mode][key] = nil
---       end
---     end
---   end
--- end
-
-my.set_mappings(maps)
-
--- 使用 Option + h/j/k/l 进行 Neovim 分屏切换
--- vim.api.nvim_set_keymap('n', '<D-h>', ':wincmd h<CR>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<D-j>', ':wincmd j<CR>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<D-k>', ':wincmd k<CR>', { noremap = true, silent = true })
--- vim.api.nvim_set_keymap('n', '<D-l>', ':wincmd l<CR>', { noremap = true, silent = true })
+map({ "n", "t" }, "<D-C-S-h>", function() require("smart-splits").resize_left() end, { desc = "Resize left" })
+map({ "n", "t" }, "<D-C-S-j>", function() require("smart-splits").resize_down() end, { desc = "Resize down" })
+map({ "n", "t" }, "<D-C-S-k>", function() require("smart-splits").resize_up() end, { desc = "Resize up" })
+map({ "n", "t" }, "<D-C-S-l>", function() require("smart-splits").resize_right() end, { desc = "Resize right" })
+map("i", "<D-C-S-h>", function() require("smart-splits").resize_left() end, { desc = "Resize left" })
+map("i", "<D-C-S-j>", function() require("smart-splits").resize_down() end, { desc = "Resize down" })
+map("i", "<D-C-S-k>", function() require("smart-splits").resize_up() end, { desc = "Resize up" })
+map("i", "<D-C-S-l>", function() require("smart-splits").resize_right() end, { desc = "Resize right" })

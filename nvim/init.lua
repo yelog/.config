@@ -1,19 +1,24 @@
 vim.api.nvim_command("source ~/.config/nvim/base.vim")
--- leader
-vim.g.mapleader = " "
 -- add plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
-if not vim.loop.fs_stat(lazypath) then
-  vim.fn.system({
-    "git",
-    "clone",
-    "--filter=blob:none",
-    "https://github.com/folke/lazy.nvim.git",
-    "--branch=stable", -- latest stable release
-    lazypath,
-  })
+if not (vim.uv or vim.loop).fs_stat(lazypath) then
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out,                            "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
 end
 vim.opt.rtp:prepend(lazypath)
+-- leader
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+
 require("utils")
 
 -- Auto load plugins and subspecs
@@ -41,15 +46,7 @@ require("lazy").setup({
   }
 })
 
--- Check if the terminal is WezTerm
-vim.api.nvim_set_keymap('n', '<leader>tp', ':lua print(os.getenv("WEZTERM_EXECUTABLE"))<CR>',
-  { noremap = true, silent = true, desc = "Check Terminal" })
-
-if my.is_wezterm() then
-  require("key-map-wezterm")
-else
-  require("key-map")
-end
+require("key-map")
 require("custom-color")
 require("custom.run-file")
 require("custom.foldding")
