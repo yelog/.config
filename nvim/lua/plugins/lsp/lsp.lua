@@ -1,25 +1,48 @@
 return {
-  "neovim/nvim-lspconfig", -- Configurations for Nvim LSP
-  -- 'nvim-java/nvim-java',
   {
-    "maan2003/lsp_lines.nvim", -- multi-line diagnostics
+    "neovim/nvim-lspconfig",
     config = function()
-      -- show tips of diagnostic on the end of line
       vim.diagnostic.config({
         virtual_lines = true, -- 在行尾显示诊断信息
         -- virtual_text = {
-        --   prefix = '>',       -- 图标或字符，可以用 "", "●", ">>" 等
-        --   spacing = 4,
-        --   severity = nil,     -- 只显示特定级别，如 vim.diagnostic.severity.ERROR
-        --   source = "if_many", -- 显示 diagnostic 来源
+        --   spacing = 4, -- 行尾 diagnostic 与代码之间的间距
+        --   severity = vim.diagnostic.severity.ERROR, -- 可选：只显示 ERROR 级别
+        --   source = "always", -- 显示 diagnostic 来源
+        --   prefix = "●", -- 行尾前缀符号，可自定义
         -- },
-        signs = true, -- 左侧 gutter 的符号
-        underline = true,
-        update_in_insert = false,
+        signs = true,             -- 是否在左侧显示符号
+        underline = true,         -- 是否下划线标记
+        update_in_insert = false, -- 插入模式下是否更新 diagnostic
         severity_sort = true,
       })
     end
-  },
+  }, -- Configurations for Nvim LSP
+  -- 'nvim-java/nvim-java',
+  -- {
+  --   "maan2003/lsp_lines.nvim", -- multi-line diagnostics
+  --   config = function()
+  --     -- show tips of diagnostic on the end of line
+  --     vim.diagnostic.config({
+  --       virtual_lines = false, -- 在行尾显示诊断信息
+  --       -- virtual_text = {
+  --       --   prefix = '>',       -- 图标或字符，可以用 "", "●", ">>" 等
+  --       --   spacing = 4,
+  --       --   severity = nil,     -- 只显示特定级别，如 vim.diagnostic.severity.ERROR
+  --       --   source = "if_many", -- 显示 diagnostic 来源
+  --       -- },
+  --       signs = true, -- 左侧 gutter 的符号
+  --       underline = true,
+  --       update_in_insert = false,
+  --       severity_sort = true,
+  --     })
+  --     vim.keymap.set(
+  --       "",
+  --       "<Leader>lc",
+  --       require("lsp_lines").toggle,
+  --       { desc = "Toggle lsp_lines" }
+  --     )
+  --   end
+  -- },
   {
     "SmiteshP/nvim-navic",
     config = function()
@@ -145,10 +168,10 @@ return {
           print(vim.inspect(vim.lsp.buf.list_workspace_folders()))
         end, bufopts)
         vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, bufopts)
-        -- vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
-        vim.keymap.set("n", "<leader>rn", function()
-          return ":IncRename " .. vim.fn.expand("<cword>")
-        end, { expr = true })
+        vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
+        -- vim.keymap.set("n", "<leader>rn", function()
+        --   return ":IncRename " .. vim.fn.expand("<cword>")
+        -- end, { expr = true })
         vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, bufopts)
         -- vim.keymap.set("n", "gu", vim.lsp.buf.references, bufopts) --use telesscope instead
         -- vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
@@ -295,10 +318,10 @@ return {
       })
     end,
   },
-  {
-    "smjonas/inc-rename.nvim",
-    config = function()
-      require("inc_rename").setup()
-    end,
-  }
+  -- {
+  --   "smjonas/inc-rename.nvim",
+  --   config = function()
+  --     require("inc_rename").setup()
+  --   end,
+  -- }
 }

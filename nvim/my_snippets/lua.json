@@ -1,8 +1,27 @@
 {
-  "snip1": {
-    "prefix": "lua",
+  "return": {
+    "prefix": [
+      "return",
+      "re"
+    ],
     "body": [
-      "lualualua"
+      "return {",
+      "  \"$1\",",
+      "  config = function()",
+      "    $0",
+      "  end",
+      "}"
     ]
-  }
+  },
+  "function": {
+    "prefix": [
+      "function",
+      "fn"
+    ],
+    "body": [
+      "function($1)",
+      "  $0",
+      "end"
+    ]
+  },
 }

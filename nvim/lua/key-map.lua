@@ -163,7 +163,11 @@ map("i", "<right>", function()
 end, { desc = "Accept Copilot or move right" })
 
 -- marklive
-map({ "n", "v" }, "<D-l>", function() vim.cmd("MarkliveTaskToggle") end, { desc = "Marklive toggle task" })
+map({ "n", "v" }, "<CR>", function()
+  if vim.bo.filetype == "markdown" then
+    vim.cmd("MarkliveTaskToggle")
+  end
+end, { desc = "Marklive toggle task (markdown only)" })
 map("t", "<C-g>", function() vim.cmd("LLMAppHandler CommitMsg") end, { desc = "Generate commit msg (LLMApp)" })
 
 -- smart-splits 全部改 function()
