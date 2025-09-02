@@ -63,7 +63,7 @@ return {
     -- { "<D-g>",      function() Snacks.lazygit() end,         desc = "Toggle Lazygit" },
     { "<leader>gl", function() Snacks.lazygit.log() end,           desc = "Lazygit Log (cwd)" },
     -- { "<leader>gl", function() Snacks.picker.git_log() end, desc = "Git Log" },
-    { "<leader>fi", function() Snacks.picker.icons() end,          desc = "Icons" },
+    -- { "<leader>fi", function() Snacks.picker.icons() end,          desc = "Icons" },
     { "<leader>fj", function() Snacks.picker.jumps() end,          desc = "Jumps" },
     { "<leader>un", function() Snacks.notifier.hide() end,         desc = "Dismiss All Notifications" },
     { "<c-/>",      function() Snacks.terminal() end,              desc = "Toggle Terminal" },
