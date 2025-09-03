@@ -6,22 +6,29 @@ return {
     require("i18n").setup({
       mode = 'static',
       static = {
-        langs = { "zh_CN", "en_US" },
+        -- langs = { "zh_CN", "en_US" },
+        langs = { "zh", "en" },
         files = {
-          -- "src/locales/{langs}.json",
-          { files = "src/locales/lang/{langs}/{module}.ts",            prefix = "{module}." },
+          "src/locales/{langs}.json",
+          -- { files = "src/locales/lang/{langs}/{module}.ts",          prefix = "{module}." },
+          -- { files = "src/views/{bu}/locales/lang/{langs}/{module}.ts", prefix = "{bu}.{module}." },
           -- { files = "packages/locales/src/langs/{langs}/{module}.json", prefix = "{module}." },
-          { files = "src/views/{bu}/locales/lang/{langs}/{module}.ts", prefix = "{bu}.{module}." },
           -- { files = "src/views/{module}/lang/{langs}.json", prefix = "{module}." }
         }
       }
     })
+
     -- 集成 fzf-lua 查询 i18n key (改进版本)
     local parser = require("i18n.parser")
     local fzf = require("fzf-lua")
 
     -- 计算字符串显示宽度（处理中文字符）
     local function display_width(str)
+      -- 添加 nil 检查，防止 gmatch 在 nil 值上调用
+      if not str or str == "" then
+        return 0
+      end
+
       local width = 0
       for char in str:gmatch("[%z\1-\127\194-\244][\128-\191]*") do
         if char:byte() > 127 then
@@ -35,6 +42,9 @@ return {
 
     -- 右填充字符串到指定宽度
     local function pad_right(str, width)
+      -- 添加 nil 检查
+      str = str or ""
+
       local current_width = display_width(str)
       if current_width >= width then
         return str
@@ -44,6 +54,11 @@ return {
 
     -- 截断过长文本并添加省略号
     local function truncate_text(text, max_width)
+      -- 添加 nil 检查
+      if not text or text == "" then
+        return ""
+      end
+
       if display_width(text) <= max_width then
         return text
       end
@@ -63,8 +78,10 @@ return {
     end
 
     local function show_i18n_keys_with_fzf()
+      -- 增加对 parser.translations 的 nil 检查
+      local translations = parser.translations or {}
       local keys_map = {}
-      for _, lang_tbl in pairs(parser.translations or {}) do
+      for _, lang_tbl in pairs(translations) do
         for k, _ in pairs(lang_tbl) do
           keys_map[k] = true
         end
@@ -88,28 +105,44 @@ return {
         col_widths[i + 1] = display_width(lang)
       end
 
-      -- 计算每个 key � �翻译的最大宽度 �翻译的最大宽度
+      -- 计算每个 key 和翻译的最大宽度
       for _, key in ipairs(key_list) do
-        col_widths[1] = math.max(col_widths[1], display_width(key))
+        local key_str = type(key) == "string" and key or tostring(key or "")
+        col_widths[1] = math.max(col_widths[1], display_width(key_str))
         for i, lang in ipairs(langs) do
-          local value = parser.translations[lang] and parser.translations[lang][key] or ""
+          local value = ""
+          -- 在访问 translations 表格时添加额外的检查
+          local lang_data = translations[lang]
+          if lang_data and type(lang_data) == 'table' and lang_data[key] ~= nil then
+            value = lang_data[key]
+          end
+          value = type(value) == "string" and value or tostring(value or "")
           col_widths[i + 1] = math.max(col_widths[i + 1], display_width(value))
         end
       end
 
       -- 限制列宽度，避免过宽
-      for i = 2, #col_widths do                     -- 从第2列开始限制宽度，第1列(key)不限制
+      for i = 2, #col_widths do
         col_widths[i] = math.min(col_widths[i], 50) -- 最大50字符宽度
       end
 
-      -- 构造多列数据
+      -- 构造多列
       local display_list = {}
 
       -- 构造数据行（不包含表头）
       for _, key in ipairs(key_list) do
-        local row = { pad_right(key, col_widths[1]) } -- key 列不截断
+        -- 确保 key 是字符串类型
+        local key_str = type(key) == "string" and key or tostring(key or "")
+        local row = { pad_right(key_str, col_widths[1]) } -- key 列不截断
+
         for i, lang in ipairs(langs) do
-          local value = parser.translations[lang] and parser.translations[lang][key] or ""
+          local value = ""
+          local lang_data = translations[lang]
+          if lang_data and type(lang_data) == 'table' and lang_data[key] ~= nil then
+            value = lang_data[key]
+          end
+          -- 确保 value 是字符串类型
+          value = type(value) == "string" and value or tostring(value or "")
           local truncated_value = truncate_text(value, col_widths[i + 1])
           table.insert(row, pad_right(truncated_value, col_widths[i + 1]))
         end
@@ -161,5 +194,6 @@ return {
     end
 
     vim.keymap.set("n", "<leader>fi", show_i18n_keys_with_fzf, { desc = "模糊查找 i18n key" })
+    vim.keymap.set("n", "<D-S-n>", show_i18n_keys_with_fzf, { desc = "模糊查找 i18n key" })
   end
 }
