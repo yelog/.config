@@ -54,7 +54,7 @@ return {
       --   -- Adjusts spacing to ensure icons are aligned
       --   nerd_font_variant = 'mono'
       -- },
-
+      fuzzy = { implementation = "prefer_rust_with_warning" },
       completion = {
         -- 'prefix' will fuzzy match on the text before the cursor
         -- 'full' will fuzzy match on the text before *and* after the cursor
@@ -104,7 +104,7 @@ return {
       -- default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, via `opts_extend`
       sources = {
-        default = { 'snippets', 'avante', 'lsp', 'path', 'buffer' },
+        default = { 'i18n', 'snippets', 'avante', 'lsp', 'path', 'buffer' },
         -- optionally disable cmdline completions
         -- cmdline = {},
         providers = {
@@ -116,6 +116,13 @@ return {
               -- options for blink-cmp-avante
             }
           },
+          i18n = {
+            name = 'i18n',
+            module = 'i18n.completion.blink_source',
+            opts = {
+              -- options for the blink-cmp-git
+            },
+          }
           -- codeium = { name = 'Codeium', module = 'codeium.blink', async = true }
         }
       },

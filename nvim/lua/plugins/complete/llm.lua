@@ -30,7 +30,7 @@ return {
     end
     require("llm").setup({
       url = "https://api.githubcopilot.com/chat/completions",
-      model = "gpt-4.1",
+      model = "gpt-5-mini",
       api_type = "openai",
       app_handler = {
         Translate = {

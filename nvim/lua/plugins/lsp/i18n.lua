@@ -1,17 +1,20 @@
 return {
   "yelog/i18n.nvim",
-  dependencies = { "ibhagwan/fzf-lua" },
+  lazy = false, -- lazy loading handled internally
+  dependencies = {
+    "ibhagwan/fzf-lua"
+  },
   dev = true,
   config = function()
     require("i18n").setup({
       mode = 'static',
       static = {
-        -- langs = { "zh_CN", "en_US" },
-        langs = { "zh", "en" },
+        langs = { "zh_CN", "en_US" },
+        -- langs = { "zh", "en" },
         files = {
-          "src/locales/{langs}.json",
-          -- { files = "src/locales/lang/{langs}/{module}.ts",          prefix = "{module}." },
-          -- { files = "src/views/{bu}/locales/lang/{langs}/{module}.ts", prefix = "{bu}.{module}." },
+          -- "src/locales/{langs}.json",
+          { files = "src/locales/lang/{langs}/{module}.ts",            prefix = "{module}." },
+          { files = "src/views/{bu}/locales/lang/{langs}/{module}.ts", prefix = "{bu}.{module}." },
           -- { files = "packages/locales/src/langs/{langs}/{module}.json", prefix = "{module}." },
           -- { files = "src/views/{module}/lang/{langs}.json", prefix = "{module}." }
         }
@@ -79,7 +82,7 @@ return {
 
     local function show_i18n_keys_with_fzf()
       -- 增加对 parser.translations 的 nil 检查
-      local translations = parser.translations or {}
+      local translations = require("i18n.parser").translations or {}
       local keys_map = {}
       for _, lang_tbl in pairs(translations) do
         for k, _ in pairs(lang_tbl) do
@@ -93,7 +96,10 @@ return {
       end
 
       -- 排序 key 列表
-      table.sort(key_list)
+      table.sort(key_list, function(a, b)
+        return #a < #b
+      end)
+
 
       -- 获取所有语言
       local langs = require("i18n.config").options.static.langs or {}
