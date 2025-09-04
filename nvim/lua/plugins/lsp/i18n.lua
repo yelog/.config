@@ -104,42 +104,33 @@ return {
       -- 获取所有语言
       local langs = require("i18n.config").options.static.langs or {}
 
-      -- 计算每列的最大宽度
+      -- 平分列宽：Key 列与语言列平均分配宽度，并在过宽时截断显示
+      local col_count = 1 + #langs
+      local total_columns = vim.o.columns or 120
+      local separator_w = (col_count - 1) * 3 -- " │ " 分隔符总宽度
+      local available = total_columns - separator_w - 2 -- 预留边距
+      if available < col_count * 10 then
+        available = col_count * 10
+      end
+      local each_width = math.floor(available / col_count)
+      if each_width > 50 then
+        each_width = 50
+      end
       local col_widths = {}
-      col_widths[1] = 3 -- "Key" 的宽度
-      for i, lang in ipairs(langs) do
-        col_widths[i + 1] = display_width(lang)
-      end
-
-      -- 计算每个 key 和翻译的最大宽度
-      for _, key in ipairs(key_list) do
-        local key_str = type(key) == "string" and key or tostring(key or "")
-        col_widths[1] = math.max(col_widths[1], display_width(key_str))
-        for i, lang in ipairs(langs) do
-          local value = ""
-          -- 在访问 translations 表格时添加额外的检查
-          local lang_data = translations[lang]
-          if lang_data and type(lang_data) == 'table' and lang_data[key] ~= nil then
-            value = lang_data[key]
-          end
-          value = type(value) == "string" and value or tostring(value or "")
-          col_widths[i + 1] = math.max(col_widths[i + 1], display_width(value))
-        end
-      end
-
-      -- 限制列宽度，避免过宽
-      for i = 2, #col_widths do
-        col_widths[i] = math.min(col_widths[i], 50) -- 最大50字符宽度
+      for i = 1, col_count do
+        col_widths[i] = each_width
       end
 
       -- 构造多列
       local display_list = {}
+      -- 行 -> 完整 key 的映射，保证复制时能得到未截断 key
+      local display_to_key = {}
 
       -- 构造数据行（不包含表头）
       for _, key in ipairs(key_list) do
-        -- 确保 key 是字符串类型
-        local key_str = type(key) == "string" and key or tostring(key or "")
-        local row = { pad_right(key_str, col_widths[1]) } -- key 列不截断
+        local original_key = type(key) == "string" and key or tostring(key or "")
+        local display_key = truncate_text(original_key, col_widths[1])
+        local row = { pad_right(display_key, col_widths[1]) }
 
         for i, lang in ipairs(langs) do
           local value = ""
@@ -147,12 +138,13 @@ return {
           if lang_data and type(lang_data) == 'table' and lang_data[key] ~= nil then
             value = lang_data[key]
           end
-          -- 确保 value 是字符串类型
           value = type(value) == "string" and value or tostring(value or "")
           local truncated_value = truncate_text(value, col_widths[i + 1])
           table.insert(row, pad_right(truncated_value, col_widths[i + 1]))
         end
-        table.insert(display_list, table.concat(row, " │ "))
+        local line = table.concat(row, " │ ")
+        table.insert(display_list, line)
+        display_to_key[line] = original_key
       end
 
       -- 构造固定的表头
@@ -176,15 +168,16 @@ return {
         actions = {
           ["default"] = function(selected)
             if selected and selected[1] then
-              local key = selected[1]:match("^([^│]+)"):gsub("%s+$", "")
+              local line = selected[1]
+              local key = display_to_key and display_to_key[line] or line:match("^([^│]+)"):gsub("%s+$", "")
               vim.notify("选中 key: " .. key)
-              -- 可以在这里添加其他操作，比如复制到剪贴板
               vim.fn.setreg('+', key)
             end
           end,
           ["ctrl-c"] = function(selected)
             if selected and selected[1] then
-              local key = selected[1]:match("^([^│]+)"):gsub("%s+$", "")
+              local line = selected[1]
+              local key = display_to_key and display_to_key[line] or line:match("^([^│]+)"):gsub("%s+$", "")
               vim.fn.setreg('+', key)
               vim.notify("已复制 key 到剪贴板: " .. key)
             end
