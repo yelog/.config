@@ -4,7 +4,8 @@ return {
     lazy = false, -- lazy loading handled internally
     -- optional: provides snippets for the snippet source
     dependencies = {
-      'rafamadriz/friendly-snippets',
+      'onsails/lspkind.nvim',
+      'nvim-mini/mini.icons',
       'Kaiser-Yang/blink-cmp-avante',
       { 'L3MON4D3/LuaSnip', version = 'v2.*' }
       -- 'Exafunction/codeium.nvim',
@@ -88,14 +89,24 @@ return {
             -- combined together in label by colorful-menu.nvim.
             columns = { { "kind_icon" }, { "label", gap = 1 } },
             components = {
-              label = {
+              kind_icon = {
                 text = function(ctx)
-                  return require("colorful-menu").blink_components_text(ctx)
+                  local kind_icon, _, _ = require('mini.icons').get('lsp', ctx.kind)
+                  return kind_icon
                 end,
+                -- (optional) use highlights from mini.icons
                 highlight = function(ctx)
-                  return require("colorful-menu").blink_components_highlight(ctx)
+                  local _, hl, _ = require('mini.icons').get('lsp', ctx.kind)
+                  return hl
                 end,
               },
+              kind = {
+                -- (optional) use highlights from mini.icons
+                highlight = function(ctx)
+                  local _, hl, _ = require('mini.icons').get('lsp', ctx.kind)
+                  return hl
+                end,
+              }
             },
           },
         },
@@ -118,12 +129,10 @@ return {
           },
           i18n = {
             name = 'i18n',
-            module = 'i18n.completion.blink_source',
+            module = 'i18n.integration.blink_source',
             opts = {
-              -- options for the blink-cmp-git
             },
           }
-          -- codeium = { name = 'Codeium', module = 'codeium.blink', async = true }
         }
       },
     },
