@@ -1,41 +1,3 @@
--- color scheme: More4 https://brandcolors.net/
---> custom color
--- vim.cmd([[highlight checkbox cterm=bold gui=bold guifg=#706357]])
--- vim.fn.matchadd("checkbox", "\\v\\[ \\]")
--- vim.cmd([[highlight checkbox_checked cterm=bold gui=bold guifg=#009f4d]])
--- vim.fn.matchadd("checkbox_checked", "\\v\\[x\\]")
-
--- vim.api.nvim_set_hl(0, "@text.strike", { strikethrough = true })
-
--->tag
--- vim.cmd([[highlight ye_tag guifg=#BB9AF7 guibg=#322E45]])
--- vim.fn.matchadd("ye_tag", "\\v#[a-zA-Z-_\\u4e00-\\u9fa5]+")
-
-
--->Strikethrough
--- vim.cmd([[highlight markdown_strikethrough gui=strikethrough]])
--- vim.api.nvim_set_hl(0, 'markdown_strikethrough', { strikethrough = true })
--- vim.fn.matchadd("markdown_strikethrough", "\\v\\~\\~[a-zA-Z-_\\u4e00-\\u9fa5]+\\~\\~")
-
---> mark text <mark>xxx</mark>
--- vim.api.nvim_set_hl(0, 'markdown_marktext', { bg = '#FFFF00', fg = '#000000' })
--- vim.fn.matchadd("markdown_marktext", "\\v\\<mark\\>[a-zA-Z-_\\u4e00-\\u9fa5]+\\<\\/mark\\>")
-
--->quote
--- vim.api.nvim_set_hl(0, 'ye_quote', { fg = '#e6e1cf', bg = '#323f4d' })
--- vim.api.nvim_set_hl(0, 'ye_quote', { fg = '#e6e1cf', bg = '#252d37' })
--- vim.fn.matchadd("ye_quote", "\\v^\\>(\\S|\\s)+$")
--- vim.fn.nvim_buf_add_highlight(0, -1, 'ye_quote', 1, 0, -1)
-
--->code-block 完整的, 包括换行
--- vim.cmd([[
---   augroup MarkdownCodeBlockHighlight
---     autocmd!
---     autocmd Syntax markdown syntax region ye_codeblock start="^```" end="^``` *$" keepend
---     autocmd Syntax markdown highlight ye_codeblock guifg=#e6e1cf guibg=#323f4d
---   augroup END
--- ]])
-
 -->important
 vim.cmd([[highlight ye_import1 cterm=bold guifg=#efdf00]])
 vim.fn.matchadd("ye_import1", "\\v( |^)@<=!(!)@!")
@@ -43,63 +5,6 @@ vim.cmd([[highlight ye_import2 cterm=bold guifg=#fe5000]])
 vim.fn.matchadd("ye_import2", "\\v( |^)@<=!!(!)@!")
 vim.cmd([[highlight ye_import3 cterm=bold guifg=#e4002b]])
 vim.fn.matchadd("ye_import3", "\\v( |^)@<=!!!(!)@!")
-
--- vim.cmd([[highlight ye_link guifg=#5c92fa gui=underline cterm=underline]])
--- vim.fn.matchadd("ye_link", "\\v\\[\\[(\\S|\\s)*\\]\\]")
-
--- vim.cmd([[highlight ye_link guifg=#5c92fa gui=underline cterm=underline]])
--- vim.fn.matchadd("ye_link", "\\v(http|https):(\\S|\\s){-}( |$)")
--- vim.fn.matchadd("ye_link", "\\[.*\\]\\(.*\\)")
--- vim.fn.matchadd("ye_link", "\\v\\[[^\\]]+\\]\\([^\\)]+\\)") -- 可以匹配 [xxx](xxx) 的链接, 但是会影响图片的匹配
--- vim.fn.matchadd("ye_link", "\\v(^|[^!])\\zs\\[[^\\]]+\\]\\([^\\)]+\\)")
-
--- 设置自定义高亮组，用于以问号结尾的语句, 还会导致 hardtime.nvim 失效
--- vim.cmd([[highlight QuestionSentence cterm=bold guifg=#e5c07b]])
--- 在进入或创建文件时应用规则
--- vim.cmd([[autocmd! BufEnter,BufNewFile * call matchadd('QuestionSentence', "\\v[a-zA-Z-_\\u4e00-\\u9fa5]+[?]")]])
-
-
--- Highlight today's date
--- Define highlight for today's date
-vim.cmd([[
-  hi Today ctermfg=Green cterm=standout gui=standout
-]])
-
--- Function to update today's highlight
-local function update_highlight()
-  local today = os.date("%Y-%m-%d")
-  vim.cmd(string.format([[
-    augroup MarkdownHighlight
-      autocmd!
-      autocmd FileType markdown lua vim.cmd('match Today /\\V%s/')
-    augroup END
-  ]], today))
-end
-
--- Initial call to set the highlight
-update_highlight()
-
--- Set up a timer to update the highlight every minute
-local timer = vim.loop.new_timer()
-timer:start(0, 60000, vim.schedule_wrap(function()
-  update_highlight()
-end))
-
--- 设置 [!NOTE] 行的背景为淡蓝色
--- vim.cmd('highlight calloutNoteBg guibg=#ADD8E6 ctermbg=lightblue')
-
-
--- 匹配 [!NOTE] 行并应用颜色
--- vim.cmd([[syntax match calloutNoteBg / #\S\+/ containedin=ALL]])
--- vim.cmd([[syntax match QuestionSentence /title/ containedin=ALL]])
--- 设置 [!NOTE] 后面的文字为深蓝色
--- vim.cmd('highlight calloutNoteTitle guifg=#000080 ctermfg=darkblue')
--- vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('calloutNoteTitle', "^>\s*\[!NOTE\]\s\+")]])
--- vim.cmd('highlight calloutNoteTitle guifg=#00CEE3 ctermfg=darkblue')
--- vim.cmd('highlight calloutNoteChar guifg=#F0CEE3 ctermfg=darkblue')
--- vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('calloutNoteChar', ">\\s*\\[\\zs!NOTE", 10)]])
--- vim.cmd([[autocmd! BufEnter,BufNewFile *.md call matchadd('calloutNoteTitle', ">\\s*\\[!NOTE\\]\\s*\\zs.*$", 10)]])
-
 
 -- 在VimEnter事件中延迟执行颜色配置
 vim.api.nvim_create_autocmd("VimEnter", {
@@ -122,34 +27,110 @@ vim.filetype.add({
   }
 })
 
-local custom_highlights = {
-  markdownBold = { bold = true, fg = "#ef9020" },
-  markdownItalic = { italic = true, fg = "#d8e020" },
-  markdownStrike = { fg = "#939393", strikethrough = true },
-  markdownLinkText = { fg = '#5c92fa', underline = true },
-  markdownLinkTextDelimiter = { fg = '#5c92fa', underline = true },
-  markdownCode = { fg = "#00c4b0", bg = "#1f262f" },
-  markdownBlockquote = { fg = '#e6e1cf' },
-  markdownFootnote = { fg = '#5c92fa' },
-  markdownH1 = { fg = '#ff6f61', bold = true },
-  markdownH1Delimiter = { fg = '#ff6f61', bold = true },
-  markdownH2 = { fg = "#f7c59f", bold = true },
-  markdownH2Delimiter = { fg = "#f7c59f", bold = true },
-  markdownH3 = { fg = "#00a79d", bold = true },
-  markdownH3Delimiter = { fg = "#00a79d", bold = true },
-  markdownH4 = { fg = "#6b5b95", bold = true },
-  markdownH4Delimiter = { fg = "#6b5b95", bold = true },
-  markdownH5 = { fg = "#92a8d1", bold = true },
-  markdownH5Delimiter = { fg = "#92a8d1", bold = true },
-  markdownH6 = { fg = "#E8DAEF", bold = true },
-  markdownH6Delimiter = { fg = "#E8DAEF", bold = true },
-  -- extend
-  markliveMarkText = { bg = '#FFFF00', fg = '#000000' },
-  markliveTag = { fg = '#BB9AF7', bg = '#322E45' },
-  markliveUser = { fg = '#FC7A07' },
-  markliveCalloutNote = { fg = '#047AFF' },
-  markliveCalloutError = { fg = '#FB464C' },
-  markliveCalloutTip = { fg = '#53DFDD' },
-  markliveCalloutWarning = { fg = '#E9973F' },
-  list_marker_minus = { fg = '#E9AD5B' }
-}
+-- 今日日期高亮配置
+-- 定义高亮样式
+vim.cmd([[
+  hi Today ctermfg=Green cterm=standout gui=standout
+]])
+
+-- 模块化封装
+local M = {}
+M.current_date = ""
+
+-- 刷新高亮函数
+function M.refresh_highlight()
+  -- 检查当前缓冲区是否为 markdown 文件
+  local filetype = vim.bo.filetype
+  if filetype ~= 'markdown' then
+    return
+  end
+
+  local today = os.date("%Y-%m-%d")
+
+  if M.current_date ~= today then
+    M.current_date = today
+    -- 清除旧匹配并设置新匹配
+    vim.cmd('call clearmatches()')
+    vim.cmd(string.format('match Today /\\V%s/', today))
+  end
+end
+
+-- 全局刷新函数（用于定时器）
+function M.global_refresh()
+  local today = os.date("%Y-%m-%d")
+
+  if M.current_date ~= today then
+    M.current_date = today
+
+    -- 为所有 markdown 缓冲区刷新高亮
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.api.nvim_buf_is_valid(buf) and vim.api.nvim_buf_is_loaded(buf) then
+        local buf_filetype = vim.api.nvim_buf_get_option(buf, 'filetype')
+        if buf_filetype == 'markdown' then
+          -- 找到显示该缓冲区的窗口并刷新
+          for _, win in ipairs(vim.api.nvim_list_wins()) do
+            if vim.api.nvim_win_get_buf(win) == buf then
+              local current_win = vim.api.nvim_get_current_win()
+              vim.api.nvim_set_current_win(win)
+              vim.cmd('call clearmatches()')
+              vim.cmd(string.format('match Today /\\V%s/', today))
+              vim.api.nvim_set_current_win(current_win)
+              break
+            end
+          end
+        end
+      end
+    end
+  end
+end
+
+-- 创建 autocmd 组
+local group = vim.api.nvim_create_augroup('TodayHighlight', { clear = true })
+
+-- 文件类型检测时触发
+vim.api.nvim_create_autocmd('FileType', {
+  group = group,
+  pattern = 'markdown',
+  callback = M.refresh_highlight,
+})
+
+-- 进入缓冲区时触发
+vim.api.nvim_create_autocmd('BufEnter', {
+  group = group,
+  pattern = '*.md',
+  callback = M.refresh_highlight,
+})
+
+-- 窗口进入时触发（处理分屏情况）
+vim.api.nvim_create_autocmd('WinEnter', {
+  group = group,
+  pattern = '*',
+  callback = function()
+    if vim.bo.filetype == 'markdown' then
+      M.refresh_highlight()
+    end
+  end,
+})
+
+-- 初始化
+M.refresh_highlight()
+
+-- 设置定时器，每分钟检查一次日期变化
+local timer = vim.loop.new_timer()
+if timer then
+  timer:start(60000, 60000, vim.schedule_wrap(M.global_refresh))
+end
+
+-- 创建手动刷新命令
+vim.api.nvim_create_user_command('RefreshDateHighlight', function()
+  M.current_date = "" -- 强制更新
+  M.global_refresh()
+end, { desc = "手动更新今日日期高亮" })
+
+-- 清理函数（可选，用于调试）
+vim.api.nvim_create_user_command('ClearDateHighlight', function()
+  vim.cmd('call clearmatches()')
+end, { desc = "清除日期高亮" })
+
+-- 导出模块（可选）
+_G.date_highlight_module = M

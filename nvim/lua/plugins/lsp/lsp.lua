@@ -6,7 +6,7 @@ return {
         virtual_lines = true, -- 在行尾显示诊断信息
         -- virtual_text = {
         --   spacing = 4, -- 行尾 diagnostic 与代码之间的间距
-        --   severity = vim.diagnostic.severity.ERROR, -- 可选：只显示 ERROR 级别
+        --   severity = vim.diagnostic.severity.ERROR, -- 行内只显示 ERROR 级别
         --   source = "always", -- 显示 diagnostic 来源
         --   prefix = "●", -- 行尾前缀符号，可自定义
         -- },
