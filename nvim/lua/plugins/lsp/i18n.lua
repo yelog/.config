@@ -9,11 +9,7 @@ return {
   },
   dev = true,
   config = function()
-    require('i18n').setup({
-      diagnostic = {
-        severity = vim.diagnostic.severity.WARN
-      }
-    })
+    require('i18n').setup()
 
     if vim.tbl_contains(filetype, vim.bo.filetype) then
       vim.keymap.set("n", "<leader>fi", require("i18n.integration.fzf").show_i18n_keys_with_fzf,

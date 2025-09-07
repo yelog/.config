@@ -103,8 +103,15 @@ end, { desc = "Search symbols" })
 map("n", "<D-S-O>", function() require("fzf-lua").files() end, { desc = "Search file" })
 map("n", "<leader>ff", function() require("fzf-lua").files() end, { desc = "Search file" })
 map("n", "<leader>fb", function() require("fzf-lua").buffers() end, { desc = "Search buffers" })
-map("n", "gd", function() require("fzf-lua").lsp_definitions() end, { desc = "Goto definition" })
-map("n", "gD", function() require("fzf-lua").lsp_implementations() end, { desc = "Goto implementation" })
+-- map("n", "gd", function() require("fzf-lua").lsp_definitions() end, { desc = "Goto definition" })
+vim.keymap.set('n', 'gd', function()
+  if require('i18n.navigation').try_definition() then
+    return
+  end
+  require("fzf-lua").lsp_definitions()
+end, { desc = 'i18n or LSP definition' })
+;
+-- map("n", "gD", function() require("fzf-lua").lsp_implementations() end, { desc = "Goto implementation" })
 map("n", "gu", function() require("fzf-lua").lsp_references() end, { desc = "Goto references" })
 map("n", "<leader>fk", function() require("fzf-lua").keymaps() end, { desc = "Search keymaps" })
 map("n", "<leader>ft", function() require("fzf-lua").tags() end, { desc = "Search tags" })
