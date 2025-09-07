@@ -105,10 +105,9 @@ map("n", "<leader>ff", function() require("fzf-lua").files() end, { desc = "Sear
 map("n", "<leader>fb", function() require("fzf-lua").buffers() end, { desc = "Search buffers" })
 -- map("n", "gd", function() require("fzf-lua").lsp_definitions() end, { desc = "Goto definition" })
 vim.keymap.set('n', 'gd', function()
-  if require('i18n.navigation').try_definition() then
-    return
+  if not require('i18n.navigation').try_definition() then
+    require("fzf-lua").lsp_definitions()
   end
-  require("fzf-lua").lsp_definitions()
 end, { desc = 'i18n or LSP definition' })
 ;
 -- map("n", "gD", function() require("fzf-lua").lsp_implementations() end, { desc = "Goto implementation" })
