@@ -161,7 +161,13 @@ return {
         -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts) --use telescope instead
         -- vim.keymap.set("n", "gD", vim.lsp.buf.implementation, bufopts)
         vim.keymap.set("n", "<M-p>", vim.lsp.buf.hover, bufopts)
-        vim.keymap.set({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help, bufopts)
+        -- vim.keymap.set({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help, bufopts)
+        vim.keymap.set({ "n", "i" }, "<C-k>", function()
+          if not require('i18n').show_popup() then
+            vim.lsp.buf.signature_help()
+          end
+        end, { desc = "i18n popup or signature help" })
+
         vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, bufopts)
         vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, bufopts)
         vim.keymap.set("n", "<leader>wl", function()
