@@ -37,10 +37,9 @@ let mapleader=" "
 " 屏蔽key
 noremap u u
 noremap e e
-nnoremap r r
 
-nnoremap Y :let @+=@"<CR>
-vnoremap Y "+y
+" nnoremap Y :let @+=@"<CR>
+" vnoremap Y "+y
 
 " 搜索
 set hlsearch
@@ -105,7 +104,7 @@ nnoremap <silent> <leader>ll :action OptimizeImports<CR>:action ReformatCode<CR>
 " autocmd FileType * nnoremap <buffer> <leader>ll :action OptimizeImports<CR>:action ReformatCode<CR>
 " autocmd FileType vue,javascript nnoremap <buffer> <leader>ll :action Javascript.Linters.EsLint.Fix<CR>
 
-nnoremap <silent> yr :CopyReference<CR>
+"nnoremap <silent> yr :CopyReference<CR>
 
 Plug 'preservim/nerdtree'
 autocmd bufenter * if (winnr("$") == 1 && exists("b:NERDTreeType") &&b:NERDTreeType == "primary") | q | endif
@@ -195,10 +194,11 @@ nmap ; <Action>(flash.repeat)
 xmap ; <Action>(flash.repeat)
 " Repeat the last f/F/t/T search backward
 nmap , <Action>(flash.repeat_backward)
-xmap , <Action>(flash.repeat_backward)
-" 结构化选中（类似 flash.nvim 的 treesitter 功能）
 nmap S <Action>(flash.treesitter)
 xmap S <Action>(flash.treesitter)
+" Remote flash
+omap r <Action>(flash.remote)
+
 
 " xnoremap s <Action>(flash.search)
 " map f <Action>(flash.find)
