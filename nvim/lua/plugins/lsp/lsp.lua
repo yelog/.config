@@ -159,6 +159,16 @@ return {
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
         -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
         -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts) --use telescope instead
+        vim.keymap.set("n", "gd", function()
+          if require('i18n').i18n_definition() then
+            return
+          end
+          if require('i18n').i18n_definition_next_locale() then
+            return
+          end
+          vim.lsp.buf.definition()
+        end
+        , bufopts) --use telescope instead
         -- vim.keymap.set("n", "gD", vim.lsp.buf.implementation, bufopts)
         vim.keymap.set("n", "<M-p>", vim.lsp.buf.hover, bufopts)
         -- vim.keymap.set({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help, bufopts)

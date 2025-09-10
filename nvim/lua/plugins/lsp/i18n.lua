@@ -13,6 +13,7 @@ return {
       { desc = "Fuzzy search i18n key" })
     vim.keymap.set("n", "<D-S-n>", require('i18n').show_i18n_keys_with_fzf,
       { desc = "Fuzzy search i18n key" })
-    vim.keymap.set("n", "<D-S-M-n>", "<cmd>I18nNextLocale<cr>", { desc = "Switch default I18n language" })
+    vim.keymap.set("n", "<D-S-B>", "<cmd>I18nNextLocale<cr>", { desc = "Switch default I18n language" })
+    vim.keymap.set("n", "<D-S-J>", "<cmd>I18nToggleOrigin<cr>", { desc = "Switch default I18n language" })
   end
 }
