@@ -3,6 +3,7 @@ return {
   lazy = false,
   dependencies = {
     'ibhagwan/fzf-lua',
+    -- 'nvim-telescope/telescope.nvim',
     'nvim-treesitter/nvim-treesitter'
   },
   dev = true,
@@ -11,6 +12,9 @@ return {
 
     vim.keymap.set("n", "<leader>fi", require('i18n').show_i18n_keys_with_fzf,
       { desc = "Fuzzy search i18n key" })
+    -- vim.keymap.set("n", "<D-S-n>", require("i18n").show_i18n_keys_with_telescope,
+    --   { desc = "Search i18n key (Telescope)" })
+
     vim.keymap.set("n", "<D-S-n>", require('i18n').show_i18n_keys_with_fzf,
       { desc = "Fuzzy search i18n key" })
     vim.keymap.set("n", "<D-S-B>", "<cmd>I18nNextLocale<cr>", { desc = "Switch default I18n language" })
