@@ -30,8 +30,8 @@ return {
       -- your own keymap.
       keymap = {
         preset = 'default',
-        -- ["<Tab>"] = { "select_next", "fallback" },
-        -- ["<S-Tab>"] = { "select_prev", "fallback" },
+        ["<Tab>"] = { "select_next", "fallback" },
+        ["<S-Tab>"] = { "select_prev", "fallback" },
         ["<CR>"] = { "select_and_accept", "fallback" },
       },
       cmdline = {
@@ -42,7 +42,8 @@ return {
         },
         keymap = {
           preset = 'default',
-          ["<Tab>"] = { "select_and_accept", "fallback" },
+          ["<Tab>"] = { "select_next", "fallback" },
+          ["<S-Tab>"] = { "select_prev", "fallback" },
         }
       },
 
@@ -67,7 +68,7 @@ return {
         accept = { auto_brackets = { enabled = false }, },
 
         -- Insert completion item on selection, don't select by default
-        list = { selection = { preselect = true, auto_insert = true } },
+        list = { selection = { preselect = true, auto_insert = false } },
         -- or set per mode
         -- list = { selection = function(ctx) return ctx.mode == 'cmdline' and 'auto_insert' or 'preselect' end },
 

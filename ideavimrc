@@ -199,7 +199,6 @@ xmap S <Action>(flash.treesitter)
 " Remote flash
 omap r <Action>(flash.remote)
 
-
 " xnoremap s <Action>(flash.search)
 " map f <Action>(flash.find)
 
