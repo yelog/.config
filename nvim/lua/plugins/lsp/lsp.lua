@@ -189,6 +189,7 @@ return {
         --   return ":IncRename " .. vim.fn.expand("<cword>")
         -- end, { expr = true })
         vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, bufopts)
+        vim.keymap.set("n", "<M-CR>", vim.lsp.buf.code_action, bufopts)
         -- vim.keymap.set("n", "gu", vim.lsp.buf.references, bufopts) --use telesscope instead
         -- vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 

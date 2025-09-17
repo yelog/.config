@@ -1,8 +1,7 @@
 {
   "return": {
     "prefix": [
-      "return",
-      "re"
+      "lazy"
     ],
     "body": [
       "return {",
@@ -23,5 +22,5 @@
       "  $0",
       "end"
     ]
-  },
+  }
 }

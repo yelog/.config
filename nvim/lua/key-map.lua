@@ -99,7 +99,7 @@ map("n", "<D-S-M>", function()
     end
   end
 end, { desc = "Search symbols" })
-map("n", "<D-S-i>", function() vim.cmd("Telescope endpoint") end, { desc = "API" })
+map("n", "<D-S-i>", function() vim.cmd("Endpoint All") end, { desc = "API" })
 map("n", "<D-S-O>", function() require("fzf-lua").files() end, { desc = "Search file" })
 map("n", "<leader>ff", function() require("fzf-lua").files() end, { desc = "Search file" })
 map("n", "<leader>fb", function() require("fzf-lua").buffers() end, { desc = "Search buffers" })
