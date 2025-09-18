@@ -7,7 +7,6 @@ vim.o.fillchars = [[eob: ,fold: ,foldopen:,foldsep: ,foldclose:]]
 vim.o.foldexpr = 'v:lua.vim.treesitter.foldexpr()'
 
 local ts = vim.treesitter
-local query = vim.treesitter.query
 -- Source: https://www.reddit.com/r/neovim/comments/1fzn1zt/custom_fold_text_function_with_treesitter_syntax/
 local function fold_virt_text(result, start_text, lnum)
   local text = ''
@@ -42,46 +41,3 @@ function _G.custom_foldtext()
 end
 
 vim.opt.foldtext = 'v:lua.custom_foldtext()'
-
--- 折叠 import 节点
-local function fold_imports(bufnr)
-  bufnr = bufnr or vim.api.nvim_get_current_buf()
-  local lang = vim.bo[bufnr].filetype
-  local parser = ts.get_parser(bufnr, lang)
-  if not parser then return end
-
-  local tree = parser:parse()[1]
-  local root = tree:root()
-
-  -- 根据语言选择 import 节点类型
-  local import_types = {
-    java = "import_declaration",
-    typescript = "import_statement",
-    tsx = "import_statement",
-    javascript = "import_statement",
-  }
-
-  local import_type = import_types[lang]
-  if not import_type then return end
-
-  -- 构造 query，匹配所有 import 节点
-  local q = query.parse(lang, string.format("(%s) @import", import_type))
-
-  for _, match, _ in q:iter_matches(root, bufnr, 0, -1) do
-    for id, node in pairs(match) do
-      local start_row, _, _, _ = node:range()
-      vim.api.nvim_win_set_cursor(0, { start_row + 1, 0 })
-      vim.cmd("normal! zc")
-    end
-  end
-end
-
--- 自动：文件打开时折叠import
-vim.api.nvim_create_autocmd("BufWinEnter", {
-  pattern = { "*.java", "*.ts", "*.tsx", "*.js" },
-  callback = function(args)
-    vim.defer_fn(function()
-      fold_imports(args.buf)
-    end, 100)
-  end,
-})

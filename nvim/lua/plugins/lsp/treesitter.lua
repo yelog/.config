@@ -8,7 +8,7 @@ return {
       -- vim.g.markdown_syntax_conceal = 1
       vim.g.markdown_fenced_languages =
       { "html", "python", "bash=sh", "json", "java", "javascript", "js=javascript", "sql", "yaml", "xml", "Dockerfile",
-        "Rust", "swift", "lua", "typescript", "ts=typescript", "vim" }
+        "Rust", "swift", "lua", "typescript", "ts=typescript", "vim", "toml" }
       require("nvim-treesitter.configs").setup({
         modules = {},
         ignore_install = {},
