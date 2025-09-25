@@ -73,6 +73,7 @@ nnoremap <silent> <leader>se :action EvaluateExpression<CR>
 vnoremap <silent> <leader>se :action EvaluateExpression<CR>
 noremap <C-O> :action Back<CR>
 noremap <C-I> :action Forward<CR>
+map <C-k> :action ParameterInfo<CR>
 
 nnoremap <silent> <leader>// :action CommentByLineComment<CR>
 vnoremap <silent> <leader>/ :action CommentByLineComment<CR>
@@ -202,6 +203,9 @@ omap r <Action>(flash.remote)
 " xnoremap s <Action>(flash.search)
 " map f <Action>(flash.find)
 
+" nnoremap / :action BetterCmd.Search<CR>
+" nnoremap : :action BetterCmd.Command<CR>
+
 " " Press `f` to activate AceJump
 " map f <Action>(AceAction)
 " " Press `F` to activate Target Mode
@@ -213,6 +217,8 @@ set quickscope
 let g:qs_highlight_on_keys = ['f', 'F', 't', 'T']
 let g:qs_primary_color = '#ff0000'
 let g:qs_accepted_chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
+
+set wildmenu
 
 " copilot
 imap <right> <Action>(copilot.applyInlays)

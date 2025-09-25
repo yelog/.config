@@ -132,6 +132,7 @@ return {
           "dockerls",
           "vimls",
           "jdtls",
+          "lemminx",
           -- "kotlin_lsp",
         },
       })
@@ -284,6 +285,7 @@ return {
       vim.lsp.enable('unocss')
       vim.lsp.enable('vimls')
       vim.lsp.enable('jdtls')
+      vim.lsp.enable('lemminx')
       -- vim.lsp.enable('kotlin_lsp')
       vim.lsp.config('dockerls', {
         settings = {
