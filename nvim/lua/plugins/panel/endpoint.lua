@@ -21,11 +21,11 @@ return {
         show_icons = true,
         show_method = true,
         methods = {
-          GET = { icon = "📥", color = "TelescopeResultsNumber" },
-          POST = { icon = "📤", color = "TelescopeResultsConstant" },
-          PUT = { icon = "✏️", color = "TelescopeResultsKeyword" },
-          DELETE = { icon = "🗑️", color = "TelescopeResultsSpecialChar" },
-          PATCH = { icon = "🔧", color = "TelescopeResultsFunction" },
+          GET = { icon = "📘", color = "TelescopeResultsNumber" },
+          POST = { icon = "📗", color = "TelescopeResultsConstant" },
+          PUT = { icon = "📙", color = "TelescopeResultsKeyword" },
+          DELETE = { icon = "📕", color = "TelescopeResultsSpecialChar" },
+          PATCH = { icon = "📒", color = "TelescopeResultsFunction" },
         },
       },
       frameworks = {

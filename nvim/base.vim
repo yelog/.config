@@ -288,3 +288,19 @@ xnoremap & :&&<CR>
 "augroup END
 
 autocmd FileChangedShell * let v:fcs_choice = 'reload'
+
+" 支持 :H str1 str2 str3 高亮多个匹配字符
+" let g:multi_highlight_groups = ['SpellBad', 'SpellCap', 'CurSearch', 'DiffAdd', 'DiffChange', 'PmenuExtra']
+"
+" function! MultiHighlight(...)
+" call clearmatches()
+" let group_count = len(g:multi_highlight_groups)
+" let i = 0
+" for pattern in a:000
+" let group = g:multi_highlight_groups[i % group_count]
+" call matchadd(group, pattern)
+" let i += 1
+" endfor
+" endfunction
+" command! -nargs=+ H call MultiHighlight(<f-args>)
+" command! HC call clearmatches()

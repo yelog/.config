@@ -203,8 +203,8 @@ omap r <Action>(flash.remote)
 " xnoremap s <Action>(flash.search)
 " map f <Action>(flash.find)
 
-" nnoremap / :action BetterCmd.Search<CR>
-" nnoremap : :action BetterCmd.Command<CR>
+" nnoremap : <Action>(BetterCmd.OpenExCommand)
+" nnoremap / <Action>(BetterCmd.OpenSearch)
 
 " " Press `f` to activate AceJump
 " map f <Action>(AceAction)
