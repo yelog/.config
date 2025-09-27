@@ -508,6 +508,7 @@ return {
           local bg = utils.get_highlight("TabLine").bg
           local underline = self.is_active and true or false
 
+          -- 先尝试从 gitsigns 获取行级改动统计
           local dict
           local ok, v = pcall(vim.api.nvim_buf_get_var, self.bufnr, "gitsigns_status_dict")
           if ok and type(v) == "table" then
@@ -520,19 +521,60 @@ return {
             end
           end
 
-          vim.notify(vim.inspect(dict))
+          -- 计算 git 仓库根目录、相对路径，以及该文件是否存在于 HEAD
+          local filename = self.filename or ""
+          local in_head = nil
+          local toproot = nil
+          local relpath = nil
+          if filename ~= "" then
+            local filedir = vim.fn.fnamemodify(filename, ":h")
+            local root = vim.fn.systemlist('git -C ' .. vim.fn.shellescape(filedir) .. ' rev-parse --show-toplevel')[1]
+            if root and root ~= '' and not tostring(root):match('^fatal:') then
+              toproot = vim.fn.trim(root)
+              local root_prefix = toproot
+              if root_prefix:sub(-1) ~= '/' then root_prefix = root_prefix .. '/' end
+              relpath = filename
+              if relpath:sub(1, #root_prefix) == root_prefix then
+                relpath = relpath:sub(#root_prefix + 1)
+              end
+              local cmd = 'git -C ' .. vim.fn.shellescape(toproot) .. ' cat-file -e ' .. vim.fn.shellescape('HEAD:' .. relpath)
+              vim.fn.system(cmd)
+              in_head = (vim.v.shell_error == 0)
+            end
+          end
 
-          if dict then
-            local a = dict.added or 0
-            local c = dict.changed or 0
-            local d = dict.removed or 0
-
-            if a > 0 and c == 0 and d == 0 then
+          if toproot and relpath then
+            -- 新逻辑：
+            -- - 不在 HEAD => 新文件（未提交）：GitSignsAdd
+            -- - 在 HEAD 且有改动 => GitSignsChange
+            -- - 其他 => 默认颜色
+            if in_head == false then
               fg = utils.get_highlight("GitSignsAdd").fg
-            elseif d > 0 and a == 0 and c == 0 then
-              fg = utils.get_highlight("GitSignsDelete").fg
-            elseif a > 0 or c > 0 or d > 0 then
-              fg = utils.get_highlight("GitSignsChange").fg
+            else
+              -- in_head 为 true 或 nil（未知）。当为 true 时仅在有改动时标记为 Change
+              local has_changes = false
+              if dict then
+                local a = dict.added or 0
+                local c = dict.changed or 0
+                local d = dict.removed or 0
+                has_changes = (a > 0) or (c > 0) or (d > 0)
+              end
+              if not has_changes and in_head == true then
+                -- 如果 gitsigns 未提供行统计，兜底使用 git status 判断是否有改动
+                local out = vim.fn.systemlist('git -C ' .. vim.fn.shellescape(toproot) .. ' status --porcelain -- ' .. vim.fn.shellescape(relpath))
+                if type(out) == 'table' and #out > 0 then
+                  for _, line in ipairs(out) do
+                    -- 存在于 HEAD 时，不可能是 ??；只要有记录就认为有改动
+                    if not line:match('^%?%?') then
+                      has_changes = true
+                      break
+                    end
+                  end
+                end
+              end
+              if has_changes then
+                fg = utils.get_highlight("GitSignsChange").fg
+              end
             end
           end
 
