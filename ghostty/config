@@ -614,7 +614,7 @@ cursor-style = block
 #   * `true`
 #   * `false`
 # 
-cursor-style-blink = 
+cursor-style-blink = true
 
 # The color of the text under the cursor. If this is not set, a default will
 # be chosen.
@@ -1894,7 +1894,7 @@ gtk-wide-tabs = true
 # 
 # This configuration only has an effect if Ghostty was built with
 # libadwaita support.
-gtk-adwaita = true
+# gtk-adwaita = true
 
 # If `true` (default), applications running in the terminal can show desktop
 # notifications using certain escape sequences such as OSC 9 or OSC 777.

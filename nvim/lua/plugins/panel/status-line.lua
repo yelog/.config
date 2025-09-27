@@ -455,13 +455,6 @@ return {
         ScrollBar
       }
 
-      local TablineBufnr = {
-        provider = function(self)
-          return tostring(self.bufnr) .. ". "
-        end,
-        hl = "Comment",
-      }
-
       -- we redefine the filename component, as we probably only want the tail and not the relative path
       local TablineFileName = {
         provider = function(self)
@@ -507,17 +500,43 @@ return {
         init = function(self)
           self.filename = vim.api.nvim_buf_get_name(self.bufnr)
         end,
+        -- 当 Git 状态变化或缓冲区切换/写入时刷新
+        update = { "User", "BufEnter", "BufWritePost", "TextChanged", "TextChangedI" },
         hl = function(self)
-          if self.is_active then
-            return "TabLineSel"
-            -- return "underline"
-            -- return "TabLineSel"
-            -- why not?
-            -- elseif not vim.api.nvim_buf_is_loaded(self.bufnr) then
-            --     return { fg = "gray" }
+          -- 获取当前 buf 文件在 git 中的状态（逐个 buffer）
+          local fg = nil
+          local bg = utils.get_highlight("TabLine").bg
+          local underline = self.is_active and true or false
+
+          local dict
+          local ok, v = pcall(vim.api.nvim_buf_get_var, self.bufnr, "gitsigns_status_dict")
+          if ok and type(v) == "table" then
+            dict = v
           else
-            return { bg = "black" }
+            -- 备用：有些情况下 get_var 不存在时用 getbufvar 兜底
+            local v2 = vim.fn.getbufvar(self.bufnr, "gitsigns_status_dict")
+            if type(v2) == "table" then
+              dict = v2
+            end
           end
+
+          vim.notify(vim.inspect(dict))
+
+          if dict then
+            local a = dict.added or 0
+            local c = dict.changed or 0
+            local d = dict.removed or 0
+
+            if a > 0 and c == 0 and d == 0 then
+              fg = utils.get_highlight("GitSignsAdd").fg
+            elseif d > 0 and a == 0 and c == 0 then
+              fg = utils.get_highlight("GitSignsDelete").fg
+            elseif a > 0 or c > 0 or d > 0 then
+              fg = utils.get_highlight("GitSignsChange").fg
+            end
+          end
+
+          return { fg = fg, bg = bg, bold = true, underline = underline }
         end,
         on_click = {
           callback = function(_, minwid, _, button)
@@ -542,36 +561,36 @@ return {
       }
 
       -- a nice "x" button to close the buffer
-      local TablineCloseButton = {
-        condition = function(self)
-          return not vim.api.nvim_get_option_value("modified", { buf = self.bufnr })
-        end,
-        { provider = " " },
-        {
-          provider = "x",
-          hl = { fg = "gray" },
-          on_click = {
-            callback = function(_, minwid)
-              vim.schedule(function()
-                vim.api.nvim_buf_delete(minwid, { force = false })
-                vim.cmd.redrawtabline()
-              end)
-            end,
-            minwid = function(self)
-              return self.bufnr
-            end,
-            name = "heirline_tabline_close_buffer_callback",
-          },
-        },
-      }
+      -- local TablineCloseButton = {
+      --   condition = function(self)
+      --     return not vim.api.nvim_get_option_value("modified", { buf = self.bufnr })
+      --   end,
+      --   { provider = " " },
+      --   {
+      --     provider = "x",
+      --     hl = { fg = "gray" },
+      --     on_click = {
+      --       callback = function(_, minwid)
+      --         vim.schedule(function()
+      --           vim.api.nvim_buf_delete(minwid, { force = false })
+      --           vim.cmd.redrawtabline()
+      --         end)
+      --       end,
+      --       minwid = function(self)
+      --         return self.bufnr
+      --       end,
+      --       name = "heirline_tabline_close_buffer_callback",
+      --     },
+      --   },
+      -- }
 
-      -- The final touch!
+      -- The final touch! 文字和左右两侧的分隔符的背景色
       local TablineBufferBlock = utils.surround({ "", "" }, function(self)
-        if self.is_active then
-          return utils.get_highlight("TabLineSel").bg
-        else
-          return utils.get_highlight("TabLine").bg
-        end
+        -- if self.is_active then
+        --   return utils.get_highlight("TabLineSel").bg
+        -- else
+        return utils.get_highlight("TabLine").bg
+        -- end
         -- end, { TablineFileNameBlock, TablineCloseButton })
       end, { TablineFileNameBlock })
 
