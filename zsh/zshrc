@@ -209,6 +209,7 @@ alias ls='eza --icons -lh --time-style=iso'
 alias cat='bat'
 alias scp='rsync -P --rsh=ssh'
 alias s='fastfetch -l ~/Documents/image/avatar.png'
+ alias ccusage-codex='bunx @ccusage/codex@latest'
 # alias python=/Library/Frameworks/Python.framework/Versions/3.11/bin/python3.11
 # export PYTHON_HOME=/Library/Frameworks/Python.framework/Versions/3.11
 # export PATH=$PATH:$PYTHON_HOME/bin
