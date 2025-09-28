@@ -521,7 +521,7 @@ return {
             -- 取消注释进行调试：
             -- vim.notify("更新 TablineFileNameBlock", vim.log.levels.INFO, { title = "Heirline" })
           end
-          vim.notify("计算 TablineFileNameBlock 高亮", vim.log.levels.DEBUG, { title = "Heirline" })
+          -- vim.notify("计算 TablineFileNameBlock 高亮", vim.log.levels.DEBUG, { title = "Heirline" })
 
           local fg = nil
 
