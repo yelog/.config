@@ -563,11 +563,22 @@ return {
 
           if toproot and relpath then
             -- 新逻辑（以 git status 为准，避免缓存/异步延迟导致误判）：
-            -- - 不在 HEAD => 新文件（未提交）：GitSignsAdd
+            -- - 不在 HEAD：
+            --     - 如果被 .gitignore 忽略，则不高亮（不应视为新增）
+            --     - 否则视为未跟踪/新增 => GitSignsAdd
             -- - 在 HEAD：只要 git status 对该文件有记录（不包含 ?? 情况），就视为有改动 => GitSignsChange
             -- - 其他 => 默认颜色
             if in_head == false then
-              fg = utils.get_highlight("GitSignsAdd").fg
+              -- 可能是未跟踪或被忽略的文件，优先检查 ignore
+              local cmd_ignore = 'git -C '
+                  .. vim.fn.shellescape(toproot)
+                  .. ' check-ignore -q -- '
+                  .. vim.fn.shellescape(relpath)
+              vim.fn.system(cmd_ignore)
+              local is_ignored = (vim.v.shell_error == 0)
+              if not is_ignored then
+                fg = utils.get_highlight("GitSignsAdd").fg
+              end
             elseif in_head == true then
               -- 如果缓冲区有未保存修改，直接认为有改动（即时反馈）
               local buf_modified = vim.api.nvim_get_option_value("modified", { buf = self.bufnr })
