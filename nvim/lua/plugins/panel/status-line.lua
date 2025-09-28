@@ -500,8 +500,8 @@ return {
         init = function(self)
           self.filename = vim.api.nvim_buf_get_name(self.bufnr)
         end,
-        -- 当 Git 状态变化或缓冲区切换/写入时刷新
-        update = { "User", "BufEnter", "BufWritePost", "TextChanged", "TextChangedI" },
+        -- 当 Git 状态变化或缓冲区切换/写入/返回焦点/终端关闭时刷新
+        update = { "User", "BufEnter", "BufWritePost", "TextChanged", "TextChangedI", "FocusGained", "TermClose", "VimResume" },
         hl = function(self)
           -- 获取当前 buf 文件在 git 中的状态（逐个 buffer）
           local bg = utils.get_highlight("TabLine").bg
@@ -509,8 +509,13 @@ return {
 
           -- 使用每个 buffer 的 changedtick 做轻量缓存，避免重复执行外部命令
           local tick = vim.api.nvim_buf_get_changedtick(self.bufnr)
+          -- 额外引入全局“git世代”计数，外部操作（如 lazygit 提交）时递增以失效缓存
+          local gen = vim.g._heirline_git_generation or 0
           local ok_cache, cache = pcall(vim.api.nvim_buf_get_var, self.bufnr, "_heirline_tab_git_cache")
-          if ok_cache and type(cache) == "table" and cache.tick == tick and cache.filename == self.filename then
+          if ok_cache and type(cache) == "table"
+              and cache.tick == tick
+              and cache.gen == gen
+              and cache.filename == self.filename then
             return { fg = cache.fg, bg = bg, bold = true, underline = underline }
           end
 
@@ -610,6 +615,7 @@ return {
           -- 写入缓存
           pcall(vim.api.nvim_buf_set_var, self.bufnr, "_heirline_tab_git_cache", {
             tick = tick,
+            gen = gen,
             filename = self.filename,
             fg = fg,
           })
@@ -785,6 +791,28 @@ return {
         opts = {
           colors = colors,
         }
+      })
+
+      -- 失效缓存并刷新 Tabline 的辅助方法
+      local function _heirline_bump_git_generation()
+        vim.g._heirline_git_generation = (vim.g._heirline_git_generation or 0) + 1
+        -- 强制重绘以触发 hl 重新计算
+        pcall(vim.cmd.redrawtabline)
+      end
+
+      -- 当从外部工具返回或关闭终端（如 lazygit）时，认为 Git 状态可能变化，递增世代以失效缓存
+      local group = vim.api.nvim_create_augroup("HeirlineGitRefresh", { clear = true })
+      vim.api.nvim_create_autocmd({ "FocusGained", "VimResume" }, {
+        group = group,
+        callback = function()
+          _heirline_bump_git_generation()
+        end,
+      })
+      vim.api.nvim_create_autocmd("TermClose", {
+        group = group,
+        callback = function()
+          _heirline_bump_git_generation()
+        end,
       })
     end
   }
