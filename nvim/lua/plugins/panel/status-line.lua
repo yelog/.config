@@ -504,9 +504,26 @@ return {
         update = { "User", "BufEnter", "BufWritePost", "TextChanged", "TextChangedI" },
         hl = function(self)
           -- 获取当前 buf 文件在 git 中的状态（逐个 buffer）
-          local fg = nil
           local bg = utils.get_highlight("TabLine").bg
           local underline = self.is_active and true or false
+
+          -- 使用每个 buffer 的 changedtick 做轻量缓存，避免重复执行外部命令
+          local tick = vim.api.nvim_buf_get_changedtick(self.bufnr)
+          local ok_cache, cache = pcall(vim.api.nvim_buf_get_var, self.bufnr, "_heirline_tab_git_cache")
+          if ok_cache and type(cache) == "table" and cache.tick == tick and cache.filename == self.filename then
+            return { fg = cache.fg, bg = bg, bold = true, underline = underline }
+          end
+
+          -- 如果你在此处调试想看触发频率，建议只在 changedtick 变化时提示：
+          local ok_tick, last_tick = pcall(vim.api.nvim_buf_get_var, self.bufnr, "_heirline_tab_dbg_tick")
+          if not ok_tick or last_tick ~= tick then
+            pcall(vim.api.nvim_buf_set_var, self.bufnr, "_heirline_tab_dbg_tick", tick)
+            -- 取消注释进行调试：
+            -- vim.notify("更新 TablineFileNameBlock", vim.log.levels.INFO, { title = "Heirline" })
+          end
+          vim.notify("计算 TablineFileNameBlock 高亮", vim.log.levels.DEBUG, { title = "Heirline" })
+
+          local fg = nil
 
           -- 先尝试从 gitsigns 获取行级改动统计
           local dict
@@ -537,46 +554,54 @@ return {
               if relpath:sub(1, #root_prefix) == root_prefix then
                 relpath = relpath:sub(#root_prefix + 1)
               end
-              local cmd = 'git -C ' .. vim.fn.shellescape(toproot) .. ' cat-file -e ' .. vim.fn.shellescape('HEAD:' .. relpath)
+              local cmd = 'git -C ' ..
+                  vim.fn.shellescape(toproot) .. ' cat-file -e ' .. vim.fn.shellescape('HEAD:' .. relpath)
               vim.fn.system(cmd)
               in_head = (vim.v.shell_error == 0)
             end
           end
 
           if toproot and relpath then
-            -- 新逻辑：
+            -- 新逻辑（以 git status 为准，避免缓存/异步延迟导致误判）：
             -- - 不在 HEAD => 新文件（未提交）：GitSignsAdd
-            -- - 在 HEAD 且有改动 => GitSignsChange
+            -- - 在 HEAD：只要 git status 对该文件有记录（不包含 ?? 情况），就视为有改动 => GitSignsChange
             -- - 其他 => 默认颜色
             if in_head == false then
               fg = utils.get_highlight("GitSignsAdd").fg
-            else
-              -- in_head 为 true 或 nil（未知）。当为 true 时仅在有改动时标记为 Change
-              local has_changes = false
-              if dict then
-                local a = dict.added or 0
-                local c = dict.changed or 0
-                local d = dict.removed or 0
-                has_changes = (a > 0) or (c > 0) or (d > 0)
-              end
-              if not has_changes and in_head == true then
-                -- 如果 gitsigns 未提供行统计，兜底使用 git status 判断是否有改动
-                local out = vim.fn.systemlist('git -C ' .. vim.fn.shellescape(toproot) .. ' status --porcelain -- ' .. vim.fn.shellescape(relpath))
+            elseif in_head == true then
+              -- 如果缓冲区有未保存修改，直接认为有改动（即时反馈）
+              local buf_modified = vim.api.nvim_get_option_value("modified", { buf = self.bufnr })
+              if buf_modified then
+                fg = utils.get_highlight("GitSignsChange").fg
+              else
+                -- 已保存状态：以 git status 为准
+                local out = vim.fn.systemlist('git -C ' ..
+                    vim.fn.shellescape(toproot) .. ' status --porcelain -- ' .. vim.fn.shellescape(relpath))
+                local has_changes = false
                 if type(out) == 'table' and #out > 0 then
                   for _, line in ipairs(out) do
-                    -- 存在于 HEAD 时，不可能是 ??；只要有记录就认为有改动
+                    -- 在 HEAD 时不会出现 ??（未跟踪），出现即忽略；其余任意状态视为有改动
                     if not line:match('^%?%?') then
                       has_changes = true
                       break
                     end
                   end
                 end
+                if has_changes then
+                  fg = utils.get_highlight("GitSignsChange").fg
+                end
               end
-              if has_changes then
-                fg = utils.get_highlight("GitSignsChange").fg
-              end
+            else
+              -- in_head == nil：无法确定（非 git 仓库或其他原因），保持默认颜色
             end
           end
+
+          -- 写入缓存
+          pcall(vim.api.nvim_buf_set_var, self.bufnr, "_heirline_tab_git_cache", {
+            tick = tick,
+            filename = self.filename,
+            fg = fg,
+          })
 
           return { fg = fg, bg = bg, bold = true, underline = underline }
         end,
