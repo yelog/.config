@@ -44,50 +44,177 @@ vim.opt.foldtext = 'v:lua.custom_foldtext()'
 
 local M = {}
 
-local ts_filetypes = {
-  typescript = true,
-  typescriptreact = true,
+local fold_targets = {
+  typescript = { finder = 'default', max_scan = 200 },
+  typescriptreact = { finder = 'default', max_scan = 200 },
+  javascript = { finder = 'default', max_scan = 200 },
+  javascriptreact = { finder = 'default', max_scan = 200 },
+  vue = { finder = 'vue', max_scan = 400 },
+  java = {
+    finder = 'default',
+    max_scan = 200,
+    allowed_before = {
+      '^%s*package%s',
+      '^%s*@[A-Z][A-Za-z]+',
+    },
+  },
 }
 
-local function is_typescript(bufnr)
+local function get_target(bufnr)
   local ft = vim.bo[bufnr].filetype
-  return ts_filetypes[ft] or false
+  return fold_targets[ft], ft
 end
 
-local function find_first_import_line(bufnr)
+local function is_target(bufnr)
+  local cfg = get_target(bufnr)
+  return cfg ~= nil
+end
+
+local function line_import_match(line)
+  return line and line:match('^%s*import%f[%s{(]') ~= nil
+end
+
+local function should_skip_leading(line)
+  if not line then
+    return true
+  end
+  if line:match('^%s*$') then
+    return true
+  end
+  if line:match('^%s*//') then
+    return true
+  end
+  if line:match('^%s*%-%-') then
+    return true
+  end
+  if line:match('^%s*#') then
+    return true
+  end
+  if line:match([[^%s*[;,{]?%s*['"][Uu]se%s+]]) then
+    return true
+  end
+  return false
+end
+
+local function find_import_default(bufnr, cfg)
+  cfg = cfg or {}
+  local allowed = cfg.allowed_before or {}
   local line_count = vim.api.nvim_buf_line_count(bufnr)
-  local last = math.min(line_count, 200)
+  local last = math.min(line_count, cfg.max_scan or 200)
   local in_block_comment = false
+
   for i = 0, last - 1 do
     local line = vim.api.nvim_buf_get_lines(bufnr, i, i + 1, false)[1]
     if not line then
       break
     end
+
     if in_block_comment then
       if line:find('%*/') then
         in_block_comment = false
       end
-    elseif line:match('^%s*/%*') then
-      if not line:find('%*/') then
-        in_block_comment = true
-      end
-    elseif line:match('^%s*//') or line:match('^%s*$') then
-      -- skip single line comments and blank lines
-    elseif line:match('^%s*import%f[%s{(]') then
-      return i + 1
     else
-      return nil
+      if line_import_match(line) then
+        return i + 1
+      end
+
+      if line:match('^%s*/%*') then
+        if not line:find('%*/') then
+          in_block_comment = true
+        end
+      elseif should_skip_leading(line) then
+        -- skip
+      else
+        local allowed_line = false
+        for _, pattern in ipairs(allowed) do
+          if line:match(pattern) then
+            allowed_line = true
+            break
+          end
+        end
+        if not allowed_line then
+          return nil
+        end
+      end
     end
   end
+
   return nil
 end
 
-local function fold_ts_imports(bufnr, try)
+local function find_import_vue(bufnr, cfg)
+  cfg = cfg or {}
+  local line_count = vim.api.nvim_buf_line_count(bufnr)
+  local last = math.min(line_count, cfg.max_scan or 400)
+  local in_block_comment = false
+  local script_open = false
+
+  for i = 0, last - 1 do
+    local line = vim.api.nvim_buf_get_lines(bufnr, i, i + 1, false)[1]
+    if not line then
+      break
+    end
+
+    if not script_open then
+      if line:find('<script') then
+        script_open = true
+        local after = line:match('<script[^>]*>(.*)')
+        if after and line_import_match(after) then
+          return i + 1
+        end
+      end
+    else
+      if line:find('</script') then
+        return nil
+      end
+
+      if in_block_comment then
+        if line:find('%*/') then
+          in_block_comment = false
+        end
+      else
+        if line_import_match(line) then
+          return i + 1
+        end
+
+        if line:match('^%s*/%*') then
+          if not line:find('%*/') then
+            in_block_comment = true
+          end
+        elseif should_skip_leading(line) then
+          -- skip
+        elseif line:match('^%s*define') or line:match('^%s*const%s+[_%w]+%s*=') then
+          return nil
+        else
+          return nil
+        end
+      end
+    end
+  end
+
+  return nil
+end
+
+local import_finders = {
+  default = find_import_default,
+  vue = find_import_vue,
+}
+
+local function find_first_import_line(bufnr)
+  local cfg = get_target(bufnr)
+  if not cfg then
+    return nil
+  end
+  local finder = import_finders[cfg.finder] or import_finders.default
+  return finder(bufnr, cfg)
+end
+
+local function fold_imports(bufnr, try)
   try = try or 1
   if try > 5 then
     return
   end
-  if not vim.api.nvim_buf_is_loaded(bufnr) or not is_typescript(bufnr) then
+  if not vim.api.nvim_buf_is_loaded(bufnr) or not is_target(bufnr) then
     return
   end
   local line = find_first_import_line(bufnr)
@@ -118,33 +245,40 @@ local function fold_ts_imports(bufnr, try)
   if not succeeded then
     vim.defer_fn(function()
       if vim.api.nvim_buf_is_loaded(bufnr) then
-        fold_ts_imports(bufnr, try + 1)
+        fold_imports(bufnr, try + 1)
       end
     end, 80 * try)
   end
 end
 
-function M.schedule_ts_import_fold(bufnr)
+function M.schedule_import_fold(bufnr)
   bufnr = bufnr or vim.api.nvim_get_current_buf()
-  if not is_typescript(bufnr) then
+  if not is_target(bufnr) then
     return
   end
   vim.defer_fn(function()
-    fold_ts_imports(bufnr, 1)
+    fold_imports(bufnr, 1)
   end, 50)
 end
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = { 'typescript', 'typescriptreact' },
+  pattern = {
+    'typescript',
+    'typescriptreact',
+    'javascript',
+    'javascriptreact',
+    'vue',
+    'java',
+  },
   callback = function(args)
-    M.schedule_ts_import_fold(args.buf)
+    M.schedule_import_fold(args.buf)
   end,
 })
 
 vim.api.nvim_create_autocmd('LspAttach', {
   callback = function(args)
-    if is_typescript(args.buf) then
-      M.schedule_ts_import_fold(args.buf)
+    if is_target(args.buf) then
+      M.schedule_import_fold(args.buf)
     end
   end,
 })

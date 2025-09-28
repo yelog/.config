@@ -205,8 +205,8 @@ return {
           vim.wo[win].foldexpr = 'v:lua.vim.lsp.foldexpr()'
         end
 
-        if vim.bo[bufnr].filetype == 'typescript' or vim.bo[bufnr].filetype == 'typescriptreact' then
-          folding.schedule_ts_import_fold(bufnr)
+        if folding and folding.schedule_import_fold then
+          folding.schedule_import_fold(bufnr)
         end
       end
 
