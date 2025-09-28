@@ -1,3 +1,5 @@
+local folding = require('custom.foldding')
+
 return {
   {
     "neovim/nvim-lspconfig",
@@ -200,7 +202,11 @@ return {
         -- folder
         if client and client.supports_method 'textDocument/foldingRange' then
           local win = vim.api.nvim_get_current_win()
-          vim.wo[win][0].foldexpr = 'v:lua.vim.lsp.foldexpr()'
+          vim.wo[win].foldexpr = 'v:lua.vim.lsp.foldexpr()'
+        end
+
+        if vim.bo[bufnr].filetype == 'typescript' or vim.bo[bufnr].filetype == 'typescriptreact' then
+          folding.schedule_ts_import_fold(bufnr)
         end
       end
 
