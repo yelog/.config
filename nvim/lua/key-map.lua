@@ -103,6 +103,17 @@ map("n", "<D-S-i>", function() vim.cmd("Endpoint") end, { desc = "API" })
 map("n", "<D-S-O>", function() require("fzf-lua").files() end, { desc = "Search file" })
 map("n", "<leader>ff", function() require("fzf-lua").files() end, { desc = "Search file" })
 map("n", "<leader>fb", function() require("fzf-lua").buffers() end, { desc = "Search buffers" })
+
+map("n", "gd", function()
+  if require('i18n').i18n_definition() then
+    return
+  end
+  if require('i18n').i18n_definition_next_locale() then
+    return
+  end
+  require('snacks').picker.lsp_definitions()
+end
+, { desc = "goto definition" }) --use telescope instead
 -- map("n", "gd", function() require("fzf-lua").lsp_definitions() end, { desc = "Goto definition" })
 -- vim.keymap.set('n', 'gd', function()
 --   if require('i18n').i18n_definition() then
