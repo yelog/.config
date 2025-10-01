@@ -125,7 +125,14 @@ end
 --   require("fzf-lua").lsp_definitions()
 -- end, { desc = 'i18n or LSP definition' })
 -- map("n", "gD", function() require("fzf-lua").lsp_implementations() end, { desc = "Goto implementation" })
-map("n", "gu", function() require("fzf-lua").lsp_references() end, { desc = "Goto references" })
+-- map("n", "gu", function() require("fzf-lua").lsp_references() end, { desc = "Goto references" })
+vim.keymap.set('n', 'gu', function()
+  if require('i18n').i18n_key_usages() then
+    return
+  end
+  require("fzf-lua").lsp_references()
+end, { desc = 'i18n usages or LSP references' })
+
 map("n", "<leader>fk", function() require("fzf-lua").keymaps() end, { desc = "Search keymaps" })
 map("n", "<leader>ft", function() require("fzf-lua").tags() end, { desc = "Search tags" })
 map("n", "<leader>fm", function() require("fzf-lua").marks() end, { desc = "Search marks" })

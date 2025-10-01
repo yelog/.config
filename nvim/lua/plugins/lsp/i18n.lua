@@ -8,7 +8,13 @@ return {
   },
   dev = true,
   config = function()
-    require('i18n').setup()
+    require('i18n').setup({
+      popup = {
+        -- Popup provider used when choosing between multiple usage locations
+        -- Available values: 'vim_ui', 'telescope', 'fzf-lua', 'snacks'
+        type = 'fzf-lua',
+      },
+    })
 
     vim.keymap.set("n", "<leader>fi", require('i18n').show_i18n_keys_with_fzf,
       { desc = "Fuzzy search i18n key" })
