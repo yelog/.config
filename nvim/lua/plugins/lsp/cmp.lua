@@ -7,7 +7,8 @@ return {
       'onsails/lspkind.nvim',
       'nvim-mini/mini.icons',
       'Kaiser-Yang/blink-cmp-avante',
-      { 'L3MON4D3/LuaSnip', version = 'v2.*' }
+      { 'L3MON4D3/LuaSnip', version = 'v2.*' },
+      'joelazar/blink-calc'
       -- 'Exafunction/codeium.nvim',
       -- 'windwp/nvim-autopairs'
     },
@@ -116,7 +117,7 @@ return {
       -- default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, via `opts_extend`
       sources = {
-        default = { 'i18n', 'snippets', 'avante', 'lsp', 'path', 'buffer' },
+        default = { 'i18n', 'snippets', 'avante', 'lsp', 'path', 'buffer', 'calc' },
         -- optionally disable cmdline completions
         -- cmdline = {},
         providers = {
@@ -133,7 +134,11 @@ return {
             module = 'i18n.integration.blink_source',
             opts = {
             },
-          }
+          },
+          calc = {
+            name = 'Calc',
+            module = 'blink-calc',
+          },
         }
       },
     },
