@@ -9,10 +9,10 @@ return {
   dev = true,
   config = function()
     require('i18n').setup({
-      popup = {
+      usage = {
         -- Popup provider used when choosing between multiple usage locations
         -- Available values: 'vim_ui', 'telescope', 'fzf-lua', 'snacks'
-        type = 'fzf-lua',
+        popup_type = 'fzf-lua',
       },
     })
 
