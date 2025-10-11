@@ -43,7 +43,7 @@ return {
         },
         keymap = {
           preset = 'default',
-          ["<Tab>"] = { "select_next", "fallback" },
+          ["<Tab>"] = { "select_and_accept", "fallback" },
           ["<S-Tab>"] = { "select_prev", "fallback" },
         }
       },

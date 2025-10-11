@@ -7,8 +7,8 @@ return {
     'nvim-treesitter/nvim-treesitter'
   },
   keys = {
-    { "<D-S-n>", function() I18n.i18n_keys() end,   desc = "Show i18n keys" },
-    { "<D-S-B>", function() I18n.next_locale() end, desc = "Switch to next locale" },
+    { "<D-S-n>", function() I18n.i18n_keys() end,     desc = "Show i18n keys" },
+    { "<D-S-B>", function() I18n.next_locale() end,   desc = "Switch to next locale" },
     { "<D-S-J>", function() I18n.toggle_origin() end, desc = "Toggle Origin" },
   },
   dev = true,
@@ -18,6 +18,7 @@ return {
         -- Popup provider used when choosing between multiple usage locations
         -- Available values: 'vim_ui', 'telescope', 'fzf-lua', 'snacks'
         popup_type = 'fzf-lua',
+        notify_no_key = false,
       },
       i18n_keys = {
         popup_type = 'fzf-lua'
