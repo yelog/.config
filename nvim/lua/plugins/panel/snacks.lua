@@ -4,6 +4,7 @@ return {
   lazy = false,
   ---@type snacks.Config
   opts = {
+    picker = { enabled = true },
     bigfile = { enabled = true },
     dashboard = { enabled = true },
     indent = { enabled = true },
