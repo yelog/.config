@@ -19,6 +19,7 @@ return {
         -- Available values: 'vim_ui', 'telescope', 'fzf-lua', 'snacks'
         popup_type = 'fzf-lua',
         notify_no_key = false,
+        grep_command = 'ast-grep',
       },
       i18n_keys = {
         popup_type = 'fzf-lua'
