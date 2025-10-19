@@ -150,6 +150,41 @@
           "type": "basic"
         }
       ]
+    },
+    {
+      "description": "Map Ctrl+U to Cmd+Backspace in WeChat",
+      "manipulators": [
+        {
+          "type": "basic",
+          "from": {
+            "key_code": "u",
+            "modifiers": {
+              "mandatory": [
+                "control"
+              ],
+              "optional": [
+                "any"
+              ]
+            }
+          },
+          "to": [
+            {
+              "key_code": "delete_or_backspace",
+              "modifiers": [
+                "command"
+              ]
+            }
+          ],
+          "conditions": [
+            {
+              "type": "frontmost_application_if",
+              "bundle_identifiers": [
+                "^com\\.tencent\\.xinWeChat$"
+              ]
+            }
+          ]
+        }
+      ]
     }
   ]
 }
