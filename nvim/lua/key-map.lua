@@ -100,7 +100,77 @@ map("n", "<D-S-M>", function()
   end
 end, { desc = "Search symbols" })
 map("n", "<D-S-i>", function() vim.cmd("Endpoint") end, { desc = "API" })
-map("n", "<D-S-O>", function() require("fzf-lua").files() end, { desc = "Search file" })
+-- map("n", "<D-S-O>", function() require("fzf-lua").files() end, { desc = "Search file" })
+-- 读取“当前”的可视选区文本（不必退出可视模式）
+local function get_current_visual_selection()
+  local mode = vim.fn.mode()   -- "v" 字符可视, "V" 行可视, "\22" 块可视
+  local vpos = vim.fn.getpos("v")   -- 可视起点
+  local cpos = vim.fn.getpos(".")   -- 当前光标（可视终点）
+
+  -- 转 0-based，buf_get_text 需要 [row, col)
+  local srow, scol = vpos[2] - 1, vpos[3] - 1
+  local erow, ecol = cpos[2] - 1, cpos[3]
+
+  -- 规范化起止（起点应 <= 终点）
+  if (erow < srow) or (erow == srow and ecol < scol) then
+    srow, erow = erow, srow
+    scol, ecol = ecol, scol
+  end
+
+  -- 行可视：整行
+  if mode == "V" then
+    local lines = vim.api.nvim_buf_get_lines(0, srow, erow + 1, false)
+    return table.concat(lines, "\n")
+  end
+
+  -- 块可视：逐行截取矩形列区间
+  if mode == "\22" then
+    local start_col = math.min(scol, ecol)
+    local end_col   = math.max(scol, ecol)
+    local lines = {}
+    for l = srow, erow do
+      local txt = vim.api.nvim_buf_get_lines(0, l, l + 1, false)[1] or ""
+      -- 注意 end_col 是闭区间，buf_get_text 右边界是开区间，所以 +1
+      local seg = vim.api.nvim_buf_get_text(0, l, start_col, l, end_col + 1, {})[1] or ""
+      table.insert(lines, seg)
+    end
+    return table.concat(lines, "\n")
+  end
+
+  -- 字符可视（默认）
+  local lines = vim.api.nvim_buf_get_text(0, srow, scol, erow, ecol, {})
+  return table.concat(lines, "\n")
+end
+
+local function sanitize(q)
+  if not q then return nil end
+  -- 把多空白合一并去首尾空白
+  q = q:gsub("%s+", " "):gsub("^%s+", ""):gsub("%s+$", "")
+  if q == "" then return nil end
+  return q
+end
+
+local function open_files_with_optional_query()
+  local mode = vim.fn.mode()
+  local query
+
+  if mode == "v" or mode == "V" or mode == "\22" then
+    query = sanitize(get_current_visual_selection())
+    -- 可选：退出可视高亮（不影响已拿到的 query）
+    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "nx", false)
+  end
+
+  require("fzf-lua").files({
+    -- fzf-lua 支持用 fzf_opts 传递 --query；也可用 query = query（新版本支持）
+    fzf_opts = query and { ["--query"] = query } or nil,
+    query = query,  -- 若你的 fzf-lua 版本支持，保留这行更直观
+  })
+end
+
+-- Normal：正常打开
+map("n", "<D-S-O>", open_files_with_optional_query, { desc = "Search file (fzf-lua)" })
+-- Visual：带选区作为初始查询
+map("x", "<D-S-O>", open_files_with_optional_query, { desc = "Search file with selection (fzf-lua)" })
 map("n", "<leader>ff", function() require("fzf-lua").files() end, { desc = "Search file" })
 map("n", "<leader>fb", function() require("fzf-lua").buffers() end, { desc = "Search buffers" })
 
