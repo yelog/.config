@@ -220,5 +220,26 @@ let g:qs_accepted_chars = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k'
 
 set wildmenu
 
+set anyobject
+
+set which-key
+
+set peekaboo
+
 " copilot
 imap <right> <Action>(copilot.applyInlays)
+
+" let g:cmdfloat_highlight_completions = 1
+
+let g:cmdfloat_search_completion_line_limit = 10000
+
+" let g:cmdfloat_disable_default_trigger = 1
+" nmap : <Action>(cmdfloat.command)
+" vmap : <Action>(cmdfloat.command)
+" nmap / <Action>(cmdfloat.search)
+" vmap / <Action>(cmdfloat.search)
+" nmap ? <Action>(cmdfloat.search_backward)
+" vmap ? <Action>(cmdfloat.search_backward)
+
+
+nnoremap <Leader>yr :action CopyReference<CR>

@@ -240,6 +240,14 @@ function ctl() {
   fi
 }
 
+function docker123() {
+  local registry="10.188.132.123:5000/library"
+  docker pull --platform linux/amd64 $1
+  docker tag $1 $registry/$1
+  docker push $registry/$1
+  echo "\e[32m sync successfully: $registry/$1 \e[0m"
+}
+
 alias icat="kitten icat"
 # alias s="kitten ssh"
 alias d="kitten diff"
@@ -499,3 +507,6 @@ export SDKMAN_DIR="$HOME/.sdkman"
 # bun
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
+
+# opencode
+export PATH=/Users/yelog/.opencode/bin:$PATH

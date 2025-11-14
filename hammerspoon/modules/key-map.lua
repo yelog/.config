@@ -107,6 +107,7 @@ _G.applications = {
   { prefix = hyperKey, key = "F", message = "Finder",        bundleId = "com.apple.finder" },
   -- { prefix = hyperKey, key = "B", message = "Browser",        bundleId = "com.google.Chrome" },
   { prefix = hyperKey, key = "B", message = "Browser",       bundleId = "company.thebrowser.Browser" },
+  -- { prefix = hyperKey, key = "B", message = "Browser",       bundleId = "com.openai.atlas.web" },
   { prefix = hyperKey, key = "I", message = "IntelliJ IDEA", bundleId = "com.jetbrains.intellij" },
   -- {prefix = hyperKey, key = "I", message="IntelliJ IDEA", bundleId="com.jetbrains.intellij-EAP"}, { prefix = hyperKey, key = "I", message = "IntelliJ IDEA", bundleId = "com.todesktop.230313mzl4w4u92" },
   -- { prefix = hyperKey, key = "O", message = "Obsidian",      bundleId = "md.obsidian" },
