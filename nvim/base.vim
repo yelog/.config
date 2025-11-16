@@ -151,9 +151,10 @@ vnoremap <leader>i<space> xi  <esc>hp
 noremap  <expr>0     col('.') == 1 ? '^': '0'
 
 " highlight
-noremap <LEADER><CR> :nohlsearch<CR>
+noremap <silent> <LEADER><CR> :nohlsearch<CR>
+noremap <silent> <Esc> :nohlsearch<CR>
 " vim实用技巧推荐，原nnoremap<silent> <C-l> :<C-u>nohlsearch<CR><C-l>` 不知道后面 <c-l>`是干嘛的，故去掉了
-nnoremap<silent> <C-l> :<C-u>nohlsearch<CR>
+nnoremap <silent> <C-l> :<C-u>nohlsearch<CR>
 " Press space twice to jump to the next '<++>' and edit it
 " autocmd FileType markdown noremap <LEADER><LEADER> <Esc>/<++><CR>:nohlsearch<CR>c4l
 autocmd FileType markdown noremap ,f <Esc>/<++><CR>:nohlsearch<CR>"_c4l

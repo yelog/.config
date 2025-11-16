@@ -23,8 +23,8 @@ return {
       -- set lenovo proxy
       require('copilot').setup({
         panel = {
-          enabled = true,
-          auto_refresh = false,
+          enabled = false,
+          auto_refresh = true,
           keymap = {
             jump_prev = "[[",
             jump_next = "]]",
@@ -43,7 +43,8 @@ return {
           hide_during_completion = true,
           debounce = 75,
           keymap = {
-            accept = "<D-Right>",
+            -- accept = "<D-Right>",
+            accept = "<Tab>",
             accept_word = false,
             accept_line = false,
             next = "<D-]>",
@@ -67,7 +68,7 @@ return {
         nes = {
           enabled = true,
           keymap = {
-            accept_and_goto = "<leader>p",
+            accept_and_goto = "<Tab>",
             accept = false,
             dismiss = "<Esc>",
           },
