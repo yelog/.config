@@ -5,7 +5,7 @@ return {
     "neovim/nvim-lspconfig",
     config = function()
       vim.diagnostic.config({
-        virtual_lines = true, -- 在行尾显示诊断信息
+        virtual_lines = false, -- 在行尾显示诊断信息
         -- virtual_text = {
         --   spacing = 4, -- 行尾 diagnostic 与代码之间的间距
         --   severity = vim.diagnostic.severity.ERROR, -- 行内只显示 ERROR 级别
