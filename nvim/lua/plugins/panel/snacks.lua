@@ -32,6 +32,27 @@ return {
         -- wo = { wrap = true } -- Wrap notifications
       }
     },
+    image = {
+      -- define these here, so that we don't need to load the image module
+      formats = {
+        "png",
+        "jpg",
+        "jpeg",
+        "gif",
+        "bmp",
+        "webp",
+        "tiff",
+        "heic",
+        "avif",
+        "mp4",
+        "mov",
+        "avi",
+        "mkv",
+        "webm",
+        "pdf",
+        "icns",
+      },
+    },
     -- scroll = { -- 比较卡顿， 体验不好
     --   animate = {
     --     duration = { step = 15, total = 250 },
