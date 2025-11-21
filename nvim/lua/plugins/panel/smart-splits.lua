@@ -1,6 +1,7 @@
 return {
   'mrjones2014/smart-splits.nvim',
-  -- tag = 'v1.0.0',
+  -- 新版本导致光标从 Neovim 移动到其他 pane 时会立即返回
+  tag = 'v2.0.0',
   -- lazy = false,
   build = './kitty/install-kittens.bash',
   config = function()
