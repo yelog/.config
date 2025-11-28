@@ -68,7 +68,7 @@ return {
         nes = {
           enabled = true,
           keymap = {
-            accept_and_goto = "<Tab>",
+            accept_and_goto = "<leader>ii",
             accept = false,
             dismiss = "<Esc>",
           },

@@ -84,6 +84,10 @@ return {
   --   dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
   --
   -- },
+  -- {
+  --   "yousefhadder/markdown-plus.nvim",
+  --   ft = "markdown",
+  -- },
   {
     "yelog/marklive.nvim",
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
@@ -102,6 +106,12 @@ return {
       -- show_mode = 'insert-line',
       show_mode = 'normal-line',
       filetype = { "markdown", "Avante" }, -- or {"*.md", "*.wiki"}
+      action = {
+        list = {
+          enable = true,
+        }
+      }
+
     }
   },
   {
