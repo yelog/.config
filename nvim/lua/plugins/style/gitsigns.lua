@@ -85,7 +85,7 @@ return {
         map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'Git Toggle Current Line Blame' })
         map('n', '<leader>gd', gs.diffthis, { desc = 'Git Diff This' })
         map('n', '<leader>gD', function() gs.diffthis('~') end, { desc = 'Git Diff This ~' })
-        map('n', '<leader>td', gs.toggle_deleted, { desc = 'Git Toggle Deleted' })
+        -- map('n', '<leader>td', gs.toggle_deleted, { desc = 'Git Toggle Deleted' })
         map('n', '<leader>gb', function()
           vim.cmd('Gitsigns blame')
         end, { desc = 'Git Toggle Deleted' })

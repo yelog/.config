@@ -67,7 +67,7 @@ end, { desc = "Toggle comment" })
 map("n", "<D-s>", function()
   local eslintFileType = { "javascript", "typescript", "vue" }
   if vim.bo.filetype == "markdown" then
-    vim.cmd("TableModeRealign")
+    Marklive.table_align()
   elseif my.is_include(vim.bo.filetype, eslintFileType) then
     vim.cmd("LspEslintFixAll")
   else
@@ -103,9 +103,9 @@ map("n", "<D-S-i>", function() vim.cmd("Endpoint") end, { desc = "API" })
 -- map("n", "<D-S-O>", function() require("fzf-lua").files() end, { desc = "Search file" })
 -- 读取“当前”的可视选区文本（不必退出可视模式）
 local function get_current_visual_selection()
-  local mode = vim.fn.mode()   -- "v" 字符可视, "V" 行可视, "\22" 块可视
-  local vpos = vim.fn.getpos("v")   -- 可视起点
-  local cpos = vim.fn.getpos(".")   -- 当前光标（可视终点）
+  local mode = vim.fn.mode()      -- "v" 字符可视, "V" 行可视, "\22" 块可视
+  local vpos = vim.fn.getpos("v") -- 可视起点
+  local cpos = vim.fn.getpos(".") -- 当前光标（可视终点）
 
   -- 转 0-based，buf_get_text 需要 [row, col)
   local srow, scol = vpos[2] - 1, vpos[3] - 1
@@ -127,7 +127,7 @@ local function get_current_visual_selection()
   if mode == "\22" then
     local start_col = math.min(scol, ecol)
     local end_col   = math.max(scol, ecol)
-    local lines = {}
+    local lines     = {}
     for l = srow, erow do
       local txt = vim.api.nvim_buf_get_lines(0, l, l + 1, false)[1] or ""
       -- 注意 end_col 是闭区间，buf_get_text 右边界是开区间，所以 +1
@@ -163,7 +163,7 @@ local function open_files_with_optional_query()
   require("fzf-lua").files({
     -- fzf-lua 支持用 fzf_opts 传递 --query；也可用 query = query（新版本支持）
     fzf_opts = query and { ["--query"] = query } or nil,
-    query = query,  -- 若你的 fzf-lua 版本支持，保留这行更直观
+    query = query, -- 若你的 fzf-lua 版本支持，保留这行更直观
   })
 end
 
@@ -230,10 +230,6 @@ map("n", "<leader>ts", function() vim.cmd("AerialToggle") end, { desc = "Toggle 
 map("n", "<c-n>", function() vim.cmd("bnext") end, { desc = "Next buffer" })
 map("n", "<c-p>", function() vim.cmd("bprevious") end, { desc = "Prev buffer" })
 map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Close other buffers" })
-
--- markdown
-map("n", "<leader>tm", function() vim.cmd("TableModeToggle") end, { desc = "Table Mode Toggle" })
-map("n", "<leader>md", function() vim.cmd("ObsidianToday") end, { desc = "Goto daily task" })
 
 -- neo-tree
 map("n", "<D-1>", function() vim.cmd("Yazi") end, { desc = "Toggle Explorer" })

@@ -66,7 +66,7 @@ return {
         copilot_node_command = 'node', -- Node.js version must be > 18.x
         server_opts_overrides = {},
         nes = {
-          enabled = true,
+          enabled = false,
           keymap = {
             accept_and_goto = "<leader>ii",
             accept = false,
