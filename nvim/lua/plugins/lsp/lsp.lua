@@ -12,7 +12,7 @@ return {
         --   source = "always", -- 显示 diagnostic 来源
         --   prefix = "●", -- 行尾前缀符号，可自定义
         -- },
-        signs = true,             -- 是否在左侧显示符号
+        signs = false,             -- 是否在左侧显示符号
         underline = true,         -- 是否下划线标记
         update_in_insert = false, -- 插入模式下是否更新 diagnostic
         severity_sort = true,
@@ -164,7 +164,7 @@ return {
         -- vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, bufopts)
         -- vim.keymap.set("n", "gd", vim.lsp.buf.definition, bufopts) --use telescope instead
         -- vim.keymap.set("n", "gD", vim.lsp.buf.implementation, bufopts)
-        vim.keymap.set("n", "<M-p>", vim.lsp.buf.hover, bufopts)
+        -- vim.keymap.set("n", "<M-p>", vim.lsp.buf.hover, bufopts)
         -- vim.keymap.set({ "n", "i" }, "<C-k>", vim.lsp.buf.signature_help, bufopts)
         vim.keymap.set({ "n", "i" }, "<C-k>", function()
           if not require('i18n').show_popup() then

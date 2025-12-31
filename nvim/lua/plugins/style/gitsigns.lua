@@ -82,11 +82,11 @@ return {
         map('n', '<leader>gR', gs.reset_buffer, { desc = 'Git Reset Buffer' })
         map('n', '<leader>gp', gs.preview_hunk, { desc = 'Git Preview Hunk' })
         -- map('n', '<leader>gb', function() gs.blame_line { full = true } end, { desc = 'Git Blame Line' })
-        map('n', '<leader>tb', gs.toggle_current_line_blame, { desc = 'Git Toggle Current Line Blame' })
+        map('n', '<leader>gb', gs.toggle_current_line_blame, { desc = 'Git Toggle Current Line Blame' })
         map('n', '<leader>gd', gs.diffthis, { desc = 'Git Diff This' })
         map('n', '<leader>gD', function() gs.diffthis('~') end, { desc = 'Git Diff This ~' })
         -- map('n', '<leader>td', gs.toggle_deleted, { desc = 'Git Toggle Deleted' })
-        map('n', '<leader>gb', function()
+        map('n', '<leader>gB', function()
           vim.cmd('Gitsigns blame')
         end, { desc = 'Git Toggle Deleted' })
 

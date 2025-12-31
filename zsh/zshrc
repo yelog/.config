@@ -510,3 +510,6 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # opencode
 export PATH=/Users/yelog/.opencode/bin:$PATH
+
+# Added by Antigravity
+export PATH="/Users/yelog/.antigravity/antigravity/bin:$PATH"
