@@ -136,6 +136,7 @@ return {
           "jdtls",
           "lemminx",
           "copilot",
+          "cssls",
           -- "kotlin_lsp",
         },
       })
@@ -284,6 +285,7 @@ return {
       vim.lsp.enable('jdtls')
       vim.lsp.enable('lemminx')
       vim.lsp.enable('copilot')
+      vim.lsp.enable('cssls')
       -- vim.lsp.enable('kotlin_lsp')
       vim.lsp.config('dockerls', {
         settings = {
