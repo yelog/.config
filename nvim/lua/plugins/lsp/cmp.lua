@@ -8,7 +8,16 @@ return {
       'nvim-mini/mini.icons',
       'Kaiser-Yang/blink-cmp-avante',
       { 'L3MON4D3/LuaSnip', version = 'v2.*' },
-      'joelazar/blink-calc'
+      'joelazar/blink-calc',
+      {
+        'Kaiser-Yang/blink-cmp-dictionary',
+        dependencies = { 'nvim-lua/plenary.nvim' }
+      },
+      {
+        'mikavilpas/blink-ripgrep.nvim',
+        version = "*", -- use the latest stable version
+      },
+      "fang2hou/blink-copilot",
       -- 'Exafunction/codeium.nvim',
       -- 'windwp/nvim-autopairs'
     },
@@ -95,43 +104,20 @@ return {
         menu = {
           auto_show = true,   -- automatically show the menu when typing
           border = 'rounded', -- border style for the menu
-          draw = {
-            -- We don't need label_description now because label and label_description are already
-            -- combined together in label by colorful-menu.nvim.
-            columns = { { "kind_icon" }, { "label", gap = 1 } },
-            treesitter = { "lsp" },
-            components = {
-              kind_icon = {
-                text = function(ctx)
-                  local kind_icon, _, _ = require('mini.icons').get('lsp', ctx.kind)
-                  return kind_icon
-                end,
-                -- (optional) use highlights from mini.icons
-                highlight = function(ctx)
-                  local _, hl, _ = require('mini.icons').get('lsp', ctx.kind)
-                  return hl
-                end,
-              },
-              kind = {
-                -- (optional) use highlights from mini.icons
-                highlight = function(ctx)
-                  local _, hl, _ = require('mini.icons').get('lsp', ctx.kind)
-                  return hl
-                end,
-              }
-            },
-          },
         },
       },
       snippets = { preset = 'luasnip' },
       -- default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, via `opts_extend`
       sources = {
-        default = { 'i18n', 'snippets', 'avante', 'lsp', 'path', 'buffer', 'calc' },
+        default = { 'copilot', 'i18n', 'lsp', 'snippets', 'avante', 'path', 'buffer', 'ripgrep', 'calc', 'dictionary' },
         -- optionally disable cmdline completions
         -- cmdline = {},
         providers = {
-          lsp = { fallbacks = {} },
+          lsp = {
+            score_offset = 100, -- 👈 强力加权
+            fallbacks = {}
+          },
           avante = {
             module = 'blink-cmp-avante',
             name = 'Avante',
@@ -148,6 +134,28 @@ return {
           calc = {
             name = 'Calc',
             module = 'blink-calc',
+          },
+          dictionary = {
+            module = 'blink-cmp-dictionary',
+            name = 'Dict',
+            -- Make sure this is at least 2.
+            -- 3 is recommended
+            min_keyword_length = 3,
+            opts = {
+              -- options for blink-cmp-dictionary
+              dictionary_directories = { vim.fn.expand('~/.config/nvim/dictionary') },
+            }
+          },
+          ripgrep = {
+            module = "blink-ripgrep",
+            name = "Ripgrep",
+            opts = {},
+          },
+          copilot = {
+            name = "copilot",
+            module = "blink-copilot",
+            score_offset = 100,
+            async = true,
           },
         }
       },
