@@ -9,10 +9,7 @@ return {
       'Kaiser-Yang/blink-cmp-avante',
       { 'L3MON4D3/LuaSnip', version = 'v2.*' },
       'joelazar/blink-calc',
-      {
-        'Kaiser-Yang/blink-cmp-dictionary',
-        dependencies = { 'nvim-lua/plenary.nvim' }
-      },
+      "archie-judd/blink-cmp-words",
       {
         'mikavilpas/blink-ripgrep.nvim',
         version = "*", -- use the latest stable version
@@ -110,52 +107,88 @@ return {
       -- default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, via `opts_extend`
       sources = {
-        default = { 'copilot', 'i18n', 'lsp', 'snippets', 'avante', 'path', 'buffer', 'ripgrep', 'calc', 'dictionary' },
+        default = { 'copilot', 'snippets', 'i18n', 'lsp', 'avante', 'path', 'buffer', 'ripgrep', 'calc', 'dictionary' },
         -- optionally disable cmdline completions
         -- cmdline = {},
         providers = {
-          lsp = {
+          lsp        = {
             score_offset = 100, -- 👈 强力加权
             fallbacks = {}
           },
-          avante = {
+          snippets   = {
+            score_offset = 10, -- 👈 强力加权
+            fallbacks = {}
+          },
+          avante     = {
             module = 'blink-cmp-avante',
             name = 'Avante',
             opts = {
               -- options for blink-cmp-avante
             }
           },
-          i18n = {
+          i18n       = {
             name = 'i18n',
             module = 'i18n.integration.blink_source',
             opts = {
             },
           },
-          calc = {
+          calc       = {
             name = 'Calc',
             module = 'blink-calc',
           },
-          dictionary = {
-            module = 'blink-cmp-dictionary',
-            name = 'Dict',
-            -- Make sure this is at least 2.
-            -- 3 is recommended
-            min_keyword_length = 3,
-            opts = {
-              -- options for blink-cmp-dictionary
-              dictionary_directories = { vim.fn.expand('~/.config/nvim/dictionary') },
-            }
-          },
-          ripgrep = {
+          ripgrep    = {
             module = "blink-ripgrep",
             name = "Ripgrep",
             opts = {},
           },
-          copilot = {
+          copilot    = {
             name = "copilot",
             module = "blink-copilot",
             score_offset = 100,
             async = true,
+          },
+          -- Use the thesaurus source
+          thesaurus  = {
+            name = "blink-cmp-words",
+            module = "blink-cmp-words.thesaurus",
+            -- All available options
+            opts = {
+              -- A score offset applied to returned items.
+              -- By default the highest score is 0 (item 1 has a score of -1, item 2 of -2 etc..).
+              score_offset = 0,
+
+              -- Default pointers define the lexical relations listed under each definition,
+              -- see Pointer Symbols below.
+              -- Default is as below ("antonyms", "similar to" and "also see").
+              definition_pointers = { "!", "&", "^" },
+
+              -- The pointers that are considered similar words when using the thesaurus,
+              -- see Pointer Symbols below.
+              -- Default is as below ("similar to", "also see" }
+              similarity_pointers = { "&", "^" },
+
+              -- The depth of similar words to recurse when collecting synonyms. 1 is similar words,
+              -- 2 is similar words of similar words, etc. Increasing this may slow results.
+              similarity_depth = 2,
+            },
+          },
+
+          -- Use the dictionary source
+          dictionary = {
+            name = "blink-cmp-words",
+            module = "blink-cmp-words.dictionary",
+            -- All available options
+            opts = {
+              -- The number of characters required to trigger completion.
+              -- Set this higher if completion is slow, 3 is default.
+              dictionary_search_threshold = 3,
+
+              -- See above
+              score_offset = 0,
+
+              -- See above
+              definition_pointers = { "!", "&", "^" },
+            },
           },
         }
       },
