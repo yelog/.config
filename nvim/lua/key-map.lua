@@ -164,6 +164,7 @@ local function open_files_with_optional_query()
     -- fzf-lua 支持用 fzf_opts 传递 --query；也可用 query = query（新版本支持）
     fzf_opts = query and { ["--query"] = query } or nil,
     query = query, -- 若你的 fzf-lua 版本支持，保留这行更直观
+    git_icons = true,
   })
 end
 
@@ -207,10 +208,10 @@ map("n", "<leader>fk", function() require("fzf-lua").keymaps() end, { desc = "Se
 map("n", "<leader>ft", function() require("fzf-lua").tags() end, { desc = "Search tags" })
 map("n", "<leader>fm", function() require("fzf-lua").marks() end, { desc = "Search marks" })
 map("n", "<leader>fh", function()
-  require("fzf-lua").oldfiles({ prompt = "History❯ ", cwd_only = true, include_current_session = true })
+  require("fzf-lua").oldfiles({ prompt = "History❯ ", cwd_only = true, include_current_session = true, git_icons = true })
 end, { desc = "Search history" })
 map("n", "<D-e>", function()
-  require("fzf-lua").oldfiles({ prompt = "History❯ ", cwd_only = true, include_current_session = true })
+  require("fzf-lua").oldfiles({ prompt = "History❯ ", cwd_only = true, include_current_session = true, git_icons = true })
 end, { desc = "Search history" })
 map("n", "<leader>f;", function() require("fzf-lua").builtin() end, { desc = "Search builtin" })
 map("n", "<leader>fs", function() require("fzf-lua").live_grep() end, { desc = "Search word" })

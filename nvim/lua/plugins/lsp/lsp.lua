@@ -12,7 +12,7 @@ return {
         --   source = "always", -- 显示 diagnostic 来源
         --   prefix = "●", -- 行尾前缀符号，可自定义
         -- },
-        signs = false,             -- 是否在左侧显示符号
+        signs = false,            -- 是否在左侧显示符号
         underline = true,         -- 是否下划线标记
         update_in_insert = false, -- 插入模式下是否更新 diagnostic
         severity_sort = true,
@@ -137,6 +137,7 @@ return {
           "lemminx",
           "copilot",
           "cssls",
+          "html",
           -- "kotlin_lsp",
         },
       })
@@ -266,19 +267,23 @@ return {
           },
         },
         filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
-      })
-      vim.lsp.config('vue_ls', {
-        -- add filetypes for typescript, javascript and vue
-        filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
         on_attach = on_attach,
         capabilities = capabilities,
-        init_options = {
-          vue = {
-            -- disable hybrid mode
-            hybridMode = false,
-          },
-        },
       })
+      vim.lsp.enable('vue_ls')
+
+      -- vim.lsp.config('vue_ls', {
+      --   -- add filetypes for typescript, javascript and vue
+      --   filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+      --   on_attach = on_attach,
+      --   capabilities = capabilities,
+      --   init_options = {
+      --     vue = {
+      --       -- disable hybrid mode
+      --       hybridMode = false,
+      --     },
+      --   },
+      -- })
       vim.lsp.enable('tailwindcss')
       vim.lsp.enable('unocss')
       vim.lsp.enable('vimls')
@@ -286,6 +291,7 @@ return {
       vim.lsp.enable('lemminx')
       vim.lsp.enable('copilot')
       vim.lsp.enable('cssls')
+      vim.lsp.enable('html')
       -- vim.lsp.enable('kotlin_lsp')
       vim.lsp.config('dockerls', {
         settings = {
