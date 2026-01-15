@@ -128,6 +128,7 @@ _G.applications = {
   { prefix = hyperKey, key = "U", message = "Teams",         bundleId = "com.microsoft.teams2" },
   { prefix = hyperKey, key = "M", message = "Mail",          bundleId = "com.apple.mail" },
   { prefix = hyperKey, key = ";", message = "ChatGPT",  bundleId = "com.openai.chat" },
+  -- { prefix = hyperKey, key = ";", message = "Cluade",  bundleId = "com.anthropic.claudefordesktop" },
   -- { prefix = hyperKey, key = ";", message = "Ollama",  bundleId = "com.electron.ollama" },
   -- { prefix = hyperKey, key = ";", message = "ChatGPT",       bundleId = "com.tencent.yuanbao" },
   -- { prefix = hyperKey, key = ";", message = "Browser",        bundleId = "com.google.Chrome" },
