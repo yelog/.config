@@ -61,8 +61,8 @@ noremap <silent> <left> :action StretchSplitToLeft<CR>
 " input :actionlist view all mapping
 " store in desktop/docs/idea-vim-action-list.md
 nnoremap <silent> <leader>d :action QuickJavaDoc<CR>
-nnoremap <silent> gd :action GotoImplementation<CR>
-nnoremap <silent> gD :action GotoDeclaration<CR>
+nnoremap <silent> gd :action GotoDeclaration<CR>
+nnoremap <silent> gD :action GotoImplementation<CR>
 "nnoremap <silent> gi gi
 "nnoremap <silent> gi :action GotoSuperMethod<CR>
 nnoremap <silent> gf :action GotoFile<CR>
