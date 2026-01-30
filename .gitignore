@@ -36,6 +36,8 @@
 !/neofetch/
 !/fastfetch/
 !/claude-code/
+!/opencode/
+!/skills/
 !ideavimrc
 !init.sh
 !starship.toml
