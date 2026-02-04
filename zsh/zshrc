@@ -515,3 +515,8 @@ export PATH=/Users/yelog/.opencode/bin:$PATH
 
 # Added by Antigravity
 export PATH="/Users/yelog/.antigravity/antigravity/bin:$PATH"
+
+# Added by LM Studio CLI (lms)
+export PATH="$PATH:/Users/yelog/.lmstudio/bin"
+# End of LM Studio CLI section
+
