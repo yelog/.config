@@ -25,13 +25,15 @@ mouse-hide-while-typing = true
 # Window
 window-padding-y = 2,0
 window-padding-balance = true
-scrollbar = never
-macos-titlebar-style = hidden
+macos-titlebar-style = tabs
 
 # keybindings
+# super (alias: cmd, command)
+# alt (alias: opt, option)
+# ctrl (alias: control)
 macos-option-as-alt = true
-keybind = super+d=new_split:right
-keybind = super+shift+d=new_split:down
+keybind = super+enter=new_split:right
+keybind = super+shift+enter=new_split:down
 keybind = super+ctrl+down=resize_split:down,10
 keybind = super+ctrl+l=goto_split:right
 keybind = super+ctrl+j=goto_split:bottom

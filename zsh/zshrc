@@ -492,10 +492,10 @@ if [ -d "$FNM_PATH" ]; then
 fi
 
 # 检测进入目录时更新标题
-function chpwd() {
-  # 执行 ~/.config/kitty/set_tab_title.sh
-  sh ~/.config/kitty/set_tab_title.sh
-}
+# function chpwd() {
+#   # 执行 ~/.config/kitty/set_tab_title.sh
+#   sh ~/.config/kitty/set_tab_title.sh
+# }
 
 . "$HOME/.local/share/../bin/env"
 
@@ -520,3 +520,6 @@ export PATH="/Users/yelog/.antigravity/antigravity/bin:$PATH"
 export PATH="$PATH:/Users/yelog/.lmstudio/bin"
 # End of LM Studio CLI section
 
+
+alias claude-mem='bun "/Users/yelog/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
+export CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000

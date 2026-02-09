@@ -8,10 +8,10 @@
       "model": "github-copilot/gpt-5-mini"
     },
     "frontend-ui-ux-engineer": {
-      "model": "anthropic/claude-opus-4-6"
+      "model": "anthropic/claude-opus-4-5"
     },
     "document-writer": {
-      "model": "anthropic/claude-opus-4-6"
+      "model": "anthropic/claude-opus-4-5"
     },
     "multimodal-looker": {
       "model": "github-copilot/gemini-3-flash"
@@ -63,9 +63,5 @@
     "writing": {
       "model": "github-copilot/gemini-3-flash"
     }
-  },
-  "_migrations": [
-    "model-version:anthropic/claude-opus-4-5->anthropic/claude-opus-4-6",
-    "model-version:anthropic/claude-opus-4-5->anthropic/claude-opus-4-6"
-  ]
+  }
 }

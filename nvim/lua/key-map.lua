@@ -233,7 +233,7 @@ map("n", "<c-p>", function() vim.cmd("bprevious") end, { desc = "Prev buffer" })
 map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Close other buffers" })
 
 -- neo-tree
-map("n", "<D-1>", function() vim.cmd("Yazi") end, { desc = "Toggle Explorer" })
+map("n", "<D-C-e>", function() vim.cmd("Yazi") end, { desc = "Toggle Explorer" })
 map("n", "<leader>te", function() vim.cmd("Yazi") end, { desc = "Toggle Explorer" })
 
 -- toggleterm

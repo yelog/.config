@@ -243,3 +243,8 @@ let g:cmdfloat_search_completion_line_limit = 10000
 
 
 nnoremap <Leader>yr :action CopyReference<CR>
+
+let g:cmdfloat_disable_default_trigger = 1
+" nmap : <Action>(cmdfloat.command)
+" 如果你也希望可视模式用 :
+"vmap : <Action>(cmdfloat.command)
