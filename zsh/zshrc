@@ -523,3 +523,5 @@ export PATH="$PATH:/Users/yelog/.lmstudio/bin"
 
 alias claude-mem='bun "/Users/yelog/.claude/plugins/marketplaces/thedotmack/plugin/scripts/worker-service.cjs"'
 export CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000
+
+[[ -f "$HOME/.config/kaku/zsh/kaku.zsh" ]] && source "$HOME/.config/kaku/zsh/kaku.zsh" # Kaku Shell Integration
