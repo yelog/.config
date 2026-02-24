@@ -112,11 +112,14 @@ local lastWindow = nil
 local previousWindow = nil
 
 -- 定义一个窗口激活的回调函数
-hs.window.filter.default:subscribe(hs.window.filter.windowFocused, function(window)
-  if lastWindow and lastWindow ~= window then
-    previousWindow = lastWindow
-  end
-  lastWindow = window
+-- 使用 pcall 保护，避免 hs.spaces 错误导致整个配置加载失败
+pcall(function()
+  hs.window.filter.default:subscribe(hs.window.filter.windowFocused, function(window)
+    if lastWindow and lastWindow ~= window then
+      previousWindow = lastWindow
+    end
+    lastWindow = window
+  end)
 end)
 -- 当前激活应用窗口和上一个激活的应用窗口进行左右分屏
 function last_application_layout()
@@ -188,7 +191,16 @@ function same_application(auto_layout_type)
 end
 
 function same_space(auto_layout_type)
-  local spaceId = hs.spaces.focusedSpace()
+  -- 使用 pcall 保护 hs.spaces 调用
+  local success, spaceId = pcall(function()
+    return hs.spaces.focusedSpace()
+  end)
+  
+  if not success or spaceId == nil then
+    hs.alert.show("hs.spaces 不可用，无法执行此操作")
+    return
+  end
+  
   -- 该空间下的所有 window 的 id，注意这里的 window 概念和 Hammerspoon 的 window 概念并不同，详请参考：http://www.hammerspoon.org/docs/hs.spaces.html#windowsForSpace
   local windowIds = hs.spaces.windowsForSpace(spaceId)
   local windows = {}

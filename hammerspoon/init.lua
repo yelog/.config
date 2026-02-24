@@ -1,8 +1,3 @@
-require("modules.app")
-require("modules.window")
-require("modules.countdown")
-require("modules.time")
-
 -- 禁用按键绑定的消息提示
 hs.hotkey.alertDuration = 0
 
@@ -24,6 +19,11 @@ function _G.setMousePos()
     hs.mouse.setRelativePosition({ x = 40, y = 40 }, currentScreen)
   end
 end
+
+require("modules.app")
+require("modules.window")
+require("modules.countdown")
+require("modules.time")
 
 -- todo 自动判断当前是否开启了 StatgeManager
 function _G.isStageManager()
