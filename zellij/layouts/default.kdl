@@ -1,0 +1,12 @@
+// ~/.config/zellij/layouts/default.kdl
+// 自定义默认布局，移除底部 status-bar
+
+layout {
+    // 顶部 tab 栏
+    pane size=1 borderless=true {
+        plugin location="zellij:tab-bar"
+    }
+
+    // 主内容区域
+    pane
+}

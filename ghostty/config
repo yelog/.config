@@ -35,12 +35,37 @@ macos-titlebar-style = hidden
 # alt (alias: opt, option)
 # ctrl (alias: control)
 macos-option-as-alt = true
-keybind = super+enter=new_split:right
-keybind = super+shift+enter=new_split:down
-keybind = super+ctrl+down=resize_split:down,10
-keybind = super+ctrl+l=goto_split:right
-keybind = super+ctrl+j=goto_split:bottom
-keybind = super+ctrl+h=goto_split:left
-keybind = super+ctrl+k=goto_split:top
-keybind = super+ctrl+f=toggle_split_zoom
+
+# Unbind keybindings to pass through to Zellij
+# Pane focus movement: Cmd+Ctrl+hjkl
+keybind = super+ctrl+h=unbind
+keybind = super+ctrl+j=unbind
+keybind = super+ctrl+k=unbind
+keybind = super+ctrl+l=unbind
+
+# Pane resizing: Cmd+Ctrl+Shift+hjkl
+keybind = super+ctrl+shift+h=unbind
+keybind = super+ctrl+shift+j=unbind
+keybind = super+ctrl+shift+k=unbind
+keybind = super+ctrl+shift+l=unbind
+
+# Pane movement: Cmd+Ctrl+Opt+hjkl
+keybind = super+ctrl+alt+h=unbind
+keybind = super+ctrl+alt+j=unbind
+keybind = super+ctrl+alt+k=unbind
+keybind = super+ctrl+alt+l=unbind
+
+# Tab management
+keybind = super+t=unbind
+keybind = super+n=unbind
+keybind = super+p=unbind
+keybind = super+shift+n=unbind
+keybind = super+shift+p=unbind
+keybind = super+w=unbind
+
+# Pane creation
+keybind = super+enter=unbind
+keybind = super+shift+enter=unbind
+
+# Keep config reload
 keybind = super+ctrl+r=reload_config

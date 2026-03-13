@@ -5,6 +5,39 @@
 keybinds clear-defaults=true {
     locked {
         bind "Ctrl g" { SwitchToMode "normal"; }
+
+        // Pane focus movement: Cmd+Ctrl+hjkl
+        bind "Super Ctrl h" { MoveFocus "left"; }
+        bind "Super Ctrl j" { MoveFocus "down"; }
+        bind "Super Ctrl k" { MoveFocus "up"; }
+        bind "Super Ctrl l" { MoveFocus "right"; }
+
+        // Pane resizing: Cmd+Ctrl+Shift+hjkl
+        bind "Super Ctrl Shift h" { Resize "Increase left"; }
+        bind "Super Ctrl Shift j" { Resize "Increase down"; }
+        bind "Super Ctrl Shift k" { Resize "Increase up"; }
+        bind "Super Ctrl Shift l" { Resize "Increase right"; }
+
+        // Pane movement: Cmd+Ctrl+Opt+hjkl
+        bind "Super Ctrl Alt h" { MovePane "left"; }
+        bind "Super Ctrl Alt j" { MovePane "down"; }
+        bind "Super Ctrl Alt k" { MovePane "up"; }
+        bind "Super Ctrl Alt l" { MovePane "right"; }
+
+        // Pane creation
+        bind "Super enter" { NewPane "right"; }
+        bind "Super Shift enter" { NewPane "down"; }
+
+        // Toggle fullscreen for focused pane
+        bind "Super Ctrl f" { ToggleFocusFullscreen; }
+
+        // Tab management
+        bind "Super t" { NewTab; }
+        bind "Super n" { GoToNextTab; }
+        bind "Super p" { GoToPreviousTab; }
+        bind "Super Shift n" { MoveTab "right"; }
+        bind "Super Shift p" { MoveTab "left"; }
+        bind "Super w" { CloseTab; }
     }
     pane {
         bind "left" { MoveFocus "left"; }
@@ -304,8 +337,8 @@ default_mode "locked"
  
 // The name of the default layout to load on startup
 // Default: "default"
-// 
-// default_layout "compact"
+
+default_layout "default"
  
 // The folder in which Zellij will look for layouts
 // (Requires restart)
