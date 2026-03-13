@@ -1,5 +1,8 @@
 auto-update = download
 
+# Theme
+theme = TokyoNight Night
+
 # Fonts
 font-family = JetBrainsMono Nerd Font Mono
 font-family-bold = JetBrainsMono NFM Bold
