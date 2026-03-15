@@ -1,11 +1,29 @@
 -- 应用切换
 require("modules.key-map")
 
+local bundleIdCache = {}
+
+local function resolveBundleId(appName)
+  if bundleIdCache[appName] then
+    return bundleIdCache[appName]
+  end
+  local output = hs.execute("osascript -e 'id of app \"" .. appName .. "\"' 2>/dev/null")
+  if output and output ~= "" then
+    local bundleId = output:gsub("%s+$", "")
+    bundleIdCache[appName] = bundleId
+    return bundleId
+  end
+  return nil
+end
+
 hs.fnutils.each(applications, function(item)
+  local bundleId = resolveBundleId(item.appName)
+  if not bundleId then
+    hs.printf("[app.lua] Warning: Cannot find bundleId for app '%s', skipping key binding", item.appName)
+    return
+  end
   hs.hotkey.bind(item.prefix, item.key, item.message, function()
-    -- toggleAppByBundleId(item.bundleId)
-    -- switchApp(item.bundleId)
-    activateApp(item.bundleId)
+    activateApp(bundleId)
   end)
 end)
 local cacheWins
