@@ -102,7 +102,7 @@ _G.windows = {
 -- 应用切换快捷键配置, 可以通过此命令获取bundleId: osascript -e 'id of app "Apifox"'
 _G.applications = {
   { prefix = hyperKey, key = "V", message = "WeChat",        bundleId = "com.tencent.xinWeChat" },
-  -- { prefix = hyperKey, key = "N", message = "QQ",            bundleId = "com.tencent.qq" },
+  { prefix = hyperKey, key = "G", message = "QQ",            bundleId = "com.tencent.qq" },
   --{prefix = hyperKey, key = "V", message="VSCode", bundleId="com.microsoft.VSCode"},
   { prefix = hyperKey, key = "F", message = "Finder",        bundleId = "com.apple.finder" },
   -- { prefix = hyperKey, key = "B", message = "Browser",        bundleId = "com.google.Chrome" },
@@ -133,14 +133,16 @@ _G.applications = {
   -- { prefix = hyperKey, key = ";", message = "Ollama",  bundleId = "com.electron.ollama" },
   -- { prefix = hyperKey, key = ";", message = "ChatGPT",       bundleId = "com.tencent.yuanbao" },
   -- { prefix = hyperKey, key = ";", message = "Browser",        bundleId = "com.google.Chrome" },
-  { prefix = hyperKey, key = "P", message = "Postman", bundleId = "com.apple.ScreenContinuity" },
+  -- { prefix = hyperKey, key = "P", message = "iPhone Mirroring", bundleId = "com.apple.ScreenContinuity" },
   --{prefix = hyperKey, key = "O", message="Word", bundleId="com.microsoft.Word"},
   --{prefix = hyperKey, key = "Y", message="PyCharm", bundleId="com.jetbrains.pycharm"},
   --{prefix = hyperKey, key = "R", message="Redis Desktop", bundleId="me.qii404.another-redis-desktop-manager"}
   --> Recent app
   -- { prefix = hyperKey, key = "P", message = "PDF",      bundleId = "net.sourceforge.skim-app.skim" },
-  { prefix = hyperKey, key = ",", message = "腾讯会议", bundleId = "com.tencent.meeting" },
+  -- { prefix = hyperKey, key = ",", message = "腾讯会议", bundleId = "com.tencent.meeting" },
+  { prefix = hyperKey, key = ",", message = "XCode", bundleId = "com.apple.dt.Xcode" },
   -- { prefix = hyperKey, key = ".", message = "zoom会议", bundleId = "us.zoom.xos" },
+  { prefix = hyperKey, key = "N", message = "Codex", bundleId = "com.openai.codex" },
 }
 
 _G.time = {
