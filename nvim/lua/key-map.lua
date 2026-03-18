@@ -232,9 +232,22 @@ map("n", "<c-n>", function() vim.cmd("bnext") end, { desc = "Next buffer" })
 map("n", "<c-p>", function() vim.cmd("bprevious") end, { desc = "Prev buffer" })
 map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Close other buffers" })
 
--- neo-tree
-map("n", "<C-e>", function() vim.cmd("Yazi toggle") end, { desc = "Toggle Explorer" })
-map("n", "<leader>te", function() vim.cmd("Yazi") end, { desc = "Toggle Explorer" })
+-- yazi
+map("n", "<C-e>", function()
+  local yazi_buf = nil
+  for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+    if vim.bo[buf].filetype == "yazi" then
+      yazi_buf = buf
+      break
+    end
+  end
+  if yazi_buf then
+    vim.api.nvim_buf_delete(yazi_buf, { force = true })
+  else
+    require("yazi").yazi()
+  end
+end, { desc = "Toggle Yazi" })
+map("n", "<leader>te", function() vim.cmd("Yazi") end, { desc = "Open Yazi" })
 
 -- lazygit
 map({"n", "t"}, "<C-g>", function() Snacks.lazygit() end, { desc = "Toggle Lazygit" })
