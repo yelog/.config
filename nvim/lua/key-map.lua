@@ -236,6 +236,9 @@ map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Close 
 map("n", "<C-e>", function() vim.cmd("Yazi toggle") end, { desc = "Toggle Explorer" })
 map("n", "<leader>te", function() vim.cmd("Yazi") end, { desc = "Toggle Explorer" })
 
+-- lazygit
+map({"n", "t"}, "<C-g>", function() Snacks.lazygit() end, { desc = "Toggle Lazygit" })
+
 -- toggleterm
 map({ "n", "t", "i", "v" }, "<D-2>", function() vim.cmd("ToggleTerm") end, { desc = "Toggle terminal" })
 
@@ -262,7 +265,7 @@ map({ "n", "v" }, "<CR>", function()
     vim.cmd("MarkliveTaskToggle")
   end
 end, { desc = "Marklive toggle task (markdown only)" })
-map("t", "<C-g>", function() vim.cmd("LLMAppHandler CommitMsg") end, { desc = "Generate commit msg (LLMApp)" })
+-- map("t", "<C-g>", function() vim.cmd("LLMAppHandler CommitMsg") end, { desc = "Generate commit msg (LLMApp)" })
 
 -- smart-splits 全部改 function()
 map({ "n", "t" }, "<D-C-h>", function() require("smart-splits").move_cursor_left() end, { desc = "Move left split" })
