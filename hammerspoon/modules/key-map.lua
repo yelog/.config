@@ -142,9 +142,9 @@ _G.applications = {
   --> Recent app
   -- { prefix = hyperKey, key = "P", message = "PDF",       appName = "Skim" },
   -- { prefix = hyperKey, key = ",", message = "腾讯会议", appName = "腾讯会议" },
-  { prefix = hyperKey, key = ",", message = "XCode", appName = "Xcode" },
+  { prefix = hyperKey, key = "N", message = "XCode", appName = "Xcode" },
   -- { prefix = hyperKey, key = ".", message = "zoom会议", appName = "zoom.us" },
-  { prefix = hyperKey, key = "N", message = "Codex", appName = "Codex" },
+  { prefix = hyperKey, key = ",", message = "Codex", appName = "Codex" },
 }
 
 _G.time = {
