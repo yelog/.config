@@ -39,6 +39,10 @@ _G.windows = {
   last_application_left_right_layout = { prefix = hyperKey, key = "\\", message = "Left and right split screen" },
   -- 跟上一个应用进行上下分屏
   last_application_up_down_layout = { prefix = hyperKey, key = "/", message = "Up and down split screen" },
+  -- 分屏边界左移/上移
+  split_boundary_shrink = { prefix = hyperKey, key = "[", message = "Shrink split boundary" },
+  -- 分屏边界右移/下移
+  split_boundary_expand = { prefix = hyperKey, key = "]", message = "Expand split boundary" },
   -- 1/9
   one = { prefix = hyperKey, key = "1", message = "1/9" },
   -- 2/9

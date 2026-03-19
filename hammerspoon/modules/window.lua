@@ -87,6 +87,116 @@ if windows.last_application_up_down_layout ~= nil then
   )
 end
 
+local function findSplitPair(win)
+  if not win then return nil, nil end
+  
+  local winFrame = win:frame()
+  local screen = win:screen()
+  local screenFrame = screen:frame()
+  local allWindows = hs.window.filter.default:getWindows(hs.window.filter.sortByFocusedLast)
+  
+  for _, otherWin in ipairs(allWindows) do
+    if otherWin ~= win and otherWin:isStandard() and otherWin:screen() == screen then
+      local otherFrame = otherWin:frame()
+      
+      if math.abs(winFrame.y - otherFrame.y) < 10 and math.abs(winFrame.h - otherFrame.h) < 10 then
+        if winFrame.x < otherFrame.x and math.abs(winFrame.x + winFrame.w - otherFrame.x) < 10 then
+          return "left_right", otherWin
+        end
+        if otherFrame.x < winFrame.x and math.abs(otherFrame.x + otherFrame.w - winFrame.x) < 10 then
+          return "left_right", otherWin
+        end
+      end
+      
+      if math.abs(winFrame.x - otherFrame.x) < 10 and math.abs(winFrame.w - otherFrame.w) < 10 then
+        if winFrame.y < otherFrame.y and math.abs(winFrame.y + winFrame.h - otherFrame.y) < 10 then
+          return "up_down", otherWin
+        end
+        if otherFrame.y < winFrame.y and math.abs(otherFrame.y + otherFrame.h - winFrame.y) < 10 then
+          return "up_down", otherWin
+        end
+      end
+    end
+  end
+  
+  return nil, nil
+end
+
+local function adjustSplitBoundary(direction)
+  local win = hs.window.focusedWindow()
+  if not win then return end
+  
+  local splitType, otherWin = findSplitPair(win)
+  if not splitType or not otherWin then
+    hs.alert.show("No split window found")
+    return
+  end
+  
+  local screenFrame = win:screen():frame()
+  local winFrame = win:frame()
+  local otherFrame = otherWin:frame()
+  local step = math.min(screenFrame.w, screenFrame.h) * 0.05
+  local minSize = math.min(screenFrame.w, screenFrame.h) * 0.25
+  
+  if splitType == "left_right" then
+    local leftWin, rightWin, leftFrame, rightFrame
+    if winFrame.x < otherFrame.x then
+      leftWin, rightWin = win, otherWin
+      leftFrame, rightFrame = winFrame, otherFrame
+    else
+      leftWin, rightWin = otherWin, win
+      leftFrame, rightFrame = otherFrame, winFrame
+    end
+    
+    local newWidth = leftFrame.w + (direction == "shrink" and -step or step)
+    if newWidth < minSize or (screenFrame.w - newWidth) < minSize then
+      return
+    end
+    
+    leftWin:setFrame(hs.geometry.rect(leftFrame.x, leftFrame.y, newWidth, leftFrame.h))
+    rightWin:setFrame(hs.geometry.rect(leftFrame.x + newWidth, rightFrame.y, screenFrame.w - newWidth, rightFrame.h))
+  elseif splitType == "up_down" then
+    local topWin, bottomWin, topFrame, bottomFrame
+    if winFrame.y < otherFrame.y then
+      topWin, bottomWin = win, otherWin
+      topFrame, bottomFrame = winFrame, otherFrame
+    else
+      topWin, bottomWin = otherWin, win
+      topFrame, bottomFrame = otherFrame, winFrame
+    end
+    
+    local newHeight = topFrame.h + (direction == "shrink" and -step or step)
+    if newHeight < minSize or (screenFrame.h - newHeight) < minSize then
+      return
+    end
+    
+    topWin:setFrame(hs.geometry.rect(topFrame.x, topFrame.y, topFrame.w, newHeight))
+    bottomWin:setFrame(hs.geometry.rect(bottomFrame.x, topFrame.y + newHeight, bottomFrame.w, screenFrame.h - newHeight))
+  end
+end
+
+if windows.split_boundary_shrink ~= nil then
+  hs.hotkey.bind(
+    windows.split_boundary_shrink.prefix,
+    windows.split_boundary_shrink.key,
+    windows.split_boundary_shrink.message,
+    function()
+      adjustSplitBoundary("shrink")
+    end
+  )
+end
+
+if windows.split_boundary_expand ~= nil then
+  hs.hotkey.bind(
+    windows.split_boundary_expand.prefix,
+    windows.split_boundary_expand.key,
+    windows.split_boundary_expand.message,
+    function()
+      adjustSplitBoundary("expand")
+    end
+  )
+end
+
 -- 同一应用的所有窗口自动网格式布局
 if windows.same_application_auto_layout_grid ~= nil then
   hs.hotkey.bind(
