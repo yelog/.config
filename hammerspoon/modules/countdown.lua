@@ -1,11 +1,12 @@
+local M = {}
+
 local remindTimer = nil
 local sound = hs.sound.getByName("Glass")
 
 local function remindUser()
   hs.alert.show("Time is up!", 5)
   sound:play()
-
-  remindTimer = nil -- set timer object to nil so that it can be restarted later
+  remindTimer = nil
 end
 
 local function parseTime(input)
@@ -23,19 +24,33 @@ local function parseTime(input)
   return totalSeconds
 end
 
-local function startRemindTimer()
-  -- Ask the user for input
+local function formatTime(seconds)
+  local hours = math.floor(seconds / 3600)
+  local minutes = math.floor(seconds / 60 % 60)
+  local remainingSeconds = math.floor(seconds % 60)
+
+  if hours > 0 then
+    return tostring(hours) .. " hour" .. (hours > 1 and "s" or "") .. " " .. tostring(minutes) .. " minute" ..
+        (minutes > 1 and "s" or "") .. " " .. tostring(remainingSeconds) .. " second" ..
+        (remainingSeconds ~= 1 and "s" or "")
+  end
+
+  if minutes > 0 then
+    return tostring(minutes) .. " minute" .. (minutes > 1 and "s" or "") .. " " .. tostring(remainingSeconds) ..
+        " second" .. (remainingSeconds ~= 1 and "s" or "")
+  end
+
+  return tostring(remainingSeconds) .. " second" .. (remainingSeconds ~= 1 and "s" or "")
+end
+
+function M.startRemindTimer()
   local ok, result = hs.dialog.textPrompt("Remind Timer", "Enter the time (e.g. 5s, 10m, 1h, 1h3m4s):", "20m")
 
   if ok then
-    -- Parse the user input
     local time = parseTime(result)
 
-    if time ~= nil then
-      -- Start the timer
+    if time ~= nil and time > 0 then
       remindTimer = hs.timer.doAfter(time, remindUser)
-
-      -- Wait for 300ms before focusing on the popup window
       hs.timer.doAfter(0.3, function()
         local dialogWindow = hs.window.find("Remind Timer")
         if dialogWindow then
@@ -48,7 +63,7 @@ local function startRemindTimer()
   end
 end
 
-local function stopRemindTimer()
+function M.stopRemindTimer()
   if remindTimer ~= nil then
     remindTimer:stop()
     hs.notify.new({
@@ -66,27 +81,7 @@ local function stopRemindTimer()
   end
 end
 
-local function formatTime(seconds)
-  local hours = math.floor(seconds / 3600)
-  local minutes = math.floor(seconds / 60 % 60)
-  local remainingSeconds = math.floor(seconds % 60)
-
-  local timeString = ""
-  if hours > 0 then
-    return tostring(hours) .. " hour" .. (hours > 1 and "s" or "") .. " " .. tostring(minutes) .. " minute" ..
-        (minutes > 1 and "s" or "") .. " " .. tostring(remainingSeconds) .. " second" ..
-        (remainingSeconds ~= 1 and "s" or "")
-  end
-
-  if minutes > 0 then
-    return tostring(minutes) .. " minute" .. (minutes > 1 and "s" or "") .. " " .. tostring(remainingSeconds) ..
-        " second" .. (remainingSeconds ~= 1 and "s" or "")
-  end
-
-  return tostring(remainingSeconds) .. " second" .. (remainingSeconds ~= 1 and "s" or "")
-end
-
-local function getRemainTime()
+function M.getRemainTime()
   if remindTimer ~= nil then
     local remainTime = remindTimer:nextTrigger()
     local timeString = formatTime(remainTime)
@@ -97,18 +92,4 @@ local function getRemainTime()
   end
 end
 
-local function showCurrentTime()
-  local prettyNow = os.date("%A              📅%B %d %Y              🕐%I:%M:%S %p")
-  hs.alert.show(prettyNow, hs.alert.defaultStyle, hs.screen.mainScreen(), 1.5)
-end
-
--- hs.hotkey.bind(superKey, "T", showCurrentTime)
--- --
--- -- -- Set a hotkey to get the remaining time of the timer
--- hs.hotkey.bind(superKey, "R", getRemainTime)
--- --
--- -- -- Set a hotkey to start the timer
--- hs.hotkey.bind(superKey, "T", startRemindTimer)
--- --
--- -- -- Set a hotkey to stop the timer
--- hs.hotkey.bind(superKey, "S", stopRemindTimer)
+return M

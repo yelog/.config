@@ -1,8 +1,9 @@
-require("modules.key-map")
+local keys = require("config.keys")
 
-if time.currentTime ~= nil then
-  hs.hotkey.bind(time.currentTime.prefix, time.currentTime.key, function()
-    --show current time
-    hs.alert.show(os.date("%A              📅%B %d %Y              🕐%I:%M:%S %p"))
-  end)
-end
+local M = {}
+
+hs.hotkey.bind(keys.hyper, "space", function()
+  hs.alert.show(os.date("%A              📅%B %d %Y              🕐%I:%M:%S %p"))
+end)
+
+return M
