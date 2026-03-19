@@ -36,7 +36,9 @@ _G.windows = {
   -- 右下角
   right_bottom = { prefix = hyperKey, key = "C", message = "Right Bottom" },
   -- 跟上一个应用进行左右分屏
-  last_application_left_right_layout = { prefix = hyperKey, key = "0", message = "Left and right split screen" },
+  last_application_left_right_layout = { prefix = hyperKey, key = "\\", message = "Left and right split screen" },
+  -- 跟上一个应用进行上下分屏
+  last_application_up_down_layout = { prefix = hyperKey, key = "/", message = "Up and down split screen" },
   -- 1/9
   one = { prefix = hyperKey, key = "1", message = "1/9" },
   -- 2/9

@@ -40,20 +40,48 @@ if windows.last_application_left_right_layout ~= nil then
 
         if currentFrame.x == screenFrame.x and currentFrame.w == screenFrame.w / 2 and
             previousFrame.x == screenFrame.x + screenFrame.w / 2 and previousFrame.w == screenFrame.w / 2 then
-          -- 交换位置
           currentWindow:setFrame(hs.geometry.rect(screenFrame.x + screenFrame.w / 2, screenFrame.y, screenFrame.w / 2,
             screenFrame.h))
           previousWindow:setFrame(hs.geometry.rect(screenFrame.x, screenFrame.y, screenFrame.w / 2, screenFrame.h))
         else
-          -- 设置当前窗口在屏幕的左半边
           currentWindow:setFrame(hs.geometry.rect(screenFrame.x, screenFrame.y, screenFrame.w / 2, screenFrame.h))
-          -- 设置上次激活的窗口在屏幕的右半边
           previousWindow:setFrame(hs.geometry.rect(screenFrame.x + screenFrame.w / 2, screenFrame.y, screenFrame.w / 2,
             screenFrame.h))
         end
         print('last_application_layout success')
       else
         print('last_application_layout failed')
+      end
+    end
+  )
+end
+
+-- 当前激活应用窗口和上一个激活的应用窗口进行上下分屏
+if windows.last_application_up_down_layout ~= nil then
+  hs.hotkey.bind(
+    windows.last_application_up_down_layout.prefix,
+    windows.last_application_up_down_layout.key,
+    windows.last_application_up_down_layout.message,
+    function()
+      local currentWindow = hs.window.focusedWindow()
+      if currentWindow and previousWindow and currentWindow ~= previousWindow then
+        local screenFrame = currentWindow:screen():frame()
+        local currentFrame = currentWindow:frame()
+        local previousFrame = previousWindow:frame()
+
+        if currentFrame.y == screenFrame.y and currentFrame.h == screenFrame.h / 2 and
+            previousFrame.y == screenFrame.y + screenFrame.h / 2 and previousFrame.h == screenFrame.h / 2 then
+          currentWindow:setFrame(hs.geometry.rect(screenFrame.x, screenFrame.y + screenFrame.h / 2, screenFrame.w,
+            screenFrame.h / 2))
+          previousWindow:setFrame(hs.geometry.rect(screenFrame.x, screenFrame.y, screenFrame.w, screenFrame.h / 2))
+        else
+          currentWindow:setFrame(hs.geometry.rect(screenFrame.x, screenFrame.y, screenFrame.w, screenFrame.h / 2))
+          previousWindow:setFrame(hs.geometry.rect(screenFrame.x, screenFrame.y + screenFrame.h / 2, screenFrame.w,
+            screenFrame.h / 2))
+        end
+        print('last_application_up_down_layout success')
+      else
+        print('last_application_up_down_layout failed')
       end
     end
   )
