@@ -3,8 +3,8 @@ _G.superKey = { "shift", "alt", "cmd", "ctrl" }
 
 -- 重载配置
 hs.hotkey.bind(superKey, "R", "Reload Configuration", function()
-  hs.reload()
-  hs.notify.new({ title = "Hammerspoon", informativeText = "Configuration Reload" }):send()
+  hs.alert.show("Configuration Reload", 1.5)
+  hs.timer.doAfter(0.1, hs.reload)
 end)
 -- Toggle Stage Manager
 hs.hotkey.bind(hyperKey, ".", "Toggle Stage Manager", function()
