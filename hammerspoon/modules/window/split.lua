@@ -123,8 +123,10 @@ local function adjustSplitBoundary(direction)
       return
     end
 
-    leftWin:setFrame(hs.geometry.rect(leftFrame.x, leftFrame.y, newWidth, leftFrame.h))
-    rightWin:setFrame(hs.geometry.rect(leftFrame.x + newWidth, rightFrame.y, screenFrame.w - newWidth, rightFrame.h))
+    local commonY = screenFrame.y
+    local commonH = screenFrame.h
+    leftWin:setFrame(hs.geometry.rect(screenFrame.x, commonY, newWidth, commonH))
+    rightWin:setFrame(hs.geometry.rect(screenFrame.x + newWidth, commonY, screenFrame.w - newWidth, commonH))
   elseif splitType == "up_down" then
     local topWin, bottomWin, topFrame, bottomFrame
     if winFrame.y < otherFrame.y then
@@ -140,9 +142,19 @@ local function adjustSplitBoundary(direction)
       return
     end
 
-    topWin:setFrame(hs.geometry.rect(topFrame.x, topFrame.y, topFrame.w, newHeight))
-    bottomWin:setFrame(hs.geometry.rect(bottomFrame.x, topFrame.y + newHeight, bottomFrame.w, screenFrame.h - newHeight))
+    local commonX = screenFrame.x
+    local commonW = screenFrame.w
+    topWin:setFrame(hs.geometry.rect(commonX, screenFrame.y, commonW, newHeight))
+    bottomWin:setFrame(hs.geometry.rect(commonX, screenFrame.y + newHeight, commonW, screenFrame.h - newHeight))
   end
+end
+
+local function shrinkSplitBoundary()
+  adjustSplitBoundary("shrink")
+end
+
+local function expandSplitBoundary()
+  adjustSplitBoundary("expand")
 end
 
 if config.split_boundary_shrink ~= nil then
@@ -150,9 +162,9 @@ if config.split_boundary_shrink ~= nil then
     config.split_boundary_shrink.prefix,
     config.split_boundary_shrink.key,
     config.split_boundary_shrink.message,
-    function()
-      adjustSplitBoundary("shrink")
-    end
+    shrinkSplitBoundary,
+    nil,
+    shrinkSplitBoundary
   )
 end
 
@@ -161,9 +173,9 @@ if config.split_boundary_expand ~= nil then
     config.split_boundary_expand.prefix,
     config.split_boundary_expand.key,
     config.split_boundary_expand.message,
-    function()
-      adjustSplitBoundary("expand")
-    end
+    expandSplitBoundary,
+    nil,
+    expandSplitBoundary
   )
 end
 

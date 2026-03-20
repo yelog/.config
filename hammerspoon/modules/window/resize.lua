@@ -41,7 +41,7 @@ if config.center_or_fullscreen ~= nil then
   )
 end
 
-hs.hotkey.bind(config.zoom.prefix, config.zoom.key, config.zoom.message, function()
+local function zoomWindow()
   local win = hs.window.focusedWindow()
   if not win then return end
   local f = win:frame()
@@ -57,9 +57,9 @@ hs.hotkey.bind(config.zoom.prefix, config.zoom.key, config.zoom.message, functio
   if f.w > max.w then f.w = max.w end
   if f.h > max.h then f.h = max.h end
   win:setFrame(f)
-end)
+end
 
-hs.hotkey.bind(config.narrow.prefix, config.narrow.key, config.narrow.message, function()
+local function narrowWindow()
   local win = hs.window.focusedWindow()
   if not win then return end
   local f = win:frame()
@@ -68,6 +68,9 @@ hs.hotkey.bind(config.narrow.prefix, config.narrow.key, config.narrow.message, f
   f.x = f.x + 20
   f.y = f.y + 20
   win:setFrame(f)
-end)
+end
+
+hs.hotkey.bind(config.zoom.prefix, config.zoom.key, config.zoom.message, zoomWindow, nil, zoomWindow)
+hs.hotkey.bind(config.narrow.prefix, config.narrow.key, config.narrow.message, narrowWindow, nil, narrowWindow)
 
 return M
