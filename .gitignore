@@ -37,6 +37,7 @@
 !/fastfetch/
 !/claude-code/
 !/opencode/
+!/docs/
 !/skills/
 !ideavimrc
 !init.sh
