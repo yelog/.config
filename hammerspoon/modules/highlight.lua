@@ -2,16 +2,33 @@ local config = require("config.highlight")
 local M = {}
 
 local highlightCanvas = nil
-local flashTimer = nil
-local fadeOutTimers = {}
+local allTimers = {}
 local currentWindow = nil
+local currentPrimaryAlpha = 0
+local currentGlowAlpha = 0
+local breathingDirection = 1
 
-local function createHighlightFrame(win)
+local GLOW_INDEX = 1
+local PRIMARY_INDEX = 2
+
+local function stopAllTimers()
+  for _, timer in ipairs(allTimers) do
+    if timer then
+      timer:stop()
+    end
+  end
+  allTimers = {}
+end
+
+local function addTimer(timer)
+  table.insert(allTimers, timer)
+  return timer
+end
+
+local function createHighlightCanvas(win)
   if not win or not win:isStandard() then return nil end
 
   local f = win:frame()
-  local fw = config.frameWidth
-
   local canvas = hs.canvas.new({
     x = f.x,
     y = f.y,
@@ -21,65 +38,134 @@ local function createHighlightFrame(win)
 
   if not canvas then return nil end
 
+  local pw = config.primaryWidth
+  local gw = config.glowWidth
+
   canvas:insertElement({
     type = "rectangle",
     roundedRectRadii = { xRadius = config.cornerRadius, yRadius = config.cornerRadius },
-    strokeColor = { red = config.color.red, green = config.color.green, blue = config.color.blue, alpha = 0 },
-    strokeWidth = fw,
+    strokeColor = { red = config.glowColor.red, green = config.glowColor.green, blue = config.glowColor.blue, alpha = 0 },
+    strokeWidth = gw,
     fillColor = { alpha = 0 },
-    frame = { x = fw / 2, y = fw / 2, w = f.w - fw, h = f.h - fw },
-  }, 1)
+    frame = { x = gw / 2, y = gw / 2, w = f.w - gw, h = f.h - gw },
+  }, GLOW_INDEX)
+
+  canvas:insertElement({
+    type = "rectangle",
+    roundedRectRadii = { xRadius = config.cornerRadius, yRadius = config.cornerRadius },
+    strokeColor = { red = config.primaryColor.red, green = config.primaryColor.green, blue = config.primaryColor.blue, alpha = 0 },
+    strokeWidth = pw,
+    fillColor = { alpha = 0 },
+    frame = { x = pw / 2, y = pw / 2, w = f.w - pw, h = f.h - pw },
+  }, PRIMARY_INDEX)
 
   canvas:level(hs.canvas.windowLevels.cursor)
   canvas:show()
+
+  currentPrimaryAlpha = 0
+  currentGlowAlpha = 0
 
   return canvas
 end
 
 local function fadeIn(canvas)
-  local steps = 6
+  local steps = 8
   local stepDuration = config.fadeInDuration / steps
-  local targetAlpha = config.color.alpha
+  local targetPrimaryAlpha = config.primaryColor.alpha
+  local targetGlowAlpha = config.glowColor.alpha
 
   for i = 1, steps do
-    hs.timer.doAfter(stepDuration * i, function()
+    addTimer(hs.timer.doAfter(stepDuration * i, function()
       if canvas and highlightCanvas == canvas then
-        canvas:elementAttribute(1, "strokeColor", {
-          red = config.color.red,
-          green = config.color.green,
-          blue = config.color.blue,
-          alpha = targetAlpha * (i / steps),
+        local progress = i / steps
+        currentPrimaryAlpha = targetPrimaryAlpha * progress
+        currentGlowAlpha = targetGlowAlpha * progress
+
+        canvas:elementAttribute(PRIMARY_INDEX, "strokeColor", {
+          red = config.primaryColor.red,
+          green = config.primaryColor.green,
+          blue = config.primaryColor.blue,
+          alpha = currentPrimaryAlpha,
+        })
+
+        canvas:elementAttribute(GLOW_INDEX, "strokeColor", {
+          red = config.glowColor.red,
+          green = config.glowColor.green,
+          blue = config.glowColor.blue,
+          alpha = currentGlowAlpha,
         })
       end
-    end)
+    end))
   end
 end
 
-local function clearFadeOutTimers()
-  for _, timer in ipairs(fadeOutTimers) do
-    timer:stop()
-  end
-  fadeOutTimers = {}
+local function startBreathing(canvas)
+  local period = 0.08
+  breathingDirection = 1
+
+  addTimer(hs.timer.doWhile(function()
+    return canvas and highlightCanvas == canvas
+  end, function()
+    if not canvas or highlightCanvas ~= canvas then return end
+
+    local step = (config.breathingMaxAlpha - config.breathingMinAlpha) * 0.15
+    currentPrimaryAlpha = currentPrimaryAlpha + step * breathingDirection
+
+    if currentPrimaryAlpha >= config.breathingMaxAlpha then
+      breathingDirection = -1
+      currentPrimaryAlpha = config.breathingMaxAlpha
+    elseif currentPrimaryAlpha <= config.breathingMinAlpha then
+      breathingDirection = 1
+      currentPrimaryAlpha = config.breathingMinAlpha
+    end
+
+    currentGlowAlpha = currentPrimaryAlpha * (config.glowColor.alpha / config.primaryColor.alpha)
+
+    canvas:elementAttribute(PRIMARY_INDEX, "strokeColor", {
+      red = config.primaryColor.red,
+      green = config.primaryColor.green,
+      blue = config.primaryColor.blue,
+      alpha = currentPrimaryAlpha,
+    })
+
+    canvas:elementAttribute(GLOW_INDEX, "strokeColor", {
+      red = config.glowColor.red,
+      green = config.glowColor.green,
+      blue = config.glowColor.blue,
+      alpha = currentGlowAlpha,
+    })
+  end, period))
 end
 
-local function fadeOutAndDelete(canvas)
+local function fadeOut(canvas)
   if not canvas then return end
 
-  clearFadeOutTimers()
-
-  local steps = 4
+  local steps = 6
   local stepDuration = config.fadeOutDuration / steps
-  local targetAlpha = config.color.alpha
+  local startPrimaryAlpha = currentPrimaryAlpha
+  local startGlowAlpha = currentGlowAlpha
 
   for i = 1, steps do
-    local timer = hs.timer.doAfter(stepDuration * i, function()
+    addTimer(hs.timer.doAfter(stepDuration * i, function()
       if canvas then
-        canvas:elementAttribute(1, "strokeColor", {
-          red = config.color.red,
-          green = config.color.green,
-          blue = config.color.blue,
-          alpha = targetAlpha * (1 - i / steps),
+        local progress = i / steps
+        local primaryAlpha = startPrimaryAlpha * (1 - progress)
+        local glowAlpha = startGlowAlpha * (1 - progress)
+
+        canvas:elementAttribute(PRIMARY_INDEX, "strokeColor", {
+          red = config.primaryColor.red,
+          green = config.primaryColor.green,
+          blue = config.primaryColor.blue,
+          alpha = primaryAlpha,
         })
+
+        canvas:elementAttribute(GLOW_INDEX, "strokeColor", {
+          red = config.glowColor.red,
+          green = config.glowColor.green,
+          blue = config.glowColor.blue,
+          alpha = glowAlpha,
+        })
+
         if i == steps then
           canvas:delete()
           if highlightCanvas == canvas then
@@ -88,46 +174,17 @@ local function fadeOutAndDelete(canvas)
           end
         end
       end
-    end)
-    table.insert(fadeOutTimers, timer)
+    end))
   end
-end
-
-local function stopFlashTimer()
-  if flashTimer then
-    flashTimer:stop()
-    flashTimer = nil
-  end
-end
-
-local function startFlashTimer(canvas)
-  stopFlashTimer()
-  clearFadeOutTimers()
-  flashTimer = hs.timer.doAfter(config.flashDuration, function()
-    if canvas and highlightCanvas == canvas then
-      fadeOutAndDelete(canvas)
-    end
-    flashTimer = nil
-  end)
 end
 
 local function removeHighlightImmediately()
-  stopFlashTimer()
-  clearFadeOutTimers()
+  stopAllTimers()
   if highlightCanvas then
     highlightCanvas:delete()
     highlightCanvas = nil
     currentWindow = nil
   end
-end
-
-local function updateHighlightPosition(canvas, win)
-  if not canvas or not win then return end
-
-  local f = win:frame()
-  local fw = config.frameWidth
-  canvas:frame({ x = f.x, y = f.y, w = f.w, h = f.h })
-  canvas:elementAttribute(1, "frame", { x = fw / 2, y = fw / 2, w = f.w - fw, h = f.h - fw })
 end
 
 local function isExcludedApp(appName)
@@ -145,11 +202,20 @@ local function onWindowFocused(win, appName)
   removeHighlightImmediately()
 
   currentWindow = win
-  highlightCanvas = createHighlightFrame(win)
+  highlightCanvas = createHighlightCanvas(win)
 
   if highlightCanvas then
     fadeIn(highlightCanvas)
-    startFlashTimer(highlightCanvas)
+    addTimer(hs.timer.doAfter(config.fadeInDuration, function()
+      if highlightCanvas then
+        startBreathing(highlightCanvas)
+      end
+    end))
+    addTimer(hs.timer.doAfter(config.fadeInDuration + config.stableDuration, function()
+      if highlightCanvas then
+        fadeOut(highlightCanvas)
+      end
+    end))
   end
 end
 
@@ -159,7 +225,25 @@ end
 
 local function onWindowMoved(win, appName)
   if highlightCanvas and currentWindow and win and win:id() == currentWindow:id() then
-    updateHighlightPosition(highlightCanvas, win)
+    local f = win:frame()
+    local pw = config.primaryWidth
+    local gw = config.glowWidth
+
+    highlightCanvas:frame({ x = f.x, y = f.y, w = f.w, h = f.h })
+
+    highlightCanvas:elementAttribute(GLOW_INDEX, "frame", {
+      x = gw / 2,
+      y = gw / 2,
+      w = f.w - gw,
+      h = f.h - gw,
+    })
+
+    highlightCanvas:elementAttribute(PRIMARY_INDEX, "frame", {
+      x = pw / 2,
+      y = pw / 2,
+      w = f.w - pw,
+      h = f.h - pw,
+    })
   end
 end
 
