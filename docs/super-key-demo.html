@@ -1,0 +1,2249 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caps Lock Hyper Key - 高效键盘工作流</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, sans-serif;
+      background: #09090b;
+      color: #e4e4e7;
+      overflow-x: hidden;
+    }
+
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .gradient-text {
+      background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .key-cap {
+      background: linear-gradient(145deg, #27272a 0%, #18181b 100%);
+      border: 1px solid #3f3f46;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 600;
+      font-size: 14px;
+      color: #a1a1aa;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 50px;
+      box-shadow: 0 2px 0 #0a0a0f, 0 4px 8px rgba(0, 0, 0, 0.4);
+      transition: all 0.15s ease;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .key-cap:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 0 #0a0a0f, 0 8px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    .key-cap.hyper:hover {
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.7), 0 4px 0 #0a0a0f;
+    }
+
+    .key-cap.hyper {
+      background: linear-gradient(145deg, #7c3aed 0%, #5b21b6 100%);
+      border-color: #a78bfa;
+      color: #faf5ff;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.5), 0 2px 0 #0a0a0f;
+    }
+
+    .flow-container {
+      position: relative;
+      min-height: 500px;
+      background: linear-gradient(180deg, #0f0f15 0%, #0a0a0f 100%);
+      border-radius: 16px;
+      border: 1px solid #27272a;
+      overflow: hidden;
+    }
+
+    .flow-node {
+      position: absolute;
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 2px solid #3f3f46;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      transition: all 0.3s ease;
+      cursor: grab;
+      z-index: 10;
+    }
+
+    .flow-node:hover {
+      transform: scale(1.05);
+      z-index: 20;
+    }
+
+    .flow-node.hyper {
+      background: linear-gradient(145deg, #7c3aed 0%, #5b21b6 100%);
+      border-color: #a78bfa;
+      color: #faf5ff;
+      box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+    }
+
+    .flow-node.cyan {
+      background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%);
+      border-color: #22d3ee;
+      color: #cffafe;
+      box-shadow: 0 0 30px rgba(34, 211, 238, 0.3);
+    }
+
+    .flow-node.green {
+      background: linear-gradient(145deg, #059669 0%, #047857 100%);
+      border-color: #10b981;
+      color: #d1fae5;
+      box-shadow: 0 0 30px rgba(16, 185, 129, 0.3);
+    }
+
+    .flow-node.blue {
+      background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%);
+      border-color: #3b82f6;
+      color: #dbeafe;
+      box-shadow: 0 0 30px rgba(59, 130, 246, 0.3);
+    }
+
+    .flow-node.dark {
+      background: linear-gradient(145deg, #27272a 0%, #18181b 100%);
+      border-color: #3f3f46;
+      color: #d4d4d8;
+    }
+
+    .flow-node.small {
+      padding: 8px 14px;
+      font-size: 12px;
+    }
+
+    .flow-connector {
+      position: absolute;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, currentColor, transparent);
+      transform-origin: left center;
+      z-index: 5;
+      pointer-events: none;
+    }
+
+    .flow-connector.animated {
+      background: linear-gradient(90deg, transparent 0%, currentColor 50%, transparent 100%);
+      background-size: 200% 100%;
+      animation: flowPulse 1.5s ease-in-out infinite;
+    }
+
+    @keyframes flowPulse {
+      0% {
+        background-position: 100% 0;
+      }
+
+      100% {
+        background-position: -100% 0;
+      }
+    }
+
+    .flow-dot {
+      position: absolute;
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      animation: flowDot 2s linear infinite;
+    }
+
+    @keyframes flowDot {
+      0% {
+        opacity: 0;
+      }
+
+      20% {
+        opacity: 1;
+      }
+
+      80% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    .section-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent 0%, #3f3f46 50%, transparent 100%);
+    }
+
+    .card {
+      background: linear-gradient(145deg, #18181b 0%, #0f0f12 100%);
+      border: 1px solid #27272a;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .card:hover {
+      border-color: #3f3f46;
+      transform: translateY(-2px);
+    }
+
+    .bg-grid {
+      background-image:
+        linear-gradient(rgba(63, 63, 70, 0.15) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(63, 63, 70, 0.15) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+
+    .tab-btn {
+      padding: 10px 20px;
+      border-radius: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      border: none;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+      color: white;
+      box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+    }
+
+    .tab-btn:not(.active) {
+      background: #27272a;
+      color: #a1a1aa;
+    }
+
+    .tab-btn:not(.active):hover {
+      background: #3f3f46;
+    }
+
+    .flow-section {
+      display: none;
+    }
+
+    .flow-section.active {
+      display: block;
+    }
+
+    .glow-purple {
+      box-shadow: 0 0 40px rgba(139, 92, 246, 0.2),
+        inset 0 0 40px rgba(139, 92, 246, 0.05);
+    }
+
+    .animate-float {
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+
+    .nine-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+      width: 100px;
+    }
+
+    .nine-grid-cell {
+      aspect-ratio: 1;
+      border-radius: 4px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .nine-grid-cell:hover {
+      transform: scale(1.1);
+      z-index: 10;
+    }
+
+    .terminal-demo {
+      background: #0c0c0c;
+      border-radius: 12px;
+      border: 1px solid #27272a;
+      overflow: hidden;
+    }
+
+    .terminal-header {
+      background: #1a1a1a;
+      padding: 8px 12px;
+      display: flex;
+      gap: 6px;
+    }
+
+    .terminal-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .cursor-blink {
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0;
+      }
+    }
+
+    .app-icon {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      transition: transform 0.2s;
+    }
+
+    .app-icon:hover {
+      transform: scale(1.15);
+    }
+
+    .key-base {
+      background: linear-gradient(145deg, #27272a 0%, #18181b 100%);
+      border: 1px solid #3f3f46;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .key-std {
+      width: 42px;
+      height: 42px;
+    }
+
+    .key-wide {
+      width: 60px;
+      height: 42px;
+    }
+
+    .key-wider {
+      width: 80px;
+      height: 42px;
+    }
+
+    .key-space {
+      width: 50px;
+      height: 42px;
+      font-size: 10px;
+    }
+
+    .key-longer {
+      width: 200px;
+      height: 42px;
+    }
+
+    .key-base:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+    }
+
+    .key-highlight-position {
+      background: linear-gradient(145deg, #059669 0%, #047857 100%);
+      border-color: #10b981;
+      color: #d1fae5;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .key-highlight-position:hover {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.5);
+    }
+
+    .key-highlight-size {
+      background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%);
+      border-color: #22d3ee;
+      color: #cffafe;
+      box-shadow: 0 0 15px rgba(34, 211, 238, 0.3);
+    }
+
+    .key-highlight-size:hover {
+      box-shadow: 0 0 25px rgba(34, 211, 238, 0.5);
+    }
+
+    .key-highlight-hyper {
+      background: linear-gradient(145deg, #7c3aed 0%, #5b21b6 100%);
+      border-color: #a78bfa;
+      color: #faf5ff;
+      box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    }
+
+    .key-highlight-nav {
+      background: linear-gradient(145deg, #db2777 0%, #be185d 100%);
+      border-color: #f472b6;
+      color: #fce7f3;
+      box-shadow: 0 0 15px rgba(236, 72, 153, 0.3);
+    }
+
+    .key-highlight-nav:hover {
+      box-shadow: 0 0 25px rgba(236, 72, 153, 0.5);
+    }
+
+    .key-highlight-app {
+      background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%);
+      border-color: #3b82f6;
+      color: #dbeafe;
+      box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    }
+
+    .key-highlight-app:hover {
+      box-shadow: 0 0 25px rgba(59, 130, 246, 0.5);
+    }
+
+    .key-label {
+      font-size: 8px;
+      opacity: 0.7;
+      margin-top: 2px;
+    }
+
+    .keyboard-container {
+      background: linear-gradient(180deg, #1a1a1e 0%, #0f0f12 100%);
+      border-radius: 12px;
+      padding: 16px;
+      border: 1px solid #27272a;
+    }
+
+    .code-block {
+      background: #0d0d0d;
+      border: 1px solid #27272a;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    .code-header {
+      background: linear-gradient(180deg, #1a1a1e 0%, #141417 100%);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid #27272a;
+    }
+
+    .code-dots {
+      display: flex;
+      gap: 6px;
+    }
+
+    .code-dot {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+    }
+
+    .code-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: #a1a1aa;
+    }
+
+    .code-content {
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+
+    .code-content pre {
+      margin: 0;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .code-comment { color: #6b7280; }
+    .code-string { color: #a5d6ff; }
+    .code-key { color: #7ee787; }
+    .code-value { color: #79c0ff; }
+    .code-number { color: #ffa657; }
+    .code-operator { color: #ff7b72; }
+    .code-function { color: #d2a8ff; }
+    .code-property { color: #ffa657; }
+    .code-bracket { color: #8b949e; }
+    .code-lua-keyword { color: #ff7b72; }
+    .code-lua-string { color: #a5d6ff; }
+    .code-lua-comment { color: #6b7280; }
+    .code-lua-function { color: #d2a8ff; }
+    .code-lua-number { color: #ffa657; }
+
+    .config-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+
+    .config-tab {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid transparent;
+      background: #27272a;
+      color: #a1a1aa;
+    }
+
+    .config-tab:hover {
+      background: #3f3f46;
+    }
+
+    .config-tab.active {
+      background: linear-gradient(135deg, #7c3aed 0%, #6366f1 100%);
+      color: white;
+      border-color: #a78bfa;
+    }
+
+    .config-section {
+      display: none;
+    }
+
+    .config-section.active {
+      display: block;
+    }
+
+    .copy-btn {
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      background: #27272a;
+      color: #a1a1aa;
+      border: 1px solid #3f3f46;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .copy-btn:hover {
+      background: #3f3f46;
+      color: #e4e4e7;
+    }
+
+    .copy-btn.copied {
+      background: #059669;
+      border-color: #10b981;
+      color: #d1fae5;
+    }
+
+    .github-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 12px 24px;
+      background: linear-gradient(135deg, #238636 0%, #1a7f37 100%);
+      color: #ffffff;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.2s;
+      border: 1px solid #2ea043;
+    }
+
+    .github-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(35, 134, 54, 0.3);
+    }
+  </style>
+</head>
+
+<body class="bg-grid">
+  <div class="max-w-6xl mx-auto px-4 py-12">
+
+    <!-- Hero Section -->
+    <section class="text-center mb-16">
+      <h1 class="text-5xl md:text-6xl font-bold mb-4">
+        <span class="gradient-text">Caps Lock Hyper Key</span>
+      </h1>
+      <p class="text-xl text-zinc-400 mb-10">打造高效的 macOS 键盘工作流</p>
+
+      <!-- Key Visual -->
+      <div class="inline-flex items-center gap-3 p-5 rounded-2xl bg-zinc-900/80 border border-zinc-700 mb-12">
+        <span class="key-cap hyper animate-float">✦ Hyper</span>
+        <span class="text-zinc-500 text-2xl">+</span>
+        <div class="flex gap-2">
+          <span class="key-cap">H</span>
+          <span class="key-cap">J</span>
+          <span class="key-cap">K</span>
+          <span class="key-cap">L</span>
+        </div>
+        <span class="text-zinc-500 text-2xl mx-2">=</span>
+        <div class="flex gap-1 text-2xl">
+          <span class="text-pink-400">←</span>
+          <span class="text-pink-400">↓</span>
+          <span class="text-pink-400">↑</span>
+          <span class="text-pink-400">→</span>
+        </div>
+      </div>
+
+      <!-- Philosophy Cards -->
+      <div class="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+        <div class="card p-6 text-left">
+          <div class="text-3xl mb-3">🔑</div>
+          <h3 class="text-lg font-semibold mb-2 text-purple-400">Hyper 键</h3>
+          <p class="text-zinc-400 text-sm leading-relaxed">
+            改造闲置的 Caps Lock，让双手无需离开主键区即可完成大量操作
+          </p>
+        </div>
+        <div class="card p-6 text-left">
+          <div class="text-3xl mb-3">🎮</div>
+          <h3 class="text-lg font-semibold mb-2 text-cyan-400">Vim 风格导航</h3>
+          <p class="text-zinc-400 text-sm leading-relaxed">
+            H/J/K/L 全局方向键，无论在哪个应用都能享受 Vim 般的流畅体验
+          </p>
+        </div>
+        <div class="card p-6 text-left">
+          <div class="text-3xl mb-3">⚡</div>
+          <h3 class="text-lg font-semibold mb-2 text-emerald-400">一站式管理</h3>
+          <p class="text-zinc-400 text-sm leading-relaxed">
+            窗口位置、大小、多屏幕、应用切换，全部整合到一个修饰键
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider my-16"></div>
+
+    <!-- Flow Diagrams -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold text-center mb-8">交互式流程图</h2>
+
+      <!-- Tabs -->
+      <div class="flex justify-center gap-3 mb-8 flex-wrap">
+        <button class="tab-btn active" data-tab="concept">🎯 核心概念</button>
+        <button class="tab-btn" data-tab="nav">🎮 光标移动</button>
+        <button class="tab-btn" data-tab="window">🪟 窗口管理</button>
+        <button class="tab-btn" data-tab="app">⚡ 应用切换</button>
+        <button class="tab-btn" data-tab="overview">📊 总览</button>
+      </div>
+
+      <!-- Concept Flow -->
+      <div id="concept-flow" class="flow-section active">
+        <div class="flow-container glow-purple p-8 max-w-4xl mx-auto">
+          <svg class="absolute inset-0 w-full h-full" style="z-index: 1;">
+            <defs>
+              <marker id="arrow-purple" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L9,3 z" fill="#a78bfa" />
+              </marker>
+            </defs>
+            <!-- Caps to Alone -->
+            <path d="M 300 70 Q 200 100 160 140" stroke="#a78bfa" stroke-width="2" fill="none" class="animated-path" />
+            <!-- Caps to Combined -->
+            <path d="M 300 70 Q 400 100 440 140" stroke="#14b8a6" stroke-width="2" fill="none" class="animated-path" />
+            <!-- Combined to results -->
+            <path d="M 480 200 Q 400 230 280 260" stroke="#fbbf24" stroke-width="2" fill="none" />
+            <path d="M 480 200 Q 480 230 480 260" stroke="#34d399" stroke-width="2" fill="none" />
+            <path d="M 480 200 Q 560 230 680 260" stroke="#60a5fa" stroke-width="2" fill="none" />
+          </svg>
+
+          <!-- Nodes -->
+          <div class="flow-node hyper" style="left: 220px; top: 30px; width: 160px;">
+            ✦ Hyper
+            <div class="text-xs opacity-70 mt-1">⇪ Caps Lock</div>
+          </div>
+
+          <div class="flow-node dark small" style="left: 80px; top: 140px;">
+            ⇪ Caps Lock
+            <div class="text-xs opacity-60 mt-1">切换输入法</div>
+          </div>
+
+          <div class="flow-node cyan" style="left: 380px; top: 140px; width: 200px;">
+            ⌘ + ⌥ + ⇧
+            <div class="text-xs opacity-70 mt-1">组合修饰键</div>
+          </div>
+
+          <div class="flow-node dark small"
+            style="left: 180px; top: 270px; background: linear-gradient(145deg, #854d0e 0%, #713f12 100%); border-color: #fbbf24; color: #fef3c7;">
+            H/J/K/L
+            <div class="text-xs opacity-80 mt-1">全局方向键</div>
+          </div>
+
+          <div class="flow-node dark small"
+            style="left: 400px; top: 270px; background: linear-gradient(145deg, #065f46 0%, #064e3b 100%); border-color: #34d399; color: #d1fae5;">
+            窗口管理
+            <div class="text-xs opacity-80 mt-1">位置/大小/屏幕</div>
+          </div>
+
+          <div class="flow-node dark small"
+            style="left: 620px; top: 270px; background: linear-gradient(145deg, #1e40af 0%, #1e3a8a 100%); border-color: #60a5fa; color: #dbeafe;">
+            应用切换
+            <div class="text-xs opacity-80 mt-1">快速激活</div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mt-6 p-4 rounded-lg bg-zinc-900/50 border border-zinc-800 max-w-4xl mx-auto">
+          <p class="text-zinc-400 text-sm text-center">
+            Caps Lock 按下时映射为 <span class="mono text-cyan-400">⌘⌥⇧</span> 组合键，单独按下则触发 <span
+              class="mono text-purple-400">Caps Lock</span> 切换输入法（需在 macOS 系统设置中配置）
+          </p>
+        </div>
+      </div>
+
+      <!-- Navigation Flow -->
+      <div id="nav-flow" class="flow-section">
+        <div class="card p-6 max-w-4xl mx-auto">
+          <p class="text-zinc-400 text-center mb-6">使用 <span class="mono text-pink-400">✦ Hyper</span> 键配合 H/J/K/L
+            实现全局方向键导航</p>
+
+          <!-- Mac Keyboard Layout -->
+          <div class="keyboard-container">
+            <!-- Row 1: Function keys hint -->
+            <div class="flex justify-center gap-1 mb-2 text-xs text-zinc-600">
+              <div class="w-12 h-6 flex items-center justify-center">Esc</div>
+              <div class="w-12 h-6 flex items-center justify-center">F1</div>
+              <div class="w-12 h-6 flex items-center justify-center">F2</div>
+              <div class="w-12 h-6 flex items-center justify-center">F3</div>
+              <div class="w-12 h-6 flex items-center justify-center">F4</div>
+              <div class="w-12 h-6 flex items-center justify-center">F5</div>
+              <div class="w-12 h-6 flex items-center justify-center">F6</div>
+              <div class="w-12 h-6 flex items-center justify-center">F7</div>
+              <div class="w-12 h-6 flex items-center justify-center">F8</div>
+              <div class="w-12 h-6 flex items-center justify-center">F9</div>
+              <div class="w-12 h-6 flex items-center justify-center">F10</div>
+              <div class="w-12 h-6 flex items-center justify-center">F11</div>
+              <div class="w-12 h-6 flex items-center justify-center">F12</div>
+            </div>
+
+            <!-- Row 2: Number keys -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-std text-zinc-600">`</div>
+              <div class="key-base key-std text-zinc-600">1</div>
+              <div class="key-base key-std text-zinc-600">2</div>
+              <div class="key-base key-std text-zinc-600">3</div>
+              <div class="key-base key-std text-zinc-600">4</div>
+              <div class="key-base key-std text-zinc-600">5</div>
+              <div class="key-base key-std text-zinc-600">6</div>
+              <div class="key-base key-std text-zinc-600">7</div>
+              <div class="key-base key-std text-zinc-600">8</div>
+              <div class="key-base key-std text-zinc-600">9</div>
+              <div class="key-base key-std text-zinc-600">0</div>
+              <div class="key-base key-std text-zinc-600">-</div>
+              <div class="key-base key-std text-zinc-600">=</div>
+              <div class="key-base key-wide text-zinc-600">delete</div>
+            </div>
+
+            <!-- Row 3: QWERTY row -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-wide text-zinc-600">tab</div>
+              <div class="key-base key-std text-zinc-600">Q</div>
+              <div class="key-base key-std text-zinc-600">W</div>
+              <div class="key-base key-std text-zinc-600">E</div>
+              <div class="key-base key-std text-zinc-600">R</div>
+              <div class="key-base key-std text-zinc-600">T</div>
+              <div class="key-base key-std text-zinc-600">Y</div>
+              <div class="key-base key-std text-zinc-600">U</div>
+              <div class="key-base key-std text-zinc-600">I</div>
+              <div class="key-base key-std text-zinc-600">O</div>
+              <div class="key-base key-std text-zinc-600">P</div>
+              <div class="key-base key-std text-zinc-600">[</div>
+              <div class="key-base key-std text-zinc-600">]</div>
+              <div class="key-base key-wide text-zinc-600">\</div>
+            </div>
+
+            <!-- Row 4: ASDF row - with HJKL highlighted -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-wide key-highlight-hyper">
+                <span>✦ Hyper</span>
+                <span class="key-label">⇪ Caps</span>
+              </div>
+              <div class="key-base key-std text-zinc-600">A</div>
+              <div class="key-base key-std text-zinc-600">S</div>
+              <div class="key-base key-std text-zinc-600">D</div>
+              <div class="key-base key-std text-zinc-600">F</div>
+              <div class="key-base key-std text-zinc-600">G</div>
+              <div class="key-base key-std key-highlight-nav" data-key="H">
+                <span>H</span>
+                <span class="key-label">← 左</span>
+              </div>
+              <div class="key-base key-std key-highlight-nav" data-key="J">
+                <span>J</span>
+                <span class="key-label">↓ 下</span>
+              </div>
+              <div class="key-base key-std key-highlight-nav" data-key="K">
+                <span>K</span>
+                <span class="key-label">↑ 上</span>
+              </div>
+              <div class="key-base key-std key-highlight-nav" data-key="L">
+                <span>L</span>
+                <span class="key-label">→ 右</span>
+              </div>
+              <div class="key-base key-std text-zinc-600">;</div>
+              <div class="key-base key-std text-zinc-600">'</div>
+              <div class="key-base key-wide text-zinc-600">return</div>
+            </div>
+
+            <!-- Row 5: ZXCV row -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-wider text-zinc-600">shift</div>
+              <div class="key-base key-std text-zinc-600">Z</div>
+              <div class="key-base key-std text-zinc-600">X</div>
+              <div class="key-base key-std text-zinc-600">C</div>
+              <div class="key-base key-std text-zinc-600">V</div>
+              <div class="key-base key-std text-zinc-600">B</div>
+              <div class="key-base key-std text-zinc-600">N</div>
+              <div class="key-base key-std text-zinc-600">M</div>
+              <div class="key-base key-std text-zinc-600">,</div>
+              <div class="key-base key-std text-zinc-600">.</div>
+              <div class="key-base key-std text-zinc-600">/</div>
+              <div class="key-base key-wider text-zinc-600">shift</div>
+            </div>
+
+            <!-- Row 6: Bottom row -->
+            <div class="flex justify-center gap-1">
+              <div class="key-base key-space text-zinc-600">fn</div>
+              <div class="key-base key-space text-zinc-600">ctrl</div>
+              <div class="key-base key-space text-zinc-600">opt</div>
+              <div class="key-base key-space text-zinc-600">⌘</div>
+              <div class="key-base key-longer text-zinc-600">space</div>
+              <div class="key-base key-space text-zinc-600">⌘</div>
+              <div class="key-base key-space text-zinc-600">opt</div>
+              <div class="key-base key-space text-zinc-600">←</div>
+              <div class="key-base key-space text-zinc-600">↑</div>
+              <div class="key-base key-space text-zinc-600">↓</div>
+              <div class="key-base key-space text-zinc-600">→</div>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="mt-8 pt-6 border-t border-zinc-800">
+            <div class="flex items-center gap-3 mb-4 justify-center">
+              <div class="w-4 h-4 rounded bg-gradient-to-br from-pink-600 to-pink-700 border border-pink-400"></div>
+              <h3 class="text-lg font-semibold text-pink-400">光标移动键</h3>
+            </div>
+            <div class="grid md:grid-cols-2 gap-4 max-w-lg mx-auto text-sm">
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #db2777 0%, #be185d 100%); border-color: #f472b6;">H</span>
+                <span class="text-zinc-400">光标左移 ←</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #db2777 0%, #be185d 100%); border-color: #f472b6;">J</span>
+                <span class="text-zinc-400">光标下移 ↓</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #db2777 0%, #be185d 100%); border-color: #f472b6;">K</span>
+                <span class="text-zinc-400">光标上移 ↑</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #db2777 0%, #be185d 100%); border-color: #f472b6;">L</span>
+                <span class="text-zinc-400">光标右移 →</span>
+              </div>
+            </div>
+            <p class="text-zinc-500 text-sm text-center mt-4">Vim 风格方向键，在任意应用中均可使用</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Window Flow -->
+      <div id="window-flow" class="flow-section">
+        <div class="card p-6 max-w-4xl mx-auto">
+          <p class="text-zinc-400 text-center mb-6">使用 <span class="mono text-emerald-400">✦ Hyper</span> 键配合以下按键快速管理窗口
+          </p>
+
+          <!-- Mac Keyboard Layout -->
+          <div class="keyboard-container">
+            <!-- Row 1: Function keys hint -->
+            <div class="flex justify-center gap-1 mb-2 text-xs text-zinc-600">
+              <div class="w-12 h-6 flex items-center justify-center">Esc</div>
+              <div class="w-12 h-6 flex items-center justify-center">F1</div>
+              <div class="w-12 h-6 flex items-center justify-center">F2</div>
+              <div class="w-12 h-6 flex items-center justify-center">F3</div>
+              <div class="w-12 h-6 flex items-center justify-center">F4</div>
+              <div class="w-12 h-6 flex items-center justify-center">F5</div>
+              <div class="w-12 h-6 flex items-center justify-center">F6</div>
+              <div class="w-12 h-6 flex items-center justify-center">F7</div>
+              <div class="w-12 h-6 flex items-center justify-center">F8</div>
+              <div class="w-12 h-6 flex items-center justify-center">F9</div>
+              <div class="w-12 h-6 flex items-center justify-center">F10</div>
+              <div class="w-12 h-6 flex items-center justify-center">F11</div>
+              <div class="w-12 h-6 flex items-center justify-center">F12</div>
+            </div>
+
+            <!-- Row 2: Number keys -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-std text-zinc-600">`</div>
+              <div class="key-base key-std key-highlight-size" data-key="1">
+                <span>1</span>
+                <span class="key-label">1/9 左上</span>
+              </div>
+              <div class="key-base key-std key-highlight-size" data-key="2">
+                <span>2</span>
+                <span class="key-label">1/9 上中</span>
+              </div>
+              <div class="key-base key-std key-highlight-size" data-key="3">
+                <span>3</span>
+                <span class="key-label">1/9 右上</span>
+              </div>
+              <div class="key-base key-std key-highlight-size" data-key="4">
+                <span>4</span>
+                <span class="key-label">1/9 左中</span>
+              </div>
+              <div class="key-base key-std key-highlight-size" data-key="5">
+                <span>5</span>
+                <span class="key-label">1/9 居中</span>
+              </div>
+              <div class="key-base key-std key-highlight-size" data-key="6">
+                <span>6</span>
+                <span class="key-label">1/9 右中</span>
+              </div>
+              <div class="key-base key-std key-highlight-size" data-key="7">
+                <span>7</span>
+                <span class="key-label">1/9 左下</span>
+              </div>
+              <div class="key-base key-std key-highlight-size" data-key="8">
+                <span>8</span>
+                <span class="key-label">1/9 下中</span>
+              </div>
+              <div class="key-base key-std key-highlight-size" data-key="9">
+                <span>9</span>
+                <span class="key-label">1/9 右下</span>
+              </div>
+              <div class="key-base key-std text-zinc-600">0</div>
+              <div class="key-base key-std key-highlight-size" data-key="-">
+                <span>-</span>
+                <span class="key-label">缩小</span>
+              </div>
+              <div class="key-base key-std key-highlight-size" data-key="=">
+                <span>=</span>
+                <span class="key-label">放大</span>
+              </div>
+              <div class="key-base key-wide text-zinc-600">delete</div>
+            </div>
+
+            <!-- Row 3: QWERTY row -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-wide text-zinc-600">tab</div>
+              <div class="key-base key-std key-highlight-position" data-key="Q">
+                <span>Q</span>
+                <span class="key-label">1/4 左上</span>
+              </div>
+              <div class="key-base key-std key-highlight-position" data-key="W">
+                <span>W</span>
+                <span class="key-label">1/2 上</span>
+              </div>
+              <div class="key-base key-std key-highlight-position" data-key="E">
+                <span>E</span>
+                <span class="key-label">1/4 右上</span>
+              </div>
+              <div class="key-base key-std text-zinc-600">R</div>
+              <div class="key-base key-std text-zinc-600">T</div>
+              <div class="key-base key-std text-zinc-600">Y</div>
+              <div class="key-base key-std text-zinc-600">U</div>
+              <div class="key-base key-std text-zinc-600">I</div>
+              <div class="key-base key-std text-zinc-600">O</div>
+              <div class="key-base key-std text-zinc-600">P</div>
+              <div class="key-base key-std text-zinc-600">[</div>
+              <div class="key-base key-std text-zinc-600">]</div>
+              <div class="key-base key-wide key-highlight-size" data-key="\">
+                <span>\</span>
+                <span class="key-label">左右分屏</span>
+              </div>
+            </div>
+
+            <!-- Row 4: ASDF row -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-wide key-highlight-hyper">
+                <span>✦ Hyper</span>
+                <span class="key-label">⇪ Caps</span>
+              </div>
+              <div class="key-base key-std key-highlight-position" data-key="A">
+                <span>A</span>
+                <span class="key-label">1/2 左</span>
+              </div>
+              <div class="key-base key-std key-highlight-size" data-key="S">
+                <span>S</span>
+                <span class="key-label">居中</span>
+              </div>
+              <div class="key-base key-std key-highlight-position" data-key="D">
+                <span>D</span>
+                <span class="key-label">1/2 右</span>
+              </div>
+              <div class="key-base key-std text-zinc-600">F</div>
+              <div class="key-base key-std text-zinc-600">G</div>
+              <div class="key-base key-std text-zinc-600">H</div>
+              <div class="key-base key-std text-zinc-600">J</div>
+              <div class="key-base key-std text-zinc-600">K</div>
+              <div class="key-base key-std text-zinc-600">L</div>
+              <div class="key-base key-std text-zinc-600">;</div>
+              <div class="key-base key-std text-zinc-600">'</div>
+              <div class="key-base key-wide key-highlight-size" data-key="return">
+                <span>⏎</span>
+                <span class="key-label">下一屏</span>
+              </div>
+            </div>
+
+            <!-- Row 5: ZXCV row -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-wider text-zinc-600">shift</div>
+              <div class="key-base key-std key-highlight-position" data-key="Z">
+                <span>Z</span>
+                <span class="key-label">1/4 左下</span>
+              </div>
+              <div class="key-base key-std key-highlight-position" data-key="X">
+                <span>X</span>
+                <span class="key-label">1/2 下</span>
+              </div>
+              <div class="key-base key-std key-highlight-position" data-key="C">
+                <span>C</span>
+                <span class="key-label">1/4 右下</span>
+              </div>
+              <div class="key-base key-std text-zinc-600">V</div>
+              <div class="key-base key-std text-zinc-600">B</div>
+<div class="key-base key-std text-zinc-600">N</div>
+               <div class="key-base key-std text-zinc-600">M</div>
+               <div class="key-base key-std text-zinc-600">,</div>
+<div class="key-base key-std key-highlight-size" data-key=".">
+                 <span>.</span>
+                 <span class="key-label">台前调度</span>
+               </div>
+               <div class="key-base key-std key-highlight-size" data-key="/">
+                 <span>/</span>
+                 <span class="key-label">上下分屏</span>
+               </div>
+               <div class="key-base key-wider text-zinc-600">shift</div>
+            </div>
+
+            <!-- Row 6: Bottom row -->
+            <div class="flex justify-center gap-1">
+              <div class="key-base key-space text-zinc-600">fn</div>
+              <div class="key-base key-space text-zinc-600">ctrl</div>
+              <div class="key-base key-space text-zinc-600">opt</div>
+              <div class="key-base key-space text-zinc-600">⌘</div>
+              <div class="key-base key-longer text-zinc-600">space</div>
+              <div class="key-base key-space text-zinc-600">⌘</div>
+              <div class="key-base key-space text-zinc-600">opt</div>
+              <div class="key-base key-space text-zinc-600">←</div>
+              <div class="key-base key-space text-zinc-600">↑</div>
+              <div class="key-base key-space text-zinc-600">↓</div>
+              <div class="key-base key-space text-zinc-600">→</div>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="mt-6 pt-4 border-t border-zinc-800">
+            <div class="grid md:grid-cols-3 gap-6">
+              <!-- Position Keys -->
+              <div>
+                <div class="flex items-center gap-2 mb-3">
+                  <div
+                    class="w-3 h-3 rounded bg-gradient-to-br from-emerald-600 to-emerald-700 border border-emerald-400">
+                  </div>
+                  <h3 class="text-sm font-semibold text-emerald-400">窗口位置控制</h3>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #059669 0%, #047857 100%); border-color: #10b981;">Q/E</span>
+                    <span class="text-zinc-400">1/4 上角</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #059669 0%, #047857 100%); border-color: #10b981;">Z/C</span>
+                    <span class="text-zinc-400">1/4 下角</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #059669 0%, #047857 100%); border-color: #10b981;">W/X</span>
+                    <span class="text-zinc-400">1/2 上下半屏</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #059669 0%, #047857 100%); border-color: #10b981;">A/D</span>
+                    <span class="text-zinc-400">1/2 左右半屏</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Nine Grid -->
+              <div>
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-3 h-3 rounded bg-gradient-to-br from-cyan-600 to-cyan-700 border border-cyan-400"></div>
+                  <h3 class="text-sm font-semibold text-cyan-400">九宫格定位 (1-9)</h3>
+                </div>
+                <div class="grid grid-cols-3 gap-1">
+                  <div
+                    class="aspect-square bg-cyan-900/30 rounded border border-cyan-500/30 flex flex-col items-center justify-center text-xs text-cyan-400">
+                    <span class="font-semibold">1</span>
+                    <span class="text-[8px] opacity-60">1/9 左上</span>
+                  </div>
+                  <div
+                    class="aspect-square bg-cyan-900/30 rounded border border-cyan-500/30 flex flex-col items-center justify-center text-xs text-cyan-400">
+                    <span class="font-semibold">2</span>
+                    <span class="text-[8px] opacity-60">1/9 上中</span>
+                  </div>
+                  <div
+                    class="aspect-square bg-cyan-900/30 rounded border border-cyan-500/30 flex flex-col items-center justify-center text-xs text-cyan-400">
+                    <span class="font-semibold">3</span>
+                    <span class="text-[8px] opacity-60">1/9 右上</span>
+                  </div>
+                  <div
+                    class="aspect-square bg-cyan-900/30 rounded border border-cyan-500/30 flex flex-col items-center justify-center text-xs text-cyan-400">
+                    <span class="font-semibold">4</span>
+                    <span class="text-[8px] opacity-60">1/9 左中</span>
+                  </div>
+                  <div
+                    class="aspect-square bg-cyan-900/30 rounded border border-cyan-500/30 flex flex-col items-center justify-center text-xs text-cyan-400">
+                    <span class="font-semibold">5</span>
+                    <span class="text-[8px] opacity-60">1/9 居中</span>
+                  </div>
+                  <div
+                    class="aspect-square bg-cyan-900/30 rounded border border-cyan-500/30 flex flex-col items-center justify-center text-xs text-cyan-400">
+                    <span class="font-semibold">6</span>
+                    <span class="text-[8px] opacity-60">1/9 右中</span>
+                  </div>
+                  <div
+                    class="aspect-square bg-cyan-900/30 rounded border border-cyan-500/30 flex flex-col items-center justify-center text-xs text-cyan-400">
+                    <span class="font-semibold">7</span>
+                    <span class="text-[8px] opacity-60">1/9 左下</span>
+                  </div>
+                  <div
+                    class="aspect-square bg-cyan-900/30 rounded border border-cyan-500/30 flex flex-col items-center justify-center text-xs text-cyan-400">
+                    <span class="font-semibold">8</span>
+                    <span class="text-[8px] opacity-60">1/9 下中</span>
+                  </div>
+                  <div
+                    class="aspect-square bg-cyan-900/30 rounded border border-cyan-500/30 flex flex-col items-center justify-center text-xs text-cyan-400">
+                    <span class="font-semibold">9</span>
+                    <span class="text-[8px] opacity-60">1/9 右下</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Size Keys -->
+              <div>
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-3 h-3 rounded bg-gradient-to-br from-cyan-600 to-cyan-700 border border-cyan-400"></div>
+                  <h3 class="text-sm font-semibold text-cyan-400">窗口大小控制</h3>
+                </div>
+                <div class="space-y-2 text-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">S</span>
+                    <span class="text-zinc-400">居中 / 切换全屏</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">\</span>
+                    <span class="text-zinc-400">左右分屏</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">/</span>
+                    <span class="text-zinc-400">上下分屏</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">.</span>
+                    <span class="text-zinc-400">切换台前调度</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">+/-</span>
+                    <span class="text-zinc-400">放大 / 缩小窗口</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">[</span>
+                    <span class="text-zinc-400">缩小分屏边界</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">]</span>
+                    <span class="text-zinc-400">扩大分屏边界</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">⏎</span>
+                    <span class="text-zinc-400">移动窗口到下一屏幕</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- App Switch Flow -->
+      <div id="app-flow" class="flow-section">
+        <div class="card p-6 max-w-4xl mx-auto">
+          <p class="text-zinc-400 text-center mb-6">使用 <span class="mono text-blue-400">✦ Hyper</span> 键配合以下按键快速切换应用</p>
+
+          <!-- Mac Keyboard Layout -->
+          <div class="keyboard-container">
+            <!-- Row 1: Function keys hint -->
+            <div class="flex justify-center gap-1 mb-2 text-xs text-zinc-600">
+              <div class="w-12 h-6 flex items-center justify-center">Esc</div>
+              <div class="w-12 h-6 flex items-center justify-center">F1</div>
+              <div class="w-12 h-6 flex items-center justify-center">F2</div>
+              <div class="w-12 h-6 flex items-center justify-center">F3</div>
+              <div class="w-12 h-6 flex items-center justify-center">F4</div>
+              <div class="w-12 h-6 flex items-center justify-center">F5</div>
+              <div class="w-12 h-6 flex items-center justify-center">F6</div>
+              <div class="w-12 h-6 flex items-center justify-center">F7</div>
+              <div class="w-12 h-6 flex items-center justify-center">F8</div>
+              <div class="w-12 h-6 flex items-center justify-center">F9</div>
+              <div class="w-12 h-6 flex items-center justify-center">F10</div>
+              <div class="w-12 h-6 flex items-center justify-center">F11</div>
+              <div class="w-12 h-6 flex items-center justify-center">F12</div>
+            </div>
+
+            <!-- Row 2: Number keys -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-std text-zinc-600">`</div>
+              <div class="key-base key-std text-zinc-600">1</div>
+              <div class="key-base key-std text-zinc-600">2</div>
+              <div class="key-base key-std text-zinc-600">3</div>
+              <div class="key-base key-std text-zinc-600">4</div>
+              <div class="key-base key-std text-zinc-600">5</div>
+              <div class="key-base key-std text-zinc-600">6</div>
+              <div class="key-base key-std text-zinc-600">7</div>
+              <div class="key-base key-std text-zinc-600">8</div>
+              <div class="key-base key-std text-zinc-600">9</div>
+              <div class="key-base key-std text-zinc-600">0</div>
+              <div class="key-base key-std text-zinc-600">-</div>
+              <div class="key-base key-std text-zinc-600">=</div>
+              <div class="key-base key-wide text-zinc-600">delete</div>
+            </div>
+
+            <!-- Row 3: QWERTY row -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-wide text-zinc-600">tab</div>
+              <div class="key-base key-std text-zinc-600">Q</div>
+              <div class="key-base key-std text-zinc-600">W</div>
+              <div class="key-base key-std text-zinc-600">E</div>
+              <div class="key-base key-std key-highlight-app" data-app="R">
+                <span>R</span>
+                <span class="key-label">Redis</span>
+              </div>
+              <div class="key-base key-std key-highlight-app" data-app="T">
+                <span>T</span>
+                <span class="key-label">终端</span>
+              </div>
+              <div class="key-base key-std key-highlight-app" data-app="Y">
+                <span>Y</span>
+                <span class="key-label">Discord</span>
+              </div>
+              <div class="key-base key-std key-highlight-app" data-app="U">
+                <span>U</span>
+                <span class="key-label">Teams</span>
+              </div>
+              <div class="key-base key-std key-highlight-app" data-app="I">
+                <span>I</span>
+                <span class="key-label">IDEA</span>
+              </div>
+              <div class="key-base key-std key-highlight-app" data-app="O">
+                <span>O</span>
+                <span class="key-label">Apifox</span>
+              </div>
+              <div class="key-base key-std text-zinc-600">P</div>
+              <div class="key-base key-std key-highlight-size" data-key="[">
+                <span>[</span>
+                <span class="key-label">边界-</span>
+              </div>
+              <div class="key-base key-std key-highlight-size" data-key="]">
+                <span>]</span>
+                <span class="key-label">边界+</span>
+              </div>
+              <div class="key-base key-wide text-zinc-600">\</div>
+            </div>
+
+            <!-- Row 4: ASDF row -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-wide key-highlight-hyper">
+                <span>✦ Hyper</span>
+                <span class="key-label">⇪ Caps</span>
+              </div>
+              <div class="key-base key-std text-zinc-600">A</div>
+              <div class="key-base key-std text-zinc-600">S</div>
+              <div class="key-base key-std text-zinc-600">D</div>
+              <div class="key-base key-std key-highlight-app" data-app="F">
+                <span>F</span>
+                <span class="key-label">Finder</span>
+              </div>
+              <div class="key-base key-std key-highlight-app" data-app="G">
+                <span>G</span>
+                <span class="key-label">QQ</span>
+              </div>
+              <div class="key-base key-std text-zinc-600">H</div>
+              <div class="key-base key-std text-zinc-600">J</div>
+              <div class="key-base key-std text-zinc-600">K</div>
+              <div class="key-base key-std text-zinc-600">L</div>
+              <div class="key-base key-std key-highlight-app" data-app=";">
+                <span>;</span>
+                <span class="key-label">ChatGPT</span>
+              </div>
+              <div class="key-base key-std text-zinc-600">'</div>
+              <div class="key-base key-wide text-zinc-600">return</div>
+            </div>
+
+            <!-- Row 5: ZXCV row -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-wider text-zinc-600">shift</div>
+              <div class="key-base key-std text-zinc-600">Z</div>
+              <div class="key-base key-std text-zinc-600">X</div>
+              <div class="key-base key-std text-zinc-600">C</div>
+              <div class="key-base key-std key-highlight-app" data-app="V">
+                <span>V</span>
+                <span class="key-label">微信</span>
+              </div>
+              <div class="key-base key-std key-highlight-app" data-app="B">
+                <span>B</span>
+                <span class="key-label">浏览器</span>
+              </div>
+              <div class="key-base key-std key-highlight-app" data-app="N">
+                <span>N</span>
+                <span class="key-label">Xcode</span>
+              </div>
+              <div class="key-base key-std key-highlight-app" data-app="M">
+                <span>M</span>
+                <span class="key-label">Mail</span>
+              </div>
+              <div class="key-base key-std key-highlight-app" data-app=",">
+                <span>,</span>
+                <span class="key-label">Codex</span>
+              </div>
+              <div class="key-base key-std text-zinc-600">.</div>
+              <div class="key-base key-std text-zinc-600">/</div>
+              <div class="key-base key-wider text-zinc-600">shift</div>
+            </div>
+
+            <!-- Row 6: Bottom row -->
+            <div class="flex justify-center gap-1">
+              <div class="key-base key-space text-zinc-600">fn</div>
+              <div class="key-base key-space text-zinc-600">ctrl</div>
+              <div class="key-base key-space text-zinc-600">opt</div>
+              <div class="key-base key-space text-zinc-600">⌘</div>
+              <div class="key-base key-longer text-zinc-600">space</div>
+              <div class="key-base key-space text-zinc-600">⌘</div>
+              <div class="key-base key-space text-zinc-600">opt</div>
+              <div class="key-base key-space text-zinc-600">←</div>
+              <div class="key-base key-space text-zinc-600">↑</div>
+              <div class="key-base key-space text-zinc-600">↓</div>
+              <div class="key-base key-space text-zinc-600">→</div>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="mt-6 pt-4 border-t border-zinc-800">
+            <div class="flex items-center gap-3 mb-4 justify-center">
+              <div class="w-4 h-4 rounded bg-gradient-to-br from-blue-600 to-blue-700 border border-blue-400"></div>
+              <h3 class="text-lg font-semibold text-blue-400">应用快速切换</h3>
+            </div>
+            <div class="grid md:grid-cols-3 gap-4 text-sm">
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">V</span>
+                <span class="text-zinc-400">💬 微信</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">B</span>
+                <span class="text-zinc-400">🌐 浏览器</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">R</span>
+                <span class="text-zinc-400">🗄️ Redis</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">T</span>
+                <span class="text-zinc-400">⌨️ 终端</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">F</span>
+                <span class="text-zinc-400">📁 Finder</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">I</span>
+                <span class="text-zinc-400">💻 IDEA</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">G</span>
+                <span class="text-zinc-400">💬 QQ</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">N</span>
+                <span class="text-zinc-400">💻 Xcode</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">M</span>
+                <span class="text-zinc-400">📧 Mail</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">;</span>
+                <span class="text-zinc-400">🤖 ChatGPT</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">O</span>
+                <span class="text-zinc-400">📊 Apifox</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">U</span>
+                <span class="text-zinc-400">👥 Teams</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">Y</span>
+                <span class="text-zinc-400">💬 Discord</span>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="key-cap text-xs px-2 py-1"
+                  style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">,</span>
+                <span class="text-zinc-400">💻 Codex</span>
+              </div>
+            </div>
+            <p class="text-zinc-500 text-sm text-center mt-4">一键激活 · 未启动自动启动 · 多窗口循环切换</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Overview Flow -->
+      <div id="overview-flow" class="flow-section">
+        <div class="card p-6 max-w-4xl mx-auto">
+          <p class="text-zinc-400 text-center mb-6"><span class="mono text-purple-400">✦ Hyper</span> 键功能总览 · 一键掌控全局</p>
+
+          <!-- Mac Keyboard Layout -->
+          <div class="keyboard-container">
+            <!-- Row 1: Function keys hint -->
+            <div class="flex justify-center gap-1 mb-2 text-xs text-zinc-600">
+              <div class="w-12 h-6 flex items-center justify-center">Esc</div>
+              <div class="w-12 h-6 flex items-center justify-center">F1</div>
+              <div class="w-12 h-6 flex items-center justify-center">F2</div>
+              <div class="w-12 h-6 flex items-center justify-center">F3</div>
+              <div class="w-12 h-6 flex items-center justify-center">F4</div>
+              <div class="w-12 h-6 flex items-center justify-center">F5</div>
+              <div class="w-12 h-6 flex items-center justify-center">F6</div>
+              <div class="w-12 h-6 flex items-center justify-center">F7</div>
+              <div class="w-12 h-6 flex items-center justify-center">F8</div>
+              <div class="w-12 h-6 flex items-center justify-center">F9</div>
+              <div class="w-12 h-6 flex items-center justify-center">F10</div>
+              <div class="w-12 h-6 flex items-center justify-center">F11</div>
+              <div class="w-12 h-6 flex items-center justify-center">F12</div>
+            </div>
+
+            <!-- Row 2: Number keys -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-std text-zinc-600">`</div>
+              <div class="key-base key-std key-highlight-size"><span>1</span><span class="key-label">1/9</span></div>
+              <div class="key-base key-std key-highlight-size"><span>2</span><span class="key-label">1/9</span></div>
+              <div class="key-base key-std key-highlight-size"><span>3</span><span class="key-label">1/9</span></div>
+              <div class="key-base key-std key-highlight-size"><span>4</span><span class="key-label">1/9</span></div>
+              <div class="key-base key-std key-highlight-size"><span>5</span><span class="key-label">1/9</span></div>
+              <div class="key-base key-std key-highlight-size"><span>6</span><span class="key-label">1/9</span></div>
+              <div class="key-base key-std key-highlight-size"><span>7</span><span class="key-label">1/9</span></div>
+              <div class="key-base key-std key-highlight-size"><span>8</span><span class="key-label">1/9</span></div>
+              <div class="key-base key-std key-highlight-size"><span>9</span><span class="key-label">1/9</span></div>
+<div class="key-base key-std text-zinc-600">0</div>
+               <div class="key-base key-std key-highlight-size"><span>-</span><span class="key-label">缩小</span></div>
+               <div class="key-base key-std key-highlight-size"><span>=</span><span class="key-label">放大</span></div>
+               <div class="key-base key-wide text-zinc-600">delete</div>
+            </div>
+
+            <!-- Row 3: QWERTY row -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-wide text-zinc-600">tab</div>
+              <div class="key-base key-std key-highlight-position"><span>Q</span><span class="key-label">1/4</span>
+              </div>
+              <div class="key-base key-std key-highlight-position"><span>W</span><span class="key-label">1/2</span>
+              </div>
+              <div class="key-base key-std key-highlight-position"><span>E</span><span class="key-label">1/4</span>
+              </div>
+<div class="key-base key-std key-highlight-app"><span>R</span><span class="key-label">Redis</span></div>
+               <div class="key-base key-std key-highlight-app"><span>T</span><span class="key-label">终端</span></div>
+               <div class="key-base key-std key-highlight-app"><span>Y</span><span class="key-label">Discord</span></div>
+               <div class="key-base key-std key-highlight-app"><span>U</span><span class="key-label">Teams</span></div>
+               <div class="key-base key-std key-highlight-app"><span>I</span><span class="key-label">IDEA</span></div>
+<div class="key-base key-std key-highlight-app"><span>O</span><span class="key-label">Apifox</span></div>
+              <div class="key-base key-std text-zinc-600">P</div>
+              <div class="key-base key-std key-highlight-size"><span>[</span><span class="key-label">边界-</span></div>
+              <div class="key-base key-std key-highlight-size"><span>]</span><span class="key-label">边界+</span></div>
+              <div class="key-base key-wide key-highlight-size"><span>\</span><span class="key-label">左右分屏</span></div>
+            </div>
+
+            <!-- Row 4: ASDF row -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-wide key-highlight-hyper"><span>✦ Hyper</span></div>
+              <div class="key-base key-std key-highlight-position"><span>A</span><span class="key-label">1/2</span>
+              </div>
+              <div class="key-base key-std key-highlight-size"><span>S</span><span class="key-label">居中</span></div>
+              <div class="key-base key-std key-highlight-position"><span>D</span><span class="key-label">1/2</span>
+              </div>
+<div class="key-base key-std key-highlight-app"><span>F</span><span class="key-label">Finder</span></div>
+               <div class="key-base key-std key-highlight-app"><span>G</span><span class="key-label">QQ</span></div>
+               <div class="key-base key-std key-highlight-nav"><span>H</span><span class="key-label">← 左</span></div>
+              <div class="key-base key-std key-highlight-nav"><span>J</span><span class="key-label">↓ 下</span></div>
+              <div class="key-base key-std key-highlight-nav"><span>K</span><span class="key-label">↑ 上</span></div>
+              <div class="key-base key-std key-highlight-nav"><span>L</span><span class="key-label">→ 右</span></div>
+              <div class="key-base key-std key-highlight-app"><span>;</span><span class="key-label">ChatGPT</span></div>
+              <div class="key-base key-std text-zinc-600">'</div>
+              <div class="key-base key-wide key-highlight-size"><span>⏎</span><span class="key-label">下一屏</span></div>
+            </div>
+
+            <!-- Row 5: ZXCV row -->
+            <div class="flex justify-center gap-1 mb-1">
+              <div class="key-base key-wider text-zinc-600">shift</div>
+              <div class="key-base key-std key-highlight-position"><span>Z</span><span class="key-label">1/4</span>
+              </div>
+              <div class="key-base key-std key-highlight-position"><span>X</span><span class="key-label">1/2</span>
+              </div>
+              <div class="key-base key-std key-highlight-position"><span>C</span><span class="key-label">1/4</span>
+              </div>
+              <div class="key-base key-std key-highlight-app"><span>V</span><span class="key-label">微信</span></div>
+<div class="key-base key-std key-highlight-app"><span>B</span><span class="key-label">浏览器</span></div>
+               <div class="key-base key-std key-highlight-app"><span>N</span><span class="key-label">Xcode</span></div>
+               <div class="key-base key-std key-highlight-app"><span>M</span><span class="key-label">Mail</span></div>
+<div class="key-base key-std key-highlight-app"><span>,</span><span class="key-label">Codex</span></div>
+               <div class="key-base key-std key-highlight-size"><span>.</span><span class="key-label">台前调度</span></div>
+              <div class="key-base key-std key-highlight-size"><span>/</span><span class="key-label">上下分屏</span></div>
+              <div class="key-base key-wider text-zinc-600">shift</div>
+            </div>
+
+            <!-- Row 6: Bottom row -->
+            <div class="flex justify-center gap-1">
+              <div class="key-base key-space text-zinc-600">fn</div>
+              <div class="key-base key-space text-zinc-600">ctrl</div>
+              <div class="key-base key-space text-zinc-600">opt</div>
+              <div class="key-base key-space text-zinc-600">⌘</div>
+              <div class="key-base key-longer text-zinc-600">space</div>
+              <div class="key-base key-space text-zinc-600">⌘</div>
+              <div class="key-base key-space text-zinc-600">opt</div>
+              <div class="key-base key-space text-zinc-600">←</div>
+              <div class="key-base key-space text-zinc-600">↑</div>
+              <div class="key-base key-space text-zinc-600">↓</div>
+              <div class="key-base key-space text-zinc-600">→</div>
+            </div>
+          </div>
+
+          <!-- Legend -->
+          <div class="mt-6 pt-6 border-t border-zinc-800">
+            <div class="grid md:grid-cols-4 gap-6">
+              <!-- Navigation -->
+              <div>
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-4 h-4 rounded bg-gradient-to-br from-pink-600 to-pink-700 border border-pink-400"></div>
+                  <h3 class="text-sm font-semibold text-pink-400">光标移动</h3>
+                </div>
+                <div class="space-y-2 text-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #db2777 0%, #be185d 100%); border-color: #f472b6;">H</span>
+                    <span class="text-zinc-400">← 左</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #db2777 0%, #be185d 100%); border-color: #f472b6;">J</span>
+                    <span class="text-zinc-400">↓ 下</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #db2777 0%, #be185d 100%); border-color: #f472b6;">K</span>
+                    <span class="text-zinc-400">↑ 上</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #db2777 0%, #be185d 100%); border-color: #f472b6;">L</span>
+                    <span class="text-zinc-400">→ 右</span>
+                  </div>
+                </div>
+                <p class="text-zinc-500 text-xs mt-3">Vim 风格方向键，在任意应用中均可使用</p>
+              </div>
+
+              <!-- Window Position -->
+              <div>
+                <div class="flex items-center gap-2 mb-3">
+                  <div
+                    class="w-4 h-4 rounded bg-gradient-to-br from-emerald-600 to-emerald-700 border border-emerald-400">
+                  </div>
+                  <h3 class="text-sm font-semibold text-emerald-400">窗口位置</h3>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #059669 0%, #047857 100%); border-color: #10b981;">Q/E</span>
+                    <span class="text-zinc-400">1/4 上角</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #059669 0%, #047857 100%); border-color: #10b981;">Z/C</span>
+                    <span class="text-zinc-400">1/4 下角</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #059669 0%, #047857 100%); border-color: #10b981;">W/X</span>
+                    <span class="text-zinc-400">1/2 上/下</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #059669 0%, #047857 100%); border-color: #10b981;">A/D</span>
+                    <span class="text-zinc-400">1/2 左/右</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Window Size -->
+              <div>
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-4 h-4 rounded bg-gradient-to-br from-cyan-600 to-cyan-700 border border-cyan-400"></div>
+<h3 class="text-sm font-semibold text-cyan-400">窗口大小</h3>
+                 </div>
+                 <div class="space-y-2 text-xs">
+                   <div class="flex items-center gap-2">
+                     <span class="key-cap text-xs px-1.5 py-0.5"
+                       style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">1-9</span>
+                     <span class="text-zinc-400">九宫格定位</span>
+                   </div>
+<div class="flex items-center gap-2">
+                      <span class="key-cap text-xs px-1.5 py-0.5"
+                        style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">S</span>
+                      <span class="text-zinc-400">居中/全屏</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="key-cap text-xs px-1.5 py-0.5"
+                        style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">\</span>
+                      <span class="text-zinc-400">左右分屏</span>
+                    </div>
+                    <div class="flex items-center gap-2">
+                      <span class="key-cap text-xs px-1.5 py-0.5"
+                        style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">/</span>
+                      <span class="text-zinc-400">上下分屏</span>
+                    </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">\</span>
+                    <span class="text-zinc-400">左右分屏</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">/</span>
+                    <span class="text-zinc-400">上下分屏</span>
+                  </div>
+                   <div class="flex items-center gap-2">
+                     <span class="key-cap text-xs px-1.5 py-0.5"
+                       style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">-</span>
+                     <span class="text-zinc-400">缩小</span>
+                   </div>
+                   <div class="flex items-center gap-2">
+                     <span class="key-cap text-xs px-1.5 py-0.5"
+                       style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">=</span>
+                     <span class="text-zinc-400">放大</span>
+                   </div>
+                   <div class="flex items-center gap-2">
+                     <span class="key-cap text-xs px-1.5 py-0.5"
+                       style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">[</span>
+                     <span class="text-zinc-400">缩小边界</span>
+                   </div>
+                   <div class="flex items-center gap-2">
+                     <span class="key-cap text-xs px-1.5 py-0.5"
+                       style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">]</span>
+                     <span class="text-zinc-400">扩大边界</span>
+                   </div>
+                   <div class="flex items-center gap-2">
+                     <span class="key-cap text-xs px-1.5 py-0.5"
+                       style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">.</span>
+                     <span class="text-zinc-400">台前调度</span>
+                   </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%); border-color: #22d3ee;">⏎</span>
+                    <span class="text-zinc-400">下一屏幕</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- App Switch -->
+              <div>
+                <div class="flex items-center gap-2 mb-3">
+                  <div class="w-4 h-4 rounded bg-gradient-to-br from-blue-600 to-blue-700 border border-blue-400"></div>
+                  <h3 class="text-sm font-semibold text-blue-400">应用切换</h3>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs">
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">V</span>
+                    <span class="text-zinc-400">微信</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">B</span>
+                    <span class="text-zinc-400">浏览器</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">R</span>
+                    <span class="text-zinc-400">Redis</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">T</span>
+                    <span class="text-zinc-400">终端</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">F</span>
+                    <span class="text-zinc-400">Finder</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">I</span>
+                    <span class="text-zinc-400">IDEA</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">G</span>
+                    <span class="text-zinc-400">QQ</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">N</span>
+                    <span class="text-zinc-400">Xcode</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">M</span>
+                    <span class="text-zinc-400">Mail</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">;</span>
+                    <span class="text-zinc-400">ChatGPT</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">O</span>
+                    <span class="text-zinc-400">Apifox</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">Y</span>
+                    <span class="text-zinc-400">Discord</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">U</span>
+                    <span class="text-zinc-400">Teams</span>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <span class="key-cap text-xs px-1.5 py-0.5"
+                      style="background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 100%); border-color: #3b82f6;">,</span>
+                    <span class="text-zinc-400">Codex</span>
+                  </div>
+                </div>
+                <p class="text-zinc-500 text-xs mt-3">一键激活 · 未启动自动启动 · 多窗口循环切换</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <div class="section-divider my-16"></div>
+
+    <!-- Quick Reference -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold text-center mb-8">快捷键速查</h2>
+
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Navigation -->
+        <div class="card p-6">
+          <h3 class="text-lg font-semibold mb-4 text-pink-400">🎮 光标移动</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+H</span>
+              <span>← 左</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+J</span>
+              <span>↓ 下</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+K</span>
+              <span>↑ 上</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+L</span>
+              <span>→ 右</span>
+            </div>
+            <div class="border-t border-zinc-800 my-2"></div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Ctrl+H</span>
+              <span>删除</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Ctrl+;</span>
+              <span>Esc</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Window Position -->
+        <div class="card p-6">
+          <h3 class="text-lg font-semibold mb-4 text-emerald-400">🪟 窗口位置</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+A</span>
+              <span>左半屏</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+D</span>
+              <span>右半屏</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+W</span>
+              <span>上半屏</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+X</span>
+              <span>下半屏</span>
+            </div>
+            <div class="border-t border-zinc-800 my-2"></div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+Q/E</span>
+              <span>上角</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+Z/C</span>
+              <span>下角</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Window Size -->
+        <div class="card p-6">
+          <h3 class="text-lg font-semibold mb-4 text-cyan-400">📐 窗口大小</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+1~9</span>
+              <span>九宫格</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+S</span>
+              <span>居中/全屏</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+\</span>
+              <span>左右分屏</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+/</span>
+              <span>上下分屏</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+.</span>
+              <span>台前调度</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper++</span>
+              <span>放大</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+-</span>
+              <span>缩小</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+[</span>
+              <span>缩小分屏边界</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+]</span>
+              <span>扩大分屏边界</span>
+            </div>
+            <div class="border-t border-zinc-800 my-2"></div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+⏎</span>
+              <span>下一屏幕</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Apps -->
+        <div class="card p-6">
+          <h3 class="text-lg font-semibold mb-4 text-blue-400">⚡ 应用切换</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+V</span>
+              <span>💬 微信</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+B</span>
+              <span>🌐 浏览器</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+R</span>
+              <span>🗄️ Redis</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+T</span>
+              <span>⌨️ 终端</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+F</span>
+              <span>📁 Finder</span>
+            </div>
+            <div class="border-t border-zinc-800 my-2"></div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+G</span>
+              <span>💬 QQ</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+N</span>
+              <span>💻 Xcode</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+I</span>
+              <span>💻 IDEA</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+;</span>
+              <span>🤖 ChatGPT</span>
+            </div>
+            <div class="flex justify-between items-center">
+              <span class="mono text-zinc-500">Hyper+,</span>
+              <span>💻 Codex</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tech Stack -->
+    <section class="mb-16">
+      <div class="card p-8 max-w-2xl mx-auto text-center">
+        <h3 class="text-xl font-semibold mb-6">工具栈</h3>
+        <div class="flex justify-center gap-12">
+          <div class="flex flex-col items-center">
+            <img src="karabiner-icon.svg" alt="Karabiner-Elements" class="w-16 h-16 mb-3 rounded-xl">
+            <div class="font-semibold text-purple-400">Karabiner-Elements</div>
+            <div class="text-zinc-500 text-sm">底层按键映射</div>
+          </div>
+          <div class="flex flex-col items-center">
+            <img src="hammerspoon-icon.png" alt="Hammerspoon" class="w-16 h-16 mb-3 rounded-lg">
+            <div class="font-semibold text-cyan-400">Hammerspoon</div>
+            <div class="text-zinc-500 text-sm">窗口与应用管理</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider my-16"></div>
+
+    <!-- Configuration Section -->
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold text-center mb-8">配置详解</h2>
+
+      <div class="card p-6 max-w-4xl mx-auto">
+        <p class="text-zinc-400 text-center mb-6">以下展示核心配置文件，您可以根据自己的需求进行调整</p>
+
+        <!-- Config Tabs -->
+        <div class="config-tabs justify-center">
+          <button class="config-tab active" data-config="karabiner">Karabiner-Elements</button>
+          <button class="config-tab" data-config="hammerspoon">Hammerspoon</button>
+        </div>
+
+        <!-- Karabiner Config -->
+        <div id="karabiner-config" class="config-section active">
+          <div class="code-block mb-6">
+            <div class="code-header">
+              <div class="code-dots">
+                <div class="code-dot" style="background: #ff5f56;"></div>
+                <div class="code-dot" style="background: #ffbd2e;"></div>
+                <div class="code-dot" style="background: #27ca40;"></div>
+              </div>
+              <span class="code-title">~/.config/karabiner/assets/complex_modifications/yelog.json</span>
+              <button class="copy-btn" onclick="copyCode(this, 'karabiner-code')">复制</button>
+            </div>
+            <div class="code-content" id="karabiner-code">
+<pre><span class="code-bracket">{</span>
+  <span class="code-key">"title"</span>: <span class="code-string">"yelog key-maping perferences"</span>,
+  <span class="code-key">"rules"</span>: <span class="code-bracket">[</span>
+    <span class="code-bracket">{</span>
+      <span class="code-comment">// Caps Lock 按下时映射为 ⌘⌥⇧，单独按下切换大小写</span>
+      <span class="code-key">"description"</span>: <span class="code-string">"Change caps_lock to cmd+opt+shift if pressed with other keys"</span>,
+      <span class="code-key">"manipulators"</span>: <span class="code-bracket">[</span>
+        <span class="code-bracket">{</span>
+          <span class="code-key">"type"</span>: <span class="code-string">"basic"</span>,
+          <span class="code-key">"from"</span>: <span class="code-bracket">{</span> <span class="code-key">"key_code"</span>: <span class="code-string">"caps_lock"</span>, <span class="code-key">"modifiers"</span>: <span class="code-bracket">{</span> <span class="code-key">"optional"</span>: <span class="code-bracket">[</span><span class="code-string">"any"</span><span class="code-bracket">]</span> <span class="code-bracket">}</span> <span class="code-bracket">}</span>,
+          <span class="code-key">"to"</span>: <span class="code-bracket">[</span>
+            <span class="code-bracket">{</span> <span class="code-key">"key_code"</span>: <span class="code-string">"left_shift"</span>, <span class="code-key">"modifiers"</span>: <span class="code-bracket">[</span><span class="code-string">"left_command"</span>, <span class="code-string">"left_option"</span><span class="code-bracket">]</span> <span class="code-bracket">}</span>
+          <span class="code-bracket">]</span>,
+          <span class="code-key">"to_if_alone"</span>: <span class="code-bracket">[</span>
+            <span class="code-bracket">{</span> <span class="code-key">"hold_down_milliseconds"</span>: <span class="code-number">100</span>, <span class="code-key">"key_code"</span>: <span class="code-string">"caps_lock"</span> <span class="code-bracket">}</span>
+          <span class="code-bracket">]</span>
+        <span class="code-bracket">}</span>
+      <span class="code-bracket">]</span>
+    <span class="code-bracket">}</span>,
+    <span class="code-bracket">{</span>
+      <span class="code-comment">// H/J/K/L 映射为方向键</span>
+      <span class="code-key">"description"</span>: <span class="code-string">"(cmd+opt+shift) + h/j/k/l == vim directional Keys"</span>,
+      <span class="code-key">"manipulators"</span>: <span class="code-bracket">[</span>
+        <span class="code-bracket">{</span> <span class="code-key">"from"</span>: <span class="code-bracket">{</span> <span class="code-key">"key_code"</span>: <span class="code-string">"h"</span>, <span class="code-key">"modifiers"</span>: <span class="code-bracket">{</span> <span class="code-key">"mandatory"</span>: <span class="code-bracket">[</span><span class="code-string">"left_shift"</span>, <span class="code-string">"left_command"</span>, <span class="code-string">"left_option"</span><span class="code-bracket">]</span> <span class="code-bracket">}</span> <span class="code-bracket">}</span>, <span class="code-key">"to"</span>: <span class="code-bracket">[</span><span class="code-bracket">{</span> <span class="code-key">"key_code"</span>: <span class="code-string">"left_arrow"</span> <span class="code-bracket">}</span><span class="code-bracket">]</span>, <span class="code-key">"type"</span>: <span class="code-string">"basic"</span> <span class="code-bracket">}</span>,
+        <span class="code-bracket">{</span> <span class="code-key">"from"</span>: <span class="code-bracket">{</span> <span class="code-key">"key_code"</span>: <span class="code-string">"j"</span>, <span class="code-key">"modifiers"</span>: <span class="code-bracket">{</span> <span class="code-key">"mandatory"</span>: <span class="code-bracket">[</span><span class="code-string">"left_shift"</span>, <span class="code-string">"left_command"</span>, <span class="code-string">"left_option"</span><span class="code-bracket">]</span> <span class="code-bracket">}</span> <span class="code-bracket">}</span>, <span class="code-key">"to"</span>: <span class="code-bracket">[</span><span class="code-bracket">{</span> <span class="code-key">"key_code"</span>: <span class="code-string">"down_arrow"</span> <span class="code-bracket">}</span><span class="code-bracket">]</span>, <span class="code-key">"type"</span>: <span class="code-string">"basic"</span> <span class="code-bracket">}</span>,
+        <span class="code-bracket">{</span> <span class="code-key">"from"</span>: <span class="code-bracket">{</span> <span class="code-key">"key_code"</span>: <span class="code-string">"k"</span>, <span class="code-key">"modifiers"</span>: <span class="code-bracket">{</span> <span class="code-key">"mandatory"</span>: <span class="code-bracket">[</span><span class="code-string">"left_shift"</span>, <span class="code-string">"left_command"</span>, <span class="code-string">"left_option"</span><span class="code-bracket">]</span> <span class="code-bracket">}</span> <span class="code-bracket">}</span>, <span class="code-key">"to"</span>: <span class="code-bracket">[</span><span class="code-bracket">{</span> <span class="code-key">"key_code"</span>: <span class="code-string">"up_arrow"</span> <span class="code-bracket">}</span><span class="code-bracket">]</span>, <span class="code-key">"type"</span>: <span class="code-string">"basic"</span> <span class="code-bracket">}</span>,
+        <span class="code-bracket">{</span> <span class="code-key">"from"</span>: <span class="code-bracket">{</span> <span class="code-key">"key_code"</span>: <span class="code-string">"l"</span>, <span class="code-key">"modifiers"</span>: <span class="code-bracket">{</span> <span class="code-key">"mandatory"</span>: <span class="code-bracket">[</span><span class="code-string">"left_shift"</span>, <span class="code-string">"left_command"</span>, <span class="code-string">"left_option"</span><span class="code-bracket">]</span> <span class="code-bracket">}</span> <span class="code-bracket">}</span>, <span class="code-key">"to"</span>: <span class="code-bracket">[</span><span class="code-bracket">{</span> <span class="code-key">"key_code"</span>: <span class="code-string">"right_arrow"</span> <span class="code-bracket">}</span><span class="code-bracket">]</span>, <span class="code-key">"type"</span>: <span class="code-string">"basic"</span> <span class="code-bracket">}</span>
+      <span class="code-bracket">]</span>
+    <span class="code-bracket">}</span>
+  <span class="code-bracket">]</span>
+<span class="code-bracket">}</span></pre>
+            </div>
+          </div>
+          <div class="p-4 rounded-lg bg-purple-900/20 border border-purple-500/30">
+            <p class="text-purple-300 text-sm">💡 <strong>Karabiner-Elements</strong> 负责 Caps Lock 到 Hyper 键的底层映射。将此 JSON 文件放入 <code class="mono text-xs bg-zinc-800 px-1 rounded">~/.config/karabiner/assets/complex_modifications/</code> 目录，然后在 Karabiner-Elements 设置中启用即可。</p>
+          </div>
+        </div>
+
+        <!-- Hammerspoon Config -->
+        <div id="hammerspoon-config" class="config-section">
+          <div class="code-block mb-6">
+            <div class="code-header">
+              <div class="code-dots">
+                <div class="code-dot" style="background: #ff5f56;"></div>
+                <div class="code-dot" style="background: #ffbd2e;"></div>
+                <div class="code-dot" style="background: #27ca40;"></div>
+              </div>
+              <span class="code-title">~/.config/hammerspoon/</span>
+              <button class="copy-btn" onclick="copyCode(this, 'hammerspoon-code')">复制</button>
+            </div>
+            <div class="code-content" id="hammerspoon-code">
+<pre><span class="code-lua-comment">-- ============================================</span>
+<span class="code-lua-comment">-- init.lua - Hammerspoon 入口文件</span>
+<span class="code-lua-comment">-- ============================================</span>
+
+<span class="code-lua-keyword">hs.hotkey.alertDuration</span> = <span class="code-lua-number">0</span>
+<span class="code-lua-keyword">hs.window.animationDuration</span> = <span class="code-lua-number">0.125</span>
+
+<span class="code-lua-comment">-- 加载功能模块</span>
+<span class="code-lua-function">require</span>(<span class="code-lua-string">"modules.window.split"</span>)
+<span class="code-lua-function">require</span>(<span class="code-lua-string">"modules.window.layout"</span>)
+<span class="code-lua-function">require</span>(<span class="code-lua-string">"modules.window.position"</span>)
+<span class="code-lua-function">require</span>(<span class="code-lua-string">"modules.window.resize"</span>)
+<span class="code-lua-function">require</span>(<span class="code-lua-string">"modules.window.multiscreen"</span>)
+<span class="code-lua-function">require</span>(<span class="code-lua-string">"modules.app"</span>)
+<span class="code-lua-function">require</span>(<span class="code-lua-string">"modules.screen"</span>)
+
+
+<span class="code-lua-comment">-- ============================================</span>
+<span class="code-lua-comment">-- config/keys.lua - 快捷键定义</span>
+<span class="code-lua-comment">-- ============================================</span>
+
+<span class="code-lua-keyword">local</span> M = {}
+
+<span class="code-lua-comment">-- Hyper 键 (⌘⌥⇧) - 与 Karabiner 映射一致</span>
+M.hyper = { <span class="code-lua-string">"shift"</span>, <span class="code-lua-string">"alt"</span>, <span class="code-lua-string">"cmd"</span> }
+<span class="code-lua-comment">-- Super 键 (⌘⌥⇧⌃)</span>
+M.super = { <span class="code-lua-string">"shift"</span>, <span class="code-lua-string">"alt"</span>, <span class="code-lua-string">"cmd"</span>, <span class="code-lua-string">"ctrl"</span> }
+
+<span class="code-lua-keyword">return</span> M
+
+
+<span class="code-lua-comment">-- ============================================</span>
+<span class="code-lua-comment">-- config/apps.lua - 应用切换配置</span>
+<span class="code-lua-comment">-- ============================================</span>
+
+<span class="code-lua-keyword">local</span> keys = <span class="code-lua-function">require</span>(<span class="code-lua-string">"config.keys"</span>)
+
+<span class="code-lua-keyword">local</span> M = {
+  { prefix = keys.hyper, key = <span class="code-lua-string">"V"</span>, message = <span class="code-lua-string">"WeChat"</span>, appName = <span class="code-lua-string">"WeChat"</span> },
+  { prefix = keys.hyper, key = <span class="code-lua-string">"G"</span>, message = <span class="code-lua-string">"QQ"</span>, appName = <span class="code-lua-string">"QQ"</span> },
+  { prefix = keys.hyper, key = <span class="code-lua-string">"F"</span>, message = <span class="code-lua-string">"Finder"</span>, appName = <span class="code-lua-string">"Finder"</span> },
+  { prefix = keys.hyper, key = <span class="code-lua-string">"B"</span>, message = <span class="code-lua-string">"Browser"</span>, appName = <span class="code-lua-string">"Arc"</span> },
+  { prefix = keys.hyper, key = <span class="code-lua-string">"I"</span>, message = <span class="code-lua-string">"IntelliJ IDEA"</span>, appName = <span class="code-lua-string">"IntelliJ IDEA"</span> },
+  { prefix = keys.hyper, key = <span class="code-lua-string">"T"</span>, message = <span class="code-lua-string">"Terminal"</span>, appName = <span class="code-lua-string">"kitty"</span> },
+  { prefix = keys.hyper, key = <span class="code-lua-string">";"</span>, message = <span class="code-lua-string">"ChatGPT"</span>, appName = <span class="code-lua-string">"ChatGPT"</span> },
+  { prefix = keys.hyper, key = <span class="code-lua-string">","</span>, message = <span class="code-lua-string">"Codex"</span>, appName = <span class="code-lua-string">"Codex"</span> },
+}
+
+<span class="code-lua-keyword">return</span> M
+
+
+<span class="code-lua-comment">-- ============================================</span>
+<span class="code-lua-comment">-- modules/app.lua - 应用切换模块</span>
+<span class="code-lua-comment">-- ============================================</span>
+
+<span class="code-lua-keyword">local</span> helper = <span class="code-lua-function">require</span>(<span class="code-lua-string">"utils.helper"</span>)
+<span class="code-lua-keyword">local</span> apps = <span class="code-lua-function">require</span>(<span class="code-lua-string">"config.apps"</span>)
+
+<span class="code-lua-comment">-- 自动解析 appName 获取 bundleId</span>
+<span class="code-lua-keyword">local</span> bundleIdCache = {}
+<span class="code-lua-keyword">local function</span> <span class="code-lua-function">resolveBundleId</span>(appName)
+  <span class="code-lua-keyword">if</span> bundleIdCache[appName] <span class="code-lua-keyword">then</span> <span class="code-lua-keyword">return</span> bundleIdCache[appName] <span class="code-lua-keyword">end</span>
+  <span class="code-lua-keyword">local</span> output = <span class="code-lua-function">hs.execute</span>(<span class="code-lua-string">"osascript -e 'id of app \""</span> .. appName .. <span class="code-lua-string">"\"' 2>/dev/null"</span>)
+  <span class="code-lua-keyword">if</span> output <span class="code-lua-keyword">and</span> output ~= <span class="code-lua-string">""</span> <span class="code-lua-keyword">then</span>
+    <span class="code-lua-keyword">local</span> bundleId = output:<span class="code-lua-function">gsub</span>(<span class="code-lua-string">"%s+$"</span>, <span class="code-lua-string">""</span>)
+    bundleIdCache[appName] = bundleId
+    <span class="code-lua-keyword">return</span> bundleId
+  <span class="code-lua-keyword">end</span>
+  <span class="code-lua-keyword">return</span> <span class="code-lua-keyword">nil</span>
+<span class="code-lua-keyword">end</span>
+
+<span class="code-lua-comment">-- 绑定快捷键</span>
+<span class="code-lua-function">hs.fnutils.each</span>(apps, <span class="code-lua-keyword">function</span>(item)
+  <span class="code-lua-keyword">local</span> bundleId = <span class="code-lua-function">resolveBundleId</span>(item.appName)
+  <span class="code-lua-function">hs.hotkey.bind</span>(item.prefix, item.key, item.message, <span class="code-lua-keyword">function</span>()
+    <span class="code-lua-function">hs.application.launchOrFocusByBundleID</span>(bundleId)
+    helper.<span class="code-lua-function">setMousePos</span>()
+  <span class="code-lua-keyword">end</span>)
+<span class="code-lua-keyword">end</span>)</pre>
+            </div>
+          </div>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="p-4 rounded-lg bg-cyan-900/20 border border-cyan-500/30">
+              <p class="text-cyan-300 text-sm"><strong>📁 文件结构</strong></p>
+              <p class="text-zinc-400 text-xs mt-2 mono">
+                ~/.config/hammerspoon/<br>
+                ├── init.lua<br>
+                ├── config/<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── keys.lua<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── apps.lua<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;└── windows.lua<br>
+                ├── modules/<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── app.lua<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;├── window/<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;├── init.lua<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;├── split.lua<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;├── layout.lua<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;├── position.lua<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;├── resize.lua<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;&nbsp;&nbsp;└── multiscreen.lua<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;└── screen.lua<br>
+                └── utils/<br>
+                &nbsp;&nbsp;&nbsp;&nbsp;└── helper.lua
+              </p>
+            </div>
+            <div class="p-4 rounded-lg bg-emerald-900/20 border border-emerald-500/30">
+              <p class="text-emerald-300 text-sm"><strong>⚙️ 自定义配置</strong></p>
+              <p class="text-zinc-400 text-xs mt-2">修改 <code class="mono text-xs bg-zinc-800 px-1 rounded">config/keys.lua</code> 定义快捷键前缀；修改 <code class="mono text-xs bg-zinc-800 px-1 rounded">config/apps.lua</code> 添加应用切换；修改 <code class="mono text-xs bg-zinc-800 px-1 rounded">config/windows.lua</code> 调整窗口管理。</p>
+              <p class="text-zinc-500 text-xs mt-2">应用使用 appName 而非 bundleId，更简洁易读。</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- GitHub Link -->
+        <div class="text-center mt-10">
+          <p class="text-zinc-400 mb-4">完整配置文件及更多功能，请访问 GitHub 仓库</p>
+          <a href="https://github.com/yelog/.config" target="_blank" class="github-link">
+            <svg height="20" viewBox="0 0 16 16" width="20" fill="currentColor">
+              <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+            </svg>
+            GitHub: yelog/.config
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <div class="section-divider my-16"></div>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-zinc-800 text-center text-zinc-500 text-sm">
+      <p>Caps Lock Hyper Key · 高效键盘工作流</p>
+    </footer>
+  </div>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const tabId = btn.dataset.tab;
+        document.querySelectorAll('.flow-section').forEach(s => s.classList.remove('active'));
+        document.getElementById(tabId + '-flow').classList.add('active');
+      });
+    });
+
+    // Config tab switching
+    document.querySelectorAll('.config-tab').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.config-tab').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const configId = btn.dataset.config;
+        document.querySelectorAll('.config-section').forEach(s => s.classList.remove('active'));
+        document.getElementById(configId + '-config').classList.add('active');
+      });
+    });
+
+    // Copy code function
+    function copyCode(btn, codeId) {
+      const codeElement = document.getElementById(codeId);
+      const text = codeElement.innerText;
+      
+      navigator.clipboard.writeText(text).then(() => {
+        btn.textContent = '已复制';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = '复制';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Key cap hover effect
+    document.querySelectorAll('.key-cap').forEach(key => {
+      key.addEventListener('mousedown', () => {
+        key.style.transform = 'translateY(1px)';
+        key.style.boxShadow = '0 1px 0 #0a0a0f, 0 2px 4px rgba(0,0,0,0.4)';
+      });
+      key.addEventListener('mouseup', () => {
+        key.style.transform = '';
+        key.style.boxShadow = '';
+      });
+      key.addEventListener('mouseleave', () => {
+        key.style.transform = '';
+        key.style.boxShadow = '';
+      });
+    });
+  </script>
+</body>
+
+</html>
