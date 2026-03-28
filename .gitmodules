@@ -7,3 +7,9 @@
 [submodule "tmux/plugins/tmux-powerline"]
 	path = tmux/plugins/tmux-powerline
 	url = https://github.com/erikw/tmux-powerline.git
+[submodule "tmux/plugins/tmux-sensible"]
+	path = tmux/plugins/tmux-sensible
+	url = https://github.com/tmux-plugins/tmux-sensible.git
+[submodule "tmux/plugins/tpm"]
+	path = tmux/plugins/tpm
+	url = https://github.com/tmux-plugins/tpm.git
