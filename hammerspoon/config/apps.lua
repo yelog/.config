@@ -15,6 +15,8 @@ local M = {
   { prefix = keys.hyper, key = ";", message = "ChatGPT", appName = "ChatGPT" },
   { prefix = keys.hyper, key = "N", message = "XCode", appName = "Xcode" },
   { prefix = keys.hyper, key = ",", message = "Codex", appName = "Codex" },
+  { prefix = keys.hyper, key = "'", message = "Telegram", appName = "Telegram" },
+  { prefix = keys.hyper, key = "P", message = "iPhone Mirroring", appName = "iPhone Mirroring" },
 }
 
 return M
