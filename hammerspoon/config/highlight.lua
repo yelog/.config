@@ -1,6 +1,6 @@
 local M = {}
 
-M.enabled = true
+M.enabled = false
 
 M.primaryColor = { red = 0, green = 0.78, blue = 1, alpha = 0.9 }
 M.glowColor = { red = 0, green = 0.78, blue = 1, alpha = 0.2 }

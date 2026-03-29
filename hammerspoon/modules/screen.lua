@@ -12,9 +12,4 @@ hs.hotkey.bind(keys.hyper, ".", "Toggle Stage Manager", function()
   helper.toggleStageManager()
 end)
 
-hs.hotkey.bind(keys.hyper, "H", "Toggle Window Highlight", function()
-  local highlight = require("modules.highlight")
-  highlight.toggle()
-end)
-
 return M
