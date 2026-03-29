@@ -55,6 +55,9 @@ keybind = super+ctrl+alt+j=unbind
 keybind = super+ctrl+alt+k=unbind
 keybind = super+ctrl+alt+l=unbind
 
+# Pane fullscreen toggle: Cmd+Ctrl+f (ignore to pass to Zellij)
+keybind = super+ctrl+f=ignore
+
 # Tab management
 keybind = super+t=unbind
 keybind = super+n=unbind
