@@ -19,6 +19,9 @@ background-image = /Users/yelog/Documents/image/紫云黄昏漫画风.jpeg
 background-image-fit = cover
 background-image-opacity = 0.4
 
+# Custom Shader (Cursor Trail Effect)
+custom-shader = ~/.config/ghostty/shaders/cursor_smear.glsl
+
 # Shell
 shell-integration = zsh
 
