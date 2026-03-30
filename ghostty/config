@@ -10,7 +10,7 @@ font-family-italic = JetBrainsMono NFM Italic
 font-family-bold-italic = JetBrainsMono NFM Bold Italic
 # 中文
 font-codepoint-map = "U+4E00-U+9FFF,U+3400-U+4DBF = Source Han Sans HW S"
-font-size = 16
+font-size = 14
 # font-thicken = true
 
 # Background
