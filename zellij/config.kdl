@@ -182,6 +182,18 @@ keybinds clear-defaults=true {
         bind "Alt ]" { NextSwapLayout; }
         bind "Alt f" { ToggleFloatingPanes; }
         bind "Ctrl g" { SwitchToMode "locked"; }
+        bind "Ctrl v" {
+            Run "lazygit" {
+                floating true
+            }
+            SwitchToMode "normal"
+        }
+        bind "Ctrl e" {
+            Run "yazi" {
+                floating true
+            }
+            SwitchToMode "normal"
+        }
         bind "Alt h" { MoveFocusOrTab "left"; }
         bind "Alt i" { MoveTab "left"; }
         bind "Alt j" { MoveFocus "down"; }
