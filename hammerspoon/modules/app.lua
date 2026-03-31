@@ -39,9 +39,11 @@ local function activateApp(bundleID)
     else
       local focusedWin = hs.window.focusedWindow()
       local activeIndex = 1
-      for i, win in ipairs(cacheWins) do
-        if win:id() == focusedWin:id() then
-          activeIndex = i
+      if focusedWin then
+        for i, win in ipairs(cacheWins) do
+          if win:id() == focusedWin:id() then
+            activeIndex = i
+          end
         end
       end
       if activeIndex == #cacheWins then
