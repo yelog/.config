@@ -4,7 +4,7 @@
 
 keybinds clear-defaults=true {
     locked {
-        bind "Ctrl g" { SwitchToMode "normal"; }
+        bind "Super Ctrl g" { SwitchToMode "normal"; }
 
         // Pane focus movement: Cmd+Ctrl+hjkl
         bind "Super Ctrl h" { MoveFocus "left"; }
@@ -181,7 +181,7 @@ keybinds clear-defaults=true {
         bind "Alt [" { PreviousSwapLayout; }
         bind "Alt ]" { NextSwapLayout; }
         bind "Alt f" { ToggleFloatingPanes; }
-        bind "Ctrl g" { SwitchToMode "locked"; }
+        bind "Super Ctrl g" { SwitchToMode "locked"; }
         bind "Ctrl v" {
             Run "lazygit" {
                 floating true
@@ -441,12 +441,13 @@ default_layout "default"
 // Default: <RANDOM>
 // 
 // session_name "My singleton session"
- 
+// session_name ""
+
 // When `session_name` is provided, attaches to that session
 // if it is already running or creates it otherwise.
 // Default: false
 // 
-// attach_to_session true
+attach_to_session true
  
 // Toggle between having Zellij lay out panes according to a predefined set of layouts whenever possible
 // Options:

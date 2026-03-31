@@ -58,8 +58,8 @@ keybind = super+ctrl+alt+j=unbind
 keybind = super+ctrl+alt+k=unbind
 keybind = super+ctrl+alt+l=unbind
 
-# Pane fullscreen toggle: Cmd+Ctrl+f (ignore to pass to Zellij)
-keybind = super+ctrl+f=ignore
+# Pane fullscreen toggle: Cmd+Ctrl+f (send CSI u sequence to bypass macOS fullscreen)
+keybind = super+ctrl+f=text:\x1b[102;13u
 
 # Tab management
 keybind = super+t=unbind
