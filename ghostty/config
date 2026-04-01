@@ -69,6 +69,26 @@ keybind = super+shift+n=unbind
 keybind = super+shift+p=unbind
 keybind = super+w=unbind
 
+# Tab quick switch: Cmd+1~9 (send as Alt+1~9 CSI u sequence for zellij compatibility)
+# Alt modifier = 2, so modifier value = 3 (2+1)
+keybind = super+1=text:\x1b[49;3u
+keybind = super+2=text:\x1b[50;3u
+keybind = super+3=text:\x1b[51;3u
+keybind = super+4=text:\x1b[52;3u
+keybind = super+5=text:\x1b[53;3u
+keybind = super+6=text:\x1b[54;3u
+keybind = super+7=text:\x1b[55;3u
+keybind = super+8=text:\x1b[56;3u
+keybind = super+9=text:\x1b[57;3u
+keybind = super+digit_1=text:\x1b[49;3u
+keybind = super+digit_2=text:\x1b[50;3u
+keybind = super+digit_3=text:\x1b[51;3u
+keybind = super+digit_4=text:\x1b[52;3u
+keybind = super+digit_5=text:\x1b[53;3u
+keybind = super+digit_6=text:\x1b[54;3u
+keybind = super+digit_7=text:\x1b[55;3u
+keybind = super+digit_8=text:\x1b[56;3u
+
 # Pane creation
 keybind = super+enter=unbind
 keybind = super+shift+enter=unbind

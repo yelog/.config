@@ -38,6 +38,30 @@ keybinds clear-defaults=true {
         bind "Super Shift n" { MoveTab "right"; }
         bind "Super Shift p" { MoveTab "left"; }
         bind "Super w" { CloseTab; }
+
+        // Tab quick switch: Cmd+1~9 (also Alt+1~9 for CSI u compatibility)
+        bind "Super 1" { GoToTab 1; }
+        bind "Super 2" { GoToTab 2; }
+        bind "Super 3" { GoToTab 3; }
+        bind "Super 4" { GoToTab 4; }
+        bind "Super 5" { GoToTab 5; }
+        bind "Super 6" { GoToTab 6; }
+        bind "Super 7" { GoToTab 7; }
+        bind "Super 8" { GoToTab 8; }
+        bind "Super 9" { GoToTab 9; }
+        bind "Alt 1" { GoToTab 1; }
+        bind "Alt 2" { GoToTab 2; }
+        bind "Alt 3" { GoToTab 3; }
+        bind "Alt 4" { GoToTab 4; }
+        bind "Alt 5" { GoToTab 5; }
+        bind "Alt 6" { GoToTab 6; }
+        bind "Alt 7" { GoToTab 7; }
+        bind "Alt 8" { GoToTab 8; }
+        bind "Alt 9" { GoToTab 9; }
+
+        // Launch tools in current pane
+        bind "Ctrl e" { WriteChars "yazi\n"; }
+        bind "Ctrl g" { WriteChars "lazygit\n"; }
     }
     pane {
         bind "left" { MoveFocus "left"; }
@@ -182,7 +206,7 @@ keybinds clear-defaults=true {
         bind "Alt ]" { NextSwapLayout; }
         bind "Alt f" { ToggleFloatingPanes; }
         bind "Super Ctrl g" { SwitchToMode "locked"; }
-        bind "Ctrl v" {
+        bind "Ctrl g" {
             Run "lazygit" {
                 floating true
             }
@@ -370,7 +394,7 @@ default_layout "default"
 //   - true (default)
 //   - false
 // 
-// mouse_mode false
+mouse_mode false
  
 // Toggle having pane frames around the panes
 // Options:
