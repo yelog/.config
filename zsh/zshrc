@@ -423,8 +423,36 @@ generate_command() {
 # 将函数注册为 zle 小部件
 zle -N generate_command
 
-# 绑定快捷键
-bindkey '^g' generate_command
+# 绑定快捷键 (Ctrl+G 已分配给 Zellij toggle lazygit，此处注释)
+# bindkey '^g' generate_command
+
+# >>>>>>>>>>>>>>>>>>>>>> Zellij toggle floating apps >>>>>>>>>>>>>>>>>>>>>>
+if [[ -n "$ZELLIJ" ]]; then
+  # Toggle lazygit: 检测进程是否运行，决定打开/切换
+  _zellij_toggle_lazygit() {
+    if pgrep -x lazygit > /dev/null 2>&1; then
+      zellij action toggle-floating-panes
+    else
+      zellij run --floating --close-on-exit --name lazygit -- lazygit
+    fi
+    zle reset-prompt
+  }
+  zle -N _zellij_toggle_lazygit
+  bindkey '^g' _zellij_toggle_lazygit
+
+  # Toggle yazi: 同上
+  _zellij_toggle_yazi() {
+    if pgrep -x yazi > /dev/null 2>&1; then
+      zellij action toggle-floating-panes
+    else
+      zellij run --floating --close-on-exit --name yazi -- yazi
+    fi
+    zle reset-prompt
+  }
+  zle -N _zellij_toggle_yazi
+  bindkey '^e' _zellij_toggle_yazi
+fi
+# <<<<<<<<<<<<<<<<<<<<< Zellij toggle floating apps <<<<<<<<<<<<<<<<<<<<<<
 
 # alias tn='tmux new -s '
 # alias ta='tmux a'

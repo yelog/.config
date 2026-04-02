@@ -16,18 +16,11 @@
       },
       "type": "remote",
       "url": "https://mcp.context7.com/mcp"
-    },
-    "playwright": {
-      "command": [
-        "npx",
-        "@playwright/mcp@latest"
-      ],
-      "enabled": true,
-      "type": "local"
     }
   },
   "plugin": [
-    "opencode-openai-codex-auth"
+    "opencode-openai-codex-auth",
+    "oh-my-openagent@latest"
   ],
   "provider": {
     "bailian-coding-plan": {

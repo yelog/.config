@@ -9,7 +9,7 @@ local M = {
   { prefix = keys.hyper, key = "Y", message = "Discord", appName = "Discord" },
   { prefix = keys.hyper, key = "R", message = "Redis Desktop Manager", appName = "Another Redis Desktop Manager" },
   { prefix = keys.hyper, key = "O", message = "Apifox", appName = "Apifox" },
-  { prefix = keys.hyper, key = "T", message = "Terminal", appName = "Ghostty" },
+  { prefix = keys.hyper, key = "T", message = "Terminal", appName = "Kitty" },
   { prefix = keys.hyper, key = "U", message = "Teams", appName = "Microsoft Teams" },
   { prefix = keys.hyper, key = "M", message = "Mail", appName = "Microsoft Outlook" },
   { prefix = keys.hyper, key = ";", message = "ChatGPT", appName = "ChatGPT" },
