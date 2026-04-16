@@ -31,7 +31,7 @@ mouse-hide-while-typing = true
 # Window
 window-padding-y = 2,0
 window-padding-balance = true
-macos-titlebar-style = hidden
+# macos-titlebar-style = hidden
 
 # keybindings
 # super (alias: cmd, command)

@@ -20,91 +20,10 @@
   },
   "plugin": [
     "opencode-openai-codex-auth",
-    "oh-my-openagent@latest"
+    "/Users/yelog/workspace/swift/VibeBar/plugins/opencode-vibebar-plugin",
+    "file:///Users/yelog/.config/opencode/plugins/codeisland.js"
   ],
   "provider": {
-    "bailian-coding-plan": {
-      "models": {
-        "MiniMax-M2.5": {
-          "name": "MiniMax M2.5",
-          "options": {
-            "thinking": {
-              "budgetTokens": 1024,
-              "type": "enabled"
-            }
-          }
-        },
-        "glm-4.7": {
-          "name": "GLM-4.7",
-          "options": {
-            "thinking": {
-              "budgetTokens": 1024,
-              "type": "enabled"
-            }
-          }
-        },
-        "glm-5": {
-          "name": "GLM-5",
-          "options": {
-            "thinking": {
-              "budgetTokens": 1024,
-              "type": "enabled"
-            }
-          }
-        },
-        "kimi-k2.5": {
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Kimi K2.5",
-          "options": {
-            "thinking": {
-              "budgetTokens": 1024,
-              "type": "enabled"
-            }
-          }
-        },
-        "qwen3-coder-next": {
-          "name": "Qwen3 Coder Next"
-        },
-        "qwen3-coder-plus": {
-          "name": "Qwen3 Coder Plus"
-        },
-        "qwen3-max-2026-01-23": {
-          "name": "Qwen3 Max 2026-01-23"
-        },
-        "qwen3.5-plus": {
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Qwen3.5 Plus",
-          "options": {
-            "thinking": {
-              "budgetTokens": 1024,
-              "type": "enabled"
-            }
-          }
-        }
-      },
-      "name": "Ali Bailian Coding Plan",
-      "npm": "@ai-sdk/anthropic",
-      "options": {
-        "apiKey": "{env:BAILIAN_CODING_PLAN_API_KEY}",
-        "baseURL": "https://coding.dashscope.aliyuncs.com/apps/anthropic/v1"
-      }
-    },
     "openai": {
       "models": {
         "gpt-5.1-codex-max": {
@@ -236,6 +155,19 @@
         "reasoningSummary": "auto",
         "store": false,
         "textVerbosity": "medium"
+      }
+    },
+    "test": {
+      "models": {
+        "claude-opus-4-6": {
+          "name": ""
+        }
+      },
+      "npm": "@ai-sdk/anthropic",
+      "options": {
+        "apiKey": "e9FY5gUD6XUdEmTAAfCC",
+        "baseURL": "https://proxy-gateway--yelogeek.replit.app/v1",
+        "setCacheKey": true
       }
     }
   }

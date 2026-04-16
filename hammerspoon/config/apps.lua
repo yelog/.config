@@ -7,7 +7,7 @@ local M = {
   { prefix = keys.hyper, key = "B", message = "Browser", appName = "Arc" },
   { prefix = keys.hyper, key = "I", message = "IntelliJ IDEA", appName = "IntelliJ IDEA" },
   { prefix = keys.hyper, key = "Y", message = "Discord", appName = "Discord" },
-  { prefix = keys.hyper, key = "R", message = "Redis Desktop Manager", appName = "Another Redis Desktop Manager" },
+  { prefix = keys.hyper, key = "R", message = "Redis Desktop Manager", appName = "Rust Redis Desktop" },
   { prefix = keys.hyper, key = "O", message = "Apifox", appName = "Apifox" },
   { prefix = keys.hyper, key = "T", message = "Terminal", appName = "Kitty" },
   { prefix = keys.hyper, key = "U", message = "Teams", appName = "Microsoft Teams" },
