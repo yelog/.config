@@ -16,4 +16,4 @@ def handle_result(args, result, target_window_id, boss):
         window.close()
     else:
         cwd = window.cwd_of_child or boss.active_tab.cwd
-        boss.launch('--type=overlay', '--cwd', cwd, 'yazi')
+        boss.launch('--type=overlay', '--cwd', cwd, '/opt/homebrew/bin/yazi')

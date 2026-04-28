@@ -207,13 +207,13 @@ keybinds clear-defaults=true {
         bind "Alt f" { ToggleFloatingPanes; }
         bind "Super Ctrl g" { SwitchToMode "locked"; }
         bind "Ctrl g" {
-            Run "lazygit" {
+            Run "/opt/homebrew/bin/lazygit" {
                 floating true
             }
             SwitchToMode "normal"
         }
         bind "Ctrl e" {
-            Run "yazi" {
+            Run "/opt/homebrew/bin/yazi" {
                 floating true
             }
             SwitchToMode "normal"
