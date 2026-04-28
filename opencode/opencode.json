@@ -20,8 +20,7 @@
   },
   "plugin": [
     "opencode-openai-codex-auth",
-    "/Users/yelog/workspace/swift/VibeBar/plugins/opencode-vibebar-plugin",
-    "file:///Users/yelog/.config/opencode/plugins/codeisland.js"
+    "/Users/yelog/workspace/swift/VibeBar/plugins/opencode-vibebar-plugin"
   ],
   "provider": {
     "openai": {

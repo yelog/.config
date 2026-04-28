@@ -19,8 +19,8 @@
                                 ],
                                 "to_if_alone": [
                                     {
-                                        "hold_down_milliseconds": 100,
-                                        "key_code": "caps_lock"
+                                        "key_code": "spacebar",
+                                        "modifiers": ["left_control"]
                                     }
                                 ],
                                 "type": "basic"
