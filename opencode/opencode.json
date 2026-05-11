@@ -16,157 +16,136 @@
       },
       "type": "remote",
       "url": "https://mcp.context7.com/mcp"
+    },
+    "gitnexus": {
+      "command": [
+        "gitnexus",
+        "mcp"
+      ],
+      "type": "local"
     }
   },
   "plugin": [
-    "opencode-openai-codex-auth",
     "/Users/yelog/workspace/swift/VibeBar/plugins/opencode-vibebar-plugin"
   ],
   "provider": {
-    "openai": {
+    "xrouter": {
       "models": {
-        "gpt-5.1-codex-max": {
+        "codex-mini-latest": {
           "limit": {
-            "context": 272000,
-            "output": 128000
+            "context": 200000,
+            "output": 100000
           },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
+          "name": "Codex Mini",
+          "options": {
+            "store": false
           },
-          "name": "GPT 5.1 Codex Max (OAuth)",
           "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "reasoningSummary": "detailed",
-              "textVerbosity": "medium"
-            },
-            "low": {
-              "reasoningEffort": "low",
-              "reasoningSummary": "detailed",
-              "textVerbosity": "medium"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "reasoningSummary": "detailed",
-              "textVerbosity": "medium"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "reasoningSummary": "detailed",
-              "textVerbosity": "medium"
-            }
+            "high": {},
+            "low": {},
+            "medium": {}
           }
         },
         "gpt-5.2": {
           "limit": {
-            "context": 272000,
+            "context": 400000,
             "output": 128000
           },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
+          "name": "GPT-5.2",
+          "options": {
+            "store": false
           },
-          "name": "GPT 5.2 (OAuth)",
           "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "reasoningSummary": "detailed",
-              "textVerbosity": "medium"
-            },
-            "low": {
-              "reasoningEffort": "low",
-              "reasoningSummary": "auto",
-              "textVerbosity": "medium"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "reasoningSummary": "auto",
-              "textVerbosity": "medium"
-            },
-            "none": {
-              "reasoningEffort": "none",
-              "reasoningSummary": "auto",
-              "textVerbosity": "medium"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "reasoningSummary": "detailed",
-              "textVerbosity": "medium"
-            }
+            "high": {},
+            "low": {},
+            "medium": {},
+            "xhigh": {}
           }
         },
-        "gpt-5.2-codex": {
+        "gpt-5.3-codex": {
           "limit": {
-            "context": 272000,
+            "context": 400000,
             "output": 128000
           },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
+          "name": "GPT-5.3 Codex",
+          "options": {
+            "store": false
           },
-          "name": "GPT 5.2 Codex (OAuth)",
           "variants": {
-            "high": {
-              "reasoningEffort": "high",
-              "reasoningSummary": "detailed",
-              "textVerbosity": "medium"
-            },
-            "low": {
-              "reasoningEffort": "low",
-              "reasoningSummary": "auto",
-              "textVerbosity": "medium"
-            },
-            "medium": {
-              "reasoningEffort": "medium",
-              "reasoningSummary": "auto",
-              "textVerbosity": "medium"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh",
-              "reasoningSummary": "detailed",
-              "textVerbosity": "medium"
-            }
+            "high": {},
+            "low": {},
+            "medium": {},
+            "xhigh": {}
+          }
+        },
+        "gpt-5.3-codex-spark": {
+          "limit": {
+            "context": 128000,
+            "output": 32000
+          },
+          "name": "GPT-5.3 Codex Spark",
+          "options": {
+            "store": false
+          },
+          "variants": {
+            "high": {},
+            "low": {},
+            "medium": {},
+            "xhigh": {}
+          }
+        },
+        "gpt-5.4": {
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "name": "GPT-5.4",
+          "options": {
+            "store": false
+          },
+          "variants": {
+            "high": {},
+            "low": {},
+            "medium": {},
+            "xhigh": {}
+          }
+        },
+        "gpt-5.4-mini": {
+          "limit": {
+            "context": 400000,
+            "output": 128000
+          },
+          "name": "GPT-5.4 Mini",
+          "options": {
+            "store": false
+          },
+          "variants": {
+            "high": {},
+            "low": {},
+            "medium": {},
+            "xhigh": {}
+          }
+        },
+        "gpt-5.5": {
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "name": "GPT-5.5",
+          "options": {
+            "store": false
+          },
+          "variants": {
+            "high": {},
+            "low": {},
+            "medium": {},
+            "xhigh": {}
           }
         }
       },
-      "name": "OpenAI",
       "options": {
-        "include": [
-          "reasoning.encrypted_content"
-        ],
-        "reasoningEffort": "medium",
-        "reasoningSummary": "auto",
-        "store": false,
-        "textVerbosity": "medium"
-      }
-    },
-    "test": {
-      "models": {
-        "claude-opus-4-6": {
-          "name": ""
-        }
-      },
-      "npm": "@ai-sdk/anthropic",
-      "options": {
-        "apiKey": "e9FY5gUD6XUdEmTAAfCC",
-        "baseURL": "https://proxy-gateway--yelogeek.replit.app/v1",
-        "setCacheKey": true
+        "apiKey": "{env:X_ROUTER_KEY}",
+        "baseURL": "https://xrouter.uk/v1"
       }
     }
   }
