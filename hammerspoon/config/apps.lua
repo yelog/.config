@@ -12,10 +12,10 @@ local M = {
   { prefix = keys.hyper, key = "T", message = "Terminal", appName = "Kitty" },
   { prefix = keys.hyper, key = "U", message = "Teams", appName = "Microsoft Teams" },
   { prefix = keys.hyper, key = "M", message = "Mail", appName = "Microsoft Outlook" },
-  { prefix = keys.hyper, key = ";", message = "ChatGPT", appName = "ChatGPT" },
+  { prefix = keys.hyper, key = ";", message = "Telegram", appName = "Telegram" },
   { prefix = keys.hyper, key = "N", message = "XCode", appName = "Xcode" },
   { prefix = keys.hyper, key = ",", message = "Codex", appName = "Codex" },
-  { prefix = keys.hyper, key = "'", message = "Telegram", appName = "Telegram" },
+  { prefix = keys.hyper, key = "'", message = "ChatGPT", appName = "ChatGPT" },
   { prefix = keys.hyper, key = "P", message = "iPhone Mirroring", appName = "iPhone Mirroring" },
 }
 
