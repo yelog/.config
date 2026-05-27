@@ -64,11 +64,156 @@ map("v", "<D-/>", function()
 end, { desc = "Toggle comment" })
 
 -- format
+local format_filetypes_with_eslint = { "javascript", "typescript", "vue" }
+local markdown_code_block_filetypes = {
+  js = "javascript",
+  javascript = "javascript",
+  ts = "typescript",
+  typescript = "typescript",
+  lua = "lua",
+  python = "python",
+  py = "python",
+  json = "json",
+  bash = "sh",
+  sh = "sh",
+}
+
+local markdown_code_block_extensions = {
+  javascript = "js",
+  typescript = "ts",
+  lua = "lua",
+  python = "py",
+  json = "json",
+  sh = "sh",
+  vue = "vue",
+}
+
+local function has_lsp_formatter(bufnr)
+  for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+    if client:supports_method("textDocument/formatting", bufnr) then
+      return true
+    end
+  end
+  return false
+end
+
+local function find_markdown_code_block()
+  local cursor_line = vim.fn.line(".")
+  local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
+  local start_line
+  local lang
+
+  for line_nr = cursor_line, 1, -1 do
+    local line = lines[line_nr] or ""
+    local fence_lang = line:match("^%s*```%s*([%w_-]*)")
+    if fence_lang then
+      start_line = line_nr
+      lang = fence_lang
+      break
+    end
+  end
+
+  if not start_line or start_line == cursor_line then
+    return nil
+  end
+
+  local end_line
+  for line_nr = start_line + 1, #lines do
+    if (lines[line_nr] or ""):match("^%s*```%s*$") then
+      end_line = line_nr
+      break
+    end
+  end
+
+  if not end_line or cursor_line >= end_line then
+    return nil
+  end
+
+  lang = (lang or ""):lower()
+  return {
+    lang = markdown_code_block_filetypes[lang] or lang,
+    start_line = start_line,
+    end_line = end_line,
+  }
+end
+
+local function format_temp_buffer_sync(lines, filetype)
+  local original_win = vim.api.nvim_get_current_win()
+  local original_buf = vim.api.nvim_get_current_buf()
+  local temp_buf = vim.api.nvim_create_buf(false, true)
+  local extension = markdown_code_block_extensions[filetype] or filetype
+  local temp_name = vim.fn.getcwd() .. "/.markdown-code-block-" .. temp_buf .. "." .. extension
+
+  vim.api.nvim_buf_set_name(temp_buf, temp_name)
+  vim.api.nvim_buf_set_lines(temp_buf, 0, -1, false, lines)
+  vim.bo[temp_buf].bufhidden = "wipe"
+  vim.bo[temp_buf].filetype = filetype
+
+  local ok, formatted_lines = pcall(function()
+    vim.api.nvim_win_set_buf(original_win, temp_buf)
+    vim.cmd("doautocmd FileType")
+    vim.wait(2000, function()
+      return has_lsp_formatter(temp_buf)
+    end, 50)
+
+    if my.is_include(filetype, format_filetypes_with_eslint) and vim.fn.exists(":LspEslintFixAll") == 2 then
+      pcall(vim.cmd, "LspEslintFixAll")
+    end
+
+    if not has_lsp_formatter(temp_buf) then
+      error("no LSP formatter for " .. filetype)
+    end
+
+    vim.lsp.buf.format({ async = false, timeout_ms = 3000 })
+    return vim.api.nvim_buf_get_lines(temp_buf, 0, -1, false)
+  end)
+
+  if vim.api.nvim_win_is_valid(original_win) then
+    vim.api.nvim_win_set_buf(original_win, original_buf)
+  end
+  if vim.api.nvim_buf_is_valid(temp_buf) then
+    vim.api.nvim_buf_delete(temp_buf, { force = true })
+  end
+
+  if not ok then
+    return nil, formatted_lines
+  end
+  return formatted_lines
+end
+
+local function format_markdown_code_block()
+  local block = find_markdown_code_block()
+  if not block then
+    return false
+  end
+
+  if block.lang == "" then
+    vim.notify("Markdown code block has no language", vim.log.levels.WARN)
+    return true
+  end
+
+  local lines = vim.api.nvim_buf_get_lines(0, block.start_line, block.end_line - 1, false)
+  if #lines == 0 then
+    vim.notify("Markdown code block is empty", vim.log.levels.WARN)
+    return true
+  end
+
+  local formatted_lines, err = format_temp_buffer_sync(lines, block.lang)
+  if not formatted_lines then
+    vim.notify("Failed to format Markdown code block: " .. tostring(err), vim.log.levels.WARN)
+    return true
+  end
+
+  vim.api.nvim_buf_set_lines(0, block.start_line, block.end_line - 1, false, formatted_lines)
+  return true
+end
+
 map("n", "<D-s>", function()
-  local eslintFileType = { "javascript", "typescript", "vue" }
   if vim.bo.filetype == "markdown" then
-    Marklive.table_align()
-  elseif my.is_include(vim.bo.filetype, eslintFileType) then
+    if not format_markdown_code_block() then
+      Marklive.table_align()
+    end
+  elseif my.is_include(vim.bo.filetype, format_filetypes_with_eslint) then
     vim.cmd("LspEslintFixAll")
   else
     vim.lsp.buf.format({ async = true })
