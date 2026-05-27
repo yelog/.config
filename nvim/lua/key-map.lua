@@ -88,6 +88,12 @@ local markdown_code_block_extensions = {
   vue = "vue",
 }
 
+local markdown_code_block_lsp_servers = {
+  javascript = "vtsls",
+  typescript = "vtsls",
+  json = "jsonls",
+}
+
 local function has_lsp_formatter(bufnr)
   for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
     if client:supports_method("textDocument/formatting", bufnr) then
@@ -97,19 +103,44 @@ local function has_lsp_formatter(bufnr)
   return false
 end
 
+local function start_code_block_lsp(bufnr, filetype)
+  local server = markdown_code_block_lsp_servers[filetype]
+  if not server then
+    return
+  end
+
+  local config = vim.lsp.config[server]
+  if not config then
+    return
+  end
+
+  vim.lsp.start(config, { bufnr = bufnr })
+end
+
 local function find_markdown_code_block()
   local cursor_line = vim.fn.line(".")
   local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
   local start_line
   local lang
+  local fence_marker
 
-  for line_nr = cursor_line, 1, -1 do
+  for line_nr = 1, cursor_line do
     local line = lines[line_nr] or ""
-    local fence_lang = line:match("^%s*```%s*([%w_-]*)")
-    if fence_lang then
-      start_line = line_nr
-      lang = fence_lang
-      break
+    local marker, fence_lang = line:match("^%s*(```+)%s*([%w_-]*)")
+    if not marker then
+      marker, fence_lang = line:match("^%s*(~~~+)%s*([%w_-]*)")
+    end
+
+    if marker then
+      if start_line and marker:sub(1, 1) == fence_marker then
+        start_line = nil
+        lang = nil
+        fence_marker = nil
+      else
+        start_line = line_nr
+        lang = fence_lang
+        fence_marker = marker:sub(1, 1)
+      end
     end
   end
 
@@ -119,7 +150,8 @@ local function find_markdown_code_block()
 
   local end_line
   for line_nr = start_line + 1, #lines do
-    if (lines[line_nr] or ""):match("^%s*```%s*$") then
+    local close_marker = (lines[line_nr] or ""):match("^%s*(" .. fence_marker .. fence_marker .. fence_marker .. "+)%s*$")
+    if close_marker then
       end_line = line_nr
       break
     end
@@ -147,11 +179,11 @@ local function format_temp_buffer_sync(lines, filetype)
   vim.api.nvim_buf_set_name(temp_buf, temp_name)
   vim.api.nvim_buf_set_lines(temp_buf, 0, -1, false, lines)
   vim.bo[temp_buf].bufhidden = "wipe"
-  vim.bo[temp_buf].filetype = filetype
 
   local ok, formatted_lines = pcall(function()
     vim.api.nvim_win_set_buf(original_win, temp_buf)
-    vim.cmd("doautocmd FileType")
+    vim.bo[temp_buf].filetype = filetype
+    start_code_block_lsp(temp_buf, filetype)
     vim.wait(2000, function()
       return has_lsp_formatter(temp_buf)
     end, 50)

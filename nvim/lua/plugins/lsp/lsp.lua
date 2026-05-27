@@ -225,6 +225,7 @@ return {
           },
         }
       })
+      vim.lsp.enable('jsonls')
 
       -- local base_on_attach = vim.lsp.config.eslint.on_attach
       vim.lsp.enable('eslint')
@@ -270,6 +271,7 @@ return {
         on_attach = on_attach,
         capabilities = capabilities,
       })
+      vim.lsp.enable('vtsls')
       vim.lsp.enable('vue_ls')
 
       -- vim.lsp.config('vue_ls', {
