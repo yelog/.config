@@ -4,39 +4,12 @@
             "complex_modifications": {
                 "rules": [
                     {
-                        "description": "Telegram/WeChat: Ctrl-W delete previous word, Ctrl-U delete to line beginning",
+                        "description": "Map Ctrl+U and Ctrl+W to Cmd+Backspace in WeChat",
                         "manipulators": [
                             {
                                 "conditions": [
                                     {
                                         "bundle_identifiers": [
-                                            "^com\\.tdesktop\\.Telegram$",
-                                            "^com\\.tencent\\.xinWeChat$"
-                                        ],
-                                        "type": "frontmost_application_if"
-                                    }
-                                ],
-                                "from": {
-                                    "key_code": "w",
-                                    "modifiers": {
-                                        "mandatory": ["control"],
-                                        "optional": ["any"]
-                                    }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_arrow",
-                                        "modifiers": ["option", "shift"]
-                                    },
-                                    { "key_code": "delete_or_backspace" }
-                                ],
-                                "type": "basic"
-                            },
-                            {
-                                "conditions": [
-                                    {
-                                        "bundle_identifiers": [
-                                            "^com\\.tdesktop\\.Telegram$",
                                             "^com\\.tencent\\.xinWeChat$"
                                         ],
                                         "type": "frontmost_application_if"
@@ -44,6 +17,30 @@
                                 ],
                                 "from": {
                                     "key_code": "u",
+                                    "modifiers": {
+                                        "mandatory": ["control"],
+                                        "optional": ["any"]
+                                    }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "delete_or_backspace",
+                                        "modifiers": ["command"]
+                                    }
+                                ],
+                                "type": "basic"
+                            },
+                            {
+                                "conditions": [
+                                    {
+                                        "bundle_identifiers": [
+                                            "^com\\.tencent\\.xinWeChat$"
+                                        ],
+                                        "type": "frontmost_application_if"
+                                    }
+                                ],
+                                "from": {
+                                    "key_code": "w",
                                     "modifiers": {
                                         "mandatory": ["control"],
                                         "optional": ["any"]
