@@ -6,15 +6,8 @@ return {
   version = false, -- set this if you want to always pull the latest change
   opts = {
     ---@alias Provider "claude" | "openai" | "azure" | "gemini" | "cohere" | "copilot" | string
-    provider = "copilot",                  -- Recommend using Claude
-    auto_suggestions_provider = "copilot", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
-    -- provider = "ollama",
-    -- claude = {
-    --   endpoint = "https://api.anthropic.com",
-    --   model = "claude-3-5-sonnet-20241022",
-    --   temperature = 0,
-    --   max_tokens = 4096,
-    -- },
+    provider = "xrouter",                  -- Recommend using Claude
+    auto_suggestions_provider = "xrouter", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     providers = {
       copilot = {
         endpoint = 'https://api.githubcopilot.com/',
@@ -63,6 +56,12 @@ return {
         api_key_name = 'OPENROUTER_API_KEY_CHRIS',
         -- model = 'deepseek/deepseek-r1',
         model = 'anthropic/claude-3.7-sonnet',
+      },
+      xrouter = {
+        __inherited_from = "openai",
+        endpoint = "https://xrouter.uk/v1",
+        api_key_name = "X_ROUTER_KEY",
+        model = "gpt-5.4",
       },
     },
     ---Specify the special dual_boost mode
