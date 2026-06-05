@@ -20,7 +20,7 @@ end
 function M.setMousePos()
   local currentScreen = M.getCurrentScreen()
   if currentScreen then
-    hs.mouse.setRelativePosition({ x = 40, y = 40 }, currentScreen)
+    hs.mouse.setRelativePosition({ x = 40, y = 60 }, currentScreen)
   end
 end
 
