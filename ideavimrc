@@ -178,6 +178,8 @@ set which-key
 " Search for string in visible area and jump
 nmap s <Action>(flash.search)
 xmap s <Action>(flash.search)
+" nmap <cr> <Action>(flash.search)
+" xmap <cr> <Action>(flash.search)
 " find for char in characters to the right of the current cursor
 nmap f <Action>(flash.find)
 xmap f <Action>(flash.find)
