@@ -23,7 +23,7 @@ return {
         end
       end
 
-      vim.api.nvim_create_autocmd({ "ModeChanged", "FocusGained", "VimEnter" }, {
+      vim.api.nvim_create_autocmd({ "FocusGained", "VimEnter" }, {
         callback = force_default_im_in_normal_mode,
       })
     end,
