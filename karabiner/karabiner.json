@@ -4,6 +4,25 @@
             "complex_modifications": {
                 "rules": [
                     {
+                        "description": "Caps Lock: alone sends F18 for input source toggle, held with other keys becomes command+option+shift(yelog.json)",
+                        "manipulators": [
+                            {
+                                "from": {
+                                    "key_code": "caps_lock",
+                                    "modifiers": { "optional": ["any"] }
+                                },
+                                "to": [
+                                    {
+                                        "key_code": "left_shift",
+                                        "modifiers": ["left_command", "left_option"]
+                                    }
+                                ],
+                                "to_if_alone": [{ "key_code": "f18" }],
+                                "type": "basic"
+                            }
+                        ]
+                    },
+                    {
                         "description": "Telegram/WeChat: Ctrl-W delete previous word, Ctrl-U delete to line beginning",
                         "manipulators": [
                             {
@@ -53,30 +72,6 @@
                                     {
                                         "key_code": "delete_or_backspace",
                                         "modifiers": ["command"]
-                                    }
-                                ],
-                                "type": "basic"
-                            }
-                        ]
-                    },
-                    {
-                        "description": "Change caps_lock key to command+option+shift if pressed with other keys(yelog.json)",
-                        "manipulators": [
-                            {
-                                "from": {
-                                    "key_code": "caps_lock",
-                                    "modifiers": { "optional": ["any"] }
-                                },
-                                "to": [
-                                    {
-                                        "key_code": "left_shift",
-                                        "modifiers": ["left_command", "left_option"]
-                                    }
-                                ],
-                                "to_if_alone": [
-                                    {
-                                        "key_code": "spacebar",
-                                        "modifiers": ["left_control"]
                                     }
                                 ],
                                 "type": "basic"
