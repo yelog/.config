@@ -9,10 +9,10 @@ return {
       require("im_select").setup({
         default_im_select = default_im,
         default_command = "macism",
-        set_default_events = { "InsertLeave", "CmdlineLeave", "FocusGained", "VimEnter" },
+        set_default_events = { "InsertLeave", "CmdlineLeave", "VimEnter" },
         set_previous_events = { "InsertEnter" },
         keep_quiet_on_no_binary = false,
-        async_switch_im = true,
+        async_switch_im = false,
       })
 
       local function force_default_im_in_normal_mode()
