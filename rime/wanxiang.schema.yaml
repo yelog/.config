@@ -85,6 +85,7 @@ engine:
     - lua_translator@*wanxiang.number_translator  #数字、金额大写，通过输入大写R1234获得候选输出
     - lua_translator@*wanxiang.super_calculator  #超级计算器，Lua内查看高级用法
     - lua_translator@*wanxiang.input_statistics  #一个输入统计的脚本，以日、周、月、年等维度的统计
+    - lua_translator@*wanxiang.clipboard  #输入vv，将系统剪贴板内容作为候选词输出
     - table_translator@custom_phrase  #自定义短语 custom_phrase.txt，用于置顶自定义编码候选词
     - table_translator@wanxiang_english  #英文词汇表导入
     - table_translator@wanxiang_mixedcode  #混合编码词汇表导入
@@ -649,6 +650,7 @@ recognizer:
     nyr1: "^N19?[0-9]?[0-9]?[0-1]?[0-9]?[0-9]?[0-9]?"
     nyr2: "^N20?[0-9]?[0-9]?[0-1]?[0-9]?[0-9]?[0-9]?"
     calculator: "^V.*$"  # V 作为触发前缀，计算器功能引导
+    clipboard: "^vv$"  # vv 触发剪贴板候选
     #add_user_dict: "^``[A-Za-z/`']*$"      #自造词引导方式
     email: "^[A-Za-z][-_.0-9A-Za-z]*@.*$"  # email @ 之后不上屏
     url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$"  # URL
