@@ -1,0 +1,15 @@
+# Rime generated files
+build/
+*.userdb/
+**/*.userdb/
+*.gram
+
+# Rime local runtime state
+user.yaml
+installation.yaml
+
+# macOS
+.DS_Store
+
+# local tool indexes
+.codegraph/
