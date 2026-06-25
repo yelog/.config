@@ -110,3 +110,100 @@
         <i>用更现代的数据，接管你的候选词。</i>
     </p>
 </div>
+
+---
+
+## 📱 macOS ↔ iPhone 同步配置
+
+本方案使用 [Hamster（仓输入法）](https://github.com/imfuxiao/Hamster) 在 iPhone 端使用万象拼音，通过 iCloud 实现 Mac 与 iPhone 之间的配置和用户词典同步。
+
+### 同步架构
+
+```
+  配置文件 (*.yaml, lua/, dicts/)         用户词典 (*.userdb)
+  ┌──────────┐   rsync (自动)  ┌──────────┐   ┌──────────┐  Rime Sync  ┌──────────┐
+  │  macOS    │ ─────────────→ │  iCloud   │   │  macOS    │ ──────────→ │  iCloud   │
+  │ Squirrel  │                │  Drive    │   │ Squirrel  │             │  sync/    │
+  └──────────┘                └─────┬────┘   └──────────┘             └─────┬────┘
+                                    │                                        │
+                              Hamster 重新部署                          Rime 同步
+                                    │                                        │
+                              ┌─────┴────┐                            ┌─────┴────┐
+                              │  iPhone   │                            │  iPhone   │
+                              │ Hamster   │                            │ Hamster   │
+                              └──────────┘                            └──────────┘
+```
+
+### 文件说明
+
+| 文件 | 用途 |
+|---|---|
+| `sync-to-hamster.sh` | 手动推送配置到 Hamster iCloud 目录 |
+| `sync-rime.sh` | 自动同步脚本（由 crontab 定时调用） |
+| `sync.log` | 同步日志（自动保留最近 500 条） |
+
+### 已配置的自动化
+
+crontab 每 30 分钟自动执行 `sync-rime.sh`，将配置文件推送到 Hamster iCloud 目录。
+
+```bash
+# crontab 任务
+*/30 * * * * /bin/bash /Users/yelog/.config/rime/sync-rime.sh
+```
+
+### 快捷命令
+
+```bash
+# 手动推送配置到 Hamster（执行后会提示是否需要同步用户词典）
+rime-sync
+
+# 查看同步日志
+cat ~/.config/rime/sync.log
+```
+
+### 完整手动同步流程
+
+当你需要立即将 Mac 端的最新输入习惯同步到 iPhone 时，按以下步骤操作：
+
+1. **推送配置**：终端执行 `rime-sync`
+2. **同步用户词典（macOS 端）**：菜单栏 → Squirrel → 同步用户数据
+3. **同步用户词典（iPhone 端）**：Hamster → Rime 功能 → Rime 同步
+4. **重新部署（iPhone 端）**：Hamster → 重新部署（仅在配置文件变更时需要）
+
+> 💡 如果只是日常打字，用户词典会持续积累，不需要每次都同步。建议每隔几天同步一次。
+
+### installation.yaml 配置
+
+两端需要配置相同的 `sync_dir`，不同的 `installation_id`：
+
+**macOS 端** (`~/.config/rime/installation.yaml`)：
+```yaml
+installation_id: "squirrel_yelog"
+sync_dir: "/Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/sync"
+```
+
+**iPhone 端** (Hamster → 文件管理 → `Rime/installation.yaml`)：
+```yaml
+installation_id: "hamster_yelog"
+sync_dir: "/private/var/mobile/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/sync"
+```
+
+### 排除的文件
+
+以下文件不会同步到 iPhone（由 `sync-to-hamster.sh` 和 `sync-rime.sh` 排除）：
+
+| 文件 | 原因 |
+|---|---|
+| `*.userdb` / `*.userdb.*` | 二进制用户词典，由 Rime Sync 单独处理 |
+| `build/` | 编译产物，各端自行生成 |
+| `*.gram` | 语言模型（~421MB），体积过大 |
+| `*.bin` | 编译后的二进制索引 |
+| `sync/` | Rime Sync 目录，已有独立的 iCloud 路径 |
+| `installation.yaml` / `user.yaml` | 设备特定配置，两端不同 |
+
+### 注意事项
+
+- iPhone 端需要在 iOS 设置中为 Hamster 开启「完全访问权限」
+- iPhone 端 Hamster 需关闭「部署时覆盖键盘词库文件」
+- 修改配置后需在 iPhone 端手动点击「重新部署」生效
+- 用户词典同步需两端分别触发（macOS 菜单栏 / iPhone Hamster）
