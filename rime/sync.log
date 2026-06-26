@@ -1,0 +1,357 @@
+[2026-06-25 17:59:37] === sync started ===
+[2026-06-25 17:59:42] rime sync failed (Squirrel not running?)
+Transfer starting: 92 files
+rsync(87910): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(87910): error: rsync_receiver
+rsync(87909): error: unexpected end of file
+rsync(87909): error: io_read_nonblocking
+rsync(87909): error: io_read_blocking
+rsync(87909): error: io_read_flush
+rsync(87909): error: rsync_sender
+rsync(87909): warning: child 87910 exited with status 1
+[2026-06-25 18:04:00] === sync started ===
+[2026-06-25 18:04:01] rime sync skipped (no permission or Squirrel not running)
+Transfer starting: 92 files
+rsync(89633): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(89633): error: rsync_receiver
+rsync(89632): error: unexpected end of file
+rsync(89632): error: io_read_nonblocking
+rsync(89632): error: io_read_blocking
+rsync(89632): error: io_read_flush
+rsync(89632): error: rsync_sender
+rsync(89632): warning: child 89633 exited with status 1
+[2026-06-25 18:04:04] config sync failed (check permissions)
+[2026-06-25 18:04:04] === sync done ===
+[2026-06-25 18:11:53] === sync started ===
+[2026-06-25 18:11:53] rime sync skipped (no permission or Squirrel not running)
+Transfer starting: 92 files
+rsync(93623): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(93623): error: rsync_receiver
+rsync(93622): error: unexpected end of file
+rsync(93622): error: io_read_nonblocking
+rsync(93622): error: io_read_blocking
+rsync(93622): error: io_read_flush
+rsync(93622): error: rsync_sender
+rsync(93622): warning: child 93623 exited with status 1
+[2026-06-25 18:11:57] config sync failed (check permissions)
+[2026-06-25 18:11:57] === sync done ===
+[2026-06-25 18:14:10] === sync started ===
+[2026-06-25 18:14:10] rime sync skipped (no permission or Squirrel not running)
+Transfer starting: 92 files
+./
+
+sent 4721 bytes  received 26 bytes  62378 bytes/sec
+total size is 90498125  speedup is 19064.27
+[2026-06-25 18:14:13] config synced to hamster
+[2026-06-25 18:14:13] === sync done ===
+[2026-06-25 18:17:02] === sync started ===
+Transfer starting: 92 files
+./
+
+sent 4721 bytes  received 26 bytes  778196 bytes/sec
+total size is 90498125  speedup is 19064.27
+[2026-06-25 18:17:02] config synced to hamster
+[2026-06-25 18:17:02] === sync done ===
+[2026-06-25 21:00:00] === sync started ===
+Transfer starting: 92 files
+rsync(9256): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(9256): error: rsync_receiver
+rsync(9255): error: unexpected end of file
+rsync(9255): error: io_read_nonblocking
+rsync(9255): error: io_read_blocking
+rsync(9255): error: io_read_flush
+rsync(9255): error: rsync_sender
+rsync(9255): warning: child 9256 exited with status 1
+[2026-06-25 21:00:00] config sync failed
+[2026-06-25 21:00:00] === sync done ===
+[2026-06-25 22:30:00] === sync started ===
+Transfer starting: 92 files
+rsync(18390): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(18390): error: rsync_receiver
+rsync(18389): error: unexpected end of file
+rsync(18389): error: io_read_nonblocking
+rsync(18389): error: io_read_blocking
+rsync(18389): error: io_read_flush
+rsync(18389): error: rsync_sender
+rsync(18389): warning: child 18390 exited with status 1
+[2026-06-25 22:30:00] config sync failed
+[2026-06-25 22:30:00] === sync done ===
+[2026-06-25 23:00:45] === sync started ===
+Transfer starting: 92 files
+rsync(23240): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(23240): error: rsync_receiver
+rsync(23239): error: unexpected end of file
+rsync(23239): error: io_read_nonblocking
+rsync(23239): error: io_read_blocking
+rsync(23239): error: io_read_flush
+rsync(23239): error: rsync_sender
+rsync(23239): warning: child 23240 exited with status 1
+[2026-06-25 23:00:45] config sync failed
+[2026-06-25 23:00:45] === sync done ===
+[2026-06-25 23:30:00] === sync started ===
+Transfer starting: 92 files
+rsync(26634): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(26634): error: rsync_receiver
+rsync(26632): error: unexpected end of file
+rsync(26632): error: io_read_nonblocking
+rsync(26632): error: io_read_blocking
+rsync(26632): error: io_read_flush
+rsync(26632): error: rsync_sender
+rsync(26632): warning: child 26634 exited with status 1
+[2026-06-25 23:30:00] config sync failed
+[2026-06-25 23:30:00] === sync done ===
+[2026-06-26 00:00:06] === sync started ===
+Transfer starting: 92 files
+rsync(29600): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(29600): error: rsync_receiver
+rsync(29599): error: unexpected end of file
+rsync(29599): error: io_read_nonblocking
+rsync(29599): error: io_read_blocking
+rsync(29599): error: io_read_flush
+rsync(29599): error: rsync_sender
+rsync(29599): warning: child 29600 exited with status 1
+[2026-06-26 00:00:06] config sync failed
+[2026-06-26 00:00:06] === sync done ===
+[2026-06-26 00:30:06] === sync started ===
+Transfer starting: 92 files
+rsync(37152): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(37152): error: rsync_receiver
+rsync(37151): error: unexpected end of file
+rsync(37151): error: io_read_nonblocking
+rsync(37151): error: io_read_blocking
+rsync(37151): error: io_read_flush
+rsync(37151): error: rsync_sender
+rsync(37151): warning: child 37152 exited with status 1
+[2026-06-26 00:30:06] config sync failed
+[2026-06-26 00:30:06] === sync done ===
+[2026-06-26 01:01:07] === sync started ===
+Transfer starting: 92 files
+rsync(44088): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(44088): error: rsync_receiver
+rsync(44087): error: unexpected end of file
+rsync(44087): error: io_read_nonblocking
+rsync(44087): error: io_read_blocking
+rsync(44087): error: io_read_flush
+rsync(44087): error: rsync_sender
+rsync(44087): warning: child 44088 exited with status 1
+[2026-06-26 01:01:07] config sync failed
+[2026-06-26 01:01:07] === sync done ===
+[2026-06-26 01:30:08] === sync started ===
+Transfer starting: 92 files
+rsync(51967): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(51967): error: rsync_receiver
+rsync(51966): error: unexpected end of file
+rsync(51966): error: io_read_nonblocking
+rsync(51966): error: io_read_blocking
+rsync(51966): error: io_read_flush
+rsync(51966): error: rsync_sender
+rsync(51966): warning: child 51967 exited with status 1
+[2026-06-26 01:30:08] config sync failed
+[2026-06-26 01:30:08] === sync done ===
+[2026-06-26 02:00:07] === sync started ===
+Transfer starting: 92 files
+rsync(59536): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(59536): error: rsync_receiver
+rsync(59535): error: unexpected end of file
+rsync(59535): error: io_read_nonblocking
+rsync(59535): error: io_read_blocking
+rsync(59535): error: io_read_flush
+rsync(59535): error: rsync_sender
+rsync(59535): warning: child 59536 exited with status 1
+[2026-06-26 02:00:07] config sync failed
+[2026-06-26 02:00:07] === sync done ===
+[2026-06-26 02:30:00] === sync started ===
+Transfer starting: 92 files
+rsync(61782): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(61782): error: rsync_receiver
+rsync(61781): error: unexpected end of file
+rsync(61781): error: io_read_nonblocking
+rsync(61781): error: io_read_blocking
+rsync(61781): error: io_read_flush
+rsync(61781): error: rsync_sender
+rsync(61781): warning: child 61782 exited with status 1
+[2026-06-26 02:30:00] config sync failed
+[2026-06-26 02:30:00] === sync done ===
+[2026-06-26 03:01:01] === sync started ===
+Transfer starting: 92 files
+rsync(66224): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(66224): error: rsync_receiver
+rsync(66223): error: unexpected end of file
+rsync(66223): error: io_read_nonblocking
+rsync(66223): error: io_read_blocking
+rsync(66223): error: io_read_flush
+rsync(66223): error: rsync_sender
+rsync(66223): warning: child 66224 exited with status 1
+[2026-06-26 03:01:01] config sync failed
+[2026-06-26 03:01:01] === sync done ===
+[2026-06-26 04:00:06] === sync started ===
+Transfer starting: 92 files
+rsync(74283): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(74283): error: rsync_receiver
+rsync(74282): error: unexpected end of file
+rsync(74282): error: io_read_nonblocking
+rsync(74282): error: io_read_blocking
+rsync(74282): error: io_read_flush
+rsync(74282): error: rsync_sender
+rsync(74282): warning: child 74283 exited with status 1
+[2026-06-26 04:00:07] config sync failed
+[2026-06-26 04:00:07] === sync done ===
+[2026-06-26 04:30:14] === sync started ===
+Transfer starting: 92 files
+rsync(76667): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(76667): error: rsync_receiver
+rsync(76666): error: unexpected end of file
+rsync(76666): error: io_read_nonblocking
+rsync(76666): error: io_read_blocking
+rsync(76666): error: io_read_flush
+rsync(76666): error: rsync_sender
+rsync(76666): warning: child 76667 exited with status 1
+[2026-06-26 04:30:14] config sync failed
+[2026-06-26 04:30:14] === sync done ===
+[2026-06-26 05:00:11] === sync started ===
+Transfer starting: 92 files
+rsync(80402): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(80402): error: rsync_receiver
+rsync(80401): error: unexpected end of file
+rsync(80401): error: io_read_nonblocking
+rsync(80401): error: io_read_blocking
+rsync(80401): error: io_read_flush
+rsync(80401): error: rsync_sender
+rsync(80401): warning: child 80402 exited with status 1
+[2026-06-26 05:00:11] config sync failed
+[2026-06-26 05:00:11] === sync done ===
+[2026-06-26 05:30:09] === sync started ===
+Transfer starting: 92 files
+rsync(83984): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(83984): error: rsync_receiver
+rsync(83983): error: unexpected end of file
+rsync(83983): error: io_read_nonblocking
+rsync(83983): error: io_read_blocking
+rsync(83983): error: io_read_flush
+rsync(83983): error: rsync_sender
+rsync(83983): warning: child 83984 exited with status 1
+[2026-06-26 05:30:09] config sync failed
+[2026-06-26 05:30:09] === sync done ===
+[2026-06-26 06:05:13] === sync started ===
+Transfer starting: 92 files
+rsync(90648): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(90648): error: rsync_receiver
+rsync(90647): error: unexpected end of file
+rsync(90647): error: io_read_nonblocking
+rsync(90647): error: io_read_blocking
+rsync(90647): error: io_read_flush
+rsync(90647): error: rsync_sender
+rsync(90647): warning: child 90648 exited with status 1
+[2026-06-26 06:05:13] config sync failed
+[2026-06-26 06:05:13] === sync done ===
+[2026-06-26 07:00:31] === sync started ===
+Transfer starting: 92 files
+rsync(93601): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(93601): error: rsync_receiver
+rsync(93600): error: unexpected end of file
+rsync(93600): error: io_read_nonblocking
+rsync(93600): error: io_read_blocking
+rsync(93600): error: io_read_flush
+rsync(93600): error: rsync_sender
+rsync(93600): warning: child 93601 exited with status 1
+[2026-06-26 07:00:31] config sync failed
+[2026-06-26 07:00:31] === sync done ===
+[2026-06-26 07:34:21] === sync started ===
+Transfer starting: 92 files
+rsync(99884): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(99884): error: rsync_receiver
+rsync(99883): error: unexpected end of file
+rsync(99883): error: io_read_nonblocking
+rsync(99883): error: io_read_blocking
+rsync(99883): error: io_read_flush
+rsync(99883): error: rsync_sender
+rsync(99883): warning: child 99884 exited with status 1
+[2026-06-26 07:34:21] config sync failed
+[2026-06-26 07:34:21] === sync done ===
+[2026-06-26 09:30:00] === sync started ===
+Transfer starting: 92 files
+rsync(11537): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(11537): error: rsync_receiver
+rsync(11536): error: unexpected end of file
+rsync(11536): error: io_read_nonblocking
+rsync(11536): error: io_read_blocking
+rsync(11536): error: io_read_flush
+rsync(11536): error: rsync_sender
+rsync(11536): warning: child 11537 exited with status 1
+[2026-06-26 09:30:00] config sync failed
+[2026-06-26 09:30:00] === sync done ===
+[2026-06-26 10:00:00] === sync started ===
+Transfer starting: 92 files
+rsync(23069): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(23069): error: rsync_receiver
+rsync(23068): error: unexpected end of file
+rsync(23068): error: io_read_nonblocking
+rsync(23068): error: io_read_blocking
+rsync(23068): error: io_read_flush
+rsync(23068): error: rsync_sender
+rsync(23068): warning: child 23069 exited with status 1
+[2026-06-26 10:00:00] config sync failed
+[2026-06-26 10:00:00] === sync done ===
+[2026-06-26 10:30:00] === sync started ===
+Transfer starting: 92 files
+rsync(33082): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(33082): error: rsync_receiver
+rsync(33081): error: unexpected end of file
+rsync(33081): error: io_read_nonblocking
+rsync(33081): error: io_read_blocking
+rsync(33081): error: io_read_flush
+rsync(33081): error: rsync_sender
+rsync(33081): warning: child 33082 exited with status 1
+[2026-06-26 10:30:00] config sync failed
+[2026-06-26 10:30:00] === sync done ===
+[2026-06-26 10:40:37] === sync started ===
+Transfer starting: 92 files
+./
+README.md
+
+sent 14823 bytes  received 48 bytes  221624 bytes/sec
+total size is 90502364  speedup is 6085.83
+[2026-06-26 10:40:37] config synced to hamster
+[2026-06-26 10:40:37] === sync done ===
+[2026-06-26 11:00:00] === sync started ===
+Transfer starting: 92 files
+rsync(45435): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(45435): error: rsync_receiver
+rsync(45434): error: unexpected end of file
+rsync(45434): error: io_read_nonblocking
+rsync(45434): error: io_read_blocking
+rsync(45434): error: io_read_flush
+rsync(45434): error: rsync_sender
+rsync(45434): warning: child 45435 exited with status 1
+[2026-06-26 11:00:00] config sync failed
+[2026-06-26 11:00:00] === sync done ===
+[2026-06-26 11:09:36] === sync started ===
+Transfer starting: 92 files
+deleting sync-to-hamster.sh
+./
+README.md
+
+sent 15041 bytes  received 48 bytes  2125211 bytes/sec
+total size is 90502606  speedup is 5997.92
+[2026-06-26 11:09:36] config synced to hamster
+[2026-06-26 11:09:36] === sync done ===
+[2026-06-26 11:11:06] === sync started ===
+Transfer starting: 92 files
+./
+
+sent 4697 bytes  received 26 bytes  774262 bytes/sec
+total size is 90502606  speedup is 19162.10
+[2026-06-26 11:11:06] config synced to hamster
+[2026-06-26 11:11:06] === sync done ===
+[2026-06-26 11:30:01] === sync started ===
+Transfer starting: 92 files
+rsync(57467): error: /Users/yelog/Library/Mobile Documents/iCloud~dev~fuxiao~app~hamsterapp/Documents/RIME/Rime/: open: Operation not permitted
+rsync(57467): error: rsync_receiver
+rsync(57466): error: unexpected end of file
+rsync(57466): error: io_read_nonblocking
+rsync(57466): error: io_read_blocking
+rsync(57466): error: io_read_flush
+rsync(57466): error: rsync_sender
+rsync(57466): warning: child 57467 exited with status 1
+[2026-06-26 11:30:01] config sync failed
+[2026-06-26 11:30:01] === sync done ===

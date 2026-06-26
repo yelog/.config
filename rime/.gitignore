@@ -4,7 +4,6 @@ build/
 **/*.userdb/
 *.gram
 sync/
-sync.log
 
 # Rime local runtime state
 user.yaml

@@ -121,68 +121,44 @@
 
 ```
   配置文件 (*.yaml, lua/, dicts/)         用户词典 (*.userdb)
-  ┌──────────┐   rsync (自动)  ┌──────────┐   ┌──────────┐  Rime Sync  ┌──────────┐
-  │  macOS    │ ─────────────→ │  iCloud   │   │  macOS    │ ──────────→ │  iCloud   │
-  │ Squirrel  │                │  Drive    │   │ Squirrel  │             │  sync/    │
-  └──────────┘                └─────┬────┘   └──────────┘             └─────┬────┘
-                                    │                                        │
-                              Hamster 重新部署                          Rime 同步
-                                    │                                        │
-                              ┌─────┴────┐                            ┌─────┴────┐
-                              │  iPhone   │                            │  iPhone   │
-                              │ Hamster   │                            │ Hamster   │
-                              └──────────┘                            └──────────┘
+  ┌──────────┐     rime-sync    ┌──────────┐   ┌──────────┐  同步用户数据  ┌──────────┐
+  │  macOS    │ ───────────────→ │  iCloud   │   │  macOS    │ ────────────→ │  iCloud   │
+  │ Squirrel  │                 │  Drive    │   │ Squirrel  │               │  sync/    │
+  └──────────┘                 └─────┬────┘   └──────────┘               └─────┬────┘
+                                     │                                          │
+                               Hamster 重新部署                            Rime 同步
+                                     │                                          │
+                               ┌─────┴────┐                              ┌─────┴────┐
+                               │  iPhone   │                              │  iPhone   │
+                               │ Hamster   │                              │ Hamster   │
+                               └──────────┘                              └──────────┘
 ```
 
 ### 文件说明
 
 | 文件 | 用途 |
 |---|---|
-| `sync-rime.sh` | 同步脚本（手动执行或由 crontab 定时调用） |
-| `sync.log` | 同步日志（自动保留最近 500 条） |
-
-### 已配置的自动化
-
-crontab 每 30 分钟自动执行 `sync-rime.sh`，将配置文件推送到 Hamster iCloud 目录。
-
-```bash
-# crontab 任务
-*/30 * * * * /bin/bash /Users/yelog/.config/rime/sync-rime.sh
-```
-
-### 快捷命令
-
-```bash
-# 同步配置到 Hamster（会检查用户词典导出状态并提醒）
-rime-sync
-
-# 查看同步日志
-cat ~/.config/rime/sync.log
-```
+| `sync-rime.sh` | 手动同步脚本（通过 `rime-sync` 命令调用） |
 
 ### 同步流程
 
-有两种同步内容，机制不同：
+同步需要手动触发，没有自动化的定时任务（因为 Rime 用户词典导出无法自动化）。
 
-| 内容 | 同步方式 | 自动化 |
-|---|---|---|
-| 配置文件 (*.yaml, lua/, dicts/) | rsync 到 iCloud | ✅ crontab 每 30 分钟 |
-| 用户词典 (自造词、调频) | Rime 内置同步机制 | ❌ 需手动触发 |
+#### 完整同步步骤
 
-#### 用户词典同步（手动）
+**Mac → iPhone（将 Mac 的造词同步到手机）：**
 
-用户词典不会自动导出，需要手动触发：
+1. 终端执行 `rime-sync`（推送配置文件到 iCloud）
+2. 菜单栏 → Squirrel → 同步用户数据（导出用户词典到 iCloud sync 目录）
+3. iPhone 端 Hamster → 重新部署（拉取配置）
+4. iPhone 端 Hamster → Rime 同步（合并用户词典）
 
-1. **macOS 端**：菜单栏 → Squirrel → 同步用户数据（导出 userdb.txt 到 iCloud sync 目录）
-2. **iPhone 端**：Hamster → Rime 功能 → Rime 同步（读取并合并 userdb.txt）
+**iPhone → Mac（将手机的造词同步到电脑）：**
 
-> 💡 `rime-sync` 会检查 userdb.txt 的导出时间，超过 1 小时未导出会提醒你先执行步骤 1。
+1. iPhone 端 Hamster → Rime 同步（导出用户词典到 iCloud sync 目录）
+2. 菜单栏 → Squirrel → 同步用户数据（合并用户词典）
 
-#### 配置文件同步（自动 + 手动）
-
-- **自动**：crontab 每 30 分钟执行 `sync-rime.sh`
-- **手动**：终端执行 `rime-sync`
-- **生效**：iPhone 端 Hamster → 重新部署
+> 💡 `rime-sync` 会检查用户词典导出时间，超过 1 小时未导出会提醒你先执行步骤 2。
 
 ### installation.yaml 配置
 
