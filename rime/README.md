@@ -153,23 +153,36 @@ crontab 每 30 分钟自动执行 `sync-rime.sh`，将配置文件推送到 Hams
 ### 快捷命令
 
 ```bash
-# 手动推送配置到 Hamster（执行后会提示是否需要同步用户词典）
+# 同步配置到 Hamster（会检查用户词典导出状态并提醒）
 rime-sync
 
 # 查看同步日志
 cat ~/.config/rime/sync.log
 ```
 
-### 完整手动同步流程
+### 同步流程
 
-当你需要立即将 Mac 端的最新输入习惯同步到 iPhone 时，按以下步骤操作：
+有两种同步内容，机制不同：
 
-1. **推送配置**：终端执行 `rime-sync`
-2. **同步用户词典（macOS 端）**：菜单栏 → Squirrel → 同步用户数据
-3. **同步用户词典（iPhone 端）**：Hamster → Rime 功能 → Rime 同步
-4. **重新部署（iPhone 端）**：Hamster → 重新部署（仅在配置文件变更时需要）
+| 内容 | 同步方式 | 自动化 |
+|---|---|---|
+| 配置文件 (*.yaml, lua/, dicts/) | rsync 到 iCloud | ✅ crontab 每 30 分钟 |
+| 用户词典 (自造词、调频) | Rime 内置同步机制 | ❌ 需手动触发 |
 
-> 💡 如果只是日常打字，用户词典会持续积累，不需要每次都同步。建议每隔几天同步一次。
+#### 用户词典同步（手动）
+
+用户词典不会自动导出，需要手动触发：
+
+1. **macOS 端**：菜单栏 → Squirrel → 同步用户数据（导出 userdb.txt 到 iCloud sync 目录）
+2. **iPhone 端**：Hamster → Rime 功能 → Rime 同步（读取并合并 userdb.txt）
+
+> 💡 `rime-sync` 会检查 userdb.txt 的导出时间，超过 1 小时未导出会提醒你先执行步骤 1。
+
+#### 配置文件同步（自动 + 手动）
+
+- **自动**：crontab 每 30 分钟执行 `sync-rime.sh`
+- **手动**：终端执行 `rime-sync`
+- **生效**：iPhone 端 Hamster → 重新部署
 
 ### installation.yaml 配置
 
