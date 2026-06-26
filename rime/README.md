@@ -138,8 +138,7 @@
 
 | 文件 | 用途 |
 |---|---|
-| `sync-to-hamster.sh` | 手动推送配置到 Hamster iCloud 目录 |
-| `sync-rime.sh` | 自动同步脚本（由 crontab 定时调用） |
+| `sync-rime.sh` | 同步脚本（手动执行或由 crontab 定时调用） |
 | `sync.log` | 同步日志（自动保留最近 500 条） |
 
 ### 已配置的自动化
