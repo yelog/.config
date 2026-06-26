@@ -123,7 +123,7 @@
   配置文件 (*.yaml, lua/, dicts/)         用户词典 (*.userdb)
   ┌──────────┐     rime-sync    ┌──────────┐   ┌──────────┐  同步用户数据  ┌──────────┐
   │  macOS    │ ───────────────→ │  iCloud   │   │  macOS    │ ────────────→ │  iCloud   │
-  │ Squirrel  │                 │  Drive    │   │ Squirrel  │               │  sync/    │
+  │ Squirrel  │   (自动触发)     │  Drive    │   │ Squirrel  │               │  sync/    │
   └──────────┘                 └─────┬────┘   └──────────┘               └─────┬────┘
                                      │                                          │
                                Hamster 重新部署                            Rime 同步
@@ -138,20 +138,44 @@
 
 | 文件 | 用途 |
 |---|---|
-| `sync-rime.sh` | 手动同步脚本（通过 `rime-sync` 命令调用） |
+| `sync-rime.sh` | 同步脚本（被 watch-sync.sh 或 rime-sync 调用） |
+| `watch-sync.sh` | 后台监听脚本，检测到同步事件时自动推送配置 |
 
 ### 同步流程
 
-同步需要手动触发，没有自动化的定时任务（因为 Rime 用户词典导出无法自动化）。
+#### 方式一：后台监听（推荐）
+
+启动监听后，只需在 Squirrel 菜单栏点击「同步用户数据」，配置会自动推送到 iPhone：
+
+```bash
+# 启动监听（后台运行）
+~/.config/rime/watch-sync.sh
+
+# 停止监听
+Ctrl+C 或 kill $(cat ~/.config/rime/watch-sync.pid)
+```
+
+启动后，Mac 端只需点击一次「同步用户数据」：
+1. ✅ 用户词典自动导出到 iCloud sync 目录
+2. ✅ 配置文件自动推送到 Hamster iCloud 目录
+3. iPhone 端：Hamster → 重新部署 + Rime 同步
+
+#### 方式二：手动执行
+
+```bash
+# 推送配置到 Hamster（会检查用户词典导出状态）
+rime-sync
+
+# 然后手动点击：Squirrel → 同步用户数据
+```
 
 #### 完整同步步骤
 
 **Mac → iPhone（将 Mac 的造词同步到手机）：**
 
-1. 终端执行 `rime-sync`（推送配置文件到 iCloud）
-2. 菜单栏 → Squirrel → 同步用户数据（导出用户词典到 iCloud sync 目录）
-3. iPhone 端 Hamster → 重新部署（拉取配置）
-4. iPhone 端 Hamster → Rime 同步（合并用户词典）
+1. 菜单栏 → Squirrel → 同步用户数据（导出用户词典 + 自动推送配置）
+2. iPhone 端 Hamster → 重新部署（拉取配置）
+3. iPhone 端 Hamster → Rime 同步（合并用户词典）
 
 **iPhone → Mac（将手机的造词同步到电脑）：**
 
