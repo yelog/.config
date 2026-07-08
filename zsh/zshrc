@@ -168,7 +168,7 @@ export PATH="$PATH:$HOME/.rvm/bin"
 # hexo
 notePath='/Users/yelog/myspace/notes'
 blogPath='/Users/yelog/myspace/blog/source/_posts'
-function hs() {
+function hexo_server() {
   # clean dir
   rm -rf $blogPath/*
   mkdir -p $blogPath
@@ -180,7 +180,7 @@ function hs() {
   hexo g
   hexo s
 }
-function hd() {
+function hexo_deploy() {
   # clean dir
   rm -rf $blogPath/*
   mkdir -p $blogPath
@@ -532,7 +532,7 @@ function chpwd() {
   fi
 }
 
-. "$HOME/.local/share/../bin/env"
+# . "$HOME/.local/share/../bin/env"
 
 #THIS MUST BE AT THE END OF THE FILE FOR SDKMAN TO WORK!!!
 export SDKMAN_DIR="$HOME/.sdkman"
