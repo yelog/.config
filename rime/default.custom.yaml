@@ -1,0 +1,11 @@
+# 自定义默认配置
+# encoding: utf-8
+
+patch:
+  # 禁用 Shift 键切换中英文
+  ascii_composer/switch_key/Shift_L: noop
+  ascii_composer/switch_key/Shift_R: noop
+
+  # 添加 Ctrl+U 删除所有拼音
+  key_binder/bindings/+:
+    - {when: composing, accept: Control+u, send: Escape}
