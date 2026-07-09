@@ -9,6 +9,7 @@
 !/tmux/
 !/nvim/
 !/hammerspoon/
+/hammerspoon/hammerspoon
 !/zsh/
 !README.md
 !LICENSE
