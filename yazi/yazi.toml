@@ -104,7 +104,7 @@ fetchers = [
 	{ url = "remote://*", run = "mime.remote", prio = "high", group = "mime" },
 ]
 spotters = [
-	{ name = "*/", run = "folder" },
+	{ url = "*/", run = "folder" },
 	# Code
 	{ mime = "text/*", run = "code" },
 	{ mime = "*/{xml,javascript,wine-extension-ini}", run = "code" },

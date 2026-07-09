@@ -4,7 +4,7 @@ local M = {
   { prefix = keys.hyper, key = "V", message = "WeChat", appName = "WeChat" },
   { prefix = keys.hyper, key = "G", message = "QQ", appName = "QQ" },
   { prefix = keys.hyper, key = "F", message = "Finder", appName = "Finder" },
-  { prefix = keys.hyper, key = "B", message = "Browser", appName = "Google Chrome" },
+  { prefix = keys.hyper, key = "B", message = "Browser", appName = "Arc" },
   { prefix = keys.hyper, key = "I", message = "IntelliJ IDEA", appName = "IntelliJ IDEA" },
   { prefix = keys.hyper, key = "Y", message = "Discord", appName = "Discord" },
   { prefix = keys.hyper, key = "R", message = "Redis Desktop Manager", appName = "Rust Redis Desktop" },
