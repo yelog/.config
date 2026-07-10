@@ -12,5 +12,9 @@ installation.yaml
 # macOS
 .DS_Store
 
+# watch-sync daemon
+watch-sync.log
+watch-sync.pid
+
 # local tool indexes
 .codegraph/
