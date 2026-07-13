@@ -372,7 +372,7 @@ end
 --   end
 --   require("fzf-lua").lsp_definitions()
 -- end, { desc = 'i18n or LSP definition' })
--- map("n", "gD", function() require("fzf-lua").lsp_implementations() end, { desc = "Goto implementation" })
+map("n", "gD", function() require('snacks').picker.lsp_implementations() end, { desc = "Goto implementation" })
 -- map("n", "gu", function() require("fzf-lua").lsp_references() end, { desc = "Goto references" })
 vim.keymap.set('n', 'gu', function()
   if require('i18n').i18n_key_usages() then
@@ -431,6 +431,26 @@ map({"n", "t"}, "<C-g>", function() Snacks.lazygit() end, { desc = "Toggle Lazyg
 
 -- toggleterm
 map({ "n", "t", "i", "v" }, "<D-2>", function() vim.cmd("ToggleTerm") end, { desc = "Toggle terminal" })
+
+-- overseer (services panel)
+map("n", "<leader>oo", function() vim.cmd("OverseerToggle") end, { desc = "Toggle services panel" })
+map("n", "<leader>os", function()
+  local overseer = require("overseer")
+  for _, task in ipairs(overseer.list_tasks({})) do
+    if task.metadata and task.metadata.service and task.status == "RUNNING" then
+      task:stop()
+    end
+  end
+end, { desc = "Stop all services" })
+map("n", "<leader>oa", function()
+  local overseer = require("overseer")
+  for _, task in ipairs(overseer.list_tasks({})) do
+    if task.metadata and task.metadata.service and task.status ~= "RUNNING" then
+      task:reset()
+      task:start()
+    end
+  end
+end, { desc = "Start all services" })
 
 -- ChatGPT (avante)
 local avanteApi = require("avante.api")
