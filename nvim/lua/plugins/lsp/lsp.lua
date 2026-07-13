@@ -140,6 +140,10 @@ return {
           "html",
           -- "kotlin_lsp",
         },
+        -- nvim-jdtls owns the Java language-server lifecycle and configuration.
+        automatic_enable = {
+          exclude = { "jdtls" },
+        },
       })
       -- Mappings.
       -- See `:help vim.diagnostic.*` for documentation on any of the below functions
@@ -289,7 +293,7 @@ return {
       vim.lsp.enable('tailwindcss')
       vim.lsp.enable('unocss')
       vim.lsp.enable('vimls')
-      vim.lsp.enable('jdtls')
+      -- jdtls is managed by nvim-jdtls (see plugins/lsp/jdtls.lua)
       vim.lsp.enable('lemminx')
       vim.lsp.enable('copilot')
       vim.lsp.enable('cssls')
