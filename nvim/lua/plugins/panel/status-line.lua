@@ -504,7 +504,7 @@ return {
         update = { "User", "BufEnter", "BufWritePost", "TextChanged", "TextChangedI", "FocusGained", "TermClose", "VimResume" },
         hl = function(self)
           -- 获取当前 buf 文件在 git 中的状态（逐个 buffer）
-          local bg = utils.get_highlight("TabLine").bg
+          local bg = self.is_active and "#3b4261" or utils.get_highlight("TabLine").bg
           local underline = self.is_active and true or false
 
           -- 使用每个 buffer 的 changedtick 做轻量缓存，避免重复执行外部命令
@@ -669,13 +669,12 @@ return {
       -- }
 
       -- The final touch! 文字和左右两侧的分隔符的背景色
-      local TablineBufferBlock = utils.surround({ "", "" }, function(self)
-        -- if self.is_active then
-        --   return utils.get_highlight("TabLineSel").bg
-        -- else
-        return utils.get_highlight("TabLine").bg
-        -- end
-        -- end, { TablineFileNameBlock, TablineCloseButton })
+      local TablineBufferBlock = utils.surround({ "", "" }, function(self)
+        if self.is_active then
+          return "#3b4261" -- 深蓝色背景，与 tokyonight 主题协调
+        else
+          return utils.get_highlight("TabLine").bg
+        end
       end, { TablineFileNameBlock })
 
       -- and here we go
