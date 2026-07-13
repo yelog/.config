@@ -2,6 +2,126 @@ return {
   "stevearc/overseer.nvim",
   config = function()
     local overseer = require("overseer")
+    local service_state = require("overseer.service_state")
+    local roots_by_tab = {}
+
+    local function find_project_root(source)
+      local dir = source or vim.api.nvim_buf_get_name(0)
+      if dir == "" then dir = vim.fn.getcwd() end
+      if vim.fn.isdirectory(dir) ~= 1 then
+        dir = vim.fn.fnamemodify(dir, ":p:h")
+      end
+
+      local last_build_root = nil
+      while dir and dir ~= "" do
+        if vim.fn.isdirectory(dir .. "/.git") == 1 then return dir end
+        if vim.fn.filereadable(dir .. "/pom.xml") == 1
+          or vim.fn.filereadable(dir .. "/build.gradle") == 1
+          or vim.fn.filereadable(dir .. "/build.gradle.kts") == 1 then
+          last_build_root = dir
+        end
+
+        local parent = vim.fn.fnamemodify(dir, ":h")
+        if parent == dir then break end
+        dir = parent
+      end
+      return last_build_root or vim.fn.getcwd()
+    end
+
+    local function spring_task(task)
+      return task.metadata and task.metadata.springboot == true
+    end
+
+    local function refresh_winbar()
+      for _, win in ipairs(vim.api.nvim_list_wins()) do
+        local buf = vim.api.nvim_win_get_buf(win)
+        if vim.bo[buf].filetype == "OverseerList" then
+          local tab = vim.api.nvim_win_get_tabpage(win)
+          local root = roots_by_tab[tab]
+          local profile = root and service_state.get_profile(root) or nil
+          profile = (profile or "default"):gsub("%%", "%%%%")
+          vim.wo[win].winbar = table.concat({
+            "%#Title# SPRING SERVICES %*",
+            "%#DiagnosticInfo#◆ profile: " .. profile .. "%*",
+            "%#Comment#  [p switch] %*",
+          })
+        end
+      end
+    end
+
+    local function select_profile()
+      local tab = vim.api.nvim_get_current_tabpage()
+      local root = roots_by_tab[tab] or find_project_root()
+      roots_by_tab[tab] = root
+      local profiles = service_state.parse_maven_profiles(root)
+      if #profiles == 0 then
+        vim.notify("No Maven profiles found in " .. root .. "/pom.xml", vim.log.levels.WARN)
+        return
+      end
+
+      local choices = { { label = "[no profile]", profile = nil } }
+      for _, profile in ipairs(profiles) do
+        table.insert(choices, { label = profile, profile = profile })
+      end
+      local current = service_state.get_profile(root)
+      vim.ui.select(choices, {
+        prompt = "Spring profile",
+        format_item = function(item)
+          return (item.profile == current and "● " or "  ") .. item.label
+        end,
+      }, function(choice)
+        if not choice then return end
+
+        local profile = choice.profile
+        if not service_state.set_profile(root, profile) then
+          vim.notify("Failed to persist Spring profile", vim.log.levels.ERROR)
+          return
+        end
+
+        refresh_winbar()
+
+        local restarted = 0
+        for _, task in ipairs(overseer.list_tasks({})) do
+          if spring_task(task)
+            and task.metadata.project_root == root
+            and task.status == "RUNNING" then
+            if task:restart(true) then restarted = restarted + 1 end
+          end
+        end
+
+        local label = profile or "default"
+        local restart_label = restarted > 0 and string.format(" · restarted %d service(s)", restarted) or ""
+        vim.notify(string.format("Spring profile: %s%s", label, restart_label))
+      end)
+    end
+
+    local function task_visual(task)
+      if task.status == "FAILURE" then
+        return "×", "DiagnosticError", "failed", "DiagnosticError"
+      elseif task.status == "RUNNING" and task.metadata and task.metadata.ready then
+        local detail = task.metadata.port and (":" .. task.metadata.port) or "ready"
+        return "●", "DiagnosticOk", detail, "DiagnosticInfo"
+      elseif task.status == "RUNNING" then
+        return "◐", "DiagnosticWarn", "starting", "DiagnosticWarn"
+      elseif task.status == "PENDING" then
+        return "○", "Comment", "stopped", "Comment"
+      elseif task.status == "CANCELED" then
+        return "■", "DiagnosticHint", "stopped", "Comment"
+      elseif task.status == "SUCCESS" then
+        return "✓", "DiagnosticInfo", "finished", "Comment"
+      end
+      return "?", "Comment", task.status:lower(), "Comment"
+    end
+
+    local function sort_rank(task)
+      if task.status == "FAILURE" then return 1 end
+      if task.status == "RUNNING" and task.metadata and task.metadata.ready then return 2 end
+      if task.status == "RUNNING" then return 3 end
+      if task.status == "PENDING" then return 4 end
+      if task.status == "CANCELED" then return 5 end
+      if task.status == "SUCCESS" then return 6 end
+      return 99
+    end
 
     overseer.setup({
       component_aliases = {
@@ -21,34 +141,19 @@ return {
         max_height = { 20, 0.3 },
         separator = "────────────────────────────────",
         render = function(task)
-          local status_icons = {
-            RUNNING  = "▶",
-            SUCCESS  = "✖",
-            FAILURE  = "✖",
-            PENDING  = "◌",
-            CANCELED = "■",
-          }
-          local status_hl = {
-            RUNNING  = "DiagnosticOk",
-            SUCCESS  = "DiagnosticError",
-            FAILURE  = "DiagnosticError",
-            PENDING  = "DiagnosticWarn",
-            CANCELED = "DiagnosticHint",
-          }
-          local icon = status_icons[task.status] or "?"
-          local hl = status_hl[task.status] or "Normal"
+          local icon, icon_hl, detail, detail_hl = task_visual(task)
           return {
             {
-              { " " .. icon .. "  ", hl },
+              { " " .. icon .. "  ", icon_hl },
               { task.name, "Normal" },
+              { "  " .. detail, detail_hl },
             },
           }
         end,
         sort = function(a, b)
-          local order = { RUNNING = 1, PENDING = 2, CANCELED = 3, FAILURE = 4, SUCCESS = 5 }
-          local sa = order[a.status] or 99
-          local sb = order[b.status] or 99
-          if sa ~= sb then return sa < sb end
+          local rank_a = sort_rank(a)
+          local rank_b = sort_rank(b)
+          if rank_a ~= rank_b then return rank_a < rank_b end
           return a.name < b.name
         end,
         keymaps = {
@@ -59,7 +164,9 @@ return {
           ["<C-v>"] = { "keymap.open", opts = { dir = "vsplit" }, desc = "Open in vsplit" },
           ["<C-s>"] = { "keymap.open", opts = { dir = "split" }, desc = "Open in split" },
           ["<C-f>"] = { "keymap.open", opts = { dir = "float" }, desc = "Open in float" },
-          ["p"] = "keymap.toggle_preview",
+          ["p"] = { select_profile, desc = "Select Spring profile" },
+          ["gp"] = "keymap.toggle_preview",
+          ["u"] = { "keymap.run_action", opts = { action = "open_service_url" }, desc = "Open service URL" },
           ["{"] = "keymap.prev_task",
           ["}"] = "keymap.next_task",
           ["<C-k>"] = "keymap.scroll_output_up",
@@ -95,24 +202,13 @@ return {
         ["restart_service"] = {
           desc = "Restart service",
           run = function(task)
-            if task.status == "RUNNING" then
-              task:stop()
-              vim.defer_fn(function()
-                task:reset()
-                task:start()
-              end, 300)
-            else
-              task:reset()
-              task:start()
-            end
+            task:restart(true)
           end,
         },
         ["stop_service"] = {
           desc = "Stop service",
           run = function(task)
-            if task.status == "RUNNING" then
-              task:stop()
-            end
+            if task.status == "RUNNING" then task:stop() end
           end,
         },
         ["start_all_services"] = {
@@ -136,57 +232,123 @@ return {
             end
           end,
         },
+        ["open_service_url"] = {
+          desc = "Open service URL",
+          condition = function(task)
+            return spring_task(task)
+          end,
+          run = function(task)
+            local url = task.metadata and task.metadata.ready and task.metadata.url or nil
+            if not url then
+              vim.notify("Service is not ready or no application port was detected", vim.log.levels.WARN)
+              return
+            end
+
+            local _, err = vim.ui.open(url)
+            if err then vim.notify("Failed to open " .. url .. ": " .. err, vim.log.levels.ERROR) end
+          end,
+        },
       },
     })
 
-    -- 打开面板前自动注册未注册的服务
-    local function find_project_root()
-      local buf_dir = vim.fn.fnamemodify(vim.api.nvim_buf_get_name(0), ":p:h")
-      local dir = buf_dir
-      local last_pom = nil
-      while dir and dir ~= "/" and dir ~= vim.fn.expand("~") do
-        if vim.fn.isdirectory(dir .. "/.git") == 1 then
-          return dir
-        end
-        if vim.fn.filereadable(dir .. "/pom.xml") == 1 then
-          last_pom = dir
-        end
-        dir = vim.fn.fnamemodify(dir, ":h")
-      end
-      return last_pom or vim.fn.getcwd()
-    end
+    local panel_group = vim.api.nvim_create_augroup("overseer_services_panel", { clear = true })
+    vim.api.nvim_create_autocmd("FileType", {
+      group = panel_group,
+      pattern = "OverseerList",
+      callback = function() vim.schedule(refresh_winbar) end,
+    })
+    vim.api.nvim_create_autocmd("User", {
+      group = panel_group,
+      pattern = "OverseerListUpdate",
+      callback = refresh_winbar,
+    })
 
-    -- 打开面板前自动注册未注册的服务
-    local function ensure_services()
+    local function ensure_services(search_dir, callback)
       local template = require("overseer.template")
-      local search_dir = find_project_root()
-      template.list({ dir = search_dir }, function(templates)
-        if #templates == 0 then return end
-        vim.schedule(function()
-          local existing = {}
-          for _, task in ipairs(overseer.list_tasks({})) do
-            existing[task.name] = true
-          end
-          for _, tmpl in ipairs(templates) do
-            if not existing[tmpl.name] then
-              overseer.run_task({ name = tmpl.name }, function(task)
-                if task then task:stop() end
-              end)
+      local templates = {}
+      for _, module in ipairs({ "springboot", "service" }) do
+        local provider = require("overseer.template." .. module)
+        local generated = provider.generator({ dir = search_dir }) or {}
+        for _, tmpl in ipairs(generated) do
+          tmpl.module = module
+          table.insert(templates, tmpl)
+        end
+      end
+
+      local existing = {}
+      for _, task in ipairs(overseer.list_tasks({})) do
+        if spring_task(task) and task.metadata.task_key then
+          existing["springboot::" .. task.metadata.task_key] = true
+        elseif task.metadata and task.metadata.service then
+          existing["service::" .. task.name] = true
+        end
+      end
+
+      local pending = {}
+      for _, tmpl in ipairs(templates) do
+        local service_key = "service::" .. tmpl.name
+        if tmpl.module == "springboot" or not existing[service_key] then
+          table.insert(pending, tmpl)
+        end
+      end
+
+      if #pending == 0 then
+        if callback then callback() end
+        return
+      end
+
+      local remaining = #pending
+      for _, tmpl in ipairs(pending) do
+        template.build_task(tmpl, {
+          params = {},
+          search = { dir = search_dir },
+          disallow_prompt = true,
+        }, function(err, task)
+          if err then
+            vim.notify("Failed to register service: " .. err, vim.log.levels.ERROR)
+          elseif task then
+            local key
+            if spring_task(task) and task.metadata.task_key then
+              key = "springboot::" .. task.metadata.task_key
+            else
+              key = "service::" .. task.name
+            end
+            if existing[key] then
+              task:dispose()
+            else
+              existing[key] = true
             end
           end
+          remaining = remaining - 1
+          if remaining == 0 and callback then callback() end
         end)
+      end
+    end
+
+    local function open_services(toggle)
+      local origin_win = vim.api.nvim_get_current_win()
+      local origin_tab = vim.api.nvim_get_current_tabpage()
+      local root = find_project_root()
+      roots_by_tab[origin_tab] = root
+      ensure_services(root, function()
+        local open_panel = function()
+          if toggle then overseer.toggle() else overseer.open() end
+        end
+        if vim.api.nvim_win_is_valid(origin_win) then
+          vim.api.nvim_win_call(origin_win, open_panel)
+        else
+          open_panel()
+        end
+        vim.schedule(refresh_winbar)
       end)
     end
 
-    -- 覆盖命令：打开前先注册服务
     vim.api.nvim_create_user_command("OverseerToggle", function()
-      ensure_services()
-      vim.defer_fn(function() overseer.toggle() end, 200)
-    end, { desc = "Toggle overseer with auto-discovery", nargs = "?", bang = true })
+      open_services(true)
+    end, { desc = "Toggle services panel", nargs = "?", bang = true })
 
     vim.api.nvim_create_user_command("OverseerOpen", function()
-      ensure_services()
-      vim.defer_fn(function() overseer.open() end, 200)
-    end, { desc = "Open overseer with auto-discovery", nargs = "?", bang = true })
+      open_services(false)
+    end, { desc = "Open services panel", nargs = "?", bang = true })
   end,
 }

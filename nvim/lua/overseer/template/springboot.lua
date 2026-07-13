@@ -1,4 +1,4 @@
-local files = require("overseer.files")
+local service_state = require("overseer.service_state")
 
 local M = {}
 
@@ -46,7 +46,7 @@ local function extract_class_info(filepath)
   end)
   if not ok then return nil end
 
-  local pkg = content:match("package%s+([%w%.]+)%s*;")
+  local pkg = content:match("package%s+([%w%.]+)%s*;?")
   local classname = vim.fn.fnamemodify(filepath, ":t:r") -- filename without extension
 
   if pkg and classname then
@@ -66,13 +66,13 @@ local function find_entry_points(dir, max_depth)
 
   local function scan(d, depth)
     if depth > max_depth then return end
-    if not vim.fn.isdirectory(d) == 1 then return end
+    if vim.fn.isdirectory(d) ~= 1 then return end
 
-    local handle = vim.loop.fs_scandir(d)
+    local handle = vim.uv.fs_scandir(d)
     if not handle then return end
 
     while true do
-      local name, type = vim.loop.fs_scandir_next(handle)
+      local name, type = vim.uv.fs_scandir_next(handle)
       if not name then break end
 
       local path = d .. "/" .. name
@@ -136,11 +136,13 @@ local function is_spring_boot_project(root)
   return false
 end
 
--- Determine if a dir is a submodule (has its own pom.xml under a parent)
+-- Determine if a dir is a submodule (has its own build file under a parent)
 local function find_module_root(entry_dir, project_root)
   local dir = entry_dir
   while dir and dir ~= project_root and dir ~= "/" do
-    if vim.fn.filereadable(dir .. "/pom.xml") == 1 then
+    if vim.fn.filereadable(dir .. "/pom.xml") == 1
+      or vim.fn.filereadable(dir .. "/build.gradle") == 1
+      or vim.fn.filereadable(dir .. "/build.gradle.kts") == 1 then
       return dir
     end
     dir = vim.fn.fnamemodify(dir, ":h")
@@ -148,9 +150,14 @@ local function find_module_root(entry_dir, project_root)
   return project_root
 end
 
+function M.parse_maven_profiles(root)
+  return service_state.parse_maven_profiles(root)
+end
+
 return {
   name = "springboot",
   desc = "Auto-detect Spring Boot entry points",
+  parse_maven_profiles = M.parse_maven_profiles,
   generator = function(opts)
     local dir = opts.dir or vim.fn.getcwd()
     local root = find_project_root(dir)
@@ -184,18 +191,22 @@ return {
       local cmd, cwd
       if use_maven then
         cwd = root
+        local base_cmd = { "mvn" }
+
         if is_multi then
           local rel = module_root:sub(#root + 2)
-          cmd = { "mvn", "-pl", rel, "spring-boot:run",
-                  "-Dspring-boot.run.mainClass=" .. ep.fqn }
+          vim.list_extend(base_cmd, { "-pl", rel, "spring-boot:run",
+                  "-Dspring-boot.run.mainClass=" .. ep.fqn })
         else
-          cmd = { "mvn", "spring-boot:run",
-                  "-Dspring-boot.run.mainClass=" .. ep.fqn }
+          vim.list_extend(base_cmd, { "spring-boot:run",
+                  "-Dspring-boot.run.mainClass=" .. ep.fqn })
         end
+
+        cmd = base_cmd
       elseif use_gradle then
         cwd = root
         if is_multi then
-          local rel = module_root:sub(#root + 2)
+          local rel = module_root:sub(#root + 2):gsub("/", ":")
           cmd = { gradlew, ":" .. rel .. ":bootRun",
                   "--mainClass=" .. ep.fqn }
         else
@@ -205,16 +216,19 @@ return {
       end
 
       if cmd then
+        local module = is_multi and module_root:sub(#root + 2) or nil
+        local task_name = module and (module .. ":" .. ep.classname) or ep.classname
         table.insert(ret, {
-          name = ep.classname,
+          name = task_name,
           builder = function(params)
             return {
               cmd = cmd,
               cwd = cwd,
-              name = ep.classname,
+              name = task_name,
               components = {
                 "on_exit_set_status",
                 "on_complete_notify",
+                "service.springboot",
                 {
                   "service.lifecycle",
                   auto_restart = false,
@@ -222,10 +236,13 @@ return {
               },
               metadata = {
                 service = true,
+                springboot = true,
                 group = "springboot",
-                module = is_multi and module_root:sub(#root + 2) or nil,
+                project_root = root,
+                module = module,
                 class = ep.fqn,
                 source = ep.path,
+                task_key = root .. "::" .. ep.fqn,
               },
             }
           end,
