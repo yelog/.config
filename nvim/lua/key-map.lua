@@ -496,13 +496,15 @@ map("i", "<D-C-S-j>", function() require("smart-splits").resize_down() end, { de
 map("i", "<D-C-S-k>", function() require("smart-splits").resize_up() end, { desc = "Resize up" })
 map("i", "<D-C-S-l>", function() require("smart-splits").resize_right() end, { desc = "Resize right" })
 
--- Smart zoom: when neovim has splits, use Snacks.zen.zoom(); otherwise, pass to kitty for toggle_layout stack
-map({ "n", "t" }, "<D-C-f>", function()
+-- Smart zoom: sync with kitty layout toggle
+-- Called by kitty via remote control after toggle_layout stack
+function SmartZoom()
   local win_count = #vim.api.nvim_list_wins()
   if win_count > 1 then
     Snacks.zen.zoom()
-  else
-    -- Pass to kitty for toggle_layout stack
-    vim.fn.system({ "kitty", "@", "--to=unix:/tmp/mykitty", "toggle_layout", "stack" })
   end
-end, { desc = "Smart zoom" })
+end
+
+map({ "n", "t" }, "<D-C-f>", function()
+  SmartZoom()
+end, { desc = "Smart zoom (sync with kitty)" })

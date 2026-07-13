@@ -217,14 +217,13 @@ return {
 
       if cmd then
         local module = is_multi and module_root:sub(#root + 2) or nil
-        local task_name = module and (module .. ":" .. ep.classname) or ep.classname
         table.insert(ret, {
-          name = task_name,
+          name = ep.classname,
           builder = function(params)
             return {
               cmd = cmd,
               cwd = cwd,
-              name = task_name,
+              name = ep.classname,
               components = {
                 "on_exit_set_status",
                 "on_complete_notify",
