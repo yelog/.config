@@ -166,18 +166,16 @@ return {
       local cmd, cwd
       if use_maven then
         cwd = root
-        local base_cmd = { "mvn" }
-
         if is_multi then
           local rel = module_root:sub(#root + 2)
-          vim.list_extend(base_cmd, { "-pl", rel, "spring-boot:run",
-                  "-Dspring-boot.run.mainClass=" .. ep.fqn })
+          -- Step 1: install dependencies, Step 2: run the target module
+          cmd = { "bash", "-c",
+                  string.format("mvn install -pl %s -am -DskipTests -q && mvn spring-boot:run -pl %s -Dspring-boot.run.mainClass=%s",
+                    rel, rel, ep.fqn) }
         else
-          vim.list_extend(base_cmd, { "spring-boot:run",
-                  "-Dspring-boot.run.mainClass=" .. ep.fqn })
+          cmd = { "mvn", "spring-boot:run",
+                  "-Dspring-boot.run.mainClass=" .. ep.fqn }
         end
-
-        cmd = base_cmd
       elseif use_gradle then
         cwd = root
         if is_multi then

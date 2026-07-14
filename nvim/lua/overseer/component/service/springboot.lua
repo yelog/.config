@@ -11,29 +11,49 @@ local function is_maven_command(command)
   return executable == "mvn" or executable == "mvnw" or executable == "mvn.cmd"
 end
 
+-- Check if command is bash -c wrapping Maven commands
+local function is_bash_maven_command(command)
+  if type(command) ~= "table" or #command < 3 then return false end
+  if vim.fs.basename(tostring(command[1])) ~= "bash" then return false end
+  if command[2] ~= "-c" then return false end
+  local cmd_str = tostring(command[3] or "")
+  return cmd_str:match("mvn ") ~= nil
+end
+
 local function apply_maven_profile(task)
-  if not is_maven_command(task.cmd) then return end
-
-  local command = {}
-  local index = 1
-  while index <= #task.cmd do
-    local argument = tostring(task.cmd[index])
-    if argument == "-P" then
-      index = index + 2
-    elseif argument:match("^%-P.+") then
-      index = index + 1
-    else
-      table.insert(command, task.cmd[index])
-      index = index + 1
+  if is_maven_command(task.cmd) then
+    -- Direct Maven command
+    local command = {}
+    local index = 1
+    while index <= #task.cmd do
+      local argument = tostring(task.cmd[index])
+      if argument == "-P" then
+        index = index + 2
+      elseif argument:match("^%-P.+") then
+        index = index + 1
+      else
+        table.insert(command, task.cmd[index])
+        index = index + 1
+      end
     end
-  end
 
-  local profile = service_state.get_profile(task.metadata.project_root)
-  if profile and profile ~= "" then
-    table.insert(command, 2, "-P" .. profile)
+    local profile = service_state.get_profile(task.metadata.project_root)
+    if profile and profile ~= "" then
+      table.insert(command, 2, "-P" .. profile)
+    end
+    task.cmd = command
+    task.metadata.profile = profile
+  elseif is_bash_maven_command(task.cmd) then
+    -- bash -c "mvn ... && mvn ..." - modify the command string
+    local profile = service_state.get_profile(task.metadata.project_root)
+    if profile and profile ~= "" then
+      local cmd_str = task.cmd[3]
+      -- Add -Pprofile after each mvn command
+      cmd_str = cmd_str:gsub("mvn%s+", "mvn -P" .. profile .. " ", 2)
+      task.cmd[3] = cmd_str
+    end
+    task.metadata.profile = profile
   end
-  task.cmd = command
-  task.metadata.profile = profile
 end
 
 local function parse_server_line(line)

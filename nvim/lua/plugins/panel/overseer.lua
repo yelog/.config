@@ -38,13 +38,33 @@ return {
         if vim.bo[buf].filetype == "OverseerList" then
           local tab = vim.api.nvim_win_get_tabpage(win)
           local root = roots_by_tab[tab]
-          local profile = root and service_state.get_profile(root) or nil
-          profile = (profile or "default"):gsub("%%", "%%%%")
-          vim.wo[win].winbar = table.concat({
-            "%#Title# SPRING SERVICES %*",
-            "%#DiagnosticInfo#◆ profile: " .. profile .. "%*",
-            "%#Comment#  [p switch] %*",
-          })
+
+          -- Determine which service types are present
+          local has_spring = false
+          local has_npm = false
+          for _, task in ipairs(overseer.list_tasks({})) do
+            if task.metadata then
+              if task.metadata.springboot then has_spring = true end
+              if task.metadata.npm then has_npm = true end
+            end
+          end
+
+          local title_parts = {}
+          if has_spring then table.insert(title_parts, "SPRING") end
+          if has_npm then table.insert(title_parts, "NPM") end
+          if #title_parts == 0 then table.insert(title_parts, "SERVICES") end
+
+          local title = table.concat(title_parts, " + ") .. " SERVICES"
+          local winbar_parts = { "%#Title# " .. title .. " %*" }
+
+          if has_spring then
+            local profile = root and service_state.get_profile(root) or nil
+            profile = (profile or "default"):gsub("%%", "%%%%")
+            table.insert(winbar_parts, "%#DiagnosticInfo#◆ profile: " .. profile .. "%*")
+            table.insert(winbar_parts, "%#Comment#  [p switch] %*")
+          end
+
+          vim.wo[win].winbar = table.concat(winbar_parts)
         end
       end
     end
@@ -270,7 +290,7 @@ return {
         ["open_service_url"] = {
           desc = "Open service URL",
           condition = function(task)
-            return spring_task(task)
+            return spring_task(task) or (task.metadata and task.metadata.npm)
           end,
           run = function(task)
             local url = task.metadata and task.metadata.ready and task.metadata.url or nil
@@ -320,7 +340,7 @@ return {
     local function ensure_services(search_dir, callback)
       local template = require("overseer.template")
       local templates = {}
-      for _, module in ipairs({ "springboot", "service" }) do
+      for _, module in ipairs({ "springboot", "npm", "service" }) do
         local provider = require("overseer.template." .. module)
         local generated = provider.generator({ dir = search_dir }) or {}
         for _, tmpl in ipairs(generated) do
@@ -333,6 +353,8 @@ return {
       for _, task in ipairs(overseer.list_tasks({})) do
         if spring_task(task) and task.metadata.task_key then
           existing["springboot::" .. task.metadata.task_key] = true
+        elseif task.metadata and task.metadata.npm and task.metadata.package_dir and task.metadata.script then
+          existing["npm::" .. task.metadata.package_dir .. "::" .. task.metadata.script] = true
         elseif task.metadata and task.metadata.service then
           existing["service::" .. task.name] = true
         end
@@ -340,8 +362,18 @@ return {
 
       local pending = {}
       for _, tmpl in ipairs(templates) do
-        local service_key = "service::" .. tmpl.name
-        if tmpl.module == "springboot" or not existing[service_key] then
+        local service_key
+        if tmpl.module == "springboot" then
+          service_key = nil -- Always allow springboot templates
+        elseif tmpl.module == "npm" then
+          -- For npm, we need to check using package_dir + script
+          local meta = tmpl.builder({}).metadata
+          service_key = "npm::" .. meta.package_dir .. "::" .. meta.script
+        else
+          service_key = "service::" .. tmpl.name
+        end
+
+        if not service_key or not existing[service_key] then
           table.insert(pending, tmpl)
         end
       end
@@ -364,6 +396,8 @@ return {
             local key
             if spring_task(task) and task.metadata.task_key then
               key = "springboot::" .. task.metadata.task_key
+            elseif task.metadata and task.metadata.npm and task.metadata.package_dir and task.metadata.script then
+              key = "npm::" .. task.metadata.package_dir .. "::" .. task.metadata.script
             else
               key = "service::" .. task.name
             end
