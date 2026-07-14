@@ -639,7 +639,6 @@ return {
         },
         -- TablineBufnr, // buffer number
         FileIcon, -- turns out the version defined in #crash-course-part-ii-filename-and-friends can be reutilized as is here!
-        Space,
         TablineFileName,
         TablineFileFlags,
       }
