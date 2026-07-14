@@ -12,6 +12,8 @@ return {
     vim.keymap.set("n", "<leader>dO", dap.step_out, { desc = "Step Out" })
     vim.keymap.set("n", "<leader>dr", dap.repl.open, { desc = "Open REPL" })
     vim.keymap.set("n", "<leader>dl", dap.run_last, { desc = "Run Last" })
-    vim.keymap.set("n", "<leader>dt", dap.terminate, { desc = "Terminate" })
+    vim.keymap.set("n", "<leader>dt", function()
+      require("custom.java_debug").terminate_active()
+    end, { desc = "Terminate" })
   end,
 }

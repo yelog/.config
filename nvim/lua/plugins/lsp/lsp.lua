@@ -135,6 +135,18 @@ return {
     end,
   },
   {
+    "WhoIsSethDaniel/mason-tool-installer.nvim",
+    dependencies = { "mason-org/mason.nvim" },
+    opts = {
+      ensure_installed = {
+        "java-debug-adapter",
+        "java-test",
+      },
+      auto_update = false,
+      run_on_start = true,
+    },
+  },
+  {
     "mason-org/mason-lspconfig.nvim",
     dependencies = { 'saghen/blink.cmp' },
     config = function()

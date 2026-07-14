@@ -101,41 +101,6 @@ local function find_entry_points(dir, max_depth)
   return results
 end
 
--- Check if project uses Spring Boot (has spring-boot-starter in pom.xml or build.gradle)
-local function is_spring_boot_project(root)
-  local pom = root .. "/pom.xml"
-  if vim.fn.filereadable(pom) == 1 then
-    local ok, content = pcall(function()
-      local f = io.open(pom, "r")
-      if not f then return "" end
-      local c = f:read("*a")
-      f:close()
-      return c
-    end)
-    if ok and (content:find("spring%-boot%-starter") or content:find("spring%-boot") or content:find("SpringBootApplication")) then
-      return true
-    end
-  end
-
-  for _, gradle_file in ipairs({ "build.gradle", "build.gradle.kts" }) do
-    local gf = root .. "/" .. gradle_file
-    if vim.fn.filereadable(gf) == 1 then
-      local ok, content = pcall(function()
-        local f = io.open(gf, "r")
-        if not f then return "" end
-        local c = f:read("*a")
-        f:close()
-        return c
-      end)
-      if ok and (content:find("spring%-boot") or content:find("SpringBootApplication")) then
-        return true
-      end
-    end
-  end
-
-  return false
-end
-
 -- Determine if a dir is a submodule (has its own build file under a parent)
 local function find_module_root(entry_dir, project_root)
   local dir = entry_dir
@@ -150,6 +115,16 @@ local function find_module_root(entry_dir, project_root)
   return project_root
 end
 
+local function find_project_name(module_root)
+  local pom = module_root .. "/pom.xml"
+  if vim.fn.filereadable(pom) ~= 1 then return vim.fs.basename(module_root) end
+  local ok, lines = pcall(vim.fn.readfile, pom)
+  if not ok then return vim.fs.basename(module_root) end
+  local content = table.concat(lines, "\n"):gsub("<parent>.-</parent>", "")
+  local artifact_id = content:match("<artifactId>%s*([^<]+)%s*</artifactId>")
+  return artifact_id and vim.trim(artifact_id) or vim.fs.basename(module_root)
+end
+
 function M.parse_maven_profiles(root)
   return service_state.parse_maven_profiles(root)
 end
@@ -162,7 +137,6 @@ return {
     local dir = opts.dir or vim.fn.getcwd()
     local root = find_project_root(dir)
     if not root then return {} end
-    if not is_spring_boot_project(root) then return {} end
 
     local entry_points = find_entry_points(root)
     if #entry_points == 0 then return {} end
@@ -186,6 +160,7 @@ return {
     local ret = {}
     for _, ep in ipairs(entry_points) do
       local module_root = find_module_root(ep.dir, root)
+      local project_name = find_project_name(module_root)
       local is_multi = (module_root ~= root)
 
       local cmd, cwd
@@ -239,9 +214,11 @@ return {
                 group = "springboot",
                 project_root = root,
                 module = module,
-                class = ep.fqn,
+                module_root = module_root,
+                project_name = project_name,
+                main_class = ep.fqn,
                 source = ep.path,
-                task_key = root .. "::" .. ep.fqn,
+                task_key = module_root .. "::" .. ep.fqn,
               },
             }
           end,

@@ -16,15 +16,6 @@ return {
       local jdtls = require("jdtls")
       local navic = require("nvim-navic")
 
-      -- 确保 nvim-dap 已加载
-      local ok, dap = pcall(require, "dap")
-      if ok then
-        -- 初始化 jdtls.dap 模块
-        jdtls.setup_dap({ hotcodereplace = "auto" })
-      else
-        vim.notify("nvim-dap 未加载，调试功能不可用", vim.log.levels.WARN)
-      end
-
       local function get_jdtls_cmd(workspace_dir)
         local mason_path = vim.fn.stdpath("data") .. "/mason"
         local jdtls_path = mason_path .. "/packages/jdtls"
@@ -79,18 +70,13 @@ return {
 
         -- 调试快捷键
         vim.keymap.set("n", "<leader>jd", function()
-          -- 安全检查 jdtls.dap 是否可用
-          if jdtls.dap and jdtls.dap.setup_dap_main_class_configs then
-            jdtls.dap.setup_dap_main_class_configs()
-          else
-            vim.notify("jdtls.dap 模块未正确初始化，请重新打开 Java 文件", vim.log.levels.WARN)
-          end
-        end, { desc = "Java: Debug Config", buffer = bufnr })
+          require("jdtls.dap").setup_dap_main_class_configs({ verbose = true })
+        end, { desc = "Java: Refresh Debug Config", buffer = bufnr })
         vim.keymap.set("n", "<leader>jt", function()
-          jdtls.test_nearest_method()
+          vim.notify("Java Test debugging is disabled until java-test supports the jdtls ASM version", vim.log.levels.WARN)
         end, { desc = "Java: Test Nearest", buffer = bufnr })
         vim.keymap.set("n", "<leader>jT", function()
-          jdtls.test_class()
+          vim.notify("Java Test debugging is disabled until java-test supports the jdtls ASM version", vim.log.levels.WARN)
         end, { desc = "Java: Test Class", buffer = bufnr })
 
         if client.server_capabilities.documentSymbolProvider then
@@ -134,10 +120,16 @@ return {
         end
       end
 
+      local java_debug = require("custom.java_debug")
+      local spring_bundles = require("spring_boot").java_extensions()
+      local debug_bundles = java_debug.bundles()
+      local toolchain_bundles = vim.list_extend(vim.list_extend({}, spring_bundles), debug_bundles)
+      local toolchain_hash = java_debug.toolchain_fingerprint(nil, toolchain_bundles)
+
       local function get_workspace_dir(root_dir)
         local project_name = vim.fs.basename(root_dir)
         local project_hash = vim.fn.sha256(root_dir):sub(1, 12)
-        return vim.fn.stdpath("cache") .. "/jdtls/workspace/" .. project_name .. "-" .. project_hash
+        return vim.fn.stdpath("cache") .. "/jdtls/workspace/" .. project_name .. "-" .. project_hash .. "-" .. toolchain_hash
       end
 
       local base_config = {
@@ -234,7 +226,7 @@ return {
           },
         },
         init_options = {
-          bundles = require("spring_boot").java_extensions(),
+          bundles = toolchain_bundles,
           extendedClientCapabilities = jdtls.extendedClientCapabilities,
         },
       }
@@ -250,7 +242,7 @@ return {
         local config = vim.deepcopy(base_config)
         config.cmd = get_jdtls_cmd(workspace_dir)
         config.root_dir = root_dir
-        jdtls.start_or_attach(config, nil, { bufnr = bufnr })
+        jdtls.start_or_attach(config, { dap = { hotcodereplace = "auto" } }, { bufnr = bufnr })
       end
 
       vim.api.nvim_create_autocmd("FileType", {

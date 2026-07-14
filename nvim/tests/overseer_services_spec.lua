@@ -116,5 +116,33 @@ for _, case in ipairs(server_cases) do
   assert_equal(case[3], task.metadata.url, "server URL should be detected from: " .. case[1])
 end
 
+local multi_root = temp_dir .. "/spring-cloud"
+local module_root = multi_root .. "/order-service"
+local source_dir = module_root .. "/src/main/java/com/example/order"
+vim.fn.mkdir(multi_root .. "/.git", "p")
+vim.fn.mkdir(source_dir, "p")
+vim.fn.writefile({
+  "<project>",
+  "  <dependencies><dependency><artifactId>spring-boot-starter</artifactId></dependency></dependencies>",
+  "</project>",
+}, multi_root .. "/pom.xml")
+vim.fn.writefile({ "<project><artifactId>order-service</artifactId></project>" }, module_root .. "/pom.xml")
+vim.fn.writefile({
+  "package com.example.order;",
+  "@SpringBootApplication",
+  "public class OrderApplication {}",
+}, source_dir .. "/OrderApplication.java")
+
+local templates = require("overseer.template.springboot").generator({ dir = module_root })
+assert_equal(1, #templates, "one Spring service should be discovered")
+local definition = templates[1].builder({})
+assert_equal("com.example.order.OrderApplication", definition.metadata.main_class,
+  "service metadata should expose the fully qualified main class")
+assert_equal(module_root, definition.metadata.module_root, "service metadata should expose its Maven module root")
+assert_equal("order-service", definition.metadata.project_name, "service metadata should expose its Maven project name")
+assert_equal(module_root .. "::com.example.order.OrderApplication", definition.metadata.task_key,
+  "service identity should include its Maven module")
+assert_equal(nil, definition.metadata.class, "obsolete class metadata should not be emitted")
+
 vim.fn.delete(temp_dir, "rf")
 print("overseer-services-tests: ok")

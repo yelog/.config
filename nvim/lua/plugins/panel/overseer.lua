@@ -98,6 +98,8 @@ return {
     local function task_visual(task)
       if task.status == "FAILURE" then
         return "×", "DiagnosticError", "failed", "DiagnosticError"
+      elseif task.metadata and task.metadata.debugging then
+        return "◆", "DiagnosticInfo", "debugging", "DiagnosticInfo"
       elseif task.status == "RUNNING" and task.metadata and task.metadata.ready then
         local detail = task.metadata.port and (":" .. task.metadata.port) or "ready"
         return "●", "DiagnosticOk", detail, "DiagnosticInfo"
@@ -115,6 +117,7 @@ return {
 
     local function sort_rank(task)
       if task.status == "FAILURE" then return 1 end
+      if task.metadata and task.metadata.debugging then return 2 end
       if task.status == "RUNNING" and task.metadata and task.metadata.ready then return 2 end
       if task.status == "RUNNING" then return 3 end
       if task.status == "PENDING" then return 4 end
@@ -175,7 +178,7 @@ return {
           ["s"] = { "keymap.run_action", opts = { action = "start_service" }, desc = "Start" },
           ["r"] = { "keymap.run_action", opts = { action = "restart_service" }, desc = "Restart" },
           ["S"] = { "keymap.run_action", opts = { action = "stop_service" }, desc = "Stop" },
-          ["dd"] = { "keymap.run_action", opts = { action = "dispose" }, desc = "Dispose" },
+          ["dd"] = { "keymap.run_action", opts = { action = "dispose_service" }, desc = "Dispose" },
           ["<leader>d"] = { "keymap.run_action", opts = { action = "debug_service" }, desc = "Debug" },
         },
       },
@@ -183,7 +186,9 @@ return {
         ["smart_enter"] = {
           desc = "Start or open",
           run = function(task)
-            if task.status == "RUNNING" then
+            if require("custom.java_debug").is_debugging(task) then
+              require("dap").repl.open()
+            elseif task.status == "RUNNING" then
               overseer.run_action(task, "open")
             else
               task:reset()
@@ -194,6 +199,14 @@ return {
         ["start_service"] = {
           desc = "Start service",
           run = function(task)
+            local java_debug = require("custom.java_debug")
+            if java_debug.is_debugging(task) then
+              java_debug.terminate(task, function()
+                task:reset()
+                task:start()
+              end)
+              return
+            end
             if task.status ~= "RUNNING" then
               task:reset()
               task:start()
@@ -203,20 +216,39 @@ return {
         ["restart_service"] = {
           desc = "Restart service",
           run = function(task)
+            local java_debug = require("custom.java_debug")
+            if java_debug.is_debugging(task) then
+              java_debug.terminate(task, function() java_debug.start(task) end)
+              return
+            end
             task:restart(true)
           end,
         },
         ["stop_service"] = {
           desc = "Stop service",
           run = function(task)
+            if require("custom.java_debug").terminate(task) then return end
             if task.status == "RUNNING" then task:stop() end
+          end,
+        },
+        ["dispose_service"] = {
+          desc = "Dispose service",
+          run = function(task)
+            local java_debug = require("custom.java_debug")
+            if java_debug.is_debugging(task) then
+              java_debug.terminate(task, function() task:dispose() end)
+            else
+              task:dispose()
+            end
           end,
         },
         ["start_all_services"] = {
           desc = "Start all services",
           run = function()
             for _, task in ipairs(overseer.list_tasks({})) do
-              if task.metadata and task.metadata.service and task.status ~= "RUNNING" then
+              if task.metadata and task.metadata.service
+                and task.status ~= "RUNNING"
+                and not require("custom.java_debug").is_debugging(task) then
                 task:reset()
                 task:start()
               end
@@ -227,8 +259,10 @@ return {
           desc = "Stop all services",
           run = function()
             for _, task in ipairs(overseer.list_tasks({})) do
-              if task.metadata and task.metadata.service and task.status == "RUNNING" then
-                task:stop()
+              if task.metadata and task.metadata.service then
+                if not require("custom.java_debug").terminate(task) and task.status == "RUNNING" then
+                  task:stop()
+                end
               end
             end
           end,
@@ -255,35 +289,16 @@ return {
             return spring_task(task)
           end,
           run = function(task)
-            -- 停止当前运行的服务
+            local java_debug = require("custom.java_debug")
+            local function launch() java_debug.start(task) end
             if task.status == "RUNNING" then
+              task:subscribe("on_complete", function()
+                vim.schedule(launch)
+                return true
+              end)
               task:stop()
-            end
-            
-            -- 获取项目根目录和主类
-            local root = task.metadata and task.metadata.project_root
-            if not root then
-              vim.notify("无法获取项目根目录", vim.log.levels.ERROR)
-              return
-            end
-            
-            -- 查找主类
-            local main_class = task.metadata and task.metadata.main_class
-            if not main_class then
-              vim.notify("无法获取主类信息，请先运行 <leader>jd 配置调试", vim.log.levels.WARN)
-              return
-            end
-            
-            -- 启动调试
-            local ok, jdtls = pcall(require, "jdtls")
-            if ok and jdtls.dap then
-              jdtls.dap.setup_dap_main_class_configs()
-              vim.defer_fn(function()
-                local dap = require("dap")
-                dap.continue()
-              end, 100)
             else
-              vim.notify("jdtls.dap 模块不可用", vim.log.levels.ERROR)
+              launch()
             end
           end,
         },
