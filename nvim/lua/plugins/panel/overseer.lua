@@ -176,6 +176,7 @@ return {
           ["r"] = { "keymap.run_action", opts = { action = "restart_service" }, desc = "Restart" },
           ["S"] = { "keymap.run_action", opts = { action = "stop_service" }, desc = "Stop" },
           ["dd"] = { "keymap.run_action", opts = { action = "dispose" }, desc = "Dispose" },
+          ["<leader>d"] = { "keymap.run_action", opts = { action = "debug_service" }, desc = "Debug" },
         },
       },
       actions = {
@@ -246,6 +247,44 @@ return {
 
             local _, err = vim.ui.open(url)
             if err then vim.notify("Failed to open " .. url .. ": " .. err, vim.log.levels.ERROR) end
+          end,
+        },
+        ["debug_service"] = {
+          desc = "Debug service",
+          condition = function(task)
+            return spring_task(task)
+          end,
+          run = function(task)
+            -- 停止当前运行的服务
+            if task.status == "RUNNING" then
+              task:stop()
+            end
+            
+            -- 获取项目根目录和主类
+            local root = task.metadata and task.metadata.project_root
+            if not root then
+              vim.notify("无法获取项目根目录", vim.log.levels.ERROR)
+              return
+            end
+            
+            -- 查找主类
+            local main_class = task.metadata and task.metadata.main_class
+            if not main_class then
+              vim.notify("无法获取主类信息，请先运行 <leader>jd 配置调试", vim.log.levels.WARN)
+              return
+            end
+            
+            -- 启动调试
+            local ok, jdtls = pcall(require, "jdtls")
+            if ok and jdtls.dap then
+              jdtls.dap.setup_dap_main_class_configs()
+              vim.defer_fn(function()
+                local dap = require("dap")
+                dap.continue()
+              end, 100)
+            else
+              vim.notify("jdtls.dap 模块不可用", vim.log.levels.ERROR)
+            end
           end,
         },
       },

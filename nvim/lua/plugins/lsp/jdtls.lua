@@ -16,6 +16,15 @@ return {
       local jdtls = require("jdtls")
       local navic = require("nvim-navic")
 
+      -- 确保 nvim-dap 已加载
+      local ok, dap = pcall(require, "dap")
+      if ok then
+        -- 初始化 jdtls.dap 模块
+        jdtls.setup_dap({ hotcodereplace = "auto" })
+      else
+        vim.notify("nvim-dap 未加载，调试功能不可用", vim.log.levels.WARN)
+      end
+
       local function get_jdtls_cmd(workspace_dir)
         local mason_path = vim.fn.stdpath("data") .. "/mason"
         local jdtls_path = mason_path .. "/packages/jdtls"
@@ -68,6 +77,22 @@ return {
         vim.keymap.set("n", "<leader>jm", function() jdtls.extract_method() end, { desc = "Java: Extract Method", buffer = bufnr })
         vim.keymap.set("v", "<leader>jm", function() jdtls.extract_method(true) end, { desc = "Java: Extract Method", buffer = bufnr })
 
+        -- 调试快捷键
+        vim.keymap.set("n", "<leader>jd", function()
+          -- 安全检查 jdtls.dap 是否可用
+          if jdtls.dap and jdtls.dap.setup_dap_main_class_configs then
+            jdtls.dap.setup_dap_main_class_configs()
+          else
+            vim.notify("jdtls.dap 模块未正确初始化，请重新打开 Java 文件", vim.log.levels.WARN)
+          end
+        end, { desc = "Java: Debug Config", buffer = bufnr })
+        vim.keymap.set("n", "<leader>jt", function()
+          jdtls.test_nearest_method()
+        end, { desc = "Java: Test Nearest", buffer = bufnr })
+        vim.keymap.set("n", "<leader>jT", function()
+          jdtls.test_class()
+        end, { desc = "Java: Test Class", buffer = bufnr })
+
         if client.server_capabilities.documentSymbolProvider then
           navic.attach(client, bufnr)
         end
@@ -85,12 +110,28 @@ return {
 
       local capabilities = require("blink.cmp").get_lsp_capabilities()
       local runtimes = {}
+
+      -- 支持多版本 Java 运行时配置
+      -- 优先使用 JAVA_HOME 环境变量，然后尝试 JAVA_HOME_<version>
       if vim.env.JAVA_HOME and vim.fn.isdirectory(vim.env.JAVA_HOME) == 1 then
         table.insert(runtimes, {
           name = "JavaSE-21",
           path = vim.env.JAVA_HOME,
           default = true,
         })
+      end
+
+      -- 支持从环境变量读取多个 Java版本
+      local java_versions = { "8", "11", "17", "21" }
+      for _, version in ipairs(java_versions) do
+        local home = os.getenv("JAVA_HOME_" .. version)
+        if home and vim.fn.isdirectory(home) == 1 then
+          table.insert(runtimes, {
+            name = "JavaSE-" .. version,
+            path = home,
+            default = (version == "21"),
+          })
+        end
       end
 
       local function get_workspace_dir(root_dir)
@@ -153,6 +194,10 @@ return {
                 "java.util.Objects.requireNonNull",
                 "java.util.Objects.requireNonNullElse",
                 "org.apache.commons.lang3.StringUtils.*",
+                "org.springframework.context.annotation.Bean",
+                "org.springframework.web.bind.annotation.*",
+                "org.springframework.stereotype.*",
+                "java.util.stream.Collectors.*",
               },
               importOrder = {
                 "java",

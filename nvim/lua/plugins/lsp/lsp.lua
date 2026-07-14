@@ -17,6 +17,25 @@ return {
         update_in_insert = false, -- 插入模式下是否更新 diagnostic
         severity_sort = true,
       })
+
+      -- CodeLens 支持
+      vim.api.nvim_create_autocmd("LspAttach", {
+        callback = function(args)
+          local client = vim.lsp.get_client_by_id(args.data.client_id)
+          if client and client.supports_method("textDocument/codeLens") then
+            vim.lsp.codelens.refresh()
+            vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+              buffer = args.buf,
+              callback = vim.lsp.codelens.refresh,
+            })
+          end
+
+          -- Inlay Hints 支持
+          if client and client.supports_method("textDocument/inlayHint") then
+            vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
+          end
+        end,
+      })
     end
   }, -- Configurations for Nvim LSP
   -- 'nvim-java/nvim-java',
@@ -276,20 +295,21 @@ return {
         capabilities = capabilities,
       })
       vim.lsp.enable('vtsls')
+
+      vim.lsp.config('vue_ls', {
+        -- add filetypes for typescript, javascript and vue
+        filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+        on_attach = on_attach,
+        capabilities = capabilities,
+        init_options = {
+          vue = {
+            -- disable hybrid mode
+            hybridMode = false,
+          },
+        },
+      })
       vim.lsp.enable('vue_ls')
 
-      -- vim.lsp.config('vue_ls', {
-      --   -- add filetypes for typescript, javascript and vue
-      --   filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
-      --   on_attach = on_attach,
-      --   capabilities = capabilities,
-      --   init_options = {
-      --     vue = {
-      --       -- disable hybrid mode
-      --       hybridMode = false,
-      --     },
-      --   },
-      -- })
       vim.lsp.enable('tailwindcss')
       vim.lsp.enable('unocss')
       vim.lsp.enable('vimls')

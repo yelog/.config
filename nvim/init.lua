@@ -1,4 +1,10 @@
 vim.api.nvim_command("source ~/.config/nvim/base.vim")
+
+-- Create a predictable server socket for kitty remote control
+local server_dir = "/tmp/nvim-" .. (vim.env.USER or "nvim")
+vim.fn.mkdir(server_dir, "p")
+pcall(vim.fn.serverstart, server_dir .. "/" .. vim.fn.getpid())
+
 -- add plugin manager
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then

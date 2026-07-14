@@ -27,7 +27,6 @@ set showcmd                       " 显示当前命令
 set nocompatible                  " 兼容旧 vi
 set mouse=a                       " 不支持鼠标
 let &t_ut=''                      " 修复配色错误的问题
-set noexpandtab
 set expandtab
 set tabstop=2
 set shiftwidth=2
@@ -46,7 +45,6 @@ let &t_EI = "\<Esc>]50;CursorShape=0\x7"
 au BufReadPost * if line("'\"") > 1 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
 set scrolloff=4
 "set notimeout
-set viewoptions=cursor,folds,slash,unix
 set ttyfast "should make scrolling faster
 " set lazyredraw "same as above
 set visualbell

@@ -2,6 +2,23 @@ local map = vim.keymap.set
 -- leader 空格无效化
 map("", "<Space>", "<Nop>", { desc = "Disable <Space>" })
 
+-- Which-Key 分组提示
+local ok, wk = pcall(require, "which-key")
+if ok then
+  wk.add({
+    { "<leader>j", group = "Java" },
+    { "<leader>v", group = "Vue" },
+    { "<leader>g", group = "Git" },
+    { "<leader>l", group = "LSP" },
+    { "<leader>f", group = "Find" },
+    { "<leader>t", group = "Toggle" },
+    { "<leader>s", group = "Split/Session" },
+    { "<leader>d", group = "Debug" },
+    { "<leader>c", group = "Code" },
+    { "<leader>b", group = "Buffer" },
+  })
+end
+
 -- Base
 map("n", "Q", "<cmd>qa<cr>", { desc = "Quit" })
 map("n", "<up>", "<cmd>res-5<cr>", { desc = "Resize up" })
@@ -497,10 +514,21 @@ map("i", "<D-C-S-k>", function() require("smart-splits").resize_up() end, { desc
 map("i", "<D-C-S-l>", function() require("smart-splits").resize_right() end, { desc = "Resize right" })
 
 -- Smart zoom: sync with kitty layout toggle
--- Called by kitty via remote control after toggle_layout stack
-function SmartZoom()
+-- Called by kitty sync_zoom.sh via nvim --remote-send
+-- @param action string|nil: "zoom" | "unzoom" | nil (toggle)
+function SmartZoom(action)
   local win_count = #vim.api.nvim_list_wins()
-  if win_count > 1 then
+  if win_count <= 1 and action ~= "unzoom" then
+    return
+  end
+
+  local is_zoomed = Snacks.zen.win and Snacks.zen.win:valid()
+
+  if action == "zoom" and not is_zoomed then
+    Snacks.zen.zoom()
+  elseif action == "unzoom" and is_zoomed then
+    Snacks.zen.zoom()
+  elseif action == nil then
     Snacks.zen.zoom()
   end
 end
