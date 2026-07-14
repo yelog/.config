@@ -454,15 +454,19 @@ map("n", "<leader>oo", function() vim.cmd("OverseerToggle") end, { desc = "Toggl
 map("n", "<leader>os", function()
   local overseer = require("overseer")
   for _, task in ipairs(overseer.list_tasks({})) do
-    if task.metadata and task.metadata.service and task.status == "RUNNING" then
-      task:stop()
+    if task.metadata and task.metadata.service then
+      if not require("custom.java_debug").terminate(task) and task.status == "RUNNING" then
+        task:stop()
+      end
     end
   end
 end, { desc = "Stop all services" })
 map("n", "<leader>oa", function()
   local overseer = require("overseer")
   for _, task in ipairs(overseer.list_tasks({})) do
-    if task.metadata and task.metadata.service and task.status ~= "RUNNING" then
+    if task.metadata and task.metadata.service
+      and task.status ~= "RUNNING"
+      and not require("custom.java_debug").is_debugging(task) then
       task:reset()
       task:start()
     end
@@ -522,11 +526,11 @@ function SmartZoom(action)
     return
   end
 
-  local is_zoomed = Snacks.zen.win and Snacks.zen.win:valid()
+  local zen_valid = Snacks.zen.win ~= nil and Snacks.zen.win:valid()
 
-  if action == "zoom" and not is_zoomed then
+  if action == "zoom" and not zen_valid then
     Snacks.zen.zoom()
-  elseif action == "unzoom" and is_zoomed then
+  elseif action == "unzoom" and zen_valid then
     Snacks.zen.zoom()
   elseif action == nil then
     Snacks.zen.zoom()
