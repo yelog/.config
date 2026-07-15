@@ -37,6 +37,15 @@ return {
   },
   -- 👇 if you use `open_for_directories=true`, this is recommended
   init = function()
+    -- GUI/long-running Neovim instances may not inherit Homebrew's PATH.
+    local paths = vim.split(vim.env.PATH or "", ":", { plain = true })
+    for _, path in ipairs({ "/opt/homebrew/sbin", "/opt/homebrew/bin" }) do
+      if vim.fn.isdirectory(path) == 1 and not vim.tbl_contains(paths, path) then
+        table.insert(paths, 1, path)
+      end
+    end
+    vim.env.PATH = table.concat(paths, ":")
+
     -- More details: https://github.com/mikavilpas/yazi.nvim/issues/802
     -- vim.g.loaded_netrw = 1
     vim.g.loaded_netrwPlugin = 1

@@ -1,3 +1,5 @@
+import os
+
 from kittens.tui.handler import result_handler
 
 
@@ -16,4 +18,12 @@ def handle_result(args, result, target_window_id, boss):
         window.close()
     else:
         cwd = window.cwd_of_child or boss.active_tab.cwd
-        boss.launch('--type=overlay', '--cwd', cwd, '/opt/homebrew/bin/yazi')
+        path = os.environ.get('PATH', '')
+        homebrew_paths = ('/opt/homebrew/bin', '/opt/homebrew/sbin')
+        merged_path = ':'.join(dict.fromkeys((*homebrew_paths, *path.split(':'))))
+        boss.launch(
+            '--type=overlay',
+            '--cwd', cwd,
+            '--env', f'PATH={merged_path}',
+            '/opt/homebrew/bin/yazi',
+        )

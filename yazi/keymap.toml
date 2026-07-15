@@ -5,7 +5,7 @@
 [mgr]
 
 keymap = [
-  { on = "S", run = 'shell "$SHELL" --block --confirm' },
+	{ on = "!", run = 'shell "$SHELL" --block --confirm', desc = "Open shell here" },
 	{ on = "<Esc>", run = "escape",             desc = "Exit visual mode, clear selected, or cancel search" },
 	{ on = "<C-[>", run = "escape",             desc = "Exit visual mode, clear selected, or cancel search" },
 	{ on = "q",     run = "quit",               desc = "Quit the process" },
@@ -83,11 +83,11 @@ keymap = [
 	{ on = ";",         run = "shell --interactive",         desc = "Run a shell command" },
 	{ on = ":",         run = "shell --block --interactive", desc = "Run a shell command (block until finishes)" },
 	{ on = ".",         run = "hidden toggle",               desc = "Toggle the visibility of hidden files" },
-	{ on = "s",         run = "search --via=fd",             desc = "Search files by name via fd" },
-	# { on = "S",         run = "search --via=rg",             desc = "Search files by content via ripgrep" },
+	{ on = "s",         run = "plugin fzf",                  desc = "Fuzzy search files recursively" },
+	{ on = "S",         run = "search --via=rg",             desc = "Search file contents recursively" },
 	{ on = "<C-s>",     run = "escape --search",             desc = "Cancel the ongoing search" },
 	{ on = "z",         run = "plugin zoxide",               desc = "Jump to a directory via zoxide" },
-	{ on = "Z",         run = "plugin fzf",                  desc = "Jump to a file/directory via fzf" },
+	{ on = "Z",         run = "plugin fzf",                  desc = "Fuzzy search files recursively" },
 
 	# Linemode
 	{ on = [ "m", "s" ], run = "linemode size",        desc = "Linemode: size" },
