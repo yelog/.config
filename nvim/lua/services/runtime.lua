@@ -25,11 +25,24 @@ local function kill_process(process, signal)
   if process and type(process.kill) == "function" then pcall(process.kill, process, signal) end
 end
 
+local function supports_process_groups()
+  local uname = vim.uv.os_uname()
+  return uname and uname.sysname ~= "Windows_NT"
+end
+
+local function signal_process_group(group_id, signal)
+  if not group_id then return false end
+  local ok, result = pcall(vim.uv.kill, -group_id, signal)
+  return ok and result == 0
+end
+
 local function default_spawn(command, opts, on_exit)
-  return vim.system(command, {
+  local grouped = supports_process_groups()
+  local system = vim.system(command, {
     cwd = opts.cwd,
     env = opts.env,
     text = true,
+    detach = grouped,
     stdout = function(err, data)
       vim.schedule(function() opts.on_output("stdout", err, data) end)
     end,
@@ -39,6 +52,18 @@ local function default_spawn(command, opts, on_exit)
   }, function(result)
     vim.schedule(function() on_exit(result) end)
   end)
+  if not grouped then return system end
+
+  return {
+    pid = system.pid,
+    group_id = system.pid,
+    system = system,
+    kill = function(_, signal)
+      if signal_process_group(system.pid, signal) then return true end
+      return pcall(system.kill, system, signal)
+    end,
+    is_closing = function() return system:is_closing() end,
+  }
 end
 
 function Service:subscribe(callback)
@@ -138,6 +163,7 @@ function Runtime:_cancel_restart(service)
 end
 
 function Runtime:_schedule_restart(service, generation)
+  if self.shutting_down then return false end
   local policy = service.definition.restart or {}
   if not policy.auto then return false end
 
@@ -185,6 +211,7 @@ function Runtime:_on_exit(service, generation, result)
   if service.generation ~= generation or service.disposed then return end
 
   service.process = nil
+  if not self.shutting_down then service.process_group_id = nil end
   close_timer(service.kill_timer)
   service.kill_timer = nil
   self:_stop_health_check(service)
@@ -206,6 +233,11 @@ function Runtime:_on_exit(service, generation, result)
   if manually_stopped then
     service.status = "STOPPED"
     self:_emit(service, "stopped")
+    return
+  end
+  if self.shutting_down then
+    service.status = "STOPPED"
+    self:_emit(service, "stopped", result)
     return
   end
 
@@ -250,6 +282,7 @@ function Runtime:register(definition)
     output_bufnr = nil,
     terminal_output = false,
     process = nil,
+    process_group_id = nil,
     restart_timer = nil,
     health_timer = nil,
     kill_timer = nil,
@@ -317,7 +350,7 @@ end
 function Runtime:start(key, opts)
   opts = opts or {}
   local service = self:get(key)
-  if not service or service.disposed or active_statuses[service.status] then return false end
+  if self.shutting_down or not service or service.disposed or active_statuses[service.status] then return false end
 
   self:_cancel_restart(service)
   if not opts.auto_restart then service.restart_count = 0 end
@@ -331,6 +364,7 @@ function Runtime:start(key, opts)
   renderer:clear()
   service.output_bufnr = renderer.bufnr
   service.terminal_output = false
+  service.process_group_id = nil
   service.stop_requested = false
   service.restart_after_stop = false
   service.status = "STARTING"
@@ -371,6 +405,7 @@ function Runtime:start(key, opts)
   end
 
   service.process = process
+  service.process_group_id = process.group_id
   service.status = "RUNNING"
   self:_start_health_check(service, generation)
   self:_emit(service, "started")
@@ -500,6 +535,68 @@ function Runtime:stop_all()
   return stopped
 end
 
+function Runtime:begin_shutdown()
+  if self.shutting_down then return false end
+  self.shutting_down = true
+
+  for _, service in ipairs(self:list()) do
+    self:_cancel_restart(service)
+    self:_stop_health_check(service)
+    close_timer(service.kill_timer)
+    service.kill_timer = nil
+    service.restart_after_stop = false
+    service.restart_profile = nil
+
+    if service.status == "RESTART_PENDING" then
+      service.stop_requested = false
+      service.status = "STOPPED"
+      self:_emit(service, "stopped")
+    elseif service.process then
+      service.stop_requested = true
+      service.status = "STOPPING"
+      self:_emit(service, "stopping")
+      kill_process(service.process, 15)
+    elseif service.process_group_id then
+      signal_process_group(service.process_group_id, 15)
+    end
+  end
+  return true
+end
+
+function Runtime:is_shutdown_complete()
+  for _, service in ipairs(self:list()) do
+    if service.process then return false end
+    if service.process_group_id then
+      if signal_process_group(service.process_group_id, 0) then return false end
+      service.process_group_id = nil
+    end
+  end
+  return true
+end
+
+function Runtime:force_shutdown()
+  self.shutting_down = true
+  for _, service in ipairs(self:list()) do
+    self:_cancel_restart(service)
+    self:_stop_health_check(service)
+    close_timer(service.kill_timer)
+    service.kill_timer = nil
+    service.restart_after_stop = false
+    service.restart_profile = nil
+
+    if service.status == "RESTART_PENDING" then
+      service.stop_requested = false
+      service.status = "STOPPED"
+      self:_emit(service, "stopped")
+    elseif service.process then
+      kill_process(service.process, 9)
+    elseif service.process_group_id then
+      signal_process_group(service.process_group_id, 9)
+    end
+  end
+  return self:is_shutdown_complete()
+end
+
 function M.new(opts)
   opts = opts or {}
   return setmetatable({
@@ -508,6 +605,7 @@ function M.new(opts)
     spawn = opts.spawn or default_spawn,
     output_limit = opts.output_limit or 10000,
     kill_timeout_ms = opts.kill_timeout_ms or 3000,
+    shutting_down = false,
   }, Runtime)
 end
 
@@ -525,7 +623,7 @@ end
 for _, method in ipairs({
   "register", "reconcile", "get", "list", "subscribe", "start", "stop", "restart", "dispose",
   "get_output_bufnr", "ensure_output", "replace_output", "archive_terminal_output", "set_debugging",
-  "is_debugging", "start_all", "stop_all",
+  "is_debugging", "start_all", "stop_all", "begin_shutdown", "is_shutdown_complete", "force_shutdown",
 }) do
   local method_name = method
   M[method_name] = function(...)

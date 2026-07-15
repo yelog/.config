@@ -83,6 +83,8 @@ assert_equal(nil, prepared_err, "successful build preparation should not return 
 assert_equal({ "mvn", "-Pdev", "-q", "-DskipTests", "install", "-pl", "order-service", "-am" },
   prepared_command, "build preparation should execute the resolved command")
 assert_equal("/repo", prepared_opts.cwd, "build preparation should run from the project root")
+assert_equal(vim.uv.os_uname().sysname ~= "Windows_NT", prepared_opts.detach,
+  "debug build preparation should create a process group on POSIX")
 
 local failed_ok, failed_err
 java_debug.prepare_build({
@@ -97,6 +99,30 @@ end)
 assert(vim.wait(100, function() return failed_ok ~= nil end), "failed debug build callback should be scheduled")
 assert_equal(false, failed_ok, "failed build preparation should stop the Debug launch")
 assert_equal("dependency build failed", failed_err, "build failure should retain actionable stderr")
+
+if vim.uv.os_uname().sysname ~= "Windows_NT" then
+  local build_tree = java_debug.prepare_build({
+    name = "BuildTree",
+    metadata = {
+      project_root = temp_dir,
+      debug_build_cmd = { "sh", "-c", "sleep 30 & wait" },
+    },
+  }, nil, function() end)
+  local build_pid = assert(build_tree and build_tree.pid, "default debug build runner should expose its process pid")
+  local build_ok, build_err = pcall(function()
+    local child_pid
+    assert(vim.wait(1000, function()
+      local result = vim.system({ "pgrep", "-P", tostring(build_pid) }, { text = true }):wait()
+      child_pid = tonumber((result.stdout or ""):match("%d+"))
+      return child_pid ~= nil
+    end), "default debug build runner should start the child process")
+    build_tree:kill(15)
+    assert(vim.wait(1000, function() return vim.uv.kill(child_pid, 0) ~= 0 end),
+      "default debug build runner should stop the child process group")
+  end)
+  pcall(vim.uv.kill, -build_pid, 9)
+  if not build_ok then error(build_err) end
+end
 
 local enriched, enrich_err
 local command_order = {}
@@ -261,6 +287,10 @@ assert_equal(false, vim.api.nvim_buf_is_valid(stale_other_terminal),
 runtime:dispose(pending_service.key)
 runtime:dispose(output_service.key)
 runtime:dispose(hidden_service.key)
+
+assert_equal(false, java_debug.begin_shutdown(), "shutdown should be a no-op without an active Java Debug session")
+assert_equal(true, java_debug.is_shutdown_complete(), "an idle Java Debug module should already be shut down")
+assert_equal(true, java_debug.force_shutdown(), "force shutdown should be safe without an active Java Debug session")
 
 vim.fn.delete(temp_dir, "rf")
 print("java-debug-tests: ok")

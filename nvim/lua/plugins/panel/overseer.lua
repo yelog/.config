@@ -2,6 +2,7 @@ return {
   "stevearc/overseer.nvim",
   init = function()
     local runtime = require("services.runtime").setup()
+    require("services.lifecycle").setup(runtime)
     local panel = require("services.panel").setup({ runtime = runtime })
 
     vim.api.nvim_create_user_command("ServicesToggle", function()
