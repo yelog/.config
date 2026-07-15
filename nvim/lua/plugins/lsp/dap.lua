@@ -3,9 +3,12 @@ return {
   lazy = false, -- 确保在 jdtls 之前加载
   config = function()
     local dap = require("dap")
+    require("custom.dap_style").apply_signs()
+    local persistent_breakpoints = require("custom.dap_breakpoints")
+    persistent_breakpoints.setup()
 
     -- 基本配置
-    vim.keymap.set("n", "<leader>db", dap.toggle_breakpoint, { desc = "Toggle Breakpoint" })
+    vim.keymap.set("n", "<leader>db", persistent_breakpoints.toggle, { desc = "Toggle Breakpoint" })
     vim.keymap.set("n", "<leader>dc", dap.continue, { desc = "Continue" })
     vim.keymap.set("n", "<leader>di", dap.step_into, { desc = "Step Into" })
     vim.keymap.set("n", "<leader>do", dap.step_over, { desc = "Step Over" })

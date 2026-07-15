@@ -10,6 +10,8 @@ local default_palette = {
   "#5c5cff", "#ff00ff", "#00ffff", "#ffffff",
 }
 local highlight_cache = {}
+local highlight_styles = {}
+local ansi_priority = 200
 
 local function new_style()
   return {
@@ -34,6 +36,29 @@ end
 
 local function hex_color(red, green, blue)
   return string.format("#%02x%02x%02x", red, green, blue)
+end
+
+local function color_channels(color, fallback)
+  local value = color or fallback
+  if type(value) == "string" then value = tonumber(value:gsub("^#", ""), 16) end
+  value = type(value) == "number" and value or fallback
+  return math.floor(value / 0x10000) % 0x100,
+    math.floor(value / 0x100) % 0x100,
+    value % 0x100
+end
+
+local function normal_colors()
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+  return normal.fg or 0xe5e5e5, normal.bg or 0x000000
+end
+
+local function blend_color(foreground, background, ratio)
+  local fr, fg, fb = color_channels(foreground, 0xe5e5e5)
+  local br, bg, bb = color_channels(background, 0x000000)
+  local function blend(front, back)
+    return math.floor(front * ratio + back * (1 - ratio) + 0.5)
+  end
+  return hex_color(blend(fr, br), blend(fg, bg), blend(fb, bb))
 end
 
 local function terminal_color(index)
@@ -72,28 +97,54 @@ local function style_key(style)
   }, ":")
 end
 
+local function highlight_definition(style)
+  local normal_fg, normal_bg = normal_colors()
+  local foreground = style.fg
+  if style.dim then foreground = blend_color(foreground or normal_fg, style.bg or normal_bg, 0.6) end
+  return {
+    fg = foreground,
+    bg = style.bg,
+    bold = style.bold or nil,
+    italic = style.italic or nil,
+    underline = style.underline or nil,
+    reverse = style.reverse or nil,
+  }
+end
+
+local function define_highlight(name, style)
+  vim.api.nvim_set_hl(0, name, highlight_definition(style))
+end
+
 local function highlight_for(style)
   local key = style_key(style)
   if not key then return nil end
   if highlight_cache[key] then return highlight_cache[key] end
 
   local name = "ServicesAnsi_" .. vim.fn.sha256(key):sub(1, 12)
-  vim.api.nvim_set_hl(0, name, {
-    fg = style.fg,
-    bg = style.bg,
-    bold = style.bold or nil,
-    italic = style.italic or nil,
-    underline = style.underline or nil,
-    reverse = style.reverse or nil,
-  })
+  highlight_styles[name] = vim.deepcopy(style)
+  define_highlight(name, style)
   highlight_cache[key] = name
   return name
 end
 
+local highlight_group = vim.api.nvim_create_augroup("ServicesAnsiHighlights", { clear = true })
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = highlight_group,
+  callback = function()
+    for name, style in pairs(highlight_styles) do
+      define_highlight(name, style)
+    end
+  end,
+})
+
 local function reset_style(style)
-  for key, value in pairs(new_style()) do
-    style[key] = value
-  end
+  style.fg = nil
+  style.bg = nil
+  style.bold = false
+  style.dim = false
+  style.italic = false
+  style.underline = false
+  style.reverse = false
 end
 
 local function sgr_values(params)
@@ -256,6 +307,7 @@ function Output:_render_pending()
       vim.api.nvim_buf_set_extmark(self.bufnr, self.namespace, first_row + offset - 1, span.start_col, {
         end_col = span.end_col,
         hl_group = span.hl_group,
+        priority = ansi_priority,
       })
     end
   end

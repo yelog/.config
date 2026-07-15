@@ -483,6 +483,25 @@ function Runtime:ensure_output(key)
   return self:_ensure_output(service).bufnr
 end
 
+function Runtime:reset_output(key)
+  local service = self:get(key)
+  if not service then return nil end
+  local renderer = self:_ensure_output(service)
+  renderer:clear()
+  service.output_bufnr = renderer.bufnr
+  service.terminal_output = false
+  self:_emit(service, "output_replaced")
+  return renderer.bufnr
+end
+
+function Runtime:append_output(key, stream, data)
+  local service = self:get(key)
+  if not service or type(data) ~= "string" or data == "" then return false end
+  local renderer = self:_ensure_output(service)
+  renderer:push(stream == "stderr" and "stderr" or "stdout", data)
+  return true
+end
+
 function Runtime:replace_output(key, bufnr, opts)
   local service = self:get(key)
   if not service or not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then return nil end
@@ -622,7 +641,7 @@ end
 
 for _, method in ipairs({
   "register", "reconcile", "get", "list", "subscribe", "start", "stop", "restart", "dispose",
-  "get_output_bufnr", "ensure_output", "replace_output", "archive_terminal_output", "set_debugging",
+  "get_output_bufnr", "ensure_output", "reset_output", "append_output", "replace_output", "archive_terminal_output", "set_debugging",
   "is_debugging", "start_all", "stop_all", "begin_shutdown", "is_shutdown_complete", "force_shutdown",
 }) do
   local method_name = method

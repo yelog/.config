@@ -55,6 +55,7 @@ assert_equal("launch", launch.request, "service launch should launch a new JVM")
 assert_equal("com.example.OrderApplication", launch.mainClass, "service launch should target only its selected main class")
 assert_equal("order-service", launch.projectName, "service launch should target the selected Maven module")
 assert_equal("/repo", launch.cwd, "jdtls root should be used to select the correct language-server client")
+assert_equal("internalConsole", launch.console, "service debug should default to the normal Services output renderer")
 
 local maven_build = { "mvn", "-q", "-DskipTests", "install", "-pl", "order-service", "-am" }
 assert_equal({ "mvn", "-Pdev", "-q", "-DskipTests", "install", "-pl", "order-service", "-am" },
@@ -173,6 +174,7 @@ vim.fn.mkdir(project_root .. "/.nvim", "p")
 vim.fn.writefile({ vim.json.encode({
   defaults = {
     vmArgs = "-Xms256m",
+    console = "integratedTerminal",
     env = { SHARED = "default", DEFAULT_ONLY = "yes" },
   },
   services = {
@@ -193,6 +195,7 @@ assert_equal(nil, config_err, "valid project config should not return an error")
 assert_equal("--enable-preview -Xms256m -Xmx2g -Dspring.profiles.active=dev", resolved.vmArgs,
   "vmArgs and selected profile should be appended in precedence order")
 assert_equal("--server.port=8082", resolved.args, "service arguments should override generated values")
+assert_equal("integratedTerminal", resolved.console, "project settings should preserve the interactive terminal fallback")
 assert_equal({
   GENERATED = "yes",
   SHARED = "service",
@@ -245,6 +248,36 @@ assert_equal(dap_buf, vim.api.nvim_win_get_buf(output_win), "visible task output
 assert_equal(output_win, adopted_win, "the existing output window should be returned to nvim-dap")
 assert_equal(win_count, #vim.api.nvim_list_wins(), "output adoption must not create a new window")
 
+local internal_output_service = runtime:register({
+  key = "springboot::internal-output",
+  name = "InternalOutputApplication",
+  service_type = "springboot",
+  cmd = { "internal-output" },
+  metadata = { project_root = "/repo" },
+})
+local internal_output = runtime:reset_output(internal_output_service.key)
+assert_equal(true, java_debug.route_output({
+  config = { __service_key = internal_output_service.key, console = "internalConsole" },
+}, { category = "stdout", output = "\27[32mdebug stdout\27[0m\n" }),
+  "internal-console stdout should be routed into the normal Services renderer")
+assert_equal(true, java_debug.route_output({
+  config = { __service_key = internal_output_service.key, console = "internalConsole" },
+}, { category = "stderr", output = "debug stderr\n" }),
+  "internal-console stderr should be routed into the normal Services renderer")
+assert_equal(false, java_debug.route_output({
+  config = { __service_key = internal_output_service.key, console = "integratedTerminal" },
+}, { category = "stdout", output = "terminal output\n" }),
+  "integrated terminal output should remain owned by its terminal buffer")
+assert_equal(false, java_debug.route_output({ config = { console = "internalConsole" } }, {
+  category = "stdout",
+  output = "unbound output\n",
+}), "DAP output without a service key should be ignored")
+assert(vim.wait(500, function()
+  return vim.deep_equal({ "debug stdout", "debug stderr" }, vim.api.nvim_buf_get_lines(internal_output, 0, -1, false))
+end), "internal-console output should retain logical lines in the normal buffer")
+assert(#vim.api.nvim_buf_get_extmarks(internal_output, internal_output_service.output.namespace, 0, -1, {}) > 0,
+  "internal-console ANSI output should retain style spans")
+
 local hidden_service = runtime:register({
   key = "springboot::hidden",
   name = "HiddenApplication",
@@ -286,6 +319,7 @@ assert_equal(false, vim.api.nvim_buf_is_valid(stale_other_terminal),
 
 runtime:dispose(pending_service.key)
 runtime:dispose(output_service.key)
+runtime:dispose(internal_output_service.key)
 runtime:dispose(hidden_service.key)
 
 assert_equal(false, java_debug.begin_shutdown(), "shutdown should be a no-op without an active Java Debug session")

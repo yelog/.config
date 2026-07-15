@@ -38,6 +38,7 @@ return {
       ---@param hl Highlights
       ---@param c ColorScheme
       on_highlights = function(hl, c)
+        require("custom.dap_style").apply_highlights(hl, c)
       --   hl.markdownH1 = { fg = "#0082b4", bold = true }
       --   hl.markdownH2 = { fg = "#ef9020", bold = true }
       --   hl.markdownH3 = { fg = "#e990ab", bold = true }

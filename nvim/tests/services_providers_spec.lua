@@ -37,6 +37,8 @@ assert_equal("springboot::" .. project_root .. "::com.example.order.OrderApplica
 assert_equal("com.example.order.OrderApplication", spring.metadata.main_class,
   "Spring definitions should retain the main class")
 assert_equal(project_root, spring.metadata.project_root, "Spring definitions should retain the project root")
+assert_equal("ALWAYS", spring.env.SPRING_OUTPUT_ANSI_ENABLED,
+  "Spring services should force application ANSI colors through non-TTY pipes")
 assert_equal({ "mvn", "-Pdev", "-Dstyle.color=always", "spring-boot:run", "-Dspring-boot.run.mainClass=com.example.order.OrderApplication" },
   spring.prepare(spring, "dev"), "Spring preparation should inject the selected Maven profile")
 

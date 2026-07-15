@@ -208,6 +208,7 @@ function M.discover(opts)
         service_type = "springboot",
         cmd = command,
         cwd = root,
+        env = { SPRING_OUTPUT_ANSI_ENABLED = "ALWAYS" },
         restart = { auto = false, delay = 3, max_attempts = 3 },
         color_policy = "always",
         prepare = M.prepare,

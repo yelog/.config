@@ -134,6 +134,39 @@ assert(#vim.api.nvim_buf_get_extmarks(real_service.output.bufnr, real_service.ou
   "ANSI output from a real process should retain a highlight span")
 real_runtime:dispose(real_service.key)
 
+local debug_output_runtime = require("services.runtime").new()
+local debug_output_service = debug_output_runtime:register({
+  key = "service::debug-output",
+  name = "debug-output",
+  service_type = "service",
+  cmd = { "debug-output" },
+  metadata = { project_root = "/smoke" },
+})
+local normal_output = debug_output_runtime:ensure_output(debug_output_service.key)
+assert(debug_output_runtime:append_output(debug_output_service.key, "stdout", "stale debug output\n"),
+  "runtime should accept output before reset")
+assert(vim.wait(500, function()
+  return vim.api.nvim_buf_get_lines(normal_output, 0, -1, false)[1] == "stale debug output"
+end), "output should exist before reset")
+local terminal_output = vim.api.nvim_create_buf(false, true)
+assert_equal(terminal_output, debug_output_runtime:replace_output(debug_output_service.key, terminal_output, { terminal = true }),
+  "external debug output should replace the normal renderer before reset")
+assert_equal(normal_output, debug_output_runtime:reset_output(debug_output_service.key),
+  "reset should restore the normal renderer for DAP output")
+assert_equal(false, debug_output_service.terminal_output, "reset should clear the terminal output flag")
+assert_equal({ "" }, vim.api.nvim_buf_get_lines(normal_output, 0, -1, false), "reset should clear retained output")
+assert(debug_output_runtime:append_output(debug_output_service.key, "stdout", "\27[31mdebug stdout\27[0m\n"),
+  "runtime should accept stdout DAP output")
+assert(debug_output_runtime:append_output(debug_output_service.key, "stderr", "debug stderr\n"),
+  "runtime should accept stderr DAP output")
+assert(vim.wait(500, function()
+  return vim.deep_equal({ "debug stdout", "debug stderr" }, vim.api.nvim_buf_get_lines(normal_output, 0, -1, false))
+end), "DAP output should use the normal renderer")
+assert(#vim.api.nvim_buf_get_extmarks(normal_output, debug_output_service.output.namespace, 0, -1, {}) > 0,
+  "ANSI DAP output should retain a highlight span")
+debug_output_runtime:dispose(debug_output_service.key)
+if vim.api.nvim_buf_is_valid(terminal_output) then vim.api.nvim_buf_delete(terminal_output, { force = true }) end
+
 local stop_runtime = require("services.runtime").new({ kill_timeout_ms = 500 })
 local stop_service = stop_runtime:register({
   key = "service::stop-smoke",
@@ -207,8 +240,8 @@ local tree_ok, tree_err = pcall(function()
   assert(tree_runtime:begin_shutdown(), "tree process should enter shutdown")
   assert(vim.wait(1000, function() return tree_runtime:is_shutdown_complete() end),
     "TERM should stop the managed process group")
-  local alive = vim.uv.kill(child_pid, 0)
-  assert(alive ~= 0, "shutdown should also stop the child process")
+  assert(vim.wait(1000, function() return vim.uv.kill(child_pid, 0) ~= 0 end),
+    "shutdown should also stop the child process")
 end)
 tree_runtime:force_shutdown()
 if not tree_ok then error(tree_err) end

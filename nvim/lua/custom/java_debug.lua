@@ -83,7 +83,7 @@ function M.launch_config(service)
     mainClass = metadata.main_class,
     projectName = metadata.project_name,
     cwd = metadata.project_root,
-    console = "integratedTerminal",
+    console = "internalConsole",
   }
 end
 
@@ -101,6 +101,16 @@ end
 function M.ensure_output_buffer(service_or_key)
   local key = service_key(service_or_key)
   return key and runtime():ensure_output(key) or nil
+end
+
+function M.route_output(session, event)
+  local config = session and session.config
+  local key = config and config.__service_key
+  if not key or config.console ~= "internalConsole" or type(event) ~= "table" or type(event.output) ~= "string" then
+    return false
+  end
+  local stream = event.category == "stderr" and "stderr" or "stdout"
+  return runtime():append_output(key, stream, event.output)
 end
 
 local function supports_process_groups()
@@ -400,6 +410,10 @@ function M.setup()
       set_debugging(active_service_key, true)
     end
   end
+  dap.listeners.after.event_output.spring_services = function(session, event)
+    if not belongs_to_service(session) then return end
+    M.route_output(session, event)
+  end
 end
 
 function M.is_debugging(service_or_key)
@@ -557,7 +571,7 @@ function M.start(service_or_key)
   shutdown_in_progress = false
   launch_token = token
   active_service_key = service.key
-  M.ensure_output_buffer(service.key)
+  runtime():reset_output(service.key)
   vim.defer_fn(function()
     if launch_token ~= token or active_service_key ~= service.key then return end
     notify("launch preparation timed out; check the build and jdtls import, then try again", vim.log.levels.ERROR)
