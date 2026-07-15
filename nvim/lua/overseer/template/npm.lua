@@ -185,6 +185,7 @@ function M.generator(opts)
                 },
                 metadata = {
                   service = true,
+                  service_type = "npm",
                   npm = true,
                   group = is_dev and "npm:dev" or "npm",
                   project_root = root,

@@ -163,7 +163,7 @@ return {
       local project_name = find_project_name(module_root)
       local is_multi = (module_root ~= root)
 
-      local cmd, cwd
+      local cmd, debug_build_cmd, cwd
       if use_maven then
         cwd = root
         if is_multi then
@@ -172,9 +172,11 @@ return {
           cmd = { "bash", "-c",
                   string.format("mvn install -pl %s -am -DskipTests -q && mvn spring-boot:run -pl %s -Dspring-boot.run.mainClass=%s",
                     rel, rel, ep.fqn) }
+          debug_build_cmd = { "mvn", "-q", "-DskipTests", "install", "-pl", rel, "-am" }
         else
           cmd = { "mvn", "spring-boot:run",
                   "-Dspring-boot.run.mainClass=" .. ep.fqn }
+          debug_build_cmd = { "mvn", "-q", "-DskipTests", "compile" }
         end
       elseif use_gradle then
         cwd = root
@@ -182,9 +184,11 @@ return {
           local rel = module_root:sub(#root + 2):gsub("/", ":")
           cmd = { gradlew, ":" .. rel .. ":bootRun",
                   "--mainClass=" .. ep.fqn }
+          debug_build_cmd = { gradlew, ":" .. rel .. ":classes" }
         else
           cmd = { gradlew, "bootRun",
                   "--mainClass=" .. ep.fqn }
+          debug_build_cmd = { gradlew, "classes" }
         end
       end
 
@@ -208,6 +212,7 @@ return {
               },
               metadata = {
                 service = true,
+                service_type = "springboot",
                 springboot = true,
                 group = "springboot",
                 project_root = root,
@@ -217,6 +222,7 @@ return {
                 main_class = ep.fqn,
                 source = ep.path,
                 task_key = module_root .. "::" .. ep.fqn,
+                debug_build_cmd = debug_build_cmd,
               },
             }
           end,

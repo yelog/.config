@@ -4,6 +4,7 @@ return {
   name = "service",
   desc = "Microservice from config",
   generator = function(opts)
+    local project_root = opts.dir or vim.fn.getcwd()
     local services = require("custom.services").load()
     local ret = {}
     for _, svc in ipairs(services) do
@@ -26,7 +27,9 @@ return {
             },
             metadata = {
               service = true,
+              service_type = "service",
               group = svc.group or "",
+              project_root = project_root,
             },
           }
         end,

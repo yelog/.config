@@ -12,6 +12,21 @@ local function normalize_root(project_root)
   return vim.fs.normalize(project_root)
 end
 
+local function normalize_service_keys(keys)
+  if type(keys) ~= "table" then return {} end
+
+  local normalized = {}
+  local seen = {}
+  for _, key in ipairs(keys) do
+    if type(key) == "string" and key ~= "" and not seen[key] then
+      seen[key] = true
+      table.insert(normalized, key)
+    end
+  end
+  table.sort(normalized)
+  return normalized
+end
+
 local function load_state()
   if vim.fn.filereadable(state_path) ~= 1 then return empty_state() end
 
@@ -94,11 +109,42 @@ function M.set_profile(project_root, profile)
 
   local ok, saved = pcall(function()
     local state = load_state()
+    local project = state.projects[root]
+    if type(project) ~= "table" then project = {} end
     if not profile or profile == "" then
-      state.projects[root] = nil
+      project.profile = nil
     else
-      state.projects[root] = { profile = vim.trim(profile) }
+      project.profile = vim.trim(profile)
     end
+    state.projects[root] = project
+    return save_state(state)
+  end)
+  pcall(vim.uv.fs_rmdir, lock_path)
+  return ok and saved or false
+end
+
+function M.get_selected_services(project_root)
+  local root = normalize_root(project_root)
+  if not root then return {} end
+
+  local project = load_state().projects[root]
+  if type(project) ~= "table" then return {} end
+  return normalize_service_keys(project.selected_services)
+end
+
+function M.set_selected_services(project_root, keys)
+  local root = normalize_root(project_root)
+  if not root or type(keys) ~= "table" then return false end
+
+  local lock_path = acquire_lock()
+  if not lock_path then return false end
+
+  local ok, saved = pcall(function()
+    local state = load_state()
+    local project = state.projects[root]
+    if type(project) ~= "table" then project = {} end
+    project.selected_services = normalize_service_keys(keys)
+    state.projects[root] = project
     return save_state(state)
   end)
   pcall(vim.uv.fs_rmdir, lock_path)

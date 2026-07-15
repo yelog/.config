@@ -32,8 +32,21 @@ vim.fn.writefile({ vim.json.encode(external_state) }, state_path)
 assert(state.set_profile("/project/a", "prod"), "write should merge with the latest disk state")
 assert_equal("qa", state.get_profile("/project/b"), "external project updates should not be overwritten")
 
+assert_equal({}, state.get_selected_services("/project/a"), "old profile state should have no services")
+assert(state.set_selected_services("/project/a", { "npm::web::dev", "springboot::orders", "npm::web::dev" }),
+  "service selection should persist")
+assert_equal({ "npm::web::dev", "springboot::orders" }, state.get_selected_services("/project/a"),
+  "service keys should be unique and sorted")
+assert_equal("prod", state.get_profile("/project/a"), "service selection should preserve the profile")
+assert(state.set_profile("/project/a", "local"), "profile update should succeed")
+assert_equal({ "npm::web::dev", "springboot::orders" }, state.get_selected_services("/project/a"),
+  "profile updates should preserve service selections")
+assert(state.set_selected_services("/project/a", {}), "empty service selection should persist")
+assert_equal({}, state.get_selected_services("/project/a"), "empty service selection should round-trip")
+assert_equal("local", state.get_profile("/project/a"), "empty selection should preserve project profile")
+
 state.setup({ path = state_path })
-assert_equal("prod", state.get_profile("/project/a"), "profile should survive a reload")
+assert_equal("local", state.get_profile("/project/a"), "profile should survive a reload")
 assert(state.set_profile("/project/a", nil), "profile removal should succeed")
 assert_equal(nil, state.get_profile("/project/a"), "removed profile should be nil")
 
@@ -44,6 +57,11 @@ assert_equal(nil, state.get_profile("/project/a"), "invalid JSON should fall bac
 vim.fn.writefile({ '{"projects":{"/project/a":{"profile":42}}}' }, state_path)
 state.setup({ path = state_path })
 assert_equal(nil, state.get_profile("/project/a"), "non-string profiles should be ignored")
+
+vim.fn.writefile({ '{"projects":{"/project/a":{"selected_services":["npm::dev",42,"npm::dev"]}}}' }, state_path)
+state.setup({ path = state_path })
+assert_equal({ "npm::dev" }, state.get_selected_services("/project/a"),
+  "invalid and duplicate service keys should be ignored")
 
 local blocker = temp_dir .. "/not-a-directory"
 vim.fn.writefile({ "blocker" }, blocker)
@@ -66,6 +84,45 @@ vim.fn.writefile({
   "</project>",
 }, project_root .. "/pom.xml")
 assert_equal({ "dev", "local" }, state.parse_maven_profiles(project_root), "profiles should be unique and sorted")
+
+local catalog = require("overseer.service_catalog")
+assert_equal("Spring Boot", catalog.get_type("springboot").label, "Spring type should be registered")
+assert_equal("npm", catalog.get_type("npm").label, "npm type should be registered")
+assert_equal("Service", catalog.get_type("unknown").label, "unknown types should use the generic fallback")
+assert_equal("springboot::module::com.example.App", catalog.key_from_metadata({
+  service_type = "springboot",
+  task_key = "module::com.example.App",
+}, "App"), "Spring keys should use task identity metadata")
+assert_equal("npm::/project/web::dev", catalog.key_from_metadata({
+  service_type = "npm",
+  package_dir = "/project/web",
+  script = "dev",
+}, "dev"), "npm keys should include package directory and script")
+assert_equal("service::redis", catalog.key_from_metadata({ service_type = "service" }, "redis"),
+  "custom service keys should use their names")
+
+local catalog_entries = {
+  { key = "springboot::orders", service_type = "springboot" },
+  { key = "springboot::users", service_type = "springboot" },
+  { key = "npm::web::dev", service_type = "npm" },
+}
+assert_equal({ catalog_entries[1], catalog_entries[3] }, catalog.filter_selected(catalog_entries, {
+  "springboot::orders",
+  "npm::web::dev",
+}), "catalog should return only selected entries")
+assert_equal({ "npm::missing::dev", "npm::web::dev", "springboot::users" }, catalog.replace_category(
+  { "springboot::orders", "npm::web::dev", "npm::missing::dev" },
+  catalog_entries,
+  "springboot",
+  { "springboot::users" }
+), "category replacement should preserve other categories and stale keys")
+assert_equal({ "npm::missing::dev", "npm::web::dev" }, catalog.replace_category(
+  { "springboot::orders", "springboot::missing", "npm::web::dev", "npm::missing::dev" },
+  catalog_entries,
+  "springboot",
+  {},
+  true
+), "clearing a category should remove stale keys from that category")
 
 state.setup({ path = state_path })
 assert(state.set_profile(project_root, "dev"), "component profile should persist")
@@ -136,13 +193,56 @@ vim.fn.writefile({
 local templates = require("overseer.template.springboot").generator({ dir = module_root })
 assert_equal(1, #templates, "one Spring service should be discovered")
 local definition = templates[1].builder({})
+assert_equal("springboot", definition.metadata.service_type, "Spring templates should expose their service type")
 assert_equal("com.example.order.OrderApplication", definition.metadata.main_class,
   "service metadata should expose the fully qualified main class")
 assert_equal(module_root, definition.metadata.module_root, "service metadata should expose its Maven module root")
 assert_equal("order-service", definition.metadata.project_name, "service metadata should expose its Maven project name")
 assert_equal(module_root .. "::com.example.order.OrderApplication", definition.metadata.task_key,
   "service identity should include its Maven module")
+assert_equal({ "mvn", "-q", "-DskipTests", "install", "-pl", "order-service", "-am" },
+  definition.metadata.debug_build_cmd, "multi-module Debug should prepare dependencies without starting the service")
 assert_equal(nil, definition.metadata.class, "obsolete class metadata should not be emitted")
+
+vim.fn.writefile({
+  '{',
+  '  "name": "demo-web",',
+  '  "scripts": { "dev": "vite" }',
+  '}',
+}, multi_root .. "/package.json")
+local npm_templates = require("overseer.template.npm").generator({ dir = multi_root })
+assert_equal(1, #npm_templates, "one npm launch entry should be discovered")
+assert_equal("npm", npm_templates[1].builder({}).metadata.service_type,
+  "npm templates should expose their service type")
+
+package.loaded.overseer = { TAG = { BUILD = "BUILD" } }
+package.loaded["custom.services"] = {
+  load = function()
+    return { { name = "redis", cmd = { "redis-server" } } }
+  end,
+}
+package.loaded["overseer.template.service"] = nil
+local service_templates = require("overseer.template.service").generator({ dir = multi_root })
+local custom_definition = service_templates[1].builder({})
+assert_equal("service", custom_definition.metadata.service_type,
+  "custom templates should expose their service type")
+assert_equal(multi_root, custom_definition.metadata.project_root,
+  "custom templates should retain the panel project root")
+
+local output_buf = vim.api.nvim_create_buf(false, true)
+local lifecycle = require("overseer.component.service.lifecycle").constructor({})
+local lifecycle_task = {
+  metadata = {},
+  get_bufnr = function() return output_buf end,
+}
+lifecycle.on_init(lifecycle, lifecycle_task)
+lifecycle.on_start(lifecycle, lifecycle_task)
+assert_equal(10000, vim.bo[output_buf].scrollback, "service output should retain at most 10,000 lines")
+vim.api.nvim_open_term(output_buf, {})
+vim.bo[output_buf].scrollback = 100000
+assert(vim.wait(100, function() return vim.bo[output_buf].scrollback == 10000 end),
+  "deferred terminal creation should reapply the service output limit")
+vim.api.nvim_buf_delete(output_buf, { force = true })
 
 vim.fn.delete(temp_dir, "rf")
 print("overseer-services-tests: ok")

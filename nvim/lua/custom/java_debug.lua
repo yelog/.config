@@ -3,6 +3,7 @@ local M = {}
 local active_task
 local active_session
 local active_terminal_buf
+local active_build_process
 local launch_token
 local pending_config
 local listeners_configured = false
@@ -72,6 +73,61 @@ function M.launch_config(task)
     cwd = metadata.project_root,
     console = "integratedTerminal",
   }
+end
+
+function M.debug_build_command(task, profile)
+  local command = vim.deepcopy((task.metadata or {}).debug_build_cmd)
+  if type(command) ~= "table" or not command[1] then return nil end
+
+  local executable = vim.fs.basename(tostring(command[1]))
+  if profile and profile ~= "" and (executable == "mvn" or executable == "mvnw" or executable == "mvn.cmd") then
+    table.insert(command, 2, "-P" .. profile)
+  end
+  return command
+end
+
+function M.ensure_output_buffer(task)
+  local strategy = task and task.strategy
+  if not strategy then return nil end
+
+  local bufnr = strategy.bufnr
+  if bufnr and vim.api.nvim_buf_is_valid(bufnr) then return bufnr end
+
+  bufnr = vim.api.nvim_create_buf(false, true)
+  strategy.bufnr = bufnr
+  vim.bo[bufnr].buflisted = false
+  vim.b[bufnr].overseer_task = task.id
+  vim.api.nvim_buf_call(bufnr, function()
+    vim.bo[bufnr].filetype = "OverseerOutput"
+  end)
+  touch(task)
+  return bufnr
+end
+
+function M.prepare_build(task, profile, callback, runner)
+  local command = M.debug_build_command(task, profile)
+  if not command then
+    callback(true)
+    return
+  end
+
+  notify("preparing " .. task.name .. " for Debug")
+  runner = runner or function(cmd, opts, done) vim.system(cmd, opts, done) end
+  return runner(command, {
+    cwd = task.metadata.project_root,
+    text = true,
+  }, function(result)
+    vim.schedule(function()
+      if result.code == 0 then
+        callback(true)
+        return
+      end
+
+      local detail = vim.trim(result.stderr or result.stdout or "")
+      if detail == "" then detail = "build exited with code " .. result.code end
+      callback(false, detail)
+    end)
+  end)
 end
 
 function M.enrich_launch_config(task, bufnr, callback, execute)
@@ -231,6 +287,13 @@ local function archive_active_output()
   end
 end
 
+local function stop_active_build()
+  if active_build_process then
+    pcall(active_build_process.kill, active_build_process, 15)
+    active_build_process = nil
+  end
+end
+
 function M.cleanup_stale_terminals()
   for _, bufnr in ipairs(vim.api.nvim_list_bufs()) do
     if vim.api.nvim_buf_is_valid(bufnr)
@@ -263,6 +326,7 @@ function M.setup()
     local bufnr = vim.api.nvim_create_buf(false, true)
     local output_win = M.adopt_output_buffer(active_task, bufnr)
     active_terminal_buf = bufnr
+    vim.bo[bufnr].scrollback = 10000
     touch(active_task)
     return bufnr, output_win
   end
@@ -278,6 +342,7 @@ function M.setup()
     set_debugging(active_task, false)
     active_task = nil
     active_session = nil
+    active_build_process = nil
     launch_token = nil
   end
 
@@ -308,6 +373,7 @@ function M.terminate(task, callback)
     return false
   end
   launch_token = nil
+  stop_active_build()
   if pending_config then
     pending_config.__cancel_guard = require("dap").ABORT
     pending_config = nil
@@ -384,55 +450,76 @@ function M.start(task)
   local token = {}
   launch_token = token
   active_task = task
+  M.ensure_output_buffer(task)
   vim.defer_fn(function()
     if launch_token ~= token or active_task ~= task then return end
-    notify("launch preparation timed out; wait for jdtls import to finish and try again", vim.log.levels.ERROR)
+    notify("launch preparation timed out; check the build and jdtls import, then try again", vim.log.levels.ERROR)
     M.terminate(task)
-  end, 60000)
+  end, 120000)
 
-  M.enrich_launch_config(task, bufnr, function(config, enrich_err)
-    vim.schedule(function()
-      if launch_token ~= token or active_task ~= task then return end
-      if not config then
-        active_task = nil
-        launch_token = nil
-        notify(enrich_err, vim.log.levels.ERROR)
-        return
-      end
-      local profile = require("overseer.service_state").get_profile(root)
-      local resolved, config_err = M.resolve_config(config, root, main_class, profile)
-      if not resolved then
-        active_task = nil
-        launch_token = nil
-        notify(config_err, vim.log.levels.ERROR)
-        return
-      end
-      M.start_debug_adapter(bufnr, function(port, adapter_err)
-        vim.schedule(function()
-          if launch_token ~= token or active_task ~= task then return end
-          if not port then
-            active_task = nil
-            launch_token = nil
-            notify(adapter_err, vim.log.levels.ERROR)
-            return
-          end
-          resolved.type = "java_service"
-          resolved.__spring_service_task_key = metadata.task_key
-          dap.adapters.java_service = { type = "server", host = "127.0.0.1", port = port }
-          pending_config = resolved
-          vim.api.nvim_buf_call(bufnr, function()
-            local ok_run, run_err = pcall(dap.run, resolved)
-            if not ok_run then
+  local profile = require("overseer.service_state").get_profile(root)
+  local function launch()
+    M.enrich_launch_config(task, bufnr, function(config, enrich_err)
+      vim.schedule(function()
+        if launch_token ~= token or active_task ~= task then return end
+        if not config then
+          active_task = nil
+          launch_token = nil
+          notify(enrich_err, vim.log.levels.ERROR)
+          return
+        end
+        local resolved, config_err = M.resolve_config(config, root, main_class, profile)
+        if not resolved then
+          active_task = nil
+          launch_token = nil
+          notify(config_err, vim.log.levels.ERROR)
+          return
+        end
+        M.start_debug_adapter(bufnr, function(port, adapter_err)
+          vim.schedule(function()
+            if launch_token ~= token or active_task ~= task then return end
+            if not port then
               active_task = nil
               launch_token = nil
-              pending_config = nil
-              notify(tostring(run_err), vim.log.levels.ERROR)
+              notify(adapter_err, vim.log.levels.ERROR)
+              return
             end
+            resolved.type = "java_service"
+            resolved.__spring_service_task_key = metadata.task_key
+            dap.adapters.java_service = { type = "server", host = "127.0.0.1", port = port }
+            pending_config = resolved
+            vim.api.nvim_buf_call(bufnr, function()
+              local ok_run, run_err = pcall(dap.run, resolved)
+              if not ok_run then
+                active_task = nil
+                launch_token = nil
+                pending_config = nil
+                notify(tostring(run_err), vim.log.levels.ERROR)
+              end
+            end)
           end)
         end)
       end)
     end)
-  end)
+  end
+
+  if task.status == "PENDING" and not task.time_start then
+    local build_process
+    build_process = M.prepare_build(task, profile, function(ok, build_err)
+      if active_build_process == build_process then active_build_process = nil end
+      if launch_token ~= token or active_task ~= task then return end
+      if not ok then
+        active_task = nil
+        launch_token = nil
+        notify("build preparation failed: " .. build_err, vim.log.levels.ERROR)
+        return
+      end
+      launch()
+    end)
+    active_build_process = build_process
+  else
+    launch()
+  end
 end
 
 return M

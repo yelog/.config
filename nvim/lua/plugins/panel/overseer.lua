@@ -2,8 +2,10 @@ return {
   "stevearc/overseer.nvim",
   config = function()
     local overseer = require("overseer")
+    local service_catalog = require("overseer.service_catalog")
     local service_state = require("overseer.service_state")
     local roots_by_tab = {}
+    local manage_services
 
     local function find_project_root(source)
       local dir = source or vim.api.nvim_buf_get_name(0)
@@ -17,7 +19,8 @@ return {
         if vim.fn.isdirectory(dir .. "/.git") == 1 then return dir end
         if vim.fn.filereadable(dir .. "/pom.xml") == 1
           or vim.fn.filereadable(dir .. "/build.gradle") == 1
-          or vim.fn.filereadable(dir .. "/build.gradle.kts") == 1 then
+          or vim.fn.filereadable(dir .. "/build.gradle.kts") == 1
+          or vim.fn.filereadable(dir .. "/package.json") == 1 then
           last_build_root = dir
         end
 
@@ -32,32 +35,53 @@ return {
       return task.metadata and task.metadata.springboot == true
     end
 
+    local function service_key(task)
+      return service_catalog.key_from_metadata(task.metadata, task.name)
+    end
+
+    local function set_sidebar_root(root, create)
+      local sidebar_module = require("overseer.task_list.sidebar")
+      local sidebar = create and sidebar_module.get_or_create() or sidebar_module.get()
+      if not sidebar then return end
+
+      sidebar.list_task_opts.filter = function(task)
+        return task.metadata
+          and task.metadata.service == true
+          and task.metadata.project_root == root
+      end
+      sidebar:render()
+    end
+
     local function refresh_winbar()
       for _, win in ipairs(vim.api.nvim_list_wins()) do
         local buf = vim.api.nvim_win_get_buf(win)
         if vim.bo[buf].filetype == "OverseerList" then
           local tab = vim.api.nvim_win_get_tabpage(win)
           local root = roots_by_tab[tab]
-
-          -- Determine which service types are present
-          local has_spring = false
-          local has_npm = false
+          local selected = root and service_state.get_selected_services(root) or {}
+          local present_types = {}
+          for _, key in ipairs(selected) do
+            local service_type = key:match("^([^:]+)::")
+            if service_type then present_types[service_type] = true end
+          end
           for _, task in ipairs(overseer.list_tasks({})) do
-            if task.metadata then
-              if task.metadata.springboot then has_spring = true end
-              if task.metadata.npm then has_npm = true end
+            if task.metadata and task.metadata.service and task.metadata.project_root == root then
+              present_types[task.metadata.service_type or (task.metadata.springboot and "springboot")
+                or (task.metadata.npm and "npm") or "service"] = true
             end
           end
 
           local title_parts = {}
-          if has_spring then table.insert(title_parts, "SPRING") end
-          if has_npm then table.insert(title_parts, "NPM") end
-          if #title_parts == 0 then table.insert(title_parts, "SERVICES") end
+          for _, type_info in ipairs(service_catalog.list_types()) do
+            if present_types[type_info.service_type] then table.insert(title_parts, type_info.title) end
+          end
 
-          local title = table.concat(title_parts, " + ") .. " SERVICES"
+          local title = #title_parts > 0 and (table.concat(title_parts, " + ") .. " SERVICES") or "SERVICES"
           local winbar_parts = { "%#Title# " .. title .. " %*" }
+          local manage_label = #selected == 0 and "add" or "manage"
+          table.insert(winbar_parts, string.format("%%#Comment# %d selected  [a %s] %%*", #selected, manage_label))
 
-          if has_spring then
+          if present_types.springboot then
             local profile = root and service_state.get_profile(root) or nil
             profile = (profile or "default"):gsub("%%", "%%%%")
             table.insert(winbar_parts, "%#DiagnosticInfo#◆ profile: " .. profile .. "%*")
@@ -135,6 +159,15 @@ return {
       return "?", "Comment", task.status:lower(), "Comment"
     end
 
+    local function task_service_type(task)
+      local metadata = task.metadata or {}
+      local service_type = metadata.service_type
+        or (metadata.springboot and "springboot")
+        or (metadata.npm and "npm")
+        or "service"
+      return service_catalog.get_type(service_type)
+    end
+
     local function sort_rank(task)
       if task.status == "FAILURE" then return 1 end
       if task.metadata and task.metadata.debugging then return 2 end
@@ -165,9 +198,11 @@ return {
         separator = "────────────────────────────────",
         render = function(task)
           local icon, icon_hl, detail, detail_hl = task_visual(task)
+          local service_type = task_service_type(task)
           return {
             {
-              { " " .. icon .. "  ", icon_hl },
+              { " " .. icon .. " ", icon_hl },
+              { service_type.icon .. " ", service_type.hl },
               { task.name, "Normal" },
               { "  " .. detail, detail_hl },
             },
@@ -188,6 +223,7 @@ return {
           ["<C-s>"] = { "keymap.open", opts = { dir = "split" }, desc = "Open in split" },
           ["<C-f>"] = { "keymap.open", opts = { dir = "float" }, desc = "Open in float" },
           ["p"] = { select_profile, desc = "Select Spring profile" },
+          ["a"] = { function() manage_services() end, desc = "Manage services" },
           ["gp"] = "keymap.toggle_preview",
           ["u"] = { "keymap.run_action", opts = { action = "open_service_url" }, desc = "Open service URL" },
           ["{"] = "keymap.prev_task",
@@ -336,81 +372,186 @@ return {
       pattern = "OverseerListUpdate",
       callback = refresh_winbar,
     })
+    vim.api.nvim_create_autocmd("TabEnter", {
+      group = panel_group,
+      callback = function()
+        local root = roots_by_tab[vim.api.nvim_get_current_tabpage()]
+        if root then set_sidebar_root(root, false) end
+      end,
+    })
 
-    local function ensure_services(search_dir, callback)
+    local function reconcile_services(search_dir, entries, callback)
       local template = require("overseer.template")
-      local templates = {}
-      for _, module in ipairs({ "springboot", "npm", "service" }) do
-        local provider = require("overseer.template." .. module)
-        local generated = provider.generator({ dir = search_dir }) or {}
-        for _, tmpl in ipairs(generated) do
-          tmpl.module = module
-          table.insert(templates, tmpl)
-        end
+      local selected = service_state.get_selected_services(search_dir)
+      local selected_lookup = {}
+      for _, key in ipairs(selected) do
+        selected_lookup[key] = true
       end
-
       local existing = {}
+      local retained_running = 0
       for _, task in ipairs(overseer.list_tasks({})) do
-        if spring_task(task) and task.metadata.task_key then
-          existing["springboot::" .. task.metadata.task_key] = true
-        elseif task.metadata and task.metadata.npm and task.metadata.package_dir and task.metadata.script then
-          existing["npm::" .. task.metadata.package_dir .. "::" .. task.metadata.script] = true
-        elseif task.metadata and task.metadata.service then
-          existing["service::" .. task.name] = true
+        if task.metadata and task.metadata.service and task.metadata.project_root == search_dir then
+          local key = service_key(task)
+          if key and selected_lookup[key] then
+            existing[key] = true
+          elseif key then
+            local debugging = require("custom.java_debug").is_debugging(task)
+            if task.status == "RUNNING" or debugging then
+              retained_running = retained_running + 1
+            else
+              task:dispose(true)
+            end
+          end
         end
       end
 
       local pending = {}
-      for _, tmpl in ipairs(templates) do
-        local service_key
-        if tmpl.module == "springboot" then
-          service_key = nil -- Always allow springboot templates
-        elseif tmpl.module == "npm" then
-          -- For npm, we need to check using package_dir + script
-          local meta = tmpl.builder({}).metadata
-          service_key = "npm::" .. meta.package_dir .. "::" .. meta.script
-        else
-          service_key = "service::" .. tmpl.name
-        end
-
-        if not service_key or not existing[service_key] then
-          table.insert(pending, tmpl)
+      for _, entry in ipairs(service_catalog.filter_selected(entries, selected)) do
+        if not existing[entry.key] then
+          table.insert(pending, entry)
         end
       end
 
       if #pending == 0 then
+        if retained_running > 0 then
+          vim.notify("Deselected running services were kept; stop and dispose them to remove", vim.log.levels.WARN)
+        end
         if callback then callback() end
         return
       end
 
       local remaining = #pending
-      for _, tmpl in ipairs(pending) do
-        template.build_task(tmpl, {
+      for _, entry in ipairs(pending) do
+        template.build_task(entry.template, {
           params = {},
           search = { dir = search_dir },
           disallow_prompt = true,
         }, function(err, task)
           if err then
             vim.notify("Failed to register service: " .. err, vim.log.levels.ERROR)
-          elseif task then
-            local key
-            if spring_task(task) and task.metadata.task_key then
-              key = "springboot::" .. task.metadata.task_key
-            elseif task.metadata and task.metadata.npm and task.metadata.package_dir and task.metadata.script then
-              key = "npm::" .. task.metadata.package_dir .. "::" .. task.metadata.script
-            else
-              key = "service::" .. task.name
-            end
-            if existing[key] then
+          elseif task and existing[entry.key] then
               task:dispose()
-            else
-              existing[key] = true
-            end
+          elseif task then
+            existing[entry.key] = true
           end
           remaining = remaining - 1
-          if remaining == 0 and callback then callback() end
+          if remaining == 0 then
+            if retained_running > 0 then
+              vim.notify("Deselected running services were kept; stop and dispose them to remove", vim.log.levels.WARN)
+            end
+            if callback then callback() end
+          end
         end)
       end
+    end
+
+    manage_services = function()
+      local tab = vim.api.nvim_get_current_tabpage()
+      local root = roots_by_tab[tab] or find_project_root()
+      roots_by_tab[tab] = root
+      local entries = service_catalog.discover(root)
+      if #entries == 0 then
+        vim.notify("No service launch entries found in " .. root, vim.log.levels.WARN)
+        return
+      end
+
+      local selected = service_state.get_selected_services(root)
+      local selected_lookup = {}
+      for _, key in ipairs(selected) do
+        selected_lookup[key] = true
+      end
+
+      local counts = {}
+      for _, entry in ipairs(entries) do
+        local count = counts[entry.service_type] or { available = 0, selected = 0 }
+        count.available = count.available + 1
+        if selected_lookup[entry.key] then count.selected = count.selected + 1 end
+        counts[entry.service_type] = count
+      end
+
+      local categories = {}
+      for _, type_info in ipairs(service_catalog.list_types()) do
+        local service_type = type_info.service_type
+        if counts[service_type] then
+          table.insert(categories, {
+            service_type = service_type,
+            label = string.format("%s %s (%d/%d selected)", type_info.icon, type_info.label,
+              counts[service_type].selected, counts[service_type].available),
+          })
+        end
+      end
+
+      vim.ui.select(categories, {
+        prompt = "Service category",
+        format_item = function(item) return item.label end,
+      }, function(category)
+        if not category then return end
+
+        local picker_items = {}
+        for _, entry in ipairs(entries) do
+          if entry.service_type == category.service_type then
+            local mark = selected_lookup[entry.key] and "●" or "○"
+            local icon = service_catalog.get_type(entry.service_type).icon
+            table.insert(picker_items, string.format("%s\t%s %s %s", entry.key, mark, icon, entry.name))
+          end
+        end
+        table.insert(picker_items, "__clear__\t× Clear this category")
+
+        require("fzf-lua").fzf_exec(picker_items, {
+          prompt = "Toggle services (Tab multi-select)> ",
+          fzf_opts = {
+            ["--multi"] = true,
+            ["--delimiter"] = "\t",
+            ["--with-nth"] = "2..",
+          },
+          actions = {
+            enter = function(chosen)
+              local replacement_lookup = {}
+              for _, entry in ipairs(entries) do
+                if entry.service_type == category.service_type and selected_lookup[entry.key] then
+                  replacement_lookup[entry.key] = true
+                end
+              end
+
+              local clear = false
+              for _, line in ipairs(chosen or {}) do
+                local key = line:match("^([^\t]+)")
+                if key == "__clear__" then
+                  clear = true
+                elseif key and replacement_lookup[key] then
+                  replacement_lookup[key] = nil
+                elseif key then
+                  replacement_lookup[key] = true
+                end
+              end
+
+              local replacement = {}
+              if not clear then
+                for key in pairs(replacement_lookup) do
+                  table.insert(replacement, key)
+                end
+              end
+              local updated = service_catalog.replace_category(
+                selected,
+                entries,
+                category.service_type,
+                replacement,
+                clear
+              )
+              if not service_state.set_selected_services(root, updated) then
+                vim.notify("Failed to persist service selection", vim.log.levels.ERROR)
+                return
+              end
+
+              reconcile_services(root, entries, function()
+                refresh_winbar()
+                vim.notify(string.format("%s services: %d selected",
+                  service_catalog.get_type(category.service_type).label, #replacement))
+              end)
+            end,
+          },
+        })
+      end)
     end
 
     local function open_services(toggle)
@@ -418,7 +559,9 @@ return {
       local origin_tab = vim.api.nvim_get_current_tabpage()
       local root = find_project_root()
       roots_by_tab[origin_tab] = root
-      ensure_services(root, function()
+      local entries = service_catalog.discover(root)
+      reconcile_services(root, entries, function()
+        set_sidebar_root(root, true)
         local open_panel = function()
           if toggle then overseer.toggle() else overseer.open() end
         end

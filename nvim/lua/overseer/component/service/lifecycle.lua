@@ -26,6 +26,11 @@ return {
       type = "number",
       default = 3,
     },
+    output_limit = {
+      desc = "Maximum terminal scrollback lines",
+      type = "number",
+      default = 10000,
+    },
   },
   editable = true,
   serializable = true,
@@ -42,6 +47,23 @@ return {
       on_start = function(self, task)
         restart_count = 0
         task.metadata.started_at = os.time()
+
+        local bufnr = task:get_bufnr()
+        if bufnr and vim.api.nvim_buf_is_valid(bufnr) then
+          local function apply_output_limit()
+            if vim.api.nvim_buf_is_valid(bufnr) then
+              vim.bo[bufnr].scrollback = params.output_limit or 10000
+            end
+          end
+          apply_output_limit()
+          if vim.bo[bufnr].buftype ~= "terminal" then
+            vim.api.nvim_create_autocmd("TermOpen", {
+              buffer = bufnr,
+              once = true,
+              callback = function() vim.schedule(apply_output_limit) end,
+            })
+          end
+        end
 
         if params.health_check and params.health_check ~= "" then
           timer = vim.loop.new_timer()

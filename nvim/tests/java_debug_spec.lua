@@ -50,6 +50,48 @@ assert_equal("com.example.OrderApplication", launch.mainClass, "service launch s
 assert_equal("order-service", launch.projectName, "service launch should target the selected Maven module")
 assert_equal("/repo", launch.cwd, "jdtls root should be used to select the correct language-server client")
 
+local maven_build = { "mvn", "-q", "-DskipTests", "install", "-pl", "order-service", "-am" }
+assert_equal({ "mvn", "-Pdev", "-q", "-DskipTests", "install", "-pl", "order-service", "-am" },
+  java_debug.debug_build_command({ metadata = { debug_build_cmd = maven_build } }, "dev"),
+  "direct debug should apply the selected Maven profile to its build preparation")
+assert_equal({ "mvn", "-q", "-DskipTests", "install", "-pl", "order-service", "-am" }, maven_build,
+  "debug build command generation should not mutate template metadata")
+assert_equal({ "./gradlew", ":order-service:classes" }, java_debug.debug_build_command({
+  metadata = { debug_build_cmd = { "./gradlew", ":order-service:classes" } },
+}, "dev"), "Gradle debug preparation should not receive Maven profile arguments")
+
+local prepared_ok, prepared_err, prepared_command, prepared_opts
+java_debug.prepare_build({
+  name = "OrderApplication",
+  metadata = { project_root = "/repo", debug_build_cmd = maven_build },
+}, "dev", function(ok, err)
+  prepared_ok, prepared_err = ok, err
+end, function(command, opts, callback)
+  prepared_command, prepared_opts = command, opts
+  callback({ code = 0, stdout = "", stderr = "" })
+  return { kill = function() end }
+end)
+assert(vim.wait(100, function() return prepared_ok ~= nil end), "debug build callback should be scheduled")
+assert_equal(true, prepared_ok, "successful build preparation should continue the Debug launch")
+assert_equal(nil, prepared_err, "successful build preparation should not return an error")
+assert_equal({ "mvn", "-Pdev", "-q", "-DskipTests", "install", "-pl", "order-service", "-am" },
+  prepared_command, "build preparation should execute the resolved command")
+assert_equal("/repo", prepared_opts.cwd, "build preparation should run from the project root")
+
+local failed_ok, failed_err
+java_debug.prepare_build({
+  name = "OrderApplication",
+  metadata = { project_root = "/repo", debug_build_cmd = maven_build },
+}, nil, function(ok, err)
+  failed_ok, failed_err = ok, err
+end, function(_, _, callback)
+  callback({ code = 1, stdout = "", stderr = "dependency build failed" })
+  return { kill = function() end }
+end)
+assert(vim.wait(100, function() return failed_ok ~= nil end), "failed debug build callback should be scheduled")
+assert_equal(false, failed_ok, "failed build preparation should stop the Debug launch")
+assert_equal("dependency build failed", failed_err, "build failure should retain actionable stderr")
+
 local enriched, enrich_err
 local command_order = {}
 java_debug.enrich_launch_config({
@@ -139,6 +181,14 @@ assert_equal(nil, missing, "missing main class should not return a config")
 assert(missing_err and missing_err:find("MissingApplication", 1, true), "missing main class should return an actionable error")
 
 local original_buf = vim.api.nvim_get_current_buf()
+local pending_task = { id = 77, strategy = {} }
+local pending_output = java_debug.ensure_output_buffer(pending_task)
+assert(pending_output and vim.api.nvim_buf_is_valid(pending_output),
+  "direct debug should initialize an Overseer output buffer for a pending task")
+assert_equal(pending_output, pending_task.strategy.bufnr, "pending task strategy should adopt the initialized buffer")
+assert_equal(77, vim.b[pending_output].overseer_task, "pending output should retain its Overseer task identity")
+assert_equal("OverseerOutput", vim.bo[pending_output].filetype, "pending output should use the Overseer output filetype")
+
 local output_buf = vim.api.nvim_create_buf(false, true)
 local dap_buf = vim.api.nvim_create_buf(false, true)
 local output_win = vim.api.nvim_get_current_win()
