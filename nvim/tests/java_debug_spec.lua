@@ -26,6 +26,11 @@ vim.fn.writefile({}, mason_root .. "/packages/java-test/extension/server/jacocoa
 vim.fn.writefile({}, mason_root .. "/packages/jdtls/plugins/org.eclipse.m2e.jdt_1.jar")
 
 local java_debug = require("custom.java_debug")
+local runtime = require("services.runtime").setup({
+  spawn = function()
+    return { kill = function() end }
+  end,
+})
 
 assert_equal({
   mason_root .. "/packages/java-debug-adapter/extension/server/com.microsoft.java.debug.plugin-1.jar",
@@ -37,6 +42,7 @@ assert(fingerprint ~= java_debug.toolchain_fingerprint(mason_root),
   "jdtls workspace fingerprint should change with the Maven integration plugin")
 
 local launch = java_debug.launch_config({
+  key = "springboot::orders",
   name = "OrderApplication",
   metadata = {
     project_root = "/repo",
@@ -181,40 +187,63 @@ assert_equal(nil, missing, "missing main class should not return a config")
 assert(missing_err and missing_err:find("MissingApplication", 1, true), "missing main class should return an actionable error")
 
 local original_buf = vim.api.nvim_get_current_buf()
-local pending_task = { id = 77, strategy = {} }
-local pending_output = java_debug.ensure_output_buffer(pending_task)
+local pending_service = runtime:register({
+  key = "springboot::pending",
+  name = "PendingApplication",
+  service_type = "springboot",
+  cmd = { "pending" },
+  metadata = { project_root = "/repo" },
+})
+local pending_output = java_debug.ensure_output_buffer(pending_service.key)
 assert(pending_output and vim.api.nvim_buf_is_valid(pending_output),
-  "direct debug should initialize an Overseer output buffer for a pending task")
-assert_equal(pending_output, pending_task.strategy.bufnr, "pending task strategy should adopt the initialized buffer")
-assert_equal(77, vim.b[pending_output].overseer_task, "pending output should retain its Overseer task identity")
-assert_equal("OverseerOutput", vim.bo[pending_output].filetype, "pending output should use the Overseer output filetype")
+  "direct debug should initialize a normal service output buffer")
+assert_equal(pending_output, runtime:get_output_bufnr(pending_service.key),
+  "pending services should own their output through the runtime")
+assert_equal("ServicesLog", vim.bo[pending_output].filetype, "pending output should use the services log filetype")
 
-local output_buf = vim.api.nvim_create_buf(false, true)
+local output_service = runtime:register({
+  key = "springboot::output",
+  name = "OutputApplication",
+  service_type = "springboot",
+  cmd = { "output" },
+  metadata = { project_root = "/repo" },
+})
+local output_buf = runtime:ensure_output(output_service.key)
 local dap_buf = vim.api.nvim_create_buf(false, true)
 local output_win = vim.api.nvim_get_current_win()
 vim.api.nvim_win_set_buf(output_win, output_buf)
-local task = { strategy = { bufnr = output_buf } }
 local win_count = #vim.api.nvim_list_wins()
-local adopted_win = java_debug.adopt_output_buffer(task, dap_buf)
-assert_equal(dap_buf, task.strategy.bufnr, "DAP terminal should become the task output buffer")
+local adopted_win = java_debug.adopt_output_buffer(output_service.key, dap_buf)
+assert_equal(dap_buf, runtime:get_output_bufnr(output_service.key), "DAP terminal should become the service output")
 assert_equal(dap_buf, vim.api.nvim_win_get_buf(output_win), "visible task output should be replaced in place")
 assert_equal(output_win, adopted_win, "the existing output window should be returned to nvim-dap")
 assert_equal(win_count, #vim.api.nvim_list_wins(), "output adoption must not create a new window")
 
-local hidden_output = vim.api.nvim_create_buf(false, true)
+local hidden_service = runtime:register({
+  key = "springboot::hidden",
+  name = "HiddenApplication",
+  service_type = "springboot",
+  cmd = { "hidden" },
+  metadata = { project_root = "/repo" },
+})
+local hidden_output = runtime:ensure_output(hidden_service.key)
 local hidden_dap = vim.api.nvim_create_buf(false, true)
-local hidden_task = { strategy = { bufnr = hidden_output } }
 vim.api.nvim_win_set_buf(output_win, original_buf)
-local hidden_win = java_debug.adopt_output_buffer(hidden_task, hidden_dap)
-assert_equal(hidden_dap, hidden_task.strategy.bufnr, "hidden DAP output should still be adopted by the task")
+local hidden_win = java_debug.adopt_output_buffer(hidden_service.key, hidden_dap)
+assert_equal(hidden_dap, runtime:get_output_bufnr(hidden_service.key),
+  "hidden DAP output should still be adopted by the service")
 assert_equal(nil, hidden_win, "no output window should be returned when the task output is hidden")
 assert_equal(win_count, #vim.api.nvim_list_wins(), "hidden output adoption must not create a window")
 vim.api.nvim_buf_set_lines(hidden_dap, 0, -1, false, { "debug line 1", "debug line 2" })
-local archived_buf = java_debug.archive_output_buffer(hidden_task, hidden_dap)
+local archived_buf = java_debug.archive_output_buffer(hidden_service.key, hidden_dap)
 assert(archived_buf and vim.api.nvim_buf_is_valid(archived_buf), "completed debug output should be archived")
+assert(vim.wait(500, function()
+  return vim.deep_equal({ "debug line 1", "debug line 2" }, vim.api.nvim_buf_get_lines(archived_buf, 0, -1, false))
+end), "archived output should be rendered into the normal service buffer")
 assert_equal({ "debug line 1", "debug line 2" }, vim.api.nvim_buf_get_lines(archived_buf, 0, -1, false),
   "archived output should preserve terminal lines")
-assert_equal(archived_buf, hidden_task.strategy.bufnr, "the archive should remain available as task output")
+assert_equal(archived_buf, runtime:get_output_bufnr(hidden_service.key),
+  "the archive should remain available as service output")
 assert_equal(false, vim.api.nvim_buf_is_valid(hidden_dap), "the DAP terminal must be deleted to prevent cross-service reuse")
 
 local stale_terminal = vim.api.nvim_create_buf(false, true)
@@ -228,6 +257,10 @@ assert_equal(false, vim.api.nvim_buf_is_valid(stale_terminal),
   "stale Java terminals should be invalidated so nvim-dap cannot bypass output adoption")
 assert_equal(false, vim.api.nvim_buf_is_valid(stale_other_terminal),
   "the cross-adapter terminal pool must be cleared before output adoption")
+
+runtime:dispose(pending_service.key)
+runtime:dispose(output_service.key)
+runtime:dispose(hidden_service.key)
 
 vim.fn.delete(temp_dir, "rf")
 print("java-debug-tests: ok")

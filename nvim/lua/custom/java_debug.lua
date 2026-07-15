@@ -1,6 +1,6 @@
 local M = {}
 
-local active_task
+local active_service_key
 local active_session
 local active_terminal_buf
 local active_build_process
@@ -12,9 +12,19 @@ local function notify(message, level)
   vim.notify("Java debug: " .. message, level or vim.log.levels.INFO)
 end
 
-local function touch(task)
-  local ok, task_list = pcall(require, "overseer.task_list")
-  if ok then task_list.touch(task) end
+local function service_key(service_or_key)
+  if type(service_or_key) == "table" then return service_or_key.key end
+  return service_or_key
+end
+
+local function get_service(service_or_key)
+  if type(service_or_key) == "table" then return service_or_key end
+  local key = service_key(service_or_key)
+  return key and require("services.runtime").get(key) or nil
+end
+
+local function runtime()
+  return require("services.runtime").instance()
 end
 
 local function append_words(...)
@@ -62,12 +72,12 @@ function M.toolchain_fingerprint(mason_root, extra_bundles)
   return vim.fn.sha256(table.concat(identities, "\n")):sub(1, 12)
 end
 
-function M.launch_config(task)
-  local metadata = task.metadata or {}
+function M.launch_config(service)
+  local metadata = service.metadata or {}
   return {
     type = "java",
     request = "launch",
-    name = "Debug " .. (task.name or vim.fs.basename(metadata.main_class or "Java")),
+    name = "Debug " .. (service.name or vim.fs.basename(metadata.main_class or "Java")),
     mainClass = metadata.main_class,
     projectName = metadata.project_name,
     cwd = metadata.project_root,
@@ -75,8 +85,8 @@ function M.launch_config(task)
   }
 end
 
-function M.debug_build_command(task, profile)
-  local command = vim.deepcopy((task.metadata or {}).debug_build_cmd)
+function M.debug_build_command(service, profile)
+  local command = vim.deepcopy((service.metadata or {}).debug_build_cmd)
   if type(command) ~= "table" or not command[1] then return nil end
 
   local executable = vim.fs.basename(tostring(command[1]))
@@ -86,35 +96,22 @@ function M.debug_build_command(task, profile)
   return command
 end
 
-function M.ensure_output_buffer(task)
-  local strategy = task and task.strategy
-  if not strategy then return nil end
-
-  local bufnr = strategy.bufnr
-  if bufnr and vim.api.nvim_buf_is_valid(bufnr) then return bufnr end
-
-  bufnr = vim.api.nvim_create_buf(false, true)
-  strategy.bufnr = bufnr
-  vim.bo[bufnr].buflisted = false
-  vim.b[bufnr].overseer_task = task.id
-  vim.api.nvim_buf_call(bufnr, function()
-    vim.bo[bufnr].filetype = "OverseerOutput"
-  end)
-  touch(task)
-  return bufnr
+function M.ensure_output_buffer(service_or_key)
+  local key = service_key(service_or_key)
+  return key and runtime():ensure_output(key) or nil
 end
 
-function M.prepare_build(task, profile, callback, runner)
-  local command = M.debug_build_command(task, profile)
+function M.prepare_build(service, profile, callback, runner)
+  local command = M.debug_build_command(service, profile)
   if not command then
     callback(true)
     return
   end
 
-  notify("preparing " .. task.name .. " for Debug")
+  notify("preparing " .. service.name .. " for Debug")
   runner = runner or function(cmd, opts, done) vim.system(cmd, opts, done) end
   return runner(command, {
-    cwd = task.metadata.project_root,
+    cwd = service.metadata.project_root,
     text = true,
   }, function(result)
     vim.schedule(function()
@@ -130,8 +127,8 @@ function M.prepare_build(task, profile, callback, runner)
   end)
 end
 
-function M.enrich_launch_config(task, bufnr, callback, execute)
-  local config = M.launch_config(task)
+function M.enrich_launch_config(service, bufnr, callback, execute)
+  local config = M.launch_config(service)
   local main_class = config.mainClass
   local project_name = config.projectName
   execute = execute or require("jdtls.util").execute_command
@@ -239,51 +236,43 @@ function M.match_config(configs, main_class, module_root, project_name)
   return nil, "multiple launch configurations found for " .. main_class
 end
 
-local function set_debugging(task, debugging)
-  if not task then return end
-  task.metadata = task.metadata or {}
-  task.metadata.debugging = debugging
-  touch(task)
+local function set_debugging(service_or_key, debugging)
+  local key = service_key(service_or_key)
+  if key then runtime():set_debugging(key, debugging) end
 end
 
-function M.adopt_output_buffer(task, bufnr)
-  local strategy = task and task.strategy
-  if not strategy then return nil end
-  local previous_buf = strategy.bufnr
-  strategy.bufnr = bufnr
-
+function M.adopt_output_buffer(service_or_key, bufnr)
+  local key = service_key(service_or_key)
+  if not key or not bufnr or not vim.api.nvim_buf_is_valid(bufnr) then return nil end
+  local service_runtime = runtime()
+  local previous_buf = service_runtime:get_output_bufnr(key)
   local output_win
-  if previous_buf and vim.api.nvim_buf_is_valid(previous_buf) then
+  if previous_buf then
     for _, win in ipairs(vim.api.nvim_list_wins()) do
       if vim.api.nvim_win_get_buf(win) == previous_buf then
         vim.api.nvim_win_set_buf(win, bufnr)
         output_win = output_win or win
       end
     end
-    if previous_buf ~= bufnr then pcall(vim.api.nvim_buf_delete, previous_buf, { force = true }) end
   end
+  service_runtime:replace_output(key, bufnr, { terminal = true })
   return output_win
 end
 
-function M.archive_output_buffer(task, terminal_buf)
-  if not task or not task.strategy or task.strategy.bufnr ~= terminal_buf then return nil end
-  if not terminal_buf or not vim.api.nvim_buf_is_valid(terminal_buf) then return nil end
-
-  local lines = vim.api.nvim_buf_get_lines(terminal_buf, 0, -1, false)
-  local archive_buf = vim.api.nvim_create_buf(false, true)
-  vim.api.nvim_buf_set_lines(archive_buf, 0, -1, false, lines)
-  vim.bo[archive_buf].modifiable = false
-  pcall(vim.api.nvim_buf_set_name, archive_buf, "[dap-log] " .. (task.name or "java-service"))
-  M.adopt_output_buffer(task, archive_buf)
+function M.archive_output_buffer(service_or_key, terminal_buf)
+  local key = service_key(service_or_key)
+  if not key or not terminal_buf or not vim.api.nvim_buf_is_valid(terminal_buf) then return nil end
+  local service_runtime = runtime()
+  if not service_runtime:archive_terminal_output(key, terminal_buf) then return nil end
+  local archive_buf = service_runtime:get_output_bufnr(key)
   pcall(vim.api.nvim_buf_delete, terminal_buf, { force = true })
   return archive_buf
 end
 
 local function archive_active_output()
-  if active_task and active_terminal_buf then
-    M.archive_output_buffer(active_task, active_terminal_buf)
+  if active_service_key and active_terminal_buf then
+    M.archive_output_buffer(active_service_key, active_terminal_buf)
     active_terminal_buf = nil
-    touch(active_task)
   end
 end
 
@@ -319,15 +308,14 @@ function M.setup()
   listeners_configured = true
 
   local function terminal_win_cmd(config)
-    if not active_task or config.__spring_service_task_key ~= active_task.metadata.task_key then
+    if not active_service_key or config.__service_key ~= active_service_key then
       return default_terminal_buffer()
     end
 
     local bufnr = vim.api.nvim_create_buf(false, true)
-    local output_win = M.adopt_output_buffer(active_task, bufnr)
+    local output_win = M.adopt_output_buffer(active_service_key, bufnr)
     active_terminal_buf = bufnr
     vim.bo[bufnr].scrollback = 10000
-    touch(active_task)
     return bufnr, output_win
   end
   dap.defaults.java.terminal_win_cmd = terminal_win_cmd
@@ -339,15 +327,15 @@ function M.setup()
   local function clear_debugging(session)
     if session and not belongs_to_service(session) then return end
     archive_active_output()
-    set_debugging(active_task, false)
-    active_task = nil
+    set_debugging(active_service_key, false)
+    active_service_key = nil
     active_session = nil
     active_build_process = nil
     launch_token = nil
   end
 
   dap.listeners.on_session.spring_services = function(_, new)
-    if new and active_task and new.config and new.config.__spring_service_task_key == active_task.metadata.task_key then
+    if new and active_service_key and new.config and new.config.__service_key == active_service_key then
       active_session = new
       pending_config = nil
       new.on_close.spring_services = function(session)
@@ -358,17 +346,18 @@ function M.setup()
   dap.listeners.after.event_initialized.spring_services = function(session)
     if belongs_to_service(session) then
       launch_token = nil
-      set_debugging(active_task, true)
+      set_debugging(active_service_key, true)
     end
   end
 end
 
-function M.is_debugging(task)
-  return active_task == task and (launch_token ~= nil or active_session ~= nil)
+function M.is_debugging(service_or_key)
+  return active_service_key == service_key(service_or_key) and (launch_token ~= nil or active_session ~= nil)
 end
 
-function M.terminate(task, callback)
-  if not M.is_debugging(task) then
+function M.terminate(service_or_key, callback)
+  local key = service_key(service_or_key)
+  if not M.is_debugging(key) then
     if callback then callback() end
     return false
   end
@@ -380,18 +369,18 @@ function M.terminate(task, callback)
   end
   local dap = require("dap")
   if not active_session then
-    set_debugging(active_task, false)
-    active_task = nil
+    set_debugging(active_service_key, false)
+    active_service_key = nil
     if callback then vim.schedule(callback) end
     return true
   end
   if dap.session() ~= active_session then dap.set_session(active_session) end
   dap.terminate({
     on_done = function()
-      if active_task == task then
+      if active_service_key == key then
         archive_active_output()
-        set_debugging(active_task, false)
-        active_task = nil
+        set_debugging(active_service_key, false)
+        active_service_key = nil
         active_session = nil
       end
       if callback then vim.schedule(callback) end
@@ -401,14 +390,19 @@ function M.terminate(task, callback)
 end
 
 function M.terminate_active()
-  if active_task then return M.terminate(active_task) end
+  if active_service_key then return M.terminate(active_service_key) end
   require("dap").terminate()
   return true
 end
 
-function M.start(task)
+function M.start(service_or_key)
   M.setup()
-  local metadata = task.metadata or {}
+  local service = get_service(service_or_key)
+  if not service or not service.key then
+    notify("service metadata is incomplete; reopen the Services panel", vim.log.levels.ERROR)
+    return
+  end
+  local metadata = service.metadata or {}
   local root = metadata.project_root
   local main_class = metadata.main_class
   local source = metadata.source
@@ -423,7 +417,7 @@ function M.start(task)
   end
 
   local dap = require("dap")
-  if active_task then
+  if active_service_key then
     notify("a service debug launch is already active; terminate it with <leader>dt first", vim.log.levels.WARN)
     return
   end
@@ -449,49 +443,49 @@ function M.start(task)
 
   local token = {}
   launch_token = token
-  active_task = task
-  M.ensure_output_buffer(task)
+  active_service_key = service.key
+  M.ensure_output_buffer(service.key)
   vim.defer_fn(function()
-    if launch_token ~= token or active_task ~= task then return end
+    if launch_token ~= token or active_service_key ~= service.key then return end
     notify("launch preparation timed out; check the build and jdtls import, then try again", vim.log.levels.ERROR)
-    M.terminate(task)
+    M.terminate(service.key)
   end, 120000)
 
-  local profile = require("overseer.service_state").get_profile(root)
+  local profile = require("services.state").get_profile(root)
   local function launch()
-    M.enrich_launch_config(task, bufnr, function(config, enrich_err)
+    M.enrich_launch_config(service, bufnr, function(config, enrich_err)
       vim.schedule(function()
-        if launch_token ~= token or active_task ~= task then return end
+        if launch_token ~= token or active_service_key ~= service.key then return end
         if not config then
-          active_task = nil
+          active_service_key = nil
           launch_token = nil
           notify(enrich_err, vim.log.levels.ERROR)
           return
         end
         local resolved, config_err = M.resolve_config(config, root, main_class, profile)
         if not resolved then
-          active_task = nil
+          active_service_key = nil
           launch_token = nil
           notify(config_err, vim.log.levels.ERROR)
           return
         end
         M.start_debug_adapter(bufnr, function(port, adapter_err)
           vim.schedule(function()
-            if launch_token ~= token or active_task ~= task then return end
+            if launch_token ~= token or active_service_key ~= service.key then return end
             if not port then
-              active_task = nil
+              active_service_key = nil
               launch_token = nil
               notify(adapter_err, vim.log.levels.ERROR)
               return
             end
             resolved.type = "java_service"
-            resolved.__spring_service_task_key = metadata.task_key
+            resolved.__service_key = service.key
             dap.adapters.java_service = { type = "server", host = "127.0.0.1", port = port }
             pending_config = resolved
             vim.api.nvim_buf_call(bufnr, function()
               local ok_run, run_err = pcall(dap.run, resolved)
               if not ok_run then
-                active_task = nil
+                active_service_key = nil
                 launch_token = nil
                 pending_config = nil
                 notify(tostring(run_err), vim.log.levels.ERROR)
@@ -503,23 +497,19 @@ function M.start(task)
     end)
   end
 
-  if task.status == "PENDING" and not task.time_start then
-    local build_process
-    build_process = M.prepare_build(task, profile, function(ok, build_err)
-      if active_build_process == build_process then active_build_process = nil end
-      if launch_token ~= token or active_task ~= task then return end
-      if not ok then
-        active_task = nil
-        launch_token = nil
-        notify("build preparation failed: " .. build_err, vim.log.levels.ERROR)
-        return
-      end
-      launch()
-    end)
-    active_build_process = build_process
-  else
+  local build_process
+  build_process = M.prepare_build(service, profile, function(ok, build_err)
+    if active_build_process == build_process then active_build_process = nil end
+    if launch_token ~= token or active_service_key ~= service.key then return end
+    if not ok then
+      active_service_key = nil
+      launch_token = nil
+      notify("build preparation failed: " .. build_err, vim.log.levels.ERROR)
+      return
+    end
     launch()
-  end
+  end)
+  active_build_process = build_process
 end
 
 return M

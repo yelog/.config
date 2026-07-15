@@ -449,26 +449,26 @@ map({"n", "t"}, "<C-g>", function() Snacks.lazygit() end, { desc = "Toggle Lazyg
 -- toggleterm
 map({ "n", "t", "i", "v" }, "<D-2>", function() vim.cmd("ToggleTerm") end, { desc = "Toggle terminal" })
 
--- overseer (services panel)
-map("n", "<leader>oo", function() vim.cmd("OverseerToggle") end, { desc = "Toggle services panel" })
+-- services panel
+map("n", "<leader>oo", function() vim.cmd("ServicesToggle") end, { desc = "Toggle services panel" })
 map("n", "<leader>os", function()
-  local overseer = require("overseer")
-  for _, task in ipairs(overseer.list_tasks({})) do
-    if task.metadata and task.metadata.service then
-      if not require("custom.java_debug").terminate(task) and task.status == "RUNNING" then
-        task:stop()
-      end
+  local runtime = require("services.runtime")
+  local java_debug = require("custom.java_debug")
+  for _, service in ipairs(runtime.list()) do
+    if java_debug.is_debugging(service.key) then
+      java_debug.terminate(service.key)
+    else
+      runtime.stop(service.key)
     end
   end
 end, { desc = "Stop all services" })
 map("n", "<leader>oa", function()
-  local overseer = require("overseer")
-  for _, task in ipairs(overseer.list_tasks({})) do
-    if task.metadata and task.metadata.service
-      and task.status ~= "RUNNING"
-      and not require("custom.java_debug").is_debugging(task) then
-      task:reset()
-      task:start()
+  local runtime = require("services.runtime")
+  local java_debug = require("custom.java_debug")
+  local state = require("services.state")
+  for _, service in ipairs(runtime.list()) do
+    if not java_debug.is_debugging(service.key) then
+      runtime.start(service.key, { profile = state.get_profile(service.metadata.project_root) })
     end
   end
 end, { desc = "Start all services" })

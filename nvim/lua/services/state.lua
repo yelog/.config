@@ -77,8 +77,7 @@ local function save_state(state)
     return false
   end
 
-  local renamed = vim.uv.fs_rename(temp_path, state_path)
-  if not renamed then
+  if not vim.uv.fs_rename(temp_path, state_path) then
     pcall(vim.fn.delete, temp_path)
     return false
   end
@@ -101,8 +100,7 @@ end
 
 function M.set_profile(project_root, profile)
   local root = normalize_root(project_root)
-  if not root then return false end
-  if profile ~= nil and type(profile) ~= "string" then return false end
+  if not root or (profile ~= nil and type(profile) ~= "string") then return false end
 
   local lock_path = acquire_lock()
   if not lock_path then return false end
@@ -111,11 +109,7 @@ function M.set_profile(project_root, profile)
     local state = load_state()
     local project = state.projects[root]
     if type(project) ~= "table" then project = {} end
-    if not profile or profile == "" then
-      project.profile = nil
-    else
-      project.profile = vim.trim(profile)
-    end
+    project.profile = profile and vim.trim(profile) ~= "" and vim.trim(profile) or nil
     state.projects[root] = project
     return save_state(state)
   end)
