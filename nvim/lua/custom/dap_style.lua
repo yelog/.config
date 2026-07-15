@@ -8,6 +8,15 @@ local signs = {
   DapStopped = { text = "▶", hl = "DapStopped", linehl = "DapStoppedLine" },
 }
 
+local jb_highlights = {
+  DapBreakpoint = { fg = "#F0524F", bold = true },
+  DapBreakpointCondition = { fg = "#EBC66D", bold = true },
+  DapBreakpointRejected = { fg = "#F75464", bold = true },
+  DapLogPoint = { fg = "#56A8F5", bold = true },
+  DapStopped = { fg = "#E0BB65", bold = true },
+  DapStoppedLine = { bg = "#3C3225" },
+}
+
 function M.apply_highlights(highlights, colors)
   local blend = require("tokyonight.util").blend
   highlights.DapBreakpoint = { fg = colors.red, bold = true }
@@ -16,6 +25,12 @@ function M.apply_highlights(highlights, colors)
   highlights.DapLogPoint = { fg = colors.blue, bold = true }
   highlights.DapStopped = { fg = colors.yellow, bold = true }
   highlights.DapStoppedLine = { bg = blend(colors.yellow, 0.18, colors.bg) }
+end
+
+function M.apply_jb_highlights()
+  for group, highlight in pairs(jb_highlights) do
+    vim.api.nvim_set_hl(0, group, highlight)
+  end
 end
 
 function M.apply_signs()

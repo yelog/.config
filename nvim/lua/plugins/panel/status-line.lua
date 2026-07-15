@@ -155,25 +155,43 @@ return {
     config = function()
       local conditions = require("heirline.conditions")
       local utils = require("heirline.utils")
-      local colors = {
-        bright_bg = utils.get_highlight("Folded").bg,
-        bright_fg = utils.get_highlight("Folded").fg,
-        red = utils.get_highlight("DiagnosticError").fg,
-        dark_red = utils.get_highlight("DiffDelete").bg,
-        green = utils.get_highlight("String").fg,
-        blue = utils.get_highlight("Function").fg,
-        gray = utils.get_highlight("NonText").fg,
-        orange = utils.get_highlight("Constant").fg,
-        purple = utils.get_highlight("Statement").fg,
-        cyan = utils.get_highlight("Special").fg,
-        diag_warn = utils.get_highlight("DiagnosticWarn").fg,
-        diag_error = utils.get_highlight("DiagnosticError").fg,
-        diag_hint = utils.get_highlight("DiagnosticHint").fg,
-        diag_info = utils.get_highlight("DiagnosticInfo").fg,
-        git_del = utils.get_highlight("diffDeleted").fg,
-        git_add = utils.get_highlight("diffAdded").fg,
-        git_change = utils.get_highlight("diffChanged").fg,
-      }
+      local function highlight_color(name, field, fallbacks)
+        local color = utils.get_highlight(name)[field]
+        if color then
+          return color
+        end
+
+        for _, fallback in ipairs(fallbacks) do
+          color = utils.get_highlight(fallback)[field]
+          if color then
+            return color
+          end
+        end
+      end
+
+      local function setup_colors()
+        return {
+          bright_bg = highlight_color("Folded", "bg", { "StatusLine", "Normal" }),
+          bright_fg = highlight_color("Folded", "fg", { "Normal" }),
+          red = highlight_color("DiagnosticError", "fg", { "ErrorMsg", "Normal" }),
+          dark_red = highlight_color("DiffDelete", "bg", { "StatusLine", "Normal" }),
+          green = highlight_color("String", "fg", { "Normal" }),
+          blue = highlight_color("Function", "fg", { "Normal" }),
+          gray = highlight_color("NonText", "fg", { "Normal" }),
+          orange = highlight_color("Constant", "fg", { "Normal" }),
+          purple = highlight_color("Statement", "fg", { "Normal" }),
+          cyan = highlight_color("Special", "fg", { "Normal" }),
+          diag_warn = highlight_color("DiagnosticWarn", "fg", { "Normal" }),
+          diag_error = highlight_color("DiagnosticError", "fg", { "Normal" }),
+          diag_hint = highlight_color("DiagnosticHint", "fg", { "Normal" }),
+          diag_info = highlight_color("DiagnosticInfo", "fg", { "Normal" }),
+          git_del = highlight_color("diffDeleted", "fg", { "GitSignsDelete", "DiagnosticError" }),
+          git_add = highlight_color("diffAdded", "fg", { "GitSignsAdd", "String" }),
+          git_change = highlight_color("diffChanged", "fg", { "GitSignsChange", "Function" }),
+        }
+      end
+
+      local colors = setup_colors()
       local Git = {
         condition = conditions.is_git_repo,
 
@@ -747,28 +765,6 @@ return {
       -- Yep, with heirline we're driving manual!
       vim.o.showtabline = 2
       vim.cmd([[au FileType * if index(['wipe', 'delete'], &bufhidden) >= 0 | set nobuflisted | endif]])
-      local function setup_colors()
-        return {
-          bright_bg = utils.get_highlight("Folded").bg,
-          bright_fg = utils.get_highlight("Folded").fg,
-          red = utils.get_highlight("DiagnosticError").fg,
-          dark_red = utils.get_highlight("DiffDelete").bg,
-          green = utils.get_highlight("String").fg,
-          blue = utils.get_highlight("Function").fg,
-          gray = utils.get_highlight("NonText").fg,
-          orange = utils.get_highlight("Constant").fg,
-          purple = utils.get_highlight("Statement").fg,
-          cyan = utils.get_highlight("Special").fg,
-          diag_warn = utils.get_highlight("DiagnosticWarn").fg,
-          diag_error = utils.get_highlight("DiagnosticError").fg,
-          diag_hint = utils.get_highlight("DiagnosticHint").fg,
-          diag_info = utils.get_highlight("DiagnosticInfo").fg,
-          git_del = utils.get_highlight("diffDeleted").fg,
-
-          git_add = utils.get_highlight("diffAdded").fg,
-          git_change = utils.get_highlight("diffChanged").fg,
-        }
-      end
 
       -- require("heirline").load_colors(setup_colors)
       -- or pass it to config.opts.colors

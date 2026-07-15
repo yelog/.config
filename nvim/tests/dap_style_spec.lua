@@ -46,6 +46,21 @@ assert_equal({ fg = "#e0af68", bold = true }, highlights.DapStopped,
 assert_equal("#e0af68:0.18:#1a1b26", highlights.DapStoppedLine.bg,
   "the stopped location should have a low-saturation line background")
 
+dap_style.apply_jb_highlights()
+local jb_breakpoint = vim.api.nvim_get_hl(0, { name = "DapBreakpoint" })
+local jb_condition = vim.api.nvim_get_hl(0, { name = "DapBreakpointCondition" })
+local jb_rejected = vim.api.nvim_get_hl(0, { name = "DapBreakpointRejected" })
+local jb_log_point = vim.api.nvim_get_hl(0, { name = "DapLogPoint" })
+local jb_stopped = vim.api.nvim_get_hl(0, { name = "DapStopped" })
+local jb_stopped_line = vim.api.nvim_get_hl(0, { name = "DapStoppedLine" })
+
+assert_equal(0xF0524F, jb_breakpoint.fg, "JB breakpoints should use the error color")
+assert_equal(0xEBC66D, jb_condition.fg, "JB conditional breakpoints should use the warning color")
+assert_equal(0xF75464, jb_rejected.fg, "JB rejected breakpoints should use the muted error color")
+assert_equal(0x56A8F5, jb_log_point.fg, "JB log points should use the info color")
+assert_equal(0xE0BB65, jb_stopped.fg, "JB stopped locations should use the warning color")
+assert_equal(0x3C3225, jb_stopped_line.bg, "JB stopped locations should have a muted warning background")
+
 dap_style.apply_signs()
 local expected_signs = {
   DapBreakpoint = { text = "●", hl = "DapBreakpoint" },
