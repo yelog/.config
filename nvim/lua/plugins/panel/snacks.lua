@@ -7,72 +7,7 @@ return {
     picker = {
       enabled = true,
       sources = {
-        grep = {
-          preview = function(ctx)
-            local file = ctx.item.file
-            local cwd = ctx.item.cwd or vim.uv.cwd()
-            local relative = file and (vim.fs.relpath(cwd, file) or file) or nil
-            ctx.item.title = relative
-
-            if relative then
-              local filename = vim.fn.fnamemodify(relative, ":t")
-              local directory = vim.fn.fnamemodify(relative, ":h")
-              local icon, icon_hl = Snacks.util.icon(filename, "file", {
-                fallback = ctx.picker.opts.icons.files,
-              })
-              local title = {
-                { icon .. " ", icon_hl },
-                { filename, "SnacksPickerFile" },
-              }
-              if directory ~= "." then
-                title[#title + 1] = { string.rep("\194\160", 3) .. directory, "SnacksPickerComment" }
-              end
-              ctx.picker.layout.wins.preview.meta.title_tpl = title
-            end
-
-            Snacks.picker.preview.file(ctx)
-          end,
-          format = function(item)
-            local ret = {}
-
-            if item.line then
-              Snacks.picker.highlight.format(item, item.line, ret)
-              for _, pos in ipairs(item.positions or {}) do
-                ret[#ret + 1] = {
-                  col = pos - 1,
-                  end_col = pos,
-                  hl_group = "SnacksPickerSearch",
-                  priority = 200,
-                }
-              end
-            end
-
-            if item.file then
-              ret[#ret + 1] = {
-                col = 0,
-                virt_text = { { vim.fn.fnamemodify(item.file, ":t"), "SnacksPickerComment" } },
-                virt_text_pos = "right_align",
-                hl_mode = "combine",
-              }
-            end
-
-            return ret
-          end,
-          layout = {
-            layout = {
-              box = "vertical",
-              width = 0.8,
-              height = 0.85,
-              {
-                box = "vertical",
-                height = 0.4,
-                { win = "input", height = 1, border = true, title = "{title} {live} {flags}", title_pos = "center" },
-                { win = "list", border = true, title = "Results", title_pos = "left" },
-              },
-              { win = "preview", height = 0.6, border = true, title = "{preview}", title_pos = "left" },
-            },
-          },
-        },
+        grep = require("custom.project_search").source(),
       },
     },
     bigfile = { enabled = true },
