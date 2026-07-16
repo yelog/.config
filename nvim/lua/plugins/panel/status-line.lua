@@ -522,7 +522,6 @@ return {
         update = { "User", "BufEnter", "BufWritePost", "TextChanged", "TextChangedI", "FocusGained", "TermClose", "VimResume" },
         hl = function(self)
           -- 获取当前 buf 文件在 git 中的状态（逐个 buffer）
-          local bg = self.is_active and "#3b4261" or utils.get_highlight("TabLine").bg
           local underline = self.is_active and true or false
 
           -- 使用每个 buffer 的 changedtick 做轻量缓存，避免重复执行外部命令
@@ -534,7 +533,7 @@ return {
               and cache.tick == tick
               and cache.gen == gen
               and cache.filename == self.filename then
-            return { fg = cache.fg, bg = bg, bold = true, underline = underline }
+            return { fg = cache.fg, bold = true, underline = underline }
           end
 
           -- 如果你在此处调试想看触发频率，建议只在 changedtick 变化时提示：
@@ -638,7 +637,7 @@ return {
             fg = fg,
           })
 
-          return { fg = fg, bg = bg, bold = true, underline = underline }
+          return { fg = fg, bold = true, underline = underline }
         end,
         on_click = {
           callback = function(_, minwid, _, button)
@@ -685,14 +684,27 @@ return {
       --   },
       -- }
 
-      -- The final touch! 文字和左右两侧的分隔符的背景色
-      local TablineBufferBlock = utils.surround({ "", "" }, function(self)
-        if self.is_active then
-          return "#3b4261" -- 深蓝色背景，与 tokyonight 主题协调
-        else
-          return utils.get_highlight("TabLine").bg
-        end
-      end, { TablineFileNameBlock })
+      -- The final touch! 文字和左右两侧的填充背景色
+      local function tabline_background(self)
+        local tabline_bg = utils.get_highlight("TabLine").bg
+        if not self.is_active then return tabline_bg end
+
+        return utils.get_highlight("PmenuSel").bg
+          or utils.get_highlight("TabLineSel").bg
+          or utils.get_highlight("CursorLine").bg
+          or tabline_bg
+      end
+
+      local TablineBufferBlock = {
+        hl = function(self)
+          return {
+            bg = tabline_background(self),
+          }
+        end,
+        { provider = " " },
+        TablineFileNameBlock,
+        { provider = " " },
+      }
 
       -- and here we go
       local BufferLine = utils.make_buflist(
