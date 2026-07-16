@@ -52,6 +52,8 @@ require("lazy").setup({
   }
 })
 
+require("custom.theme").setup()
+
 require("key-map")
 require("custom-color")
 require("custom.run-file")

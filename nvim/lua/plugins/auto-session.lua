@@ -58,7 +58,7 @@ return {
     },
     config = function(_, opts)
       local resession = require("resession")
-      resession.setup()
+      resession.setup(opts)
       -- Resession does NOTHING automagically, so we have to set up some keymaps
       vim.keymap.set("n", "<leader>ss", resession.save)
       vim.keymap.set("n", "<leader>sl", resession.load)

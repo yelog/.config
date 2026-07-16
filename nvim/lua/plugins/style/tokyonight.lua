@@ -54,6 +54,5 @@ return {
       --   hl.markdownStrike = { fg = "#939393", strikethrough = true }
       end,
     })
-    vim.cmd([[colorscheme tokyonight]])
   end,
 }
