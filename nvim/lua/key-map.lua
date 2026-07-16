@@ -445,7 +445,7 @@ map("n", "<C-e>", function()
     require("yazi").yazi()
   end
 end, { desc = "Toggle Yazi" })
-map("n", "<leader>te", function() vim.cmd("Yazi") end, { desc = "Open Yazi" })
+map("n", "<leader>te", "<cmd>Neotree left toggle<cr>", { desc = "Toggle Neo-tree" })
 
 -- lazygit
 map({"n", "t"}, "<C-g>", function() Snacks.lazygit() end, { desc = "Toggle Lazygit" })
