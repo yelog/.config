@@ -13,6 +13,16 @@ return {
     end, { desc = "Open services panel", force = true })
   end,
   config = function()
-    require("overseer").setup({})
+    require("overseer").setup({
+      output = {
+        use_terminal = true,
+        preserve_output = true,
+      },
+      task_list = {
+        direction = "bottom",
+        min_height = 10,
+        max_height = { 24, 0.35 },
+      },
+    })
   end,
 }

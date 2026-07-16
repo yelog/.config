@@ -96,6 +96,18 @@ return {
     -- When dev is true, This plugin will use {config.dev.path}/markdown-preview.nvim/ instead of fetching it from GitHub https://lazy.folke.io/spec/examples
     -- {config.dev.path} configed by lazy.nvim in init.lua
     dev = true,
+    init = function()
+      vim.api.nvim_create_autocmd("FileType", {
+        group = vim.api.nvim_create_augroup("marklive_buffer_keymaps", { clear = true }),
+        pattern = { "markdown", "Avante" },
+        callback = function(args)
+          vim.keymap.set({ "n", "v" }, "<CR>", "<cmd>MarkliveTaskToggle<cr>", {
+            buffer = args.buf,
+            desc = "Marklive toggle task",
+          })
+        end,
+      })
+    end,
     keys = {
       { "<leader>ta",  function() Marklive.table_align() end,            desc = "Align markdown table" },
       { "<leader>tir", function() Marklive.table_insert_row_below() end, desc = "Insert row below (table body)" },

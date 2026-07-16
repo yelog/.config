@@ -95,30 +95,7 @@ return {
       end
 
       local capabilities = require("blink.cmp").get_lsp_capabilities()
-      local runtimes = {}
-
-      -- 支持多版本 Java 运行时配置
-      -- 优先使用 JAVA_HOME 环境变量，然后尝试 JAVA_HOME_<version>
-      if vim.env.JAVA_HOME and vim.fn.isdirectory(vim.env.JAVA_HOME) == 1 then
-        table.insert(runtimes, {
-          name = "JavaSE-21",
-          path = vim.env.JAVA_HOME,
-          default = true,
-        })
-      end
-
-      -- 支持从环境变量读取多个 Java版本
-      local java_versions = { "8", "11", "17", "21" }
-      for _, version in ipairs(java_versions) do
-        local home = os.getenv("JAVA_HOME_" .. version)
-        if home and vim.fn.isdirectory(home) == 1 then
-          table.insert(runtimes, {
-            name = "JavaSE-" .. version,
-            path = home,
-            default = (version == "21"),
-          })
-        end
-      end
+      local runtimes, launcher_home = require("custom.java_runtime").discover()
 
       local java_debug = require("custom.java_debug")
       local spring_bundles = require("spring_boot").java_extensions()
@@ -135,6 +112,7 @@ return {
       local base_config = {
         capabilities = capabilities,
         on_attach = on_attach,
+        cmd_env = launcher_home and { JAVA_HOME = launcher_home } or nil,
         settings = {
           java = {
             configuration = {
@@ -232,6 +210,10 @@ return {
       }
 
       local function start_or_attach(bufnr)
+        if not launcher_home then
+          vim.notify("jdtls: Java 21 or newer is required; set JAVA_HOME_21 or JAVA_HOME", vim.log.levels.ERROR)
+          return
+        end
         local root_dir = find_root(bufnr)
         if not root_dir then
           vim.notify("jdtls: no Maven, Gradle, Ant, or Git project root found", vim.log.levels.WARN)

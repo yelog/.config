@@ -196,9 +196,6 @@ cnoremap <C-p> <Up>
 " find and replace
 noremap \s :%s/<c-r><c-w>/<c-r><c-w>/gI<left><left><left>
 
-" set wrap
-noremap <LEADER>sw :set wrap!<CR>
-
 " 剪贴板
 " 打通复制寄存器和粘贴板
 " set clipboard=unnamedplus

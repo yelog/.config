@@ -5,14 +5,16 @@ return {
     "neovim/nvim-lspconfig",
     config = function()
       vim.diagnostic.config({
-        virtual_lines = false, -- 在行尾显示诊断信息
-        -- virtual_text = {
-        --   spacing = 4, -- 行尾 diagnostic 与代码之间的间距
-        --   severity = vim.diagnostic.severity.ERROR, -- 行内只显示 ERROR 级别
-        --   source = "always", -- 显示 diagnostic 来源
-        --   prefix = "●", -- 行尾前缀符号，可自定义
-        -- },
-        signs = false,            -- 是否在左侧显示符号
+        virtual_lines = false,
+        virtual_text = {
+          spacing = 2,
+          severity = vim.diagnostic.severity.ERROR,
+          source = "if_many",
+          prefix = "●",
+        },
+        signs = {
+          severity = { min = vim.diagnostic.severity.WARN },
+        },
         underline = true,         -- 是否下划线标记
         update_in_insert = false, -- 插入模式下是否更新 diagnostic
         severity_sort = true,
@@ -25,6 +27,7 @@ return {
           if client and client.supports_method("textDocument/codeLens") then
             vim.lsp.codelens.refresh()
             vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+              group = vim.api.nvim_create_augroup("lsp_codelens_" .. args.buf, { clear = true }),
               buffer = args.buf,
               callback = vim.lsp.codelens.refresh,
             })
@@ -141,6 +144,9 @@ return {
       ensure_installed = {
         "java-debug-adapter",
         "java-test",
+        "prettier",
+        "stylua",
+        "vscode-spring-boot-tools",
       },
       auto_update = false,
       run_on_start = true,
@@ -166,7 +172,6 @@ return {
           "vimls",
           "jdtls",
           "lemminx",
-          "copilot",
           "cssls",
           "html",
           -- "kotlin_lsp",
@@ -207,7 +212,7 @@ return {
           if not require('i18n').show_popup() then
             vim.lsp.buf.signature_help()
           end
-        end, { desc = "i18n popup or signature help" })
+        end, { desc = "i18n popup or signature help", buffer = bufnr })
 
         vim.keymap.set("n", "<leader>wa", vim.lsp.buf.add_workspace_folder, bufopts)
         vim.keymap.set("n", "<leader>wr", vim.lsp.buf.remove_workspace_folder, bufopts)
@@ -249,6 +254,11 @@ return {
       -- Set up lspconfig.
       -- local capabilities = require("cmp_nvim_lsp").default_capabilities()
       local capabilities = require('blink.cmp').get_lsp_capabilities()
+      vim.lsp.config('*', {
+        on_attach = on_attach,
+        flags = lsp_flags,
+        capabilities = capabilities,
+      })
       vim.lsp.enable('marksman')
       vim.lsp.config('jsonls', {
         on_attach = on_attach,
@@ -284,8 +294,7 @@ return {
       -- local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
       -- or even
       -- local vue_language_server_path = vim.fn.stdpath('data') .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
-      local vue_language_server_path = vim.fn.expand '$MASON/packages' ..
-          '/vue-language-server' .. '/node_modules/@vue/language-server'
+      local vue_language_server_path = vim.fn.stdpath("data") .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
       local vue_plugin = {
         name = '@vue/typescript-plugin',
         location = vue_language_server_path,
@@ -308,18 +317,6 @@ return {
       })
       vim.lsp.enable('vtsls')
 
-      vim.lsp.config('vue_ls', {
-        -- add filetypes for typescript, javascript and vue
-        filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
-        on_attach = on_attach,
-        capabilities = capabilities,
-        init_options = {
-          vue = {
-            -- disable hybrid mode
-            hybridMode = false,
-          },
-        },
-      })
       vim.lsp.enable('vue_ls')
 
       vim.lsp.enable('tailwindcss')
@@ -327,7 +324,6 @@ return {
       vim.lsp.enable('vimls')
       -- jdtls is managed by nvim-jdtls (see plugins/lsp/jdtls.lua)
       vim.lsp.enable('lemminx')
-      vim.lsp.enable('copilot')
       vim.lsp.enable('cssls')
       vim.lsp.enable('html')
       -- vim.lsp.enable('kotlin_lsp')
@@ -339,15 +335,6 @@ return {
                 ignoreMultilineInstructions = true,
               },
             },
-          }
-        }
-      })
-      vim.lsp.config('rust_analyzer', {
-        settings = {
-          ['rust-analyzer'] = {
-            diagnostics = {
-              enable = false,
-            }
           }
         }
       })

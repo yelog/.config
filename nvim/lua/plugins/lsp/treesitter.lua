@@ -22,6 +22,8 @@ return {
           "markdown_inline",
           "html",
           "css",
+          "rust",
+          "toml",
         },
         sync_install = false,
         auto_install = true,

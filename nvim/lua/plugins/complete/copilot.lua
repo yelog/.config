@@ -14,9 +14,6 @@ return {
   -- },
   {
     "zbirenbaum/copilot.lua",
-    dependencies = {
-      "copilotlsp-nvim/copilot-lsp", -- (optional) for NES functionality
-    },
     cmd = "Copilot",
     event = "InsertEnter",
     config = function()
@@ -38,19 +35,7 @@ return {
           },
         },
         suggestion = {
-          enabled = true,
-          auto_trigger = true,
-          hide_during_completion = true,
-          debounce = 75,
-          keymap = {
-            -- accept = "<D-Right>",
-            accept = "<Tab>",
-            accept_word = false,
-            accept_line = false,
-            next = "<D-]>",
-            prev = "<D-[>",
-            dismiss = "<C-]>",
-          },
+          enabled = false,
         },
         filetypes = {
           yaml = true,

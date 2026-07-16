@@ -16,6 +16,7 @@ if ok then
     { "<leader>d", group = "Debug" },
     { "<leader>c", group = "Code" },
     { "<leader>b", group = "Buffer" },
+    { "<leader>x", group = "Tasks" },
   })
 end
 
@@ -81,7 +82,6 @@ map("v", "<D-/>", function()
 end, { desc = "Toggle comment" })
 
 -- format
-local format_filetypes_with_eslint = { "javascript", "typescript", "vue" }
 local markdown_code_block_filetypes = {
   js = "javascript",
   javascript = "javascript",
@@ -104,35 +104,6 @@ local markdown_code_block_extensions = {
   sh = "sh",
   vue = "vue",
 }
-
-local markdown_code_block_lsp_servers = {
-  javascript = "vtsls",
-  typescript = "vtsls",
-  json = "jsonls",
-}
-
-local function has_lsp_formatter(bufnr)
-  for _, client in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
-    if client:supports_method("textDocument/formatting", bufnr) then
-      return true
-    end
-  end
-  return false
-end
-
-local function start_code_block_lsp(bufnr, filetype)
-  local server = markdown_code_block_lsp_servers[filetype]
-  if not server then
-    return
-  end
-
-  local config = vim.lsp.config[server]
-  if not config then
-    return
-  end
-
-  vim.lsp.start(config, { bufnr = bufnr })
-end
 
 local function find_markdown_code_block()
   local cursor_line = vim.fn.line(".")
@@ -200,20 +171,7 @@ local function format_temp_buffer_sync(lines, filetype)
   local ok, formatted_lines = pcall(function()
     vim.api.nvim_win_set_buf(original_win, temp_buf)
     vim.bo[temp_buf].filetype = filetype
-    start_code_block_lsp(temp_buf, filetype)
-    vim.wait(2000, function()
-      return has_lsp_formatter(temp_buf)
-    end, 50)
-
-    if my.is_include(filetype, format_filetypes_with_eslint) and vim.fn.exists(":LspEslintFixAll") == 2 then
-      pcall(vim.cmd, "LspEslintFixAll")
-    end
-
-    if not has_lsp_formatter(temp_buf) then
-      error("no LSP formatter for " .. filetype)
-    end
-
-    vim.lsp.buf.format({ async = false, timeout_ms = 3000 })
+    require("custom.format").format({ bufnr = temp_buf, async = false, timeout_ms = 3000 })
     return vim.api.nvim_buf_get_lines(temp_buf, 0, -1, false)
   end)
 
@@ -258,20 +216,14 @@ local function format_markdown_code_block()
 end
 
 map("n", "<D-s>", function()
-  if vim.bo.filetype == "markdown" then
-    if not format_markdown_code_block() then
-      Marklive.table_align()
-    end
-  elseif my.is_include(vim.bo.filetype, format_filetypes_with_eslint) then
-    vim.cmd("LspEslintFixAll")
-  else
-    vim.lsp.buf.format({ async = true })
-  end
+  require("custom.format").format({ markdown_code_block = format_markdown_code_block })
 end, { desc = "Format code" })
 
 map({ "n", "v" }, "<leader>ll", function()
-  vim.lsp.buf.format({ async = true })
+  require("custom.format").format({ markdown_code_block = format_markdown_code_block })
 end, { desc = "Format code" })
+map("n", "<leader>ld", function() Snacks.picker.diagnostics_buffer() end, { desc = "Buffer diagnostics" })
+map("n", "<leader>lD", function() Snacks.picker.diagnostics() end, { desc = "Workspace diagnostics" })
 
 -- fzf-lua（全部改成 function() ... end）
 map("n", "<D-S-M>", function()
@@ -419,9 +371,6 @@ end, { desc = "Search word (visual)" })
 -- kulala
 map("n", "<leader>ce", function() require("kulala").set_selected_env() end, { desc = "Select kulala env" })
 
--- autosession
-map("n", "<leader>sd", function() vim.cmd("Autosession delete") end, { desc = "Delete session" })
-
 -- aerial
 map("n", "<leader>ts", function() vim.cmd("AerialToggle") end, { desc = "Toggle structure (Aerial)" })
 
@@ -477,29 +426,18 @@ map("n", "<leader>oa", function()
   end
 end, { desc = "Start all services" })
 
+-- finite project tasks
+map("n", "<leader>xn", function() require("custom.task_runner").run("nearest") end, { desc = "Test nearest" })
+map("n", "<leader>xf", function() require("custom.task_runner").run("file") end, { desc = "Test file/class" })
+map("n", "<leader>xa", function() require("custom.task_runner").run("all") end, { desc = "Test all" })
+map("n", "<leader>xr", function() require("custom.task_runner").rerun() end, { desc = "Rerun last test" })
+map("n", "<leader>xo", function() require("custom.task_runner").open_output() end, { desc = "Open test output" })
+
 -- ChatGPT (avante)
-local avanteApi = require("avante.api")
 map("i", "<D-k>", "<esc>V<cmd>AvanteEdit<cr>", { desc = "Avante edit" })
 map("n", "<D-k>", "V<cmd>AvanteEdit<cr>", { desc = "Avante edit" })
-map("v", "<D-k>", function() avanteApi.edit() end, { desc = "Avante edit" })
+map("v", "<D-k>", function() require("avante.api").edit() end, { desc = "Avante edit" })
 map({ "i", "n", "v" }, "<D-K>", function() vim.cmd("AvanteChat") end, { desc = "Avante chat" })
-
--- copilot (保持 function)
-map("i", "<right>", function()
-  local copilot = require("copilot.suggestion")
-  if copilot.is_visible() then
-    copilot.accept()
-  else
-    vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Right>", true, true, true), "n", true)
-  end
-end, { desc = "Accept Copilot or move right" })
-
--- marklive
-map({ "n", "v" }, "<CR>", function()
-  if vim.bo.filetype == "markdown" then
-    vim.cmd("MarkliveTaskToggle")
-  end
-end, { desc = "Marklive toggle task (markdown only)" })
 -- map("t", "<C-g>", function() vim.cmd("LLMAppHandler CommitMsg") end, { desc = "Generate commit msg (LLMApp)" })
 
 -- smart-splits 全部改 function()
