@@ -137,6 +137,18 @@ function Panel:_panel_for_tab(tab)
   return self.panels[tab or vim.api.nvim_get_current_tabpage()]
 end
 
+function Panel:_remembered_key(tab, root)
+  local tab_focus = self.focused_keys[tab]
+  return tab_focus and tab_focus[vim.fs.normalize(root)] or nil
+end
+
+function Panel:_remember_focus(panel, key)
+  if not key then return end
+  local root = vim.fs.normalize(panel.root)
+  self.focused_keys[panel.tab] = self.focused_keys[panel.tab] or {}
+  self.focused_keys[panel.tab][root] = key
+end
+
 function Panel:_service_for_cursor(panel)
   if not panel_valid(panel) then return nil end
   local line = vim.api.nvim_win_get_cursor(panel.list_win)[1]
@@ -159,9 +171,26 @@ end
 
 function Panel:focus(panel, key)
   local service = self.runtime:get(key)
-  if not service or panel.root ~= service.metadata.project_root then return false end
+  if not service or vim.fs.normalize(panel.root) ~= vim.fs.normalize(service.metadata.project_root) then return false end
   panel.focused_key = key
+  self:_remember_focus(panel, key)
   self:_show_output(panel, service)
+  return true
+end
+
+function Panel:_restore_focus(panel)
+  local key = self:_remembered_key(panel.tab, panel.root)
+  if not key then return false end
+
+  local row
+  for index, row_key in ipairs(panel.rows) do
+    if row_key == key then
+      row = index
+      break
+    end
+  end
+  if not row or not self:focus(panel, key) then return false end
+  vim.api.nvim_win_set_cursor(panel.list_win, { row, 0 })
   return true
 end
 
@@ -380,7 +409,6 @@ end
 
 function Panel:_create(root)
   local tab = vim.api.nvim_get_current_tabpage()
-  local origin_win = vim.api.nvim_get_current_win()
   vim.cmd("botright new")
   local list_win = vim.api.nvim_get_current_win()
   local list_bufnr = vim.api.nvim_get_current_buf()
@@ -427,7 +455,6 @@ function Panel:_create(root)
     end,
   })
 
-  if vim.api.nvim_win_is_valid(origin_win) then vim.api.nvim_set_current_win(origin_win) end
   return panel
 end
 
@@ -444,7 +471,10 @@ function Panel:open(root)
   else
     panel.root = root
   end
+  panel.focused_key = nil
   self:render(panel)
+  self:_restore_focus(panel)
+  if vim.api.nvim_win_is_valid(panel.list_win) then vim.api.nvim_set_current_win(panel.list_win) end
   return panel
 end
 
@@ -452,6 +482,7 @@ function Panel:close(tab)
   tab = tab or vim.api.nvim_get_current_tabpage()
   local panel = self.panels[tab]
   if not panel then return false end
+  self:_remember_focus(panel, panel.focused_key)
   self.panels[tab] = nil
   if panel.help_win and vim.api.nvim_win_is_valid(panel.help_win) then pcall(vim.api.nvim_win_close, panel.help_win, true) end
   if vim.api.nvim_win_is_valid(panel.output_win) then pcall(vim.api.nvim_win_close, panel.output_win, true) end
@@ -600,6 +631,7 @@ function M.new(opts)
     state = opts.state or require("services.state"),
     discover = opts.discover or function(root) return require("services.providers").discover(root) end,
     panels = {},
+    focused_keys = {},
   }, Panel)
   controller.unsubscribe = controller.runtime:subscribe(function(event) controller:_on_runtime_event(event) end)
   return controller

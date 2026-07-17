@@ -69,6 +69,7 @@ assert_equal("SPRING + NPM SERVICES  2 selected  [a manage]  ◆ profile: dev  [
 panel:open(root)
 local instance = panel.panels[vim.api.nvim_get_current_tabpage()]
 assert(instance, "opening a root should create a tab-local panel")
+assert_equal(instance.list_win, vim.api.nvim_get_current_win(), "opening should focus the service list")
 assert_equal(2, #instance.rows, "panel rows should reflect reconciled service records")
 assert(vim.api.nvim_win_get_position(instance.list_win)[2] < vim.api.nvim_win_get_position(instance.output_win)[2],
   "the service list should remain left of the output pane regardless of splitright")
@@ -91,6 +92,16 @@ assert_equal(orders.output.bufnr, vim.api.nvim_win_get_buf(instance.output_win),
   "focused services should replace the output buffer in place")
 assert_equal(true, vim.wo[instance.output_win].wrap, "normal output panes should soft-wrap")
 assert_equal(true, vim.wo[instance.output_win].linebreak, "normal output panes should use linebreak")
+
+assert(panel:close(), "closing an open panel should succeed")
+panel:open(root)
+instance = panel.panels[vim.api.nvim_get_current_tabpage()]
+assert_equal(instance.list_win, vim.api.nvim_get_current_win(), "reopening should focus the service list")
+assert_equal(orders.key, instance.focused_key, "reopening should restore the focused service key")
+assert_equal(orders.output.bufnr, vim.api.nvim_win_get_buf(instance.output_win),
+  "reopening should restore the focused service output")
+assert_equal(orders.key, instance.rows[vim.api.nvim_win_get_cursor(instance.list_win)[1]],
+  "reopening should move the cursor to the focused service's current row")
 
 local has_help_mapping = false
 for _, mapping in ipairs(vim.api.nvim_buf_get_keymap(instance.list_bufnr, "n")) do
