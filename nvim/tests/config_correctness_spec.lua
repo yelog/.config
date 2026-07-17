@@ -21,6 +21,7 @@ local markdown = read("lua/plugins/style/markdown.lua")
 local copilot = read("lua/plugins/complete/copilot.lua")
 local lsp = read("lua/plugins/lsp/lsp.lua")
 local snacks = read("lua/plugins/panel/snacks.lua")
+local fzf_lua = read("lua/plugins/panel/fzf-lua.lua")
 local base = read("base.vim")
 
 assert_not_contains(keymaps, "Autosession delete", "Resession should be the only session deletion implementation")
@@ -56,6 +57,12 @@ assert_not_contains(lsp, "vim.lsp.enable('copilot')", "Neovim should not start a
 
 assert_contains(snacks, '{ "<leader>bS"', "Scratch selection should use the Buffer namespace")
 assert_not_contains(snacks, '{ "<leader>S"', "Scratch selection should not replace the save mapping")
+assert_contains(keymaps, "Snacks.picker.files({", "File search should use Snacks' path-aware highlighter")
+assert_contains(keymaps, 'format = require("custom.file_picker").format',
+  "File search should map path matches onto its filename-first display")
+assert_contains(keymaps, "pattern = query", "Visual file search should preserve the selected initial query")
+assert_not_contains(fzf_lua, 'formatter = "path.dirname_first"',
+  "fzf-lua should not override the file layout owned by Snacks")
 assert_not_contains(base, "noremap <LEADER>sw", "Snacks should be the sole wrap toggle")
 assert_contains(keymaps, '{ "<leader>x", group = "Tasks" }', "Which-Key should expose the Tasks namespace")
 

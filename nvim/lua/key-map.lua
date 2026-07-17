@@ -274,19 +274,17 @@ local function open_files_with_optional_query()
     vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "nx", false)
   end
 
-  require("fzf-lua").files({
-    -- fzf-lua 支持用 fzf_opts 传递 --query；也可用 query = query（新版本支持）
-    fzf_opts = query and { ["--query"] = query } or nil,
-    query = query, -- 若你的 fzf-lua 版本支持，保留这行更直观
-    git_icons = true,
+  Snacks.picker.files({
+    pattern = query,
+    format = require("custom.file_picker").format,
   })
 end
 
 -- Normal：正常打开
-map("n", "<D-S-O>", open_files_with_optional_query, { desc = "Search file (fzf-lua)" })
+map("n", "<D-S-O>", open_files_with_optional_query, { desc = "Search file (Snacks)" })
 -- Visual：带选区作为初始查询
-map("x", "<D-S-O>", open_files_with_optional_query, { desc = "Search file with selection (fzf-lua)" })
-map("n", "<leader>ff", function() require("fzf-lua").files() end, { desc = "Search file" })
+map("x", "<D-S-O>", open_files_with_optional_query, { desc = "Search file with selection (Snacks)" })
+map("n", "<leader>ff", open_files_with_optional_query, { desc = "Search file" })
 map("n", "<leader>fb", function() require("fzf-lua").buffers() end, { desc = "Search buffers" })
 
 map("n", "gd", function()
