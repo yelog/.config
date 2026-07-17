@@ -176,9 +176,9 @@ return {
           "html",
           -- "kotlin_lsp",
         },
-        -- nvim-jdtls owns the Java language-server lifecycle and configuration.
+        -- nvim-jdtls and copilot.lua own these client lifecycles.
         automatic_enable = {
-          exclude = { "jdtls" },
+          exclude = { "jdtls", "copilot" },
         },
       })
       -- Mappings.

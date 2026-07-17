@@ -22,6 +22,7 @@ assert(
   not lsp:find("vim.lsp.config('rust_analyzer'", 1, true),
   "rust-analyzer should use its default diagnostics configuration"
 )
+assert(lsp:find('exclude = { "jdtls", "copilot" }', 1, true), "Mason must not auto-enable a second Copilot LSP client")
 
 assert(jdtls:find('require("custom.java_runtime")', 1, true), "JDTLS should use validated Java runtime discovery")
 assert(jdtls:find("cmd_env", 1, true), "JDTLS should receive an explicit launcher JAVA_HOME")
