@@ -28,46 +28,13 @@ map("n", "<down>", "<cmd>res+5<cr>", { desc = "Resize down" })
 map("n", "<left>", "<cmd>vertical res-5<cr>", { desc = "Resize left" })
 map("n", "<right>", "<cmd>vertical res+5<cr>", { desc = "Resize right" })
 
--- 判断当前分屏类型
-local function split_type()
-  local win_count = #vim.api.nvim_list_wins()
-  if win_count == 1 then
-    return "No Split"
-  end
-
-  -- 获取当前窗口的宽度和高度
-  local current_win = vim.api.nvim_get_current_win()
-  local current_width = vim.api.nvim_win_get_width(current_win)
-  local current_height = vim.api.nvim_win_get_height(current_win)
-
-  -- 遍历所有窗口，判断分屏方向
-  for _, win in ipairs(vim.api.nvim_list_wins()) do
-    if win ~= current_win then
-      local width = vim.api.nvim_win_get_width(win)
-      local height = vim.api.nvim_win_get_height(win)
-
-      if vim.bo[vim.api.nvim_win_get_buf(win)].filetype == "neo-tree" then
-        return "neo-tree"
-      elseif current_width == width then
-        return "Horizontal Split"
-      elseif current_height == height then
-        return "Vertical Split"
-      end
-    end
-  end
-
-  return "Unknown Split"
-end
 map("n", "<c-q>", function()
-  local type = split_type()
-  if vim.bo.filetype == 'neo-tree' or type == "neo-tree" then
+  if vim.bo.filetype == "neo-tree" then
     vim.cmd("Neotree close")
-  elseif type == "No Split" or type == 'Unknown Split' then
-    vim.cmd("bdelete")
-  else
-    vim.cmd("q")
+    return
   end
-end, { desc = "Smart Quit" })
+  Snacks.bufdelete()
+end, { desc = "Delete buffer" })
 
 -- plugin
 map("n", "<leader>pi", function() vim.cmd("Lazy") end, { desc = "Plugin install (Lazy)" })

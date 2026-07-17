@@ -27,6 +27,11 @@ assert_not_contains(keymaps, "Autosession delete", "Resession should be the only
 assert_not_contains(keymaps, "local avanteApi = require", "Avante should not load while global keymaps initialize")
 assert_not_contains(keymaps, 'map({ "n", "v" }, "<CR>"', "Markdown Enter should not be a global mapping")
 assert_not_contains(keymaps, 'require("copilot.suggestion")', "Copilot acceptance should be owned by Blink")
+assert_contains(keymaps,
+  'map("n", "<c-q>", function()\n  if vim.bo.filetype == "neo-tree" then\n    vim.cmd("Neotree close")\n    return\n  end\n  Snacks.bufdelete()\nend, { desc = "Delete buffer" })',
+  "Ctrl-Q should delete buffers without closing their windows")
+assert_not_contains(keymaps, "local function split_type()",
+  "Ctrl-Q should not infer window geometry before deleting a buffer")
 
 assert_contains(markdown, 'vim.keymap.set({ "n", "v" }, "<CR>"', "Marklive should install its Enter mapping")
 assert_contains(markdown, "buffer = args.buf", "Marklive Enter should be buffer-local")
