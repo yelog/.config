@@ -57,6 +57,23 @@ Create `.nvim/java-debug.json` in the repository root when a service needs custo
 
 `defaults` applies to every service. `services` is keyed by the fully qualified Spring Boot main class and overrides defaults. The profile selected in the panel is appended as `-Dspring.profiles.active=<profile>`.
 
+## Maven dashboard
+
+Open a `pom.xml` or a source file in the Maven project, then use:
+
+- `<leader>om` or `:Maven` to toggle the right-side Maven project panel.
+- `<leader>op` or `:MavenProfiles` to select Maven build profiles.
+- `<leader>ox` or `:MavenExec` to open the upstream Maven command picker.
+- `<leader>of` or `:MavenFavorites` to open favorite Maven commands.
+- `:MavenProfilesClear` to remove the selected Maven build profiles.
+
+The Maven mappings resolve the project root from the active buffer before opening the upstream UI. `<leader>op` runs
+`mvn help:all-profiles` for the current Maven project and stores selections in
+`stdpath("state")/maven/profiles.json`. The selection is independent from the Services panel's Spring profile and
+does not modify `pom.xml` or Maven settings. It adds `-P=<profiles>` to Lifecycle, plugin-goal, and custom-command
+actions launched from the Maven project tree. The upstream `:MavenExec` and dependency metadata loaders do not use
+these default arguments, so include `-P=<profiles>` manually in those commands when needed.
+
 ## Useful commands
 
 - `:Mason` checks whether Java tools are installed.

@@ -34,6 +34,8 @@ return {
     config = function()
       -- airblade/vim-rooter
       vim.g.rooter_patterns = { ".git/" }
+      -- Keep NUI panels from resetting the project directory when they mount nofile buffers.
+      vim.g.rooter_buftypes = { "" }
     end
   },
   {

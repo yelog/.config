@@ -17,6 +17,7 @@ if ok then
     { "<leader>c", group = "Code" },
     { "<leader>b", group = "Buffer" },
     { "<leader>x", group = "Tasks" },
+    { "<leader>o", group = "Operations" },
   })
 end
 
@@ -425,6 +426,12 @@ map("n", "<leader>oa", function()
     end
   end
 end, { desc = "Start all services" })
+map("n", "<leader>om", function() require("custom.maven_profiles").open_dashboard() end, { desc = "Toggle Maven panel" })
+map("n", "<leader>op", "<cmd>MavenProfiles<cr>", { desc = "Select Maven profiles" })
+map("n", "<leader>ox", function() require("custom.maven_profiles").open_execution() end,
+  { desc = "Execute Maven command" })
+map("n", "<leader>of", function() require("custom.maven_profiles").open_favorites() end,
+  { desc = "Maven favorite commands" })
 
 -- finite project tasks
 map("n", "<leader>xn", function() require("custom.task_runner").run("nearest") end, { desc = "Test nearest" })
