@@ -52,8 +52,8 @@ return {
     opts = {
       autosave = {
         enabled = true,
-        interval = 60,
-        notify = true,
+        interval = 300,
+        notify = false,
       },
     },
     config = function(_, opts)

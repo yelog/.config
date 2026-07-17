@@ -52,6 +52,8 @@ local specs = dofile(config_root .. "/lua/plugins/auto-session.lua")
 specs[1].config(nil, specs[1].opts)
 assert(received_opts == specs[1].opts, "resession.setup should receive the declared opts table")
 assert_equal(true, received_opts.autosave.enabled, "Resession autosave should remain enabled")
+assert_equal(300, received_opts.autosave.interval, "Resession autosave should run every five minutes")
+assert_equal(false, received_opts.autosave.notify, "Resession autosave should not notify")
 
 vim.fn.delete(temp_dir, "rf")
 print("theme-persistence-tests: ok")
