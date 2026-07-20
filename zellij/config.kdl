@@ -61,7 +61,7 @@ keybinds clear-defaults=true {
 
         // Launch tools in current pane
         bind "Ctrl e" { WriteChars "yazi\n"; }
-        bind "Ctrl g" { WriteChars "lazygit\n"; }
+        bind "Super g" { WriteChars "lazygit\n"; }
     }
     pane {
         bind "left" { MoveFocus "left"; }
@@ -206,7 +206,7 @@ keybinds clear-defaults=true {
         bind "Alt ]" { NextSwapLayout; }
         bind "Alt f" { ToggleFloatingPanes; }
         bind "Super Ctrl g" { SwitchToMode "locked"; }
-        bind "Ctrl g" {
+        bind "Super g" {
             Run "/opt/homebrew/bin/lazygit" {
                 floating true
             }

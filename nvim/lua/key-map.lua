@@ -366,7 +366,7 @@ end, { desc = "Toggle Yazi" })
 map("n", "<leader>te", "<cmd>Neotree left toggle<cr>", { desc = "Toggle Neo-tree" })
 
 -- lazygit
-map({"n", "t"}, "<C-g>", function() Snacks.lazygit() end, { desc = "Toggle Lazygit" })
+map({"n", "t"}, "<D-g>", function() Snacks.lazygit() end, { desc = "Toggle Lazygit" })
 
 -- toggleterm
 map({ "n", "t", "i", "v" }, "<D-2>", function() vim.cmd("ToggleTerm") end, { desc = "Toggle terminal" })
