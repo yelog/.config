@@ -60,6 +60,8 @@ assert_not_contains(snacks, '{ "<leader>S"', "Scratch selection should not repla
 assert_contains(keymaps, "Snacks.picker.files({", "File search should use Snacks' path-aware highlighter")
 assert_contains(keymaps, 'format = require("custom.file_picker").format',
   "File search should map path matches onto its filename-first display")
+assert_contains(keymaps, 'on_match = require("custom.file_picker").on_match',
+  "File search should prioritize high-quality filename matches")
 assert_contains(keymaps, "pattern = query", "Visual file search should preserve the selected initial query")
 assert_not_contains(fzf_lua, 'formatter = "path.dirname_first"',
   "fzf-lua should not override the file layout owned by Snacks")
