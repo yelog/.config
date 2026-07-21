@@ -36,6 +36,13 @@ package.preload["custom.maven_project_tree"] = function()
     end,
   }
 end
+package.preload["custom.maven_reactor_execution"] = function()
+  return {
+    install = function()
+      table.insert(setup_order, "reactor_execution")
+    end,
+  }
+end
 package.preload["custom.maven_profiles"] = function()
   return {
     apply_current = function()
@@ -58,8 +65,8 @@ assert_equal(55, spec.opts.projects_view.size, "Maven dashboard should reserve a
 
 spec.config(nil, spec.opts)
 assert_equal(spec.opts, captured_options, "Maven setup should receive the configured options")
-assert_equal({ "maven", "project_tree", "profiles" }, setup_order,
-  "Maven setup should install the hierarchy adapter before applying stored profiles")
+assert_equal({ "maven", "project_tree", "reactor_execution", "profiles" }, setup_order,
+  "Maven setup should install hierarchy and reactor adapters before applying stored profiles")
 assert_equal(1, apply_current_calls, "Maven setup should apply the stored profile after configuration")
 
 local init = read("init.lua")

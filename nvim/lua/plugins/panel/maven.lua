@@ -13,6 +13,7 @@ return {
   config = function(_, opts)
     require("maven").setup(opts)
     require("custom.maven_project_tree").install()
+    require("custom.maven_reactor_execution").install()
     require("custom.maven_profiles").apply_current()
   end,
 }
