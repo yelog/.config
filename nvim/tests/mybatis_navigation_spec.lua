@@ -40,4 +40,12 @@ assert_equal(statement.id, "findByCustomerId", "find enclosing statement")
 assert_equal(nav._method_at(java_lines, 5), "findByCustomerId", "find Java method")
 assert_equal(nav._method_at({ "if (enabled) {" }, 1), nil, "ignore Java keyword")
 
+local sys_dept_mapper = "/Users/yelog/workspace/lenovo/moss/moss-cloud/moss-service-common/moss-service-common-server/src/main/java/com/lenovo/moss/service/common/server/dao/SysDeptMapper.java"
+local target = nav._mapper_method_from_location({
+  uri = vim.uri_from_fname(sys_dept_mapper),
+  range = { start = { line = 18, character = 0 } },
+})
+assert_equal(target.mapper.fqcn, "com.lenovo.moss.service.common.server.dao.SysDeptMapper", "resolve Mapper definition location")
+assert_equal(target.method, "queryAllChildrenId", "resolve Mapper method definition location")
+
 print("mybatis-navigation-tests: ok")

@@ -179,6 +179,55 @@ local function current_context()
   end
 end
 
+local function mapper_method_from_location(location)
+  local uri = location.uri or location.targetUri
+  local range = location.range or location.targetSelectionRange or location.targetRange
+  if not uri or not range then return nil end
+  local path = vim.uri_to_fname(uri)
+  if path:sub(-5) ~= ".java" then return nil end
+  local lines = read_file(path)
+  if not lines then return nil end
+  local mapper = parse_java(lines)
+  local method = method_at(lines, range.start.line + 1)
+  if not mapper or not method then return nil end
+  return { mapper = mapper, method = method }
+end
+
+local function call_site_targets()
+  if vim.bo.filetype ~= "java" then return {} end
+  local path = vim.api.nvim_buf_get_name(0)
+  local root = path ~= "" and maven_root(path) or nil
+  if not root then return {} end
+
+  local params = vim.lsp.util.make_position_params(0, "utf-16")
+  local responses = vim.lsp.buf_request_sync(0, "textDocument/definition", params, 800)
+  if not responses then return {} end
+
+  local targets = {}
+  local seen = {}
+  for _, response in pairs(responses) do
+    local result = response.result
+    if result then
+      local locations = (result.uri or result.targetUri) and { result } or result
+      for _, location in ipairs(locations) do
+        local target = mapper_method_from_location(location)
+        if target then
+          for _, xml in ipairs(xml_for_namespace(root, target.mapper.fqcn)) do
+            for _, statement in ipairs(statement_locations({ xml }, target.method)) do
+              local key = statement.path .. ":" .. statement.row
+              if not seen[key] then
+                seen[key] = true
+                table.insert(targets, statement)
+              end
+            end
+          end
+        end
+      end
+    end
+  end
+  return targets
+end
+
 local function mapper_target(context, want_statement)
   if context.kind == "java" then
     local xmls = xml_for_namespace(context.root, context.mapper.fqcn)
@@ -205,11 +254,13 @@ end
 
 function M.implementation()
   local context = current_context()
-  if not context then return false end
-  local target = mapper_target(context, context.kind == "java" and context.method ~= nil)
-  if choose(target, "MyBatis implementation") then return true end
-  notify("未找到对应的 MyBatis XML 映射", vim.log.levels.WARN)
-  return true
+  if context then
+    local target = mapper_target(context, context.kind == "java" and context.method ~= nil)
+    if choose(target, "MyBatis implementation") then return true end
+    notify("未找到对应的 MyBatis XML 映射", vim.log.levels.WARN)
+    return true
+  end
+  return choose(call_site_targets(), "MyBatis implementation")
 end
 
 function M.usages()
@@ -236,5 +287,6 @@ M._parse_java = parse_java
 M._parse_xml = parse_xml
 M._statement_at = statement_at
 M._method_at = method_at
+M._mapper_method_from_location = mapper_method_from_location
 
 return M
