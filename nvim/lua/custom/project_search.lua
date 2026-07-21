@@ -214,7 +214,12 @@ local function format(item)
   if item.file then
     ret[#ret + 1] = {
       col = 0,
-      virt_text = { { vim.fn.fnamemodify(item.file, ":t"), "SnacksPickerComment" } },
+      virt_text = {
+        {
+          string.format("%s %d", vim.fn.fnamemodify(item.file, ":t"), item.pos and item.pos[1] or 0),
+          "SnacksPickerComment",
+        },
+      },
       virt_text_pos = "right_align",
       hl_mode = "combine",
     }

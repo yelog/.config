@@ -223,7 +223,7 @@ local function get_current_visual_selection()
 
   -- 转 0-based，buf_get_text 需要 [row, col)
   local srow, scol = vpos[2] - 1, vpos[3] - 1
-  local erow, ecol = cpos[2] - 1, cpos[3]
+  local erow, ecol = cpos[2] - 1, cpos[3] - 1
 
   -- 规范化起止（起点应 <= 终点）
   if (erow < srow) or (erow == srow and ecol < scol) then
@@ -252,7 +252,16 @@ local function get_current_visual_selection()
   end
 
   -- 字符可视（默认）
-  local lines = vim.api.nvim_buf_get_text(0, srow, scol, erow, ecol, {})
+  -- getpos() 的列是字节列；终点需要包含完整的 UTF-8 字符。
+  local function char_end_col(row, col)
+    local line = vim.api.nvim_buf_get_lines(0, row, row + 1, false)[1] or ""
+    local char_index = vim.fn.charidx(line, col)
+    local char = vim.fn.strcharpart(line, char_index, 1)
+    return col + #char
+  end
+
+  local end_col = char_end_col(erow, ecol)
+  local lines = vim.api.nvim_buf_get_text(0, srow, scol, erow, end_col, {})
   return table.concat(lines, "\n")
 end
 
