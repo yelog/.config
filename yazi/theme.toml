@@ -24,3 +24,10 @@ syntect_theme = ""
 mode_normal = { bg = "blue", bold = true }
 mode_select = { bg = "red", bold = true }
 mode_unset  = { bg = "yellow", bold = true }
+
+[git]
+modified      = { fg = "blue" }
+deleted       = { fg = "red", bold = true }
+modified_sign = "M"
+added_sign    = "A"
+deleted_sign  = "D"
