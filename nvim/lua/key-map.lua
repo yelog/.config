@@ -300,6 +300,9 @@ map("n", "<leader>ff", open_files_with_optional_query, { desc = "Search file" })
 map("n", "<leader>fb", function() require("fzf-lua").buffers() end, { desc = "Search buffers" })
 
 map("n", "gd", function()
+  if require("custom.mybatis_navigation").definition() then
+    return
+  end
   if require('i18n').i18n_definition() then
     return
   end
@@ -319,9 +322,17 @@ end
 --   end
 --   require("fzf-lua").lsp_definitions()
 -- end, { desc = 'i18n or LSP definition' })
-map("n", "gD", function() require('snacks').picker.lsp_implementations() end, { desc = "Goto implementation" })
+map("n", "gD", function()
+  if require("custom.mybatis_navigation").implementation() then
+    return
+  end
+  require('snacks').picker.lsp_implementations()
+end, { desc = "Goto implementation" })
 -- map("n", "gu", function() require("fzf-lua").lsp_references() end, { desc = "Goto references" })
 vim.keymap.set('n', 'gu', function()
+  if require("custom.mybatis_navigation").usages() then
+    return
+  end
   if require('i18n').i18n_key_usages() then
     return
   end
