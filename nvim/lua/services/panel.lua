@@ -156,6 +156,123 @@ function Panel:_service_for_cursor(panel)
   return key and self.runtime:get(key) or nil
 end
 
+function Panel:_output_state(panel, service)
+  local state = panel.output_states[service.key]
+  if not state then
+    state = { following = true, unseen_lines = 0, view = nil }
+    panel.output_states[service.key] = state
+  end
+  return state
+end
+
+function Panel:_displayed_normal_output(panel)
+  if not panel_valid(panel) then return nil end
+  local service = panel.focused_key and self.runtime:get(panel.focused_key) or nil
+  if not service or service.terminal_output or not service.output then return nil end
+  if vim.api.nvim_win_get_buf(panel.output_win) ~= service.output.bufnr then return nil end
+  return service
+end
+
+function Panel:_active_normal_output(panel)
+  if vim.api.nvim_get_current_win() ~= panel.output_win then return nil end
+  return self:_displayed_normal_output(panel)
+end
+
+function Panel:_set_output_winbar(panel, state)
+  if not panel or not vim.api.nvim_win_is_valid(panel.output_win) then return end
+  if not state then
+    vim.wo[panel.output_win].winbar = ""
+  elseif state.following then
+    vim.wo[panel.output_win].winbar = "LOG [FOLLOW]"
+  else
+    vim.wo[panel.output_win].winbar = string.format("LOG [PAUSED - %d new - G tail]", state.unseen_lines)
+  end
+end
+
+function Panel:_tail_output(panel)
+  if not panel_valid(panel) then return false end
+  local ok = pcall(vim.api.nvim_win_call, panel.output_win, function()
+    vim.cmd("normal! G")
+  end)
+  return ok
+end
+
+function Panel:_output_at_tail(panel)
+  if not panel_valid(panel) then return false end
+  local ok, at_tail = pcall(vim.api.nvim_win_call, panel.output_win, function()
+    local last_line = vim.api.nvim_buf_line_count(0)
+    return vim.api.nvim_win_get_cursor(0)[1] == last_line and vim.fn.line("w$") >= last_line
+  end)
+  return ok and at_tail or false
+end
+
+function Panel:_save_output_view(panel, service)
+  service = service or self:_displayed_normal_output(panel)
+  if not service then return end
+  local state = self:_output_state(panel, service)
+  if state.following then return end
+  local ok, view = pcall(vim.api.nvim_win_call, panel.output_win, function()
+    return vim.fn.winsaveview()
+  end)
+  if ok then state.view = view end
+end
+
+function Panel:_restore_output_view(panel, state, trimmed)
+  if not panel_valid(panel) or not state.view then return end
+  local view = vim.deepcopy(state.view)
+  if trimmed and trimmed > 0 then
+    for _, field in ipairs({ "lnum", "topline" }) do
+      if view[field] then view[field] = math.max(1, view[field] - trimmed) end
+    end
+    state.view = view
+  end
+  pcall(vim.api.nvim_win_call, panel.output_win, function()
+    vim.fn.winrestview(view)
+  end)
+end
+
+function Panel:_update_output_following(panel)
+  local service = self:_active_normal_output(panel)
+  if not service then return end
+  local state = self:_output_state(panel, service)
+  if self:_output_at_tail(panel) then
+    state.following = true
+    state.unseen_lines = 0
+    state.view = nil
+  else
+    state.following = false
+    self:_save_output_view(panel, service)
+  end
+  self:_set_output_winbar(panel, state)
+end
+
+function Panel:_pause_output_for_search(panel)
+  local service = self:_active_normal_output(panel)
+  if not service then return end
+  local state = self:_output_state(panel, service)
+  state.following = false
+  self:_save_output_view(panel, service)
+  self:_set_output_winbar(panel, state)
+end
+
+function Panel:_handle_output_rendered(panel, service, detail)
+  local bufnr = detail and detail.bufnr or nil
+  if not panel_valid(panel) or panel.focused_key ~= service.key or service.terminal_output
+    or not service.output or service.output.bufnr ~= bufnr
+    or vim.api.nvim_win_get_buf(panel.output_win) ~= bufnr then
+    return
+  end
+
+  local state = self:_output_state(panel, service)
+  if state.following then
+    self:_tail_output(panel)
+  else
+    state.unseen_lines = state.unseen_lines + math.max(0, detail.appended or 0)
+    self:_restore_output_view(panel, state, detail.trimmed)
+  end
+  self:_set_output_winbar(panel, state)
+end
+
 function Panel:_show_output(panel, service)
   if not panel_valid(panel) or not service then return false end
   local bufnr = self.runtime:get_output_bufnr(service.key)
@@ -163,8 +280,22 @@ function Panel:_show_output(panel, service)
   vim.api.nvim_win_set_buf(panel.output_win, bufnr)
   if service.terminal_output then
     set_empty_output_options(panel.output_win)
+    self:_set_output_winbar(panel)
   elseif service.output then
     service.output:configure_window(panel.output_win)
+    if bufnr == service.output.bufnr then
+      local state = self:_output_state(panel, service)
+      if state.following then
+        self:_tail_output(panel)
+      else
+        self:_restore_output_view(panel, state)
+      end
+      self:_set_output_winbar(panel, state)
+    else
+      self:_set_output_winbar(panel)
+    end
+  else
+    self:_set_output_winbar(panel)
   end
   return true
 end
@@ -172,6 +303,7 @@ end
 function Panel:focus(panel, key)
   local service = self.runtime:get(key)
   if not service or vim.fs.normalize(panel.root) ~= vim.fs.normalize(service.metadata.project_root) then return false end
+  if panel.focused_key ~= key then self:_save_output_view(panel) end
   panel.focused_key = key
   self:_remember_focus(panel, key)
   self:_show_output(panel, service)
@@ -407,6 +539,15 @@ function Panel:_configure_keymaps(panel)
   vim.keymap.set("n", "p", function() self:select_profile(panel) end, { buffer = panel.list_bufnr, silent = true })
 end
 
+function Panel:_destroy(panel)
+  if not panel then return end
+  if self.panels[panel.tab] == panel then self.panels[panel.tab] = nil end
+  if panel.augroup then
+    pcall(vim.api.nvim_del_augroup_by_id, panel.augroup)
+    panel.augroup = nil
+  end
+end
+
 function Panel:_create(root)
   local tab = vim.api.nvim_get_current_tabpage()
   vim.cmd("botright new")
@@ -423,6 +564,7 @@ function Panel:_create(root)
   vim.cmd("resize 16")
   local available_width = vim.api.nvim_win_get_width(list_win) + vim.api.nvim_win_get_width(output_win)
   vim.api.nvim_win_set_width(list_win, math.max(1, math.floor(available_width / 4)))
+  local augroup = vim.api.nvim_create_augroup("ServicesPanel_" .. list_bufnr, { clear = true })
 
   local panel = {
     root = root,
@@ -434,24 +576,50 @@ function Panel:_create(root)
     namespace = vim.api.nvim_create_namespace("services_panel_" .. list_bufnr),
     rows = {},
     focused_key = nil,
+    output_states = {},
+    augroup = augroup,
   }
   self.panels[tab] = panel
   self:_configure_keymaps(panel)
 
   vim.api.nvim_create_autocmd("CursorMoved", {
+    group = augroup,
     buffer = list_bufnr,
     callback = function()
       local service = self:_service_for_cursor(panel)
       if service then self:focus(panel, service.key) end
     end,
   })
+  vim.api.nvim_create_autocmd({ "CursorMoved", "WinScrolled" }, {
+    group = augroup,
+    callback = function()
+      self:_update_output_following(panel)
+    end,
+  })
+  vim.api.nvim_create_autocmd("CmdlineEnter", {
+    group = augroup,
+    callback = function(args)
+      if args.match == "/" or args.match == "?" then self:_pause_output_for_search(panel) end
+    end,
+  })
   vim.api.nvim_create_autocmd("WinClosed", {
+    group = augroup,
     pattern = tostring(list_win),
     once = true,
     callback = function()
       if self.panels[tab] ~= panel then return end
-      self.panels[tab] = nil
+      self:_destroy(panel)
       if vim.api.nvim_win_is_valid(output_win) then pcall(vim.api.nvim_win_close, output_win, true) end
+    end,
+  })
+  vim.api.nvim_create_autocmd("WinClosed", {
+    group = augroup,
+    pattern = tostring(output_win),
+    once = true,
+    callback = function()
+      if self.panels[tab] ~= panel then return end
+      self:_destroy(panel)
+      if vim.api.nvim_win_is_valid(list_win) then pcall(vim.api.nvim_win_close, list_win, true) end
     end,
   })
 
@@ -467,8 +635,10 @@ function Panel:open(root)
   local tab = vim.api.nvim_get_current_tabpage()
   local panel = self.panels[tab]
   if not panel_valid(panel) then
+    self:_destroy(panel)
     panel = self:_create(root)
   else
+    if vim.fs.normalize(panel.root) ~= vim.fs.normalize(root) then panel.output_states = {} end
     panel.root = root
   end
   panel.focused_key = nil
@@ -483,7 +653,7 @@ function Panel:close(tab)
   local panel = self.panels[tab]
   if not panel then return false end
   self:_remember_focus(panel, panel.focused_key)
-  self.panels[tab] = nil
+  self:_destroy(panel)
   if panel.help_win and vim.api.nvim_win_is_valid(panel.help_win) then pcall(vim.api.nvim_win_close, panel.help_win, true) end
   if vim.api.nvim_win_is_valid(panel.output_win) then pcall(vim.api.nvim_win_close, panel.output_win, true) end
   if vim.api.nvim_win_is_valid(panel.list_win) then pcall(vim.api.nvim_win_close, panel.list_win, true) end
@@ -607,14 +777,33 @@ end
 function Panel:_on_runtime_event(event)
   local service = event.service
   if not service then return end
+  if event.type == "output_rendered" then
+    vim.schedule(function()
+      for _, panel in pairs(self.panels) do
+        if panel_valid(panel) and panel.root == service.metadata.project_root and panel.focused_key == service.key then
+          self:_handle_output_rendered(panel, service, event.detail)
+        end
+      end
+    end)
+    return
+  end
+
   vim.schedule(function()
     for _, panel in pairs(self.panels) do
       if panel_valid(panel) and panel.root == service.metadata.project_root then
+        if event.type == "starting" and panel.focused_key == service.key and not service.terminal_output then
+          local state = self:_output_state(panel, service)
+          state.following = true
+          state.unseen_lines = 0
+          state.view = nil
+        end
         if event.type == "disposed" and panel.focused_key == service.key then
           panel.focused_key = nil
+          panel.output_states[service.key] = nil
           if vim.api.nvim_buf_is_valid(panel.empty_output) then
             vim.api.nvim_win_set_buf(panel.output_win, panel.empty_output)
             set_empty_output_options(panel.output_win)
+            self:_set_output_winbar(panel)
           end
         end
         self:render(panel)

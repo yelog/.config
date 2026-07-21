@@ -65,6 +65,18 @@ assert(vim.wait(500, function()
 end), "output should be parsed and rendered")
 assert_equal("http://localhost:8080", service.metadata.url, "parsers should update service metadata")
 
+local rendered_event
+runtime:subscribe(function(event)
+  if event.type == "output_rendered" then rendered_event = event end
+end)
+assert(runtime:append_output(service.key, "stdout", "follow batch\n"),
+  "runtime should accept output for rendered-event coverage")
+assert(vim.wait(500, function() return rendered_event ~= nil end),
+  "runtime should forward the completed renderer batch")
+assert_equal(service, rendered_event.service, "render event should retain its service")
+assert_equal(1, rendered_event.detail.appended, "render event should expose appended lines")
+assert_equal(service.output.bufnr, rendered_event.detail.bufnr, "render event should expose its buffer")
+
 assert(runtime:stop(service.key), "stopping a live service should succeed")
 assert_equal("STOPPING", service.status, "manual stop should expose the stopping state")
 assert_equal({ 15 }, spawned[1].process.killed, "manual stop should send TERM first")

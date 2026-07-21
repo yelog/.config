@@ -313,12 +313,21 @@ function Output:_render_pending()
   end
   self.line_count = self.line_count + #pending
 
-  local overflow = self.line_count - self.limit
-  if overflow > 0 then
+  local trimmed = math.max(0, self.line_count - self.limit)
+  if trimmed > 0 then
     vim.bo[self.bufnr].modifiable = true
-    vim.api.nvim_buf_set_lines(self.bufnr, 0, overflow, false, {})
+    vim.api.nvim_buf_set_lines(self.bufnr, 0, trimmed, false, {})
     vim.bo[self.bufnr].modifiable = false
-    self.line_count = self.line_count - overflow
+    self.line_count = self.line_count - trimmed
+  end
+
+  if self.on_render then
+    self.on_render({
+      bufnr = self.bufnr,
+      appended = #pending,
+      line_count = self.line_count,
+      trimmed = trimmed,
+    })
   end
 end
 
@@ -440,6 +449,7 @@ function M.new(opts)
     namespace = vim.api.nvim_create_namespace("services_output_" .. bufnr),
     limit = math.max(1, opts.limit or 10000),
     on_line = opts.on_line,
+    on_render = opts.on_render,
     streams = { stdout = new_stream(), stderr = new_stream() },
     pending_lines = {},
     line_count = 0,

@@ -111,6 +111,30 @@ vim.api.nvim_exec_autocmds("ColorScheme", { modeline = false })
 local restored_highlight = vim.api.nvim_get_hl(0, { name = faint_group, link = false })
 assert_equal(0x999999, restored_highlight.fg, "ColorScheme should recreate generated ANSI highlights")
 
+local batches = {}
+local notified = require("services.output").new({
+  limit = 3,
+  on_render = function(batch) table.insert(batches, batch) end,
+})
+notified:push("stdout", "one\ntwo\n")
+assert(vim.wait(500, function() return #batches == 1 end), "render callback should run")
+assert_equal({
+  bufnr = notified.bufnr,
+  appended = 2,
+  line_count = 2,
+  trimmed = 0,
+}, batches[1], "first batch should report its completed render")
+
+notified:push("stdout", "three\nfour\n")
+assert(vim.wait(500, function() return #batches == 2 end), "second render callback should run")
+assert_equal({
+  bufnr = notified.bufnr,
+  appended = 2,
+  line_count = 3,
+  trimmed = 1,
+}, batches[2], "second batch should report its completed trimmed render")
+notified:dispose()
+
 local original_buf = vim.api.nvim_get_current_buf()
 local original_win = vim.api.nvim_get_current_win()
 vim.api.nvim_win_set_buf(original_win, output.bufnr)

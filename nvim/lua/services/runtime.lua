@@ -98,6 +98,9 @@ function Runtime:_ensure_output(service)
     on_line = function(line, stream)
       if stream ~= "archive" then self:_parse_line(service, line) end
     end,
+    on_render = function(detail)
+      self:_emit(service, "output_rendered", detail)
+    end,
   })
   if not service.output_bufnr or not vim.api.nvim_buf_is_valid(service.output_bufnr) then
     service.output_bufnr = service.output.bufnr
