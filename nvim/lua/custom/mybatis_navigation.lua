@@ -137,6 +137,40 @@ local function java_method_locations(paths, id)
   return matches
 end
 
+local function java_methods(lines)
+  local methods = {}
+  local keywords = { if_ = true, for_ = true, while_ = true, switch_ = true }
+  for row, line in ipairs(lines) do
+    local name = line:match("([%w_]+)%s*%(")
+    local start = name and line:find(name, 1, true)
+    if name and not keywords[name .. "_"] then
+      local before = line:sub(1, start - 1)
+      if before:match("[%w_>%]%)]%s*$") then
+        table.insert(methods, {
+          name = name,
+          row = row,
+          col = start - 1,
+          end_col = start - 1 + #name,
+        })
+      end
+    end
+  end
+  return methods
+end
+
+local function statement_details(paths)
+  local matches = {}
+  for _, path in ipairs(paths) do
+    for row, line in ipairs(read_file(path) or {}) do
+      local tag, id = line:match("<%s*([%a]+)[^>]-id%s*=%s*[\"']([^\"']+)[\"']")
+      if tag and statement_tags[tag] and id then
+        table.insert(matches, { path = path, row = row, tag = tag, id = id })
+      end
+    end
+  end
+  return matches
+end
+
 local function choose(locations, prompt)
   if #locations == 0 then
     return false
@@ -288,5 +322,11 @@ M._parse_xml = parse_xml
 M._statement_at = statement_at
 M._method_at = method_at
 M._mapper_method_from_location = mapper_method_from_location
+M._java_methods = java_methods
+M._statement_details = statement_details
+M._maven_root = maven_root
+M._xml_for_namespace = xml_for_namespace
+M._java_for_namespace = java_for_namespace
+M._read_file = read_file
 
 return M

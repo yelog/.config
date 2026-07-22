@@ -15,6 +15,8 @@ return {
     config = function()
       local jdtls = require("jdtls")
       local navic = require("nvim-navic")
+      local mybatis = require("custom.mybatis_diagnostics")
+      mybatis.setup()
 
       local function get_jdtls_cmd(workspace_dir)
         local mason_path = vim.fn.stdpath("data") .. "/mason"
@@ -47,8 +49,9 @@ return {
       local function on_attach(client, bufnr)
         local bufopts = { noremap = true, silent = true, buffer = bufnr }
 
-        vim.keymap.set("n", "<leader>la", vim.lsp.buf.code_action, bufopts)
-        vim.keymap.set("n", "<M-CR>", vim.lsp.buf.code_action, bufopts)
+        mybatis.attach(bufnr)
+        vim.keymap.set("n", "<leader>la", mybatis.code_action, bufopts)
+        vim.keymap.set("n", "<M-CR>", mybatis.code_action, bufopts)
         vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
         vim.keymap.set("n", "<leader>D", vim.lsp.buf.type_definition, bufopts)
         vim.keymap.set({ "n", "i" }, "<C-k>", function()

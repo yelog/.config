@@ -40,6 +40,29 @@ assert_equal(statement.id, "findByCustomerId", "find enclosing statement")
 assert_equal(nav._method_at(java_lines, 5), "findByCustomerId", "find Java method")
 assert_equal(nav._method_at({ "if (enabled) {" }, 1), nil, "ignore Java keyword")
 
+local methods = nav._java_methods({
+  "  List<Order> findByCustomerId(Long customerId);",
+  "  int updateStatus(Long id, String status);",
+  "  if (enabled) {",
+})
+assert_equal(methods[1].name, "findByCustomerId", "extract Mapper method")
+assert_equal(methods[2].name, "updateStatus", "extract multiple Mapper methods")
+assert_equal(#methods, 2, "ignore control-flow calls")
+
+local xml_path = vim.fn.tempname()
+vim.fn.writefile({
+  '<mapper namespace="com.example.OrderMapper">',
+  '  <select id="findByCustomerId" parameterType="long">',
+  "    select 1",
+  "  </select>",
+  "</mapper>",
+}, xml_path)
+local statements = nav._statement_details({ xml_path })
+assert_equal(#statements, 1, "parse XML statement")
+assert_equal(statements[1].id, "findByCustomerId", "parse XML statement id")
+assert_equal(statements[1].tag, "select", "parse XML statement tag")
+vim.fn.delete(xml_path)
+
 local sys_dept_mapper = "/Users/yelog/workspace/lenovo/moss/moss-cloud/moss-service-common/moss-service-common-server/src/main/java/com/lenovo/moss/service/common/server/dao/SysDeptMapper.java"
 local target = nav._mapper_method_from_location({
   uri = vim.uri_from_fname(sys_dept_mapper),
