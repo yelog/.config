@@ -9,6 +9,9 @@ return {
       position = "right",
       size = 55,
     },
+    console = {
+      show_dependencies_load_execution = true,
+    },
   },
   config = function(_, opts)
     require("maven").setup(opts)

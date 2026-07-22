@@ -62,6 +62,8 @@ assert_equal("mvn", spec.opts.mvn_executable, "Maven dashboard should use the in
 assert_equal(5, spec.opts.project_scanner_depth, "Maven scanner depth should cover common multi-module projects")
 assert_equal("right", spec.opts.projects_view.position, "Maven dashboard should open on the right")
 assert_equal(55, spec.opts.projects_view.size, "Maven dashboard should reserve a compact sidebar width")
+assert_equal(true, spec.opts.console.show_dependencies_load_execution,
+  "dependency analysis should show Maven output when loading fails")
 
 spec.config(nil, spec.opts)
 assert_equal(spec.opts, captured_options, "Maven setup should receive the configured options")

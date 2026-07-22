@@ -83,3 +83,5 @@ Profile 选择保存在 `stdpath("state")/maven/profiles.json`，以规范化后
 展开 `Plugins` 可以从 Effective POM 查看插件；再展开插件可运行其 goals。依赖、插件和 Maven `--help` 参数会缓存。依赖或插件节点使用 `Ctrl-r` 可强制刷新。
 
 所有看板命令经 Maven Console 串行执行，成功、警告和失败输出带高亮。自由命令窗口按空格切分参数，复杂引号或包含空格的参数建议在命令行或预设中避免使用。
+
+依赖分析默认显示 Maven Console。若 `Dependencies` 节点加载失败，请查看其中 Maven 的完整错误；常见原因包括私服或 Central 访问被拒绝、父 POM 无法下载、未配置代理或镜像，以及项目本身的 POM 解析错误。
