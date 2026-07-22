@@ -420,6 +420,8 @@ map("n", "<leader>ox", function() require("custom.maven_profiles").open_executio
   { desc = "Execute Maven command" })
 map("n", "<leader>of", function() require("custom.maven_profiles").open_favorites() end,
   { desc = "Maven favorite commands" })
+map("n", "<leader>oD", function() require("custom.maven_dependency_analyzer").open() end,
+  { desc = "Analyze Maven dependencies" })
 
 -- finite project tasks
 map("n", "<leader>xn", function() require("custom.task_runner").run("nearest") end, { desc = "Test nearest" })

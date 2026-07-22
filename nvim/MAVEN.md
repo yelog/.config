@@ -16,6 +16,7 @@
 | `<leader>op` | 选择当前项目的 Maven Profile，可用 `Tab` 多选 |
 | `<leader>ox` | 打开任意 Maven 命令执行窗口 |
 | `<leader>of` | 搜索并运行收藏的 Maven 命令 |
+| `<leader>oD` | 打开当前 Maven 项目的独立依赖分析器 |
 
 ## 用户命令
 
@@ -27,6 +28,7 @@
 | `:MavenExec` | 打开 Maven 命令执行窗口 |
 | `:MavenFavorites` | 打开收藏命令窗口 |
 | `:MavenInit` | 创建 Maven Archetype 项目 |
+| `:MavenDependencies` | 分析当前 Maven 项目的完整依赖图 |
 | `:MavenPresetAdd <名称> <Maven 参数...>` | 保存当前项目的命令预设 |
 | `:MavenPresetRemove <名称>` | 删除当前项目的命令预设 |
 
@@ -78,7 +80,27 @@ Profile 选择保存在 `stdpath("state")/maven/profiles.json`，以规范化后
 
 ## 依赖、插件和输出
 
-按 `a` 打开依赖分析：左侧显示已解析依赖，右侧显示选中依赖的传递路径。冲突版本会标记为警告；可用 `/` 或 `s` 过滤，`on` 按名称排序，`os` 按 jar 大小排序，`i` 查看依赖详情。
+项目树中的 `a` 保留上游的简版依赖分析：左侧显示已解析依赖，右侧显示选中依赖的传递路径。冲突版本会标记为警告；可用 `/` 或 `s` 过滤，`on` 按名称排序，`os` 按 jar 大小排序，`i` 查看依赖详情。
+
+## 独立依赖分析器
+
+使用 `<leader>oD` 或 `:MavenDependencies` 打开当前 POM 的完整依赖分析器。它复用 Maven 的已解析依赖图、缓存与 Console 输出，不会只读取 `pom.xml` 中的直接依赖。
+
+| 按键 | 功能 |
+| --- | --- |
+| `t` | 完整传递依赖树，保留搜索命中节点的父级路径 |
+| `l` | 去重后的依赖列表，按 `groupId:artifactId` 聚合 |
+| `c` | 只显示 Maven 标记为版本冲突的依赖 |
+| `/` | 搜索 groupId、artifactId、版本或 scope |
+| `T` | 隐藏或显示 `test` scope 及其子树 |
+| `S` | 显示或隐藏本地 JAR 大小 |
+| `r` | 强制重新执行 Maven 依赖解析，跳过缓存 |
+| `p` | 显示当前坐标的全部传递引用路径 |
+| `i` | 显示当前依赖的坐标、scope、大小、冲突与重复状态 |
+| `Enter` | 在树模式展开或收起节点 |
+| `q` / `Esc` | 关闭分析器 |
+
+冲突行显示 Maven 实际采用的版本，以及被冲突调解排除的版本。JAR 大小取自本地 Maven 仓库；尚未下载的构件显示为 `-`。
 
 展开 `Plugins` 可以从 Effective POM 查看插件；再展开插件可运行其 goals。依赖、插件和 Maven `--help` 参数会缓存。依赖或插件节点使用 `Ctrl-r` 可强制刷新。
 

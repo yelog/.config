@@ -75,6 +75,8 @@ local init = read("init.lua")
 local keymaps = read("lua/key-map.lua")
 local tools = read("lua/plugins/tools.lua")
 assert_contains(init, 'require("custom.maven_profiles").setup()', "profile helper should register its commands at startup")
+assert_contains(init, 'require("custom.maven_dependency_analyzer").setup()',
+  "dependency analyzer should register its command at startup")
 assert_contains(tools, 'vim.g.rooter_buftypes = { "" }', "Rooter should ignore NUI nofile buffers")
 assert_contains(keymaps, '{ "<leader>o", group = "Operations" }', "Which-Key should expose Maven under Operations")
 assert_contains(keymaps, 'require("custom.maven_profiles").open_dashboard()',
@@ -84,5 +86,7 @@ assert_contains(keymaps, 'require("custom.maven_profiles").open_execution()',
   "Maven execution should resolve the current project's root before opening")
 assert_contains(keymaps, 'require("custom.maven_profiles").open_favorites()',
   "Maven favorites should resolve the current project's root before opening")
+assert_contains(keymaps, 'require("custom.maven_dependency_analyzer").open()',
+  "dependency analyzer should have a dedicated keymap")
 
 print("maven-plugin-spec-tests: ok")

@@ -55,6 +55,7 @@ require("lazy").setup({
 require("custom.theme").setup()
 
 require("custom.maven_profiles").setup()
+require("custom.maven_dependency_analyzer").setup()
 require("key-map")
 require("custom-color")
 require("custom.run-file")
