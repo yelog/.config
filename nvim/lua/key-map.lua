@@ -285,6 +285,7 @@ local function open_files_with_optional_query()
 
   Snacks.picker.files({
     pattern = query,
+    hidden = true,
     format = require("custom.file_picker").format,
     matcher = {
       on_match = require("custom.file_picker").on_match,
