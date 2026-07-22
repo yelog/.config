@@ -60,6 +60,11 @@ vim.fn.writefile({
 }, project_root .. "/pom.xml")
 assert_equal({ "dev", "local" }, state.parse_maven_profiles(project_root), "profiles should be unique and sorted")
 
+package.preload["custom.maven_profiles"] = function()
+  return { get_primary_profile = function(root) return root == project_root and "dev" or nil end }
+end
+assert_equal("dev", state.get_profile(project_root), "Maven projects should use the Maven profile selection")
+
 local catalog = require("services.catalog")
 assert_equal("Spring Boot", catalog.get_type("springboot").label, "Spring type should be registered")
 assert_equal("npm", catalog.get_type("npm").label, "npm type should be registered")

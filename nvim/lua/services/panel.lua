@@ -667,27 +667,34 @@ function Panel:toggle(root)
 end
 
 function Panel:select_profile(panel)
-  local profiles = self.state.parse_maven_profiles(panel.root)
-  if #profiles == 0 then
-    vim.notify("No Maven profiles found in " .. panel.root .. "/pom.xml", vim.log.levels.WARN)
-    return
-  end
-  local choices = { { label = "[no profile]", profile = nil } }
-  for _, profile in ipairs(profiles) do
-    table.insert(choices, { label = profile, profile = profile })
-  end
-  local current = self.state.get_profile(panel.root)
-  vim.ui.select(choices, {
-    prompt = "Spring profile",
-    format_item = function(item) return (item.profile == current and "* " or "  ") .. item.label end,
-  }, function(choice)
-    if not choice or not self.state.set_profile(panel.root, choice.profile) then return end
-    for _, service in ipairs(self.runtime:list(panel.root)) do
-      if service.service_type == "springboot" and service.status == "RUNNING" then
-        self.runtime:restart(service.key, { profile = choice.profile })
-      end
+  local maven_profiles = require("custom.maven_profiles")
+  maven_profiles.list_available(panel.root, function(error, profiles)
+    if error then
+      vim.notify(error, vim.log.levels.ERROR)
+      return
     end
-    self:render(panel)
+    if #profiles == 0 then
+      vim.notify("No Maven profiles found for " .. panel.root, vim.log.levels.WARN)
+      return
+    end
+    local choices = { { label = "[no profile]", profile = nil } }
+    for _, profile in ipairs(profiles) do
+      table.insert(choices, { label = profile, profile = profile })
+    end
+    local current = maven_profiles.get_primary_profile(panel.root)
+    vim.ui.select(choices, {
+      prompt = "Spring profile",
+      format_item = function(item) return (item.profile == current and "* " or "  ") .. item.label end,
+    }, function(choice)
+      if not choice or not maven_profiles.set_profiles(panel.root, choice.profile and { choice.profile } or {}) then return end
+      maven_profiles.apply_current(panel.root)
+      for _, service in ipairs(self.runtime:list(panel.root)) do
+        if service.service_type == "springboot" and service.status == "RUNNING" then
+          self.runtime:restart(service.key, { profile = choice.profile })
+        end
+      end
+      self:render(panel)
+    end)
   end)
 end
 

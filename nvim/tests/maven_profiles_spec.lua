@@ -43,6 +43,20 @@ vim.fn.writefile({ "<project />" }, project_root .. "/pom.xml")
 
 assert(profiles.set_profiles(project_root, { "uat", "dev", "dev" }), "profile selection should persist")
 assert_equal({ "dev", "uat" }, profiles.get_profiles(project_root), "profile selection should be project-scoped")
+assert_equal("dev", profiles.get_primary_profile(project_root), "service launches should use the first selected profile")
+
+local arguments = {
+  { arg = "-DskipTests", enabled = true },
+  { arg = "-Drevision", value = "1.2.3", enabled = false },
+}
+assert(profiles.set_arguments(project_root, arguments), "project arguments should persist")
+assert_equal(arguments, profiles.get_arguments(project_root), "project arguments should round-trip")
+
+local commands = {
+  { name = "verify-fast", description = "Verify without tests", cmd_args = { "verify", "-DskipTests" } },
+}
+assert(profiles.set_commands(project_root, commands), "project commands should persist")
+assert_equal(commands, profiles.get_commands(project_root), "project commands should round-trip")
 
 local config = {
   options = {
@@ -67,6 +81,17 @@ assert_equal({
   { arg = "-DskipTests", enabled = true },
   { arg = "-P", value = "legacy", enabled = true },
 }, config.options.default_arguments_view.arguments, "profile clear should remove only helper arguments")
+
+config.options.projects_view = { custom_commands = {} }
+profiles.apply_current(project_root, config)
+assert_equal(vim.list_extend(vim.deepcopy(arguments), {
+  { arg = "-P", value = "dev,uat", enabled = true, _maven_dashboard_profile = true },
+}), config.options.default_arguments_view.arguments,
+  "opening a project should restore its saved Maven arguments")
+assert(profiles.save_current_arguments(project_root, config), "closing the arguments view should persist user arguments")
+assert_equal(arguments, profiles.get_arguments(project_root), "generated Maven profile arguments must not be persisted")
+assert_equal(commands, config.options.projects_view.custom_commands,
+  "opening a project should expose its saved Maven commands")
 
 local listed_profiles
 profiles.list_available(project_root, function(err, available)

@@ -40,6 +40,43 @@ local function normalize_profiles(profiles)
   return normalized
 end
 
+local function normalize_arguments(arguments)
+  local normalized = {}
+  for _, argument in ipairs(arguments or {}) do
+    if type(argument) == "table" and type(argument.arg) == "string" then
+      local arg = vim.trim(argument.arg)
+      local value = type(argument.value) == "string" and vim.trim(argument.value) or nil
+      if arg ~= "" then
+        table.insert(normalized, { arg = arg, value = value ~= "" and value or nil, enabled = argument.enabled == true })
+      end
+    end
+  end
+  return normalized
+end
+
+local function normalize_commands(commands)
+  local normalized = {}
+  local seen = {}
+  for _, command in ipairs(commands or {}) do
+    if type(command) == "table" and type(command.name) == "string" and type(command.cmd_args) == "table" then
+      local name = vim.trim(command.name)
+      local args = {}
+      for _, arg in ipairs(command.cmd_args) do
+        if type(arg) == "string" and vim.trim(arg) ~= "" then table.insert(args, arg) end
+      end
+      if name ~= "" and #args > 0 and not seen[name] then
+        seen[name] = true
+        table.insert(normalized, {
+          name = name,
+          description = type(command.description) == "string" and command.description or "",
+          cmd_args = args,
+        })
+      end
+    end
+  end
+  return normalized
+end
+
 local function load_state()
   if vim.fn.filereadable(state_path) ~= 1 then
     return empty_state()
@@ -157,6 +194,49 @@ function M.set_profiles(root, profiles)
   return save_state(state)
 end
 
+local function get_project_setting(root, name, normalize)
+  root = normalize_root(root)
+  if not root then return {} end
+  local project = load_state().projects[root]
+  return type(project) == "table" and normalize(project[name]) or {}
+end
+
+local function set_project_setting(root, name, value, normalize)
+  root = normalize_root(root)
+  if not root or type(value) ~= "table" then return false end
+  local state = load_state()
+  local project = state.projects[root]
+  if type(project) ~= "table" then project = {} end
+  local normalized = normalize(value)
+  if #normalized == 0 then
+    project[name] = nil
+  else
+    project[name] = normalized
+  end
+  state.projects[root] = project
+  return save_state(state)
+end
+
+function M.get_arguments(root)
+  return get_project_setting(root, "arguments", normalize_arguments)
+end
+
+function M.set_arguments(root, arguments)
+  return set_project_setting(root, "arguments", arguments, normalize_arguments)
+end
+
+function M.get_commands(root)
+  return get_project_setting(root, "commands", normalize_commands)
+end
+
+function M.set_commands(root, commands)
+  return set_project_setting(root, "commands", commands, normalize_commands)
+end
+
+function M.get_primary_profile(root)
+  return M.get_profiles(root)[1]
+end
+
 function M.apply_profiles(profiles, config)
   config = config or maven_config()
   local defaults = config and config.options and config.options.default_arguments_view
@@ -184,11 +264,63 @@ function M.apply_profiles(profiles, config)
   return true
 end
 
+function M.save_current_arguments(root, config)
+  root = root or M.find_project_root()
+  config = config or maven_config()
+  local defaults = config and config.options and config.options.default_arguments_view
+  if not root or type(defaults) ~= "table" then return false end
+
+  local arguments = {}
+  for _, argument in ipairs(defaults.arguments or {}) do
+    if argument._maven_dashboard_profile ~= true then table.insert(arguments, argument) end
+  end
+  return M.set_arguments(root, arguments)
+end
+
+local arguments_persistence_installed = false
+
+function M.install_argument_persistence()
+  if arguments_persistence_installed then return true end
+  local ok, argument_view = pcall(require, "maven.ui.arguments_view")
+  if not ok then return false end
+
+  local upstream_mount = argument_view.mount
+  argument_view.mount = function(self, ...)
+    upstream_mount(self, ...)
+    local input = self._input_component and self._input_component.bufnr
+    local options = self._options_component and self._options_component.bufnr
+    local group = vim.api.nvim_create_augroup("MavenArgumentsPersistence", { clear = true })
+    local function persist_on_leave(buffer)
+      vim.api.nvim_create_autocmd("BufLeave", {
+        group = group,
+        buffer = buffer,
+        callback = function()
+          vim.schedule(function()
+            local current = vim.api.nvim_get_current_buf()
+            if current ~= input and current ~= options then M.save_current_arguments() end
+          end)
+        end,
+      })
+    end
+    persist_on_leave(input)
+    persist_on_leave(options)
+  end
+  arguments_persistence_installed = true
+  return true
+end
+
 function M.apply_current(root, config)
   root = root or M.find_project_root()
   if not root then
     return false
   end
+  config = config or maven_config()
+  if not config or not config.options then return false end
+  local defaults = config.options.default_arguments_view
+  if type(defaults) == "table" then defaults.arguments = M.get_arguments(root) end
+  local projects_view = config.options.projects_view
+  if type(projects_view) == "table" then projects_view.custom_commands = M.get_commands(root) end
+  M.install_argument_persistence()
   return M.apply_profiles(M.get_profiles(root), config)
 end
 
@@ -359,6 +491,45 @@ function M.clear()
   vim.notify("Maven profiles: none")
 end
 
+function M.add_command(name, cmd_args, description)
+  local root = M.find_project_root()
+  if not root then
+    vim.notify("No Maven project found for the current buffer", vim.log.levels.WARN)
+    return false
+  end
+  local commands = {}
+  for _, command in ipairs(M.get_commands(root)) do
+    if command.name ~= name then table.insert(commands, command) end
+  end
+  table.insert(commands, { name = name, description = description or "", cmd_args = cmd_args })
+  if not M.set_commands(root, commands) then
+    vim.notify("Failed to save Maven command preset", vim.log.levels.ERROR)
+    return false
+  end
+  M.apply_current(root)
+  vim.notify("Saved Maven preset: " .. name)
+  return true
+end
+
+function M.remove_command(name)
+  local root = M.find_project_root()
+  if not root then
+    vim.notify("No Maven project found for the current buffer", vim.log.levels.WARN)
+    return false
+  end
+  local commands = {}
+  for _, command in ipairs(M.get_commands(root)) do
+    if command.name ~= name then table.insert(commands, command) end
+  end
+  if not M.set_commands(root, commands) then
+    vim.notify("Failed to remove Maven command preset", vim.log.levels.ERROR)
+    return false
+  end
+  M.apply_current(root)
+  vim.notify("Removed Maven preset: " .. name)
+  return true
+end
+
 function M.setup(opts)
   opts = opts or {}
   state_path = opts.path or default_state_path
@@ -372,11 +543,27 @@ function M.setup(opts)
     desc = "Clear Maven profile selection",
     force = true,
   })
+  vim.api.nvim_create_user_command("MavenPresetAdd", function(command)
+    local values = vim.split(command.args, "%s+", { trimempty = true })
+    local name = table.remove(values, 1)
+    if not name or #values == 0 then
+      vim.notify("Usage: MavenPresetAdd <name> <Maven arguments...>", vim.log.levels.ERROR)
+      return
+    end
+    M.add_command(name, values)
+  end, { nargs = "+", desc = "Add a project Maven command preset" })
+  vim.api.nvim_create_user_command("MavenPresetRemove", function(command)
+    M.remove_command(command.args)
+  end, { nargs = 1, desc = "Remove a project Maven command preset" })
   vim.api.nvim_create_autocmd("DirChanged", {
     group = vim.api.nvim_create_augroup("MavenProfiles", { clear = true }),
     callback = function()
       M.apply_current()
     end,
+  })
+  vim.api.nvim_create_autocmd("DirChangedPre", {
+    group = vim.api.nvim_create_augroup("MavenArgumentsSave", { clear = true }),
+    callback = function() M.save_current_arguments() end,
   })
   M.apply_current()
   return M

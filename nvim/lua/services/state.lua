@@ -93,6 +93,11 @@ function M.get_profile(project_root)
   local root = normalize_root(project_root)
   if not root then return nil end
 
+  if vim.fn.filereadable(root .. "/pom.xml") == 1 then
+    local ok, maven_profiles = pcall(require, "custom.maven_profiles")
+    if ok and maven_profiles.get_primary_profile then return maven_profiles.get_primary_profile(root) end
+  end
+
   local project = load_state().projects[root]
   if type(project) ~= "table" or type(project.profile) ~= "string" then return nil end
   return project.profile ~= "" and project.profile or nil
