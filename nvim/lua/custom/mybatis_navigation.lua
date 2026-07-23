@@ -117,7 +117,8 @@ local function statement_locations(paths, id)
   for _, path in ipairs(paths) do
     for row, line in ipairs(read_file(path) or {}) do
       if line:match("<%s*[a-z]+[^>]-id%s*=%s*[\"']" .. escaped .. "[\"']") then
-        table.insert(matches, { path = path, row = row, label = path .. ":" .. row .. "  " .. id })
+        local _, quote_end = line:find("id%s*=%s*[\"']")
+        table.insert(matches, { path = path, row = row, col = quote_end, label = path .. ":" .. row .. "  " .. id })
       end
     end
   end
@@ -130,7 +131,8 @@ local function java_method_locations(paths, id)
   for _, path in ipairs(paths) do
     for row, line in ipairs(read_file(path) or {}) do
       if line:match("[%w_<>%,%s%[%]%.?]+%s+" .. escaped .. "%s*%(") then
-        table.insert(matches, { path = path, row = row, label = path .. ":" .. row .. "  " .. id })
+        local start = line:find(escaped .. "%s*%(")
+        table.insert(matches, { path = path, row = row, col = start - 1, label = path .. ":" .. row .. "  " .. id })
       end
     end
   end
@@ -177,7 +179,7 @@ local function choose(locations, prompt)
   end
   local function open(location)
     vim.cmd.edit(vim.fn.fnameescape(location.path))
-    vim.api.nvim_win_set_cursor(0, { location.row, 0 })
+    vim.api.nvim_win_set_cursor(0, { location.row, location.col or 0 })
   end
   if #locations == 1 then
     open(locations[1])
@@ -324,6 +326,9 @@ M._method_at = method_at
 M._mapper_method_from_location = mapper_method_from_location
 M._java_methods = java_methods
 M._statement_details = statement_details
+M._statement_locations = statement_locations
+M._java_method_locations = java_method_locations
+M._choose = choose
 M._maven_root = maven_root
 M._xml_for_namespace = xml_for_namespace
 M._java_for_namespace = java_for_namespace

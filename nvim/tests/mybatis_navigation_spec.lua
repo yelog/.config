@@ -61,7 +61,30 @@ local statements = nav._statement_details({ xml_path })
 assert_equal(#statements, 1, "parse XML statement")
 assert_equal(statements[1].id, "findByCustomerId", "parse XML statement id")
 assert_equal(statements[1].tag, "select", "parse XML statement tag")
+
+local statement_locations = nav._statement_locations({ xml_path }, "findByCustomerId")
+assert_equal(statement_locations[1].col, 14, "target XML id value")
 vim.fn.delete(xml_path)
+
+local single_quote_xml_path = vim.fn.tempname()
+vim.fn.writefile({ "  <delete id='removeById'>delete from orders</delete>" }, single_quote_xml_path)
+local single_quote_locations = nav._statement_locations({ single_quote_xml_path }, "removeById")
+assert_equal(single_quote_locations[1].col, 14, "target single-quoted XML id value")
+vim.fn.delete(single_quote_xml_path)
+
+local java_path = vim.fn.tempname() .. ".java"
+vim.fn.writefile({ "  List<Order> findByCustomerId(Long customerId);" }, java_path)
+local method_locations = nav._java_method_locations({ java_path }, "findByCustomerId")
+assert_equal(method_locations[1].col, 14, "target Java Mapper method name")
+vim.fn.delete(java_path)
+
+local target_path = vim.fn.tempname()
+vim.fn.writefile({ "  <select id=\"findByCustomerId\">" }, target_path)
+nav._choose({ { path = target_path, row = 1, col = statement_locations[1].col } }, "test cursor column")
+assert_equal(vim.api.nvim_win_get_cursor(0)[2], 14, "open target at symbol column")
+nav._choose({ { path = target_path, row = 1 } }, "test fallback column")
+assert_equal(vim.api.nvim_win_get_cursor(0)[2], 0, "open fallback target at line start")
+vim.fn.delete(target_path)
 
 local sys_dept_mapper = "/Users/yelog/workspace/lenovo/moss/moss-cloud/moss-service-common/moss-service-common-server/src/main/java/com/lenovo/moss/service/common/server/dao/SysDeptMapper.java"
 local target = nav._mapper_method_from_location({
