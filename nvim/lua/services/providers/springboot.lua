@@ -184,7 +184,7 @@ function M.discover(opts)
       command = {
         "bash",
         "-c",
-        string.format("mvn -Dstyle.color=always install -pl %s -am -DskipTests -q && mvn -Dstyle.color=always spring-boot:run -pl %s -Dspring-boot.run.mainClass=%s",
+        string.format("mvn -Dstyle.color=always install -pl %s -am -Dmaven.test.skip=true -q && mvn -Dstyle.color=always spring-boot:run -pl %s -Dspring-boot.run.mainClass=%s",
           relative, relative, entry.fqn),
       }
       debug_build_cmd = { "mvn", "-q", "-DskipTests", "install", "-pl", relative, "-am" }
