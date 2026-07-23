@@ -24,17 +24,19 @@ return {
       vim.api.nvim_create_autocmd("LspAttach", {
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
-          if client and client.supports_method("textDocument/codeLens") then
-            vim.lsp.codelens.refresh()
+          if client and client:supports_method("textDocument/codeLens") then
+            vim.lsp.codelens.enable(true, { bufnr = args.buf })
             vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
               group = vim.api.nvim_create_augroup("lsp_codelens_" .. args.buf, { clear = true }),
               buffer = args.buf,
-              callback = vim.lsp.codelens.refresh,
+              callback = function(event)
+                vim.lsp.codelens.enable(true, { bufnr = event.buf })
+              end,
             })
           end
 
           -- Inlay Hints 支持
-          if client and client.supports_method("textDocument/inlayHint") then
+          if client and client:supports_method("textDocument/inlayHint") then
             vim.lsp.inlay_hint.enable(true, { bufnr = args.buf })
           end
         end,
@@ -233,7 +235,7 @@ return {
           navic.attach(client, bufnr)
         end
         -- folder
-        if client and client.supports_method 'textDocument/foldingRange' then
+        if client and client:supports_method 'textDocument/foldingRange' then
           local win = vim.api.nvim_get_current_win()
           vim.wo[win].foldexpr = 'v:lua.vim.lsp.foldexpr()'
         end

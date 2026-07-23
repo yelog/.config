@@ -86,7 +86,7 @@ return {
           navic.attach(client, bufnr)
         end
 
-        if client and client.supports_method("textDocument/foldingRange") then
+        if client and client:supports_method("textDocument/foldingRange") then
           local win = vim.api.nvim_get_current_win()
           vim.wo[win].foldexpr = "v:lua.vim.lsp.foldexpr()"
         end
