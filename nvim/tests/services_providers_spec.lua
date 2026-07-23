@@ -78,6 +78,12 @@ assert(npm_dev.parse_line(npm_metadata, "  Local:   http://localhost:5174/"),
   "npm parser should report Vite port discovery")
 assert_equal("http://localhost:5174", npm_metadata.url, "npm parser should build the service URL")
 
+local vitepress_metadata = vim.deepcopy(npm_dev.metadata)
+assert(npm_dev.parse_line(vitepress_metadata, "  Local:   http://localhost:5173/"),
+  "npm parser should mark VitePress Local output as ready")
+assert_equal(true, vitepress_metadata.ready, "VitePress Local output should mark service ready")
+assert_equal("http://localhost:5173", vitepress_metadata.url, "VitePress parser should build Local URL")
+
 package.loaded["custom.services"] = {
   load = function()
     return {

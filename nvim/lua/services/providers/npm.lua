@@ -87,7 +87,7 @@ end
 local function parse_vite_line(line)
   if line:match("ready in %d+ ms") then return { ready = true } end
   local port = line:match("Local:%s+https?://localhost:(%d+)")
-  return port and { port = tonumber(port) } or nil
+  return port and { ready = true, port = tonumber(port) } or nil
 end
 
 local function parse_nextjs_line(line)
