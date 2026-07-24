@@ -33,7 +33,7 @@ return {
     "airblade/vim-rooter",    --> Changes Vim working directory to project root
     config = function()
       -- airblade/vim-rooter
-      vim.g.rooter_patterns = { ".git/" }
+      vim.g.rooter_patterns = { "http-client.env.json", ".git/" }
       -- Keep NUI panels from resetting the project directory when they mount nofile buffers.
       vim.g.rooter_buftypes = { "" }
     end

@@ -358,9 +358,6 @@ map("x", "<D-S-F>", function()
   require("custom.project_search").open({ search = query })
 end, { desc = "Search word (visual)" })
 
--- kulala
-map("n", "<leader>ce", function() require("kulala").set_selected_env() end, { desc = "Select kulala env" })
-
 -- aerial
 map("n", "<leader>ts", function() vim.cmd("AerialToggle") end, { desc = "Toggle structure (Aerial)" })
 

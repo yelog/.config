@@ -12,11 +12,11 @@ return {
       treesitter.setup()
       treesitter.install({
         "java", "javascript", "typescript", "vue", "lua", "bash", "json", "yaml", "markdown", "markdown_inline",
-        "html", "css", "rust", "toml",
+        "html", "css", "rust", "toml", "xml",
       })
 
       vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "java", "javascript", "typescript", "vue", "lua", "sh", "json", "yaml", "markdown", "html", "css", "rust", "toml" },
+        pattern = { "java", "javascript", "typescript", "vue", "lua", "sh", "json", "yaml", "markdown", "html", "css", "rust", "toml", "xml" },
         callback = function(args) pcall(vim.treesitter.start, args.buf) end,
       })
 
