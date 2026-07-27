@@ -409,6 +409,15 @@ function Panel:restart_service(panel, service)
 end
 
 function Panel:dispose_service(service)
+  local selected = {}
+  for _, key in ipairs(self.state.get_selected_services(service.metadata.project_root)) do
+    if key ~= service.key then table.insert(selected, key) end
+  end
+  if not self.state.set_selected_services(service.metadata.project_root, selected) then
+    vim.notify("Failed to persist service removal", vim.log.levels.ERROR)
+    return false
+  end
+
   local java_debug = require("custom.java_debug")
   if java_debug.is_debugging(service.key) then
     return java_debug.terminate(service.key, function() self.runtime:dispose(service.key) end)

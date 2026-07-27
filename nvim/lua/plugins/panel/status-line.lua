@@ -454,6 +454,31 @@ return {
         update = 'CursorMoved'
       }
 
+      local function service_summary()
+          local runtime = require("services.runtime").instance()
+          local lifecycle = require("services.lifecycle")
+          return require("services.status").summary(runtime:list(), lifecycle.shutdown_status())
+      end
+
+      local ServiceStatus = {
+        init = function(self) self.summary = service_summary() end,
+        condition = function() return service_summary() ~= nil end,
+        provider = function(self) return " " .. self.summary.text .. " " end,
+        hl = function(self)
+          local color = {
+            idle = colors.gray,
+            starting = colors.blue,
+            running = colors.green,
+            closing = colors.orange,
+            stopping = colors.orange,
+            failed = colors.red,
+            force = colors.red,
+          }
+          return { fg = color[self.summary.kind], bold = self.summary.kind ~= "idle" }
+        end,
+        update = { "User", pattern = "ServicesStatusChanged" },
+      }
+
 
       local StatusLine = {
         hl = { bg = "NONE" }, -- 背景色设置为 NONE，让背景透明
@@ -465,6 +490,7 @@ return {
         Space,
         Git,
         { provider = "%=" }, -- Center alignment
+        ServiceStatus,
         Navic,
         Space,
         FileType,

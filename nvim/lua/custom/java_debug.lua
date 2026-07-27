@@ -493,6 +493,10 @@ function M.is_shutdown_complete()
     and active_terminal_buf == nil
 end
 
+function M.shutdown_pending_count()
+  return M.is_shutdown_complete() and 0 or 1
+end
+
 function M.force_shutdown()
   local key = active_service_key
   shutdown_in_progress = true

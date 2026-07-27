@@ -238,6 +238,7 @@ assert(vim.wait(500, function()
     and vim.api.nvim_win_get_buf(instance.output_win) == instance.empty_output
     and #instance.rows == 1
 end), "disposing the focused service should retain the output split and refresh the list")
+assert_equal({ "npm::web::dev" }, selected, "disposing a service should persistently remove its selection")
 
 local web = runtime:get("npm::web::dev")
 assert(runtime:start(web.key), "running-service disposal should start its process first")
@@ -250,6 +251,19 @@ assert(vim.wait(500, function()
     and vim.api.nvim_win_get_buf(instance.output_win) == instance.empty_output
     and #instance.rows == 0
 end), "disposing a running focused service should retain the output split and remove its row")
+assert_equal({}, selected, "disposing the final service should persist an empty selection")
+
+local persistence_failure_service = runtime:register(vim.deepcopy(definitions[1]))
+state.set_selected_services = function() return false end
+assert_equal(false, panel:dispose_service(persistence_failure_service),
+  "a persistence failure should prevent runtime disposal")
+assert_equal(persistence_failure_service, runtime:get(persistence_failure_service.key),
+  "a service should remain available when its selection cannot be persisted")
+state.set_selected_services = function(_, keys)
+  selected = keys
+  return true
+end
+runtime:dispose(persistence_failure_service.key)
 
 local same_root_alias = root .. "/."
 local stale_output_state = { following = false, unseen_lines = 7, view = { lnum = 1, topline = 1 } }

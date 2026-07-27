@@ -53,6 +53,8 @@ assert_equal({ "runtime.begin", "debug.begin", "runtime.complete", "debug.comple
   completed_calls, "completed shutdown should begin both paths without force escalation")
 
 local forced_calls = {}
+local shutdown_feedback = {}
+local shutdown_clock = 0
 local forced_runtime = {
   begin_shutdown = function()
     table.insert(forced_calls, "runtime.begin")
@@ -83,8 +85,11 @@ local waited_ms
 assert_equal(false, lifecycle.shutdown(forced_runtime, {
   java_debug = forced_debug,
   grace_ms = 123,
+  now = function() return shutdown_clock end,
+  render_shutdown_status = function(message) table.insert(shutdown_feedback, message) end,
   wait = function(timeout, predicate)
     waited_ms = timeout
+    shutdown_clock = 120
     assert_equal(false, predicate(), "the lifecycle predicate should wait for both shutdown paths")
     return false
   end,
@@ -94,6 +99,14 @@ assert_equal({
   "runtime.begin", "debug.begin", "runtime.complete", "debug.complete", "runtime.complete", "debug.complete",
   "runtime.force", "debug.force", "runtime.complete", "debug.complete",
 }, forced_calls, "the lifecycle should force both incomplete shutdown paths after waiting")
+assert(shutdown_feedback[1]:find("正在关闭服务 2/2 · 0.0s", 1, true),
+  "pending shutdown should identify the remaining managed units")
+assert(shutdown_feedback[2]:find("正在关闭服务 2/2 · 0.1s", 1, true),
+  "pending shutdown should refresh after the spinner interval")
+assert(shutdown_feedback[1] ~= shutdown_feedback[2], "pending shutdown should advance its spinner")
+assert_equal("正在强制关闭剩余服务…", shutdown_feedback[3],
+  "timed out shutdown should explain force escalation")
+assert_equal(nil, shutdown_feedback[4], "shutdown feedback should clear before exit")
 
 lifecycle.setup(completed_runtime, { java_debug = completed_debug })
 lifecycle.setup(completed_runtime, { java_debug = completed_debug })

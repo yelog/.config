@@ -87,6 +87,8 @@ function Runtime:_emit(service, event_type, detail)
   for _, callback in ipairs(self.subscribers) do
     pcall(callback, event)
   end
+  pcall(vim.api.nvim_exec_autocmds, "User", { pattern = "ServicesStatusChanged", modeline = false })
+  pcall(vim.cmd, "redrawstatus")
 end
 
 function Runtime:_ensure_output(service)
@@ -596,6 +598,14 @@ function Runtime:is_shutdown_complete()
   return true
 end
 
+function Runtime:shutdown_pending_count()
+  local pending = 0
+  for _, service in ipairs(self:list()) do
+    if service.process or service.process_group_id or active_statuses[service.status] then pending = pending + 1 end
+  end
+  return pending
+end
+
 function Runtime:force_shutdown()
   self.shutting_down = true
   for _, service in ipairs(self:list()) do
@@ -645,7 +655,7 @@ end
 for _, method in ipairs({
   "register", "reconcile", "get", "list", "subscribe", "start", "stop", "restart", "dispose",
   "get_output_bufnr", "ensure_output", "reset_output", "append_output", "replace_output", "archive_terminal_output", "set_debugging",
-  "is_debugging", "start_all", "stop_all", "begin_shutdown", "is_shutdown_complete", "force_shutdown",
+  "is_debugging", "start_all", "stop_all", "begin_shutdown", "is_shutdown_complete", "shutdown_pending_count", "force_shutdown",
 }) do
   local method_name = method
   M[method_name] = function(...)
