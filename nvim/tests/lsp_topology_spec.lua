@@ -27,6 +27,10 @@ assert(lsp:find('exclude = { "jdtls", "copilot" }', 1, true), "Mason must not au
 assert(jdtls:find('require("custom.java_runtime")', 1, true), "JDTLS should use validated Java runtime discovery")
 assert(jdtls:find("cmd_env", 1, true), "JDTLS should receive an explicit launcher JAVA_HOME")
 assert(
+  read("lua/key-map.lua"):find('custom.jdtls_workspace_cleaner', 1, true),
+  "LSP keymaps should expose JDTLS workspace cleanup"
+)
+assert(
   jdtls:find("vscode-spring-boot-tools", 1, true) or lsp:find("vscode-spring-boot-tools", 1, true),
   "Mason should ensure Spring Boot language tools"
 )

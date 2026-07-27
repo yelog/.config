@@ -192,6 +192,9 @@ map({ "n", "v" }, "<leader>ll", function()
 end, { desc = "Format code" })
 map("n", "<leader>ld", function() Snacks.picker.diagnostics_buffer() end, { desc = "Buffer diagnostics" })
 map("n", "<leader>lD", function() Snacks.picker.diagnostics() end, { desc = "Workspace diagnostics" })
+map("n", "<leader>lc", function()
+  require("custom.jdtls_workspace_cleaner").pick()
+end, { desc = "Clean JDTLS workspace cache" })
 
 -- fzf-lua（全部改成 function() ... end）
 map("n", "<D-S-M>", function()
