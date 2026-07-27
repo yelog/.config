@@ -77,6 +77,17 @@ assert_equal(service, rendered_event.service, "render event should retain its se
 assert_equal(1, rendered_event.detail.appended, "render event should expose appended lines")
 assert_equal(service.output.bufnr, rendered_event.detail.bufnr, "render event should expose its buffer")
 
+local cleared_event
+runtime:subscribe(function(event)
+  if event.type == "output_cleared" then cleared_event = event end
+end)
+local output_bufnr = service.output.bufnr
+assert(runtime:clear_output(service.key), "runtime should clear a service output")
+assert_equal(output_bufnr, service.output.bufnr, "clearing should retain the standard output buffer")
+assert_equal({ "" }, vim.api.nvim_buf_get_lines(output_bufnr, 0, -1, false),
+  "clearing should remove rendered output")
+assert_equal(service, cleared_event.service, "clearing should emit an event for its service")
+
 assert(runtime:stop(service.key), "stopping a live service should succeed")
 assert_equal("STOPPING", service.status, "manual stop should expose the stopping state")
 assert_equal({ 15 }, spawned[1].process.killed, "manual stop should send TERM first")

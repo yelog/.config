@@ -104,6 +104,7 @@ local help_items = {
   { "s", "Start service" },
   { "r", "Restart service" },
   { "S", "Stop service" },
+  { "c", "Clear service log" },
   { "dd", "Dispose service" },
   { "<leader>d", "Debug Spring Boot service" },
   { "u", "Open detected service URL" },
@@ -284,6 +285,10 @@ function Panel:_show_output(panel, service)
   elseif service.output then
     service.output:configure_window(panel.output_win)
     if bufnr == service.output.bufnr then
+      vim.keymap.set("n", "c", function() self:clear_service_output(service) end, {
+        buffer = bufnr,
+        silent = true,
+      })
       local state = self:_output_state(panel, service)
       if state.following then
         self:_tail_output(panel)
@@ -436,6 +441,15 @@ function Panel:dispose_service(service)
   return self.runtime:dispose(service.key)
 end
 
+function Panel:clear_service_output(service)
+  if not service then return false end
+  if service.terminal_output then
+    vim.notify("Terminal output cannot be cleared from Services", vim.log.levels.WARN)
+    return false
+  end
+  return self.runtime:clear_output(service.key)
+end
+
 function Panel:debug_service(panel, service)
   if service.service_type ~= "springboot" then
     vim.notify("Debug is available only for Spring Boot services", vim.log.levels.WARN)
@@ -525,6 +539,9 @@ function Panel:_configure_keymaps(panel)
   vim.keymap.set("n", "S", function()
     local service = current_service()
     if service then self:stop_service(service) end
+  end, { buffer = panel.list_bufnr, silent = true })
+  vim.keymap.set("n", "c", function()
+    self:clear_service_output(current_service())
   end, { buffer = panel.list_bufnr, silent = true })
   vim.keymap.set("n", "dd", function()
     local service = current_service()
@@ -798,6 +815,23 @@ function Panel:_on_runtime_event(event)
       for _, panel in pairs(self.panels) do
         if panel_valid(panel) and panel.root == service.metadata.project_root and panel.focused_key == service.key then
           self:_handle_output_rendered(panel, service, event.detail)
+        end
+      end
+    end)
+    return
+  end
+  if event.type == "output_cleared" then
+    vim.schedule(function()
+      for _, panel in pairs(self.panels) do
+        if panel_valid(panel) and panel.root == service.metadata.project_root then
+          local state = self:_output_state(panel, service)
+          state.following = true
+          state.unseen_lines = 0
+          state.view = nil
+          if panel.focused_key == service.key and not service.terminal_output
+            and vim.api.nvim_win_get_buf(panel.output_win) == service.output.bufnr then
+            self:_set_output_winbar(panel, state)
+          end
         end
       end
     end)

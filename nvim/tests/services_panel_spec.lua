@@ -47,6 +47,11 @@ local function log_batch(prefix, count)
   return table.concat(lines, "\n") .. "\n"
 end
 
+local function press(winid, keys)
+  vim.api.nvim_set_current_win(winid)
+  vim.api.nvim_feedkeys(vim.keycode(keys), "mx", false)
+end
+
 local root = "/panel-project"
 local definitions = {
   {
@@ -202,6 +207,26 @@ end), "resumed output should tail subsequent rendered batches")
 assert_equal(0, output_state.unseen_lines, "resumed output should remain caught up")
 assert_equal(instance.list_win, vim.api.nvim_get_current_win(), "resumed output should not steal list focus")
 
+output_state.following = false
+output_state.unseen_lines = 3
+output_state.view = output_view(instance.output_win)
+press(instance.list_win, "c")
+assert(vim.wait(500, function()
+  return vim.deep_equal({ "" }, vim.api.nvim_buf_get_lines(orders.output.bufnr, 0, -1, false))
+    and output_state.following and output_state.unseen_lines == 0 and output_state.view == nil
+end), "clearing from the service list should reset rendered output and follow state")
+assert_equal(instance.list_win, vim.api.nvim_get_current_win(), "list clear should retain list focus")
+assert(runtime:append_output(orders.key, "stdout", "after list clear\n"), "output should continue after clearing")
+assert(vim.wait(500, function()
+  return vim.api.nvim_buf_get_lines(orders.output.bufnr, -2, -1, false)[1] == "after list clear"
+end), "new output should render after list clear")
+
+press(instance.output_win, "c")
+assert(vim.wait(500, function()
+  return vim.deep_equal({ "" }, vim.api.nvim_buf_get_lines(orders.output.bufnr, 0, -1, false))
+end), "clearing from the output window should remove rendered output")
+assert_equal(instance.output_win, vim.api.nvim_get_current_win(), "output clear should retain output focus")
+
 instance = panel:open(root)
 assert(instance.output_states[orders.key] == output_state,
   "reopening an already-open panel at the same root should retain output state")
@@ -228,6 +253,7 @@ assert(help_text:find("?", 1, true), "help should document its own shortcut")
 assert(help_text:find("<CR>", 1, true), "help should document start or focus")
 assert(help_text:find("<leader>d", 1, true), "help should document Spring Boot debugging")
 assert(help_text:find("dd", 1, true), "help should document disposal")
+assert(help_text:find("Clear service log", 1, true), "help should document log clearing")
 panel:show_help(instance)
 assert_equal(false, vim.api.nvim_win_is_valid(help_win), "opening help again should close the existing help window")
 

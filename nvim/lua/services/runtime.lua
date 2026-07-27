@@ -499,6 +499,14 @@ function Runtime:reset_output(key)
   return renderer.bufnr
 end
 
+function Runtime:clear_output(key)
+  local service = self:get(key)
+  if not service or service.terminal_output then return false end
+  self:_ensure_output(service):clear()
+  self:_emit(service, "output_cleared")
+  return true
+end
+
 function Runtime:append_output(key, stream, data)
   local service = self:get(key)
   if not service or type(data) ~= "string" or data == "" then return false end
@@ -654,7 +662,7 @@ end
 
 for _, method in ipairs({
   "register", "reconcile", "get", "list", "subscribe", "start", "stop", "restart", "dispose",
-  "get_output_bufnr", "ensure_output", "reset_output", "append_output", "replace_output", "archive_terminal_output", "set_debugging",
+  "get_output_bufnr", "ensure_output", "reset_output", "clear_output", "append_output", "replace_output", "archive_terminal_output", "set_debugging",
   "is_debugging", "start_all", "stop_all", "begin_shutdown", "is_shutdown_complete", "shutdown_pending_count", "force_shutdown",
 }) do
   local method_name = method
