@@ -22,6 +22,7 @@ local copilot = read("lua/plugins/complete/copilot.lua")
 local lsp = read("lua/plugins/lsp/lsp.lua")
 local snacks = read("lua/plugins/panel/snacks.lua")
 local fzf_lua = read("lua/plugins/panel/fzf-lua.lua")
+local grug_far = read("lua/plugins/grug-far.lua")
 local base = read("base.vim")
 
 assert_not_contains(keymaps, "Autosession delete", "Resession should be the only session deletion implementation")
@@ -67,5 +68,18 @@ assert_not_contains(fzf_lua, 'formatter = "path.dirname_first"',
   "fzf-lua should not override the file layout owned by Snacks")
 assert_not_contains(base, "noremap <LEADER>sw", "Snacks should be the sole wrap toggle")
 assert_contains(keymaps, '{ "<leader>x", group = "Tasks" }', "Which-Key should expose the Tasks namespace")
+
+assert_contains(grug_far, '"MagicDuck/grug-far.nvim"', "grug-far should provide project-wide replacement")
+assert_contains(grug_far, '"<D-S-R>"', "Cmd+Shift+R should open grug-far")
+assert_contains(grug_far, '"--fixed-strings"', "grug-far should default to literal matching")
+assert_contains(grug_far, '"--ignore-case"', "grug-far should support case-insensitive matching")
+assert_contains(grug_far, 'visualSelectionUsage = "prefill-search"',
+  "Visual selections should prefill the replacement search")
+assert_contains(grug_far, 'style = "float"',
+  "grug-far should open in a Snacks floating window")
+assert_contains(grug_far, "grug_far._createWindow = function(context)",
+  "grug-far should bind its buffer to the Snacks floating window")
+assert_contains(grug_far, "fixbuf = false", "Snacks should allow grug-far to replace its temporary buffer")
+assert_not_contains(grug_far, "windowCreationCommand =", "grug-far should not depend on an Ex split command")
 
 print("config-correctness-tests: ok")
