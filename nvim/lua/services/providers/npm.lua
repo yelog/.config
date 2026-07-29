@@ -42,6 +42,19 @@ local function command_for(package_manager, script)
   return { "npm", "run", script }
 end
 
+local function split_arguments(value)
+  if type(value) ~= "string" or value == "" then return {} end
+  return vim.split(vim.trim(value), "%s+", { trimempty = true })
+end
+
+function M.prepare(definition, _, override)
+  override = override or {}
+  local metadata = definition.metadata or {}
+  local command = command_for(override.packageManager or metadata.package_manager, override.script or metadata.script)
+  vim.list_extend(command, split_arguments(override.arguments))
+  return command
+end
+
 local dev_scripts = { dev = true, start = true, serve = true, watch = true, develop = true }
 
 local function is_dev_script(name)
@@ -155,6 +168,7 @@ function M.discover(opts)
             env = { FORCE_COLOR = "1", CLICOLOR_FORCE = "1" },
             restart = { auto = is_dev, delay = 3, max_attempts = 3 },
             color_policy = "always",
+            prepare = M.prepare,
             parse_line = M.parse_line,
             metadata = {
               service_type = "npm",

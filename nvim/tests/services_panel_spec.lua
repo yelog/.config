@@ -108,6 +108,7 @@ panel:open(root)
 local instance = panel.panels[vim.api.nvim_get_current_tabpage()]
 assert(instance, "opening a root should create a tab-local panel")
 assert_equal(instance.list_win, vim.api.nvim_get_current_win(), "opening should focus the service list")
+assert(vim.fn.maparg("g", "n", false, true).lhs == "g", "Services should map g to configure the selected service")
 assert_equal(2, #instance.rows, "panel rows should reflect reconciled service records")
 assert(vim.api.nvim_win_get_position(instance.list_win)[2] < vim.api.nvim_win_get_position(instance.output_win)[2],
   "the service list should remain left of the output pane regardless of splitright")

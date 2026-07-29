@@ -41,6 +41,11 @@ assert_equal("ALWAYS", spring.env.SPRING_OUTPUT_ANSI_ENABLED,
   "Spring services should force application ANSI colors through non-TTY pipes")
 assert_equal({ "mvn", "-Pdev", "-Dstyle.color=always", "spring-boot:run", "-Dspring-boot.run.mainClass=com.example.order.OrderApplication" },
   spring.prepare(spring, "dev"), "Spring preparation should inject the selected Maven profile")
+assert_equal({
+  "mvn", "-Pdev", "-Dstyle.color=always", "spring-boot:run", "-Dspring-boot.run.mainClass=com.example.order.OrderApplication",
+  "-Dspring-boot.run.jvmArguments=-Xmx1g", "-Dspring-boot.run.arguments=--server.port=8081",
+}, spring.prepare(spring, "dev", { vmArgs = "-Xmx1g", programArgs = "--server.port=8081" }),
+  "Spring preparation should inject service JVM and program arguments")
 
 local spring_metadata = vim.deepcopy(spring.metadata)
 assert(spring.parse_line(spring_metadata, "Tomcat started on port(s): 8080 (http) with context path '/api'"),
@@ -70,6 +75,9 @@ assert_equal("npm", npm_dev.service_type, "npm definitions should have a type")
 assert_equal({ "npm", "run", "dev" }, npm_dev.cmd, "npm provider should select npm from its lockfile")
 assert_equal("npm::" .. project_root .. "::dev", npm_dev.key, "npm definitions should use a stable key")
 assert_equal("1", npm_dev.env.FORCE_COLOR, "npm provider should force color through non-TTY pipes")
+assert_equal({ "pnpm", "run", "dev", "--host", "0.0.0.0" },
+  npm_dev.prepare(npm_dev, nil, { packageManager = "pnpm", arguments = "--host 0.0.0.0" }),
+  "npm preparation should apply the configured manager and arguments")
 
 local npm_metadata = vim.deepcopy(npm_dev.metadata)
 assert(npm_dev.parse_line(npm_metadata, "VITE v8.0.0 ready in 3204 ms"),

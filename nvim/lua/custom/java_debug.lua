@@ -259,6 +259,18 @@ function M.resolve_config(base, root, main_class, profile)
   return resolved, nil
 end
 
+local function apply_service_override(config, service)
+  local override = require("services.launch_config").get((service.metadata or {}).project_root, service.key)
+  config.vmArgs = append_words(
+    config.vmArgs,
+    override.vmArgs,
+    override.springProfile and ("-Dspring.profiles.active=" .. override.springProfile) or nil
+  )
+  if type(override.programArgs) == "string" and override.programArgs ~= "" then config.args = override.programArgs end
+  if type(override.env) == "table" then config.env = vim.tbl_extend("force", config.env or {}, override.env) end
+  return config
+end
+
 function M.match_config(configs, main_class, module_root, project_name)
   local matches = {}
   for _, config in ipairs(configs or {}) do
@@ -600,6 +612,7 @@ function M.start(service_or_key)
           notify(config_err, vim.log.levels.ERROR)
           return
         end
+        resolved = apply_service_override(resolved, service)
         M.start_debug_adapter(bufnr, function(port, adapter_err)
           vim.schedule(function()
             if launch_token ~= token or active_service_key ~= service.key then return end

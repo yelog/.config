@@ -129,15 +129,35 @@ local function parse_server_line(line)
   }
 end
 
-function M.prepare(definition, profile)
+function M.prepare(definition, profile, override)
   local command = vim.deepcopy(definition.cmd)
-  if not profile or profile == "" then return command end
+  override = override or {}
 
   local executable = vim.fs.basename(tostring(command[1] or ""))
-  if executable == "mvn" or executable == "mvnw" or executable == "mvn.cmd" then
+  if profile and profile ~= "" and (executable == "mvn" or executable == "mvnw" or executable == "mvn.cmd") then
     table.insert(command, 2, "-P" .. profile)
-  elseif executable == "bash" and command[2] == "-c" and type(command[3]) == "string" then
+  elseif profile and profile ~= "" and executable == "bash" and command[2] == "-c" and type(command[3]) == "string" then
     command[3] = command[3]:gsub("mvn%s+", "mvn -P" .. profile .. " ", 2)
+  end
+  local properties = {}
+  local vm_args = override.vmArgs
+  if type(override.springProfile) == "string" and override.springProfile ~= "" then
+    vm_args = table.concat(vim.tbl_filter(function(value) return value ~= "" end, {
+      vm_args or "", "-Dspring.profiles.active=" .. override.springProfile,
+    }), " ")
+  end
+  if type(vm_args) == "string" and vm_args ~= "" then
+    table.insert(properties, "-Dspring-boot.run.jvmArguments=" .. vm_args)
+  end
+  if type(override.programArgs) == "string" and override.programArgs ~= "" then
+    table.insert(properties, "-Dspring-boot.run.arguments=" .. override.programArgs)
+  end
+  for _, property in ipairs(properties) do
+    if executable == "bash" and command[2] == "-c" and type(command[3]) == "string" then
+      command[3] = command[3] .. " " .. vim.fn.shellescape(property)
+    else
+      table.insert(command, property)
+    end
   end
   return command
 end

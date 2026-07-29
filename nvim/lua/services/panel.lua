@@ -110,6 +110,7 @@ local help_items = {
   { "u", "Open detected service URL" },
   { "a", "Manage selected services" },
   { "p", "Select Spring profile" },
+  { "g", "Configure selected service" },
   { "q", "Close Services panel" },
 }
 
@@ -563,6 +564,10 @@ function Panel:_configure_keymaps(panel)
   end, { buffer = panel.list_bufnr, silent = true })
   vim.keymap.set("n", "a", function() self:manage(panel) end, { buffer = panel.list_bufnr, silent = true })
   vim.keymap.set("n", "p", function() self:select_profile(panel) end, { buffer = panel.list_bufnr, silent = true })
+  vim.keymap.set("n", "g", function()
+    local service = current_service()
+    if service then require("services.config_editor").open(service, function() self:render(panel) end) end
+  end, { buffer = panel.list_bufnr, silent = true })
 end
 
 function Panel:_destroy(panel)

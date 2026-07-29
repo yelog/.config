@@ -363,6 +363,8 @@ function Runtime:start(key, opts)
   local generation = service.generation
   local profile = opts.profile
   if profile == nil then profile = service.metadata.profile end
+  local override = require("services.launch_config").get(service.metadata.project_root, service.key)
+  if type(override.mavenProfile) == "string" and override.mavenProfile ~= "" then profile = override.mavenProfile end
   self:_reset_metadata(service, profile)
 
   local renderer = self:_ensure_output(service)
@@ -377,7 +379,7 @@ function Runtime:start(key, opts)
 
   local command = vim.deepcopy(service.definition.cmd)
   if type(service.definition.prepare) == "function" then
-    local ok, prepared = pcall(service.definition.prepare, service.definition, profile)
+    local ok, prepared = pcall(service.definition.prepare, service.definition, profile, override)
     if not ok or type(prepared) ~= "table" or not prepared[1] then
       service.status = "FAILED"
       service.last_error = ok and "invalid prepared command" or prepared
@@ -390,7 +392,7 @@ function Runtime:start(key, opts)
 
   local ok, process = pcall(self.spawn, command, {
     cwd = service.cwd,
-    env = service.env,
+    env = vim.tbl_extend("force", {}, service.env or {}, type(override.env) == "table" and override.env or {}),
     on_output = function(stream, err, data)
       self:_on_output(service, generation, stream, err, data)
     end,
