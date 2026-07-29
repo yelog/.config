@@ -4,13 +4,7 @@ return {
     event = { "BufReadPre *.java", "BufNewFile *.java" },
     dependencies = {
       "mfussenegger/nvim-dap",
-      {
-        "JavaHello/spring-boot.nvim",
-        dependencies = {
-          "neovim/nvim-lspconfig",
-        },
-        opts = {},
-      },
+      "JavaHello/spring-boot.nvim",
     },
     config = function()
       local jdtls = require("jdtls")

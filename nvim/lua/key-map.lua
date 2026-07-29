@@ -313,6 +313,9 @@ map("n", "gd", function()
   if require('i18n').i18n_definition_next_locale() then
     return
   end
+  if require("custom.spring_property_navigation").definition() then
+    return
+  end
   require('snacks').picker.lsp_definitions()
 end
 , { desc = "goto definition" }) --use telescope instead

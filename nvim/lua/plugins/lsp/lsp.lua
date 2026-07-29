@@ -164,6 +164,7 @@ return {
           "marksman",
           "lua_ls",
           "jsonls",
+          "yamlls",
           "vue_ls",
           "vtsls",
           "eslint",
@@ -273,6 +274,7 @@ return {
         }
       })
       vim.lsp.enable('jsonls')
+      vim.lsp.enable('yamlls')
 
       -- local base_on_attach = vim.lsp.config.eslint.on_attach
       vim.lsp.enable('eslint')

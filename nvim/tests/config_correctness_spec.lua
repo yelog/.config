@@ -55,6 +55,8 @@ assert_contains(
 )
 assert_not_contains(lsp, '"copilot",', "Mason should not install a duplicate native Copilot LSP")
 assert_not_contains(lsp, "vim.lsp.enable('copilot')", "Neovim should not start a duplicate native Copilot LSP")
+assert_contains(lsp, '"yamlls",', "Mason should install the YAML language server")
+assert_contains(lsp, "vim.lsp.enable('yamlls')", "Neovim should enable the YAML language server")
 
 assert_contains(snacks, '{ "<leader>bS"', "Scratch selection should use the Buffer namespace")
 assert_not_contains(snacks, '{ "<leader>S"', "Scratch selection should not replace the save mapping")

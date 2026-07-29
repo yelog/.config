@@ -7,6 +7,7 @@ end
 
 local lsp = read("lua/plugins/lsp/lsp.lua")
 local jdtls = read("lua/plugins/lsp/jdtls.lua")
+local spring_boot = read("lua/plugins/lsp/spring_boot.lua")
 local treesitter = read("lua/plugins/lsp/treesitter.lua")
 
 assert(lsp:find("vim.lsp.config('*'", 1, true), "All ordinary LSP servers should inherit shared attachment behavior")
@@ -34,6 +35,8 @@ assert(
   jdtls:find("vscode-spring-boot-tools", 1, true) or lsp:find("vscode-spring-boot-tools", 1, true),
   "Mason should ensure Spring Boot language tools"
 )
+assert(spring_boot:find("BufReadPre bootstrap*.yml", 1, true), "Spring Boot LS should load before bootstrap YAML filetypes")
+assert(spring_boot:find("BufReadPre application*.yml", 1, true), "Spring Boot LS should load before application YAML filetypes")
 
 assert(treesitter:find('"rust"', 1, true), "Treesitter should install the Rust parser")
 assert(treesitter:find('"toml"', 1, true), "Treesitter should install the TOML parser")
