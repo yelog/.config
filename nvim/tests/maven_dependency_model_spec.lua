@@ -16,12 +16,12 @@ end
 
 local model = require("custom.maven_dependency_model")
 local dependencies = {
-  { id = "a", group_id = "org.demo", artifact_id = "root", version = "1.0", scope = "compile" },
-  { id = "b", parent_id = "a", group_id = "org.demo", artifact_id = "shared", version = "2.0", scope = "compile" },
-  { id = "c", parent_id = "a", group_id = "org.demo", artifact_id = "test-only", version = "1.0", scope = "test" },
-  { id = "d", group_id = "org.other", artifact_id = "second", version = "1.0", scope = "compile" },
-  { id = "e", parent_id = "d", group_id = "org.demo", artifact_id = "shared", version = "2.0", scope = "compile", is_duplicate = true },
-  { id = "f", parent_id = "d", group_id = "org.bad", artifact_id = "conflicted", version = "1.5", scope = "runtime", conflict_version = "2.0" },
+  { id = "a", group_id = "org.demo", artifact_id = "root", version = "1.0", scope = "compile", size = 10 },
+  { id = "b", parent_id = "a", group_id = "org.demo", artifact_id = "shared", version = "2.0", scope = "compile", size = 20 },
+  { id = "c", parent_id = "a", group_id = "org.demo", artifact_id = "test-only", version = "1.0", scope = "test", size = 5 },
+  { id = "d", group_id = "org.other", artifact_id = "second", version = "1.0", scope = "compile", size = 30 },
+  { id = "e", parent_id = "d", group_id = "org.demo", artifact_id = "shared", version = "2.0", scope = "compile", size = 20, is_duplicate = true },
+  { id = "f", parent_id = "d", group_id = "org.bad", artifact_id = "conflicted", version = "1.5", scope = "runtime", size = 40, conflict_version = "2.0" },
 }
 
 local graph = model.index(dependencies)
@@ -31,6 +31,10 @@ assert_equal({ "b", "c" }, graph.children.a, "children should be indexed by occu
 assert_equal({ "a", "b" }, model.path_for_id(graph, "b"), "a dependency path should include all ancestors")
 assert_equal({ { "a", "b" }, { "d", "e" } }, model.paths(graph, "org.demo:shared"),
   "coordinate paths should include every occurrence")
+assert_equal({ direct = 2, resolved = 6, conflicts = 1, size = 125 }, model.summary(graph),
+  "summary should expose direct, resolved, conflict, and size totals")
+assert_equal({ "b", "a", "c" }, model.ordered_ids(graph, { "a", "b", "c" }, { sort_by_size = true }),
+  "size sort should be descending and preserve input order for ties")
 
 local tree = model.visible_tree(graph, { query = "shared" })
 assert_equal({ "a", "b", "d", "e" }, tree, "tree filtering should preserve matching paths")

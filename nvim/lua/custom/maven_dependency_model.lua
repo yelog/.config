@@ -87,6 +87,32 @@ function M.matching_ids(graph, options)
   return result
 end
 
+function M.summary(graph)
+  local result = { direct = #graph.roots, resolved = 0, conflicts = 0, size = 0 }
+  for _, dependency in pairs(graph.by_id) do
+    result.resolved = result.resolved + 1
+    result.size = result.size + (dependency.size or 0)
+    if dependency.conflict_version then result.conflicts = result.conflicts + 1 end
+  end
+  return result
+end
+
+function M.ordered_ids(graph, ids, options)
+  options = options or {}
+  local result = vim.deepcopy(ids)
+  if not options.sort_by_size then return result end
+
+  local positions = {}
+  for index, id in ipairs(result) do positions[id] = index end
+  table.sort(result, function(left, right)
+    local left_size = graph.by_id[left].size or 0
+    local right_size = graph.by_id[right].size or 0
+    if left_size == right_size then return positions[left] < positions[right] end
+    return left_size > right_size
+  end)
+  return result
+end
+
 function M.visible_list(graph, options)
   options = options or {}
   local result = {}

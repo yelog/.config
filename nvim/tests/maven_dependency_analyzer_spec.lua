@@ -19,9 +19,9 @@ package.preload["maven.sources"] = function()
     load_project_dependencies = function(pom, _, callback)
       loaded_pom = pom
       callback("SUCCEED", {
-        { id = "root", group_id = "org.demo", artifact_id = "root", version = "1.0", scope = "compile" },
-        { id = "framework", parent_id = "root", group_id = "org.demo", artifact_id = "framework-core", version = "1.0", scope = "compile" },
-        { id = "fastjson", parent_id = "framework", group_id = "com.alibaba", artifact_id = "fastjson", version = "2.0", scope = "compile" },
+        { id = "root", group_id = "org.demo", artifact_id = "root", version = "1.0", scope = "compile", size = 2 },
+        { id = "framework", parent_id = "root", group_id = "org.demo", artifact_id = "framework-core", version = "1.0", scope = "compile", size = 4 },
+        { id = "fastjson", parent_id = "framework", group_id = "com.alibaba", artifact_id = "fastjson", version = "2.0", scope = "compile", size = 10 },
       })
     end,
   }
@@ -55,5 +55,10 @@ vim.cmd("normal /")
 
 assert(vim.api.nvim_get_current_win() == popup_win, "search completion should return focus to the dependency popup")
 local rendered = table.concat(vim.api.nvim_buf_get_lines(vim.api.nvim_win_get_buf(popup_win), 0, -1, false), "\n")
-assert(rendered:find("com.alibaba:fastjson", 1, true), "search results should expand every ancestor path to matching dependencies")
+assert(rendered:find("fastjson", 1, true), "search results should expand every ancestor path to matching dependencies")
+assert(rendered:find("1 direct", 1, true), "workbench should show dependency summary")
+assert(rendered:find("g group", 1, true), "workbench should advertise metadata controls")
+vim.cmd("normal g")
+rendered = table.concat(vim.api.nvim_buf_get_lines(vim.api.nvim_win_get_buf(popup_win), 0, -1, false), "\n")
+assert(rendered:find("com.alibaba", 1, true), "group toggle should reveal groupId metadata")
 print("maven-dependency-analyzer-tests: ok")
