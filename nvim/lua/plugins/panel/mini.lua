@@ -16,5 +16,19 @@ return {
         }),
       },
     })
+
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "xml",
+      callback = function(args)
+        vim.b[args.buf].miniai_config = {
+          custom_textobjects = {
+            t = {
+              "<([%p%w]-)%f[^<%w][^<>]->.-</%1>",
+              "^<.->().*()</[^/]->$",
+            },
+          },
+        }
+      end,
+    })
   end
 }
