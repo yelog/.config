@@ -34,6 +34,10 @@ assert_equal({ { "a", "b" }, { "d", "e" } }, model.paths(graph, "org.demo:shared
 
 local tree = model.visible_tree(graph, { query = "shared" })
 assert_equal({ "a", "b", "d", "e" }, tree, "tree filtering should preserve matching paths")
+assert_equal({ b = true, e = true }, model.matching_ids(graph, { query = "shared" }),
+  "tree filtering should distinguish matching dependencies from their ancestors")
+assert_equal({}, model.visible_tree(graph, { query = "missing" }),
+  "a query with no matches should leave the renderer an explicit empty state")
 
 tree = model.visible_tree(graph, { hide_test = true })
 assert_equal({ "a", "b", "d", "e", "f" }, tree, "hiding test scope should remove test nodes")

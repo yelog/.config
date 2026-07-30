@@ -78,6 +78,15 @@ function M.visible_tree(graph, options)
   return result
 end
 
+function M.matching_ids(graph, options)
+  options = options or {}
+  local result = {}
+  for id, dependency in pairs(graph.by_id) do
+    if matches(dependency, options) then result[id] = true end
+  end
+  return result
+end
+
 function M.visible_list(graph, options)
   options = options or {}
   local result = {}

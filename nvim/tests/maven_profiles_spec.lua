@@ -40,6 +40,14 @@ assert_equal({ "dev", "uat" }, profiles.parse_profiles(output), "profile output 
 local project_root = temp_dir .. "/project"
 vim.fn.mkdir(project_root, "p")
 vim.fn.writefile({ "<project />" }, project_root .. "/pom.xml")
+local module_root = project_root .. "/modules/server"
+vim.fn.mkdir(module_root .. "/src/main/java", "p")
+vim.fn.writefile({ "<project />" }, module_root .. "/pom.xml")
+
+assert_equal(module_root .. "/pom.xml", profiles.find_nearest_pom(module_root .. "/pom.xml"),
+  "a POM buffer should analyze that exact POM")
+assert_equal(module_root .. "/pom.xml", profiles.find_nearest_pom(module_root .. "/src/main/java/App.java"),
+  "a module source file should resolve to its nearest POM")
 
 assert(profiles.set_profiles(project_root, { "uat", "dev", "dev" }), "profile selection should persist")
 assert_equal({ "dev", "uat" }, profiles.get_profiles(project_root), "profile selection should be project-scoped")

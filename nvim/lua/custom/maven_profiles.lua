@@ -154,6 +154,20 @@ function M.find_project_root(path)
   return pom_root and vim.fs.normalize(pom_root) or nil
 end
 
+function M.find_nearest_pom(path)
+  path = path or vim.api.nvim_buf_get_name(0)
+  if type(path) ~= "string" or path == "" then return nil end
+  path = vim.fs.normalize(path)
+
+  if vim.fn.isdirectory(path) ~= 1 then
+    if vim.fs.basename(path) == "pom.xml" and vim.fn.filereadable(path) == 1 then return path end
+    path = vim.fs.dirname(path)
+  end
+
+  local poms = vim.fs.find("pom.xml", { path = path, upward = true, limit = 1 })
+  return poms[1] and vim.fs.normalize(poms[1]) or nil
+end
+
 function M.parse_profiles(output)
   local profiles = {}
   for line in (output or ""):gmatch("[^\r\n]+") do
