@@ -19,7 +19,7 @@ package.preload["maven.sources"] = function()
     load_project_dependencies = function(pom, _, callback)
       loaded_pom = pom
       callback("SUCCEED", {
-        { id = "root", group_id = "org.demo", artifact_id = "root", version = "1.0", scope = "compile", size = 2 },
+        { id = "root", group_id = "org.demo", artifact_id = "root", version = "1.0", scope = "compile", size = 2, conflict_version = "0.9" },
         { id = "framework", parent_id = "root", group_id = "org.demo", artifact_id = "framework-core", version = "1.0", scope = "compile", size = 4 },
         { id = "fastjson", parent_id = "framework", group_id = "com.alibaba", artifact_id = "fastjson", version = "2.0", scope = "compile", size = 10 },
       })
@@ -58,6 +58,8 @@ local rendered = table.concat(vim.api.nvim_buf_get_lines(vim.api.nvim_win_get_bu
 assert(rendered:find("fastjson", 1, true), "search results should expand every ancestor path to matching dependencies")
 assert(rendered:find("1 direct", 1, true), "workbench should show dependency summary")
 assert(rendered:find("g group", 1, true), "workbench should advertise metadata controls")
+assert(rendered:find("[! CONFLICT]", 1, true), "direct conflicts should retain an explicit conflict badge")
+assert(rendered:find("active 1.0 <- omitted 0.9", 1, true), "conflicts should compare active and omitted versions")
 vim.cmd("normal g")
 rendered = table.concat(vim.api.nvim_buf_get_lines(vim.api.nvim_win_get_buf(popup_win), 0, -1, false), "\n")
 assert(rendered:find("com.alibaba", 1, true), "group toggle should reveal groupId metadata")

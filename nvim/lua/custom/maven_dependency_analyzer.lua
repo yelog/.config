@@ -6,6 +6,15 @@ local active_view
 local Analyzer = {}
 Analyzer.__index = Analyzer
 
+local function setup_highlights()
+  vim.api.nvim_set_hl(0, "MavenDependencyDirect", { default = true, link = "String" })
+  vim.api.nvim_set_hl(0, "MavenDependencyTransitive", { default = true, link = "Function" })
+  vim.api.nvim_set_hl(0, "MavenDependencyDuplicate", { default = true, link = "Special" })
+  vim.api.nvim_set_hl(0, "MavenDependencyConflictRail", { default = true, link = "DiagnosticWarn" })
+  vim.api.nvim_set_hl(0, "MavenDependencyConflictBadge", { default = true, link = "DiagnosticVirtualTextWarn" })
+  vim.api.nvim_set_hl(0, "MavenDependencyConflictText", { default = true, link = "DiagnosticWarn" })
+end
+
 local function coordinate(dependency)
   return dependency.group_id .. ":" .. dependency.artifact_id
 end
@@ -106,23 +115,31 @@ function Analyzer:_node_line(node)
   end
   if not dependency.parent_id then
     line:append("D ", "String")
-  elseif dependency.conflict_version then
-    line:append("! ", "DiagnosticWarn")
   elseif dependency.is_duplicate then
     line:append("= ", "DiagnosticHint")
   else
     line:append("· ", "Comment")
   end
-  line:append(dependency.artifact_id, is_match and "Search" or dependency.conflict_version and "DiagnosticWarn" or "Identifier")
+  if dependency.conflict_version then
+    line:append("┃ ", "MavenDependencyConflictRail")
+    line:append("[! CONFLICT] ", "MavenDependencyConflictBadge")
+  end
+  local artifact_highlight = is_match and "Search"
+    or dependency.conflict_version and "MavenDependencyConflictText"
+    or not dependency.parent_id and "MavenDependencyDirect"
+    or dependency.is_duplicate and "MavenDependencyDuplicate"
+    or "MavenDependencyTransitive"
+  line:append(dependency.artifact_id, artifact_highlight)
   if self.show_group_id then line:append("  " .. dependency.group_id, "Comment") end
-  line:append("  " .. dependency.version, "Constant")
+  line:append("  " .. dependency.version, dependency.conflict_version and "MavenDependencyConflictText" or "Constant")
   if dependency.scope then
     local scope_highlight = dependency.scope == "test" and "DiagnosticInfo"
       or dependency.scope == "provided" and "DiagnosticHint" or "Type"
     line:append(" [" .. dependency.scope .. "]", scope_highlight)
   end
   if dependency.conflict_version then
-    line:append(" selected=" .. dependency.version .. " omitted=" .. dependency.conflict_version, "DiagnosticWarn")
+    line:append("  active " .. dependency.version .. " <- omitted " .. dependency.conflict_version,
+      "MavenDependencyConflictText")
   end
   if self.show_size then
     local utils = require("maven.utils")
@@ -307,6 +324,7 @@ end
 function Analyzer:mount()
   local Popup = require("nui.popup")
   local Tree = require("nui.tree")
+  setup_highlights()
   self.popup = Popup({
     enter = true,
     relative = "editor",
