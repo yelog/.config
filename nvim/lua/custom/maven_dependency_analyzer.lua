@@ -45,6 +45,19 @@ local function ensure_maven_plugin()
   return true
 end
 
+local function with_remote_update(callback)
+  local command_builder = require("maven.utils.cmd_builder")
+  local original_builder = command_builder.build_mvn_dependencies_cmd
+  command_builder.build_mvn_dependencies_cmd = function(...)
+    local command = original_builder(...)
+    table.insert(command.args, 1, "-U")
+    return command
+  end
+  local ok, err = pcall(callback)
+  command_builder.build_mvn_dependencies_cmd = original_builder
+  if not ok then error(err) end
+end
+
 local function popup_lines(title, lines)
   local Popup = require("nui.popup")
   local popup = Popup({
@@ -214,7 +227,7 @@ function Analyzer:_render_header()
   control("T", "tests", self.hide_test)
   control("s", "sort", self.sort_by_size)
   control("S", "size", self.show_size)
-  controls:append("  r refresh  p paths  o pom  i info  q close", "Comment")
+  controls:append("  r refresh  R remote refresh  p paths  o pom  i info  q close", "Comment")
   controls:render(self.popup.bufnr, vim.api.nvim_create_namespace("maven_dependency_analyzer"), 4)
   vim.api.nvim_set_option_value("modifiable", false, { buf = self.popup.bufnr })
   vim.api.nvim_set_option_value("readonly", true, { buf = self.popup.bufnr })
@@ -310,7 +323,8 @@ function Analyzer:_setup_maps()
   self.popup:map("n", "i", function() self:_show_details() end, { nowait = true })
   self.popup:map("n", "p", function() self:_show_paths() end, { nowait = true })
   self.popup:map("n", "o", function() self:_open_pom_declaration() end, { nowait = true })
-  self.popup:map("n", "r", function() M.open(true) end, { nowait = true })
+  self.popup:map("n", "r", function() M.open(true, false, self.pom_path) end, { nowait = true })
+  self.popup:map("n", "R", function() M.open(true, true, self.pom_path) end, { nowait = true })
   self.popup:map("n", "<enter>", function()
     if self.mode ~= "tree" then return end
     local node = self.tree:get_node()
@@ -345,8 +359,8 @@ function Analyzer:mount()
   self:render()
 end
 
-function M.open(force)
-  local pom_path = require("custom.maven_profiles").find_nearest_pom()
+function M.open(force, remote_update, pom_path)
+  pom_path = pom_path or require("custom.maven_profiles").find_nearest_pom()
   if not pom_path then
     vim.notify("No Maven pom.xml found for the current buffer", vim.log.levels.WARN)
     return
@@ -356,19 +370,22 @@ function M.open(force)
     vim.notify("Unable to load maven.nvim: " .. err, vim.log.levels.ERROR)
     return
   end
-  vim.notify("Loading Maven dependencies...", vim.log.levels.INFO)
-  require("maven.sources").load_project_dependencies(pom_path, force == true, function(state, dependencies)
-    if state ~= require("maven.utils").SUCCEED_STATE then return end
-    if not dependencies or #dependencies == 0 then
-      vim.notify("No resolved Maven dependencies found", vim.log.levels.INFO)
-      return
-    end
-    vim.schedule(function()
-      if active_view and active_view.layout then active_view.layout:unmount() end
-      active_view = Analyzer.new(pom_path, dependencies)
-      active_view:mount()
+  vim.notify(remote_update and "Refreshing Maven dependencies with -U..." or "Loading Maven dependencies...", vim.log.levels.INFO)
+  local function load_dependencies()
+    require("maven.sources").load_project_dependencies(pom_path, force == true, function(state, dependencies)
+      if state ~= require("maven.utils").SUCCEED_STATE then return end
+      if not dependencies or #dependencies == 0 then
+        vim.notify("No resolved Maven dependencies found", vim.log.levels.INFO)
+        return
+      end
+      vim.schedule(function()
+        if active_view and active_view.layout then active_view.layout:unmount() end
+        active_view = Analyzer.new(pom_path, dependencies)
+        active_view:mount()
+      end)
     end)
-  end)
+  end
+  if remote_update then with_remote_update(load_dependencies) else load_dependencies() end
 end
 
 function M.setup()

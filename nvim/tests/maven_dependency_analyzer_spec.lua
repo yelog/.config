@@ -9,15 +9,28 @@ package.path = table.concat({
 vim.opt.rtp:append(vim.fn.expand("~/.local/share/nvim/lazy/nui.nvim"))
 
 local loaded_pom
+local loaded_args
+local dependency_loads = 0
+local command_builder = {}
+local original_dependency_builder = function()
+  return { cmd = "mvn", args = { "-B", "dependency:graph" } }
+end
+command_builder.build_mvn_dependencies_cmd = original_dependency_builder
+package.preload["maven.utils.cmd_builder"] = function() return command_builder end
 package.preload["custom.maven_profiles"] = function()
   return {
-    find_nearest_pom = function() return "/workspace/demo/module/pom.xml" end,
+    find_nearest_pom = function()
+      if dependency_loads == 0 then return "/workspace/demo/module/pom.xml" end
+      return nil
+    end,
   }
 end
 package.preload["maven.sources"] = function()
   return {
     load_project_dependencies = function(pom, _, callback)
+      dependency_loads = dependency_loads + 1
       loaded_pom = pom
+      loaded_args = command_builder.build_mvn_dependencies_cmd(pom, "/tmp", "dependencies.txt").args
       callback("SUCCEED", {
         { id = "root", group_id = "org.demo", artifact_id = "root", version = "1.0", scope = "compile", size = 2, conflict_version = "0.9" },
         { id = "framework", parent_id = "root", group_id = "org.demo", artifact_id = "framework-core", version = "1.0", scope = "compile", size = 4 },
@@ -63,4 +76,10 @@ assert(rendered:find("active 1.0 <- omitted 0.9", 1, true), "conflicts should co
 vim.cmd("normal g")
 rendered = table.concat(vim.api.nvim_buf_get_lines(vim.api.nvim_win_get_buf(popup_win), 0, -1, false), "\n")
 assert(rendered:find("com.alibaba", 1, true), "group toggle should reveal groupId metadata")
+vim.cmd("normal R")
+assert(dependency_loads == 2, "remote refresh should resolve dependencies again from the panel POM")
+assert(loaded_pom == "/workspace/demo/module/pom.xml", "remote refresh should reuse the panel POM")
+assert(vim.tbl_contains(loaded_args, "-U"), "remote refresh should pass Maven -U to the dependency graph command")
+assert(command_builder.build_mvn_dependencies_cmd == original_dependency_builder,
+  "remote refresh should restore the dependency graph command builder")
 print("maven-dependency-analyzer-tests: ok")
