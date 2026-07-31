@@ -127,11 +127,25 @@ function M.install()
   end
 
   local sources = require("maven.sources")
+  local project_view = require("maven.ui.projects_view")
   local upstream_scan_projects = sources.scan_projects
+  local upstream_setup_win_maps = project_view._setup_win_maps
   sources.scan_projects = function(base_path, callback)
     return upstream_scan_projects(base_path, function(projects)
       callback(M.rebuild(projects))
     end)
+  end
+  project_view._setup_win_maps = function(self)
+    upstream_setup_win_maps(self)
+    self._win:map("n", "a", function()
+      local node = self._tree:get_node()
+      if not node then
+        vim.notify("Not project selected")
+        return
+      end
+      local project = self:_lookup_project(node.project_id)
+      require("custom.maven_dependency_analyzer").open(false, false, project.pom_xml_path)
+    end, { noremap = true, nowait = true })
   end
   installed = true
 end

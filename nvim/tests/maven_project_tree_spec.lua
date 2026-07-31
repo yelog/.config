@@ -29,6 +29,22 @@ local function parser(module_paths)
   end
 end
 
+local upstream_project_view = {
+  _setup_win_maps = function(self)
+    self._win:map("n", "a", function() self.upstream_analysis_opened = true end)
+  end,
+}
+local analyzer_calls = {}
+
+package.preload["maven.ui.projects_view"] = function() return upstream_project_view end
+package.preload["custom.maven_dependency_analyzer"] = function()
+  return {
+    open = function(...)
+      table.insert(analyzer_calls, { ... })
+    end,
+  }
+end
+
 local project_tree = require("custom.maven_project_tree")
 
 local root = project("/workspace/pom.xml", "/workspace", "root")
@@ -107,5 +123,42 @@ assert_equal("upstream scan result", scan_result, "the adapter must preserve the
 assert_equal(1, upstream_calls, "the adapter must call the upstream scanner once")
 assert_equal({ wrapped_root }, wrapped_roots, "the installed scanner must rebuild the project tree")
 assert_equal({ wrapped_child }, wrapped_root.modules, "the installed scanner must resolve direct POM paths")
+
+local maps = {}
+local selected_project = project("/workspace/module/pom.xml", "/workspace/module", "module")
+local view = {
+  _win = {
+    map = function(_, _, key, callback)
+      maps[key] = callback
+    end,
+  },
+  _tree = {
+    get_node = function()
+      return { project_id = "module" }
+    end,
+  },
+  _lookup_project = function(_, id)
+    assert_equal("module", id, "the analyzer must use the selected node project")
+    return selected_project
+  end,
+}
+
+upstream_project_view._setup_win_maps(view)
+assert(maps.a, "the project view should install an analysis mapping")
+maps.a()
+assert_equal({ false, false, "/workspace/module/pom.xml" }, analyzer_calls[1],
+  "panel analysis should open the unified analyzer for the selected module POM")
+
+local notifications = {}
+local original_notify = vim.notify
+vim.notify = function(message, level)
+  table.insert(notifications, { message, level })
+end
+view._tree.get_node = function() return nil end
+maps.a()
+vim.notify = original_notify
+
+assert_equal(1, #analyzer_calls, "an empty panel selection must not open dependency analysis")
+assert_equal("Not project selected", notifications[1][1], "an empty panel selection should explain the problem")
 
 print("maven-project-tree-spec-tests: ok")
