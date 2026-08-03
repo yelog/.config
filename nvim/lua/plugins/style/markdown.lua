@@ -133,7 +133,6 @@ return {
       -- 1. 'insert-line': default value, show origin content of current line when insert mode and cursor is on the line
       -- 2. 'normal-line': show origin content of current line when normal mode and cursor is on the line
       -- 3. 'insert-all': show origin content of all when insert mode
-      -- show_mode = 'insert-line',
       show_mode = 'normal-line',
       filetype = { "markdown", "Avante" }, -- or {"*.md", "*.wiki"}
       action = {
