@@ -97,6 +97,7 @@ function Runtime:_ensure_output(service)
   service.output = output.new({
     name = service.name,
     limit = self.output_limit,
+    highlight_line = service.definition.highlight_line,
     on_line = function(line, stream)
       if stream ~= "archive" then self:_parse_line(service, line) end
     end,

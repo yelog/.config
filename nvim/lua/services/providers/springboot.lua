@@ -1,4 +1,5 @@
 local M = {}
+local log_highlighter = require("services.log_highlighters.springboot")
 
 local function find_project_root(start_dir)
   local dir = start_dir
@@ -233,6 +234,7 @@ function M.discover(opts)
         color_policy = "always",
         prepare = M.prepare,
         parse_line = M.parse_line,
+        highlight_line = log_highlighter.highlight_line,
         metadata = {
           service_type = "springboot",
           springboot = true,

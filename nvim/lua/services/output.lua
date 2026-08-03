@@ -12,6 +12,7 @@ local default_palette = {
 local highlight_cache = {}
 local highlight_styles = {}
 local ansi_priority = 200
+local semantic_priority = 100
 
 local function new_style()
   return {
@@ -258,10 +259,16 @@ local function next_control(data, start)
   return next_index
 end
 
-function Output:_queue_line(text, spans, stream_name)
+function Output:_queue_line(text, ansi_spans, stream_name)
+  local semantic_spans = {}
+  if self.highlight_line then
+    local ok, spans = pcall(self.highlight_line, text, self.highlight_state)
+    if ok and type(spans) == "table" then semantic_spans = spans end
+  end
   table.insert(self.pending_lines, {
     text = text,
-    spans = spans,
+    ansi_spans = ansi_spans,
+    semantic_spans = semantic_spans,
   })
   if self.on_line then self.on_line(text, stream_name) end
   if self.render_scheduled then return end
@@ -303,7 +310,14 @@ function Output:_render_pending()
 
   local first_row = self.line_count
   for offset, entry in ipairs(pending) do
-    for _, span in ipairs(entry.spans) do
+    for _, span in ipairs(entry.semantic_spans) do
+      vim.api.nvim_buf_set_extmark(self.bufnr, self.namespace, first_row + offset - 1, span.start_col, {
+        end_col = span.end_col,
+        hl_group = span.hl_group,
+        priority = semantic_priority,
+      })
+    end
+    for _, span in ipairs(entry.ansi_spans) do
       vim.api.nvim_buf_set_extmark(self.bufnr, self.namespace, first_row + offset - 1, span.start_col, {
         end_col = span.end_col,
         hl_group = span.hl_group,
@@ -450,6 +464,8 @@ function M.new(opts)
     limit = math.max(1, opts.limit or 10000),
     on_line = opts.on_line,
     on_render = opts.on_render,
+    highlight_line = opts.highlight_line,
+    highlight_state = {},
     streams = { stdout = new_stream(), stderr = new_stream() },
     pending_lines = {},
     line_count = 0,

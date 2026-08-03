@@ -36,9 +36,33 @@ local function extmark_details(output)
   return details
 end
 
+local function has_extmark(marks, expected)
+  for _, mark in ipairs(marks) do
+    if vim.deep_equal(mark, expected) then return true end
+  end
+  return false
+end
+
 local output = require("services.output").new({ limit = 3, name = "output-test" })
 assert_equal("nofile", vim.bo[output.bufnr].buftype, "output should use a normal nofile buffer")
 assert_equal(false, vim.bo[output.bufnr].modifiable, "output should be immutable outside renderer writes")
+
+local semantic = require("services.log_highlighters.springboot")
+local highlighted = require("services.output").new({
+  name = "semantic-output-test",
+  highlight_line = semantic.highlight_line,
+})
+local spring_line = "2026-08-03 15:10:12.613 [WARN ] [] [com.example.Service:123] - Service warning"
+highlighted:push("stdout", spring_line .. "\n")
+wait_for_last_line(highlighted, spring_line)
+local semantic_marks = extmark_details(highlighted)
+assert(has_extmark(semantic_marks, { row = 0, start_col = 25, end_col = 29, hl_group = "ServicesLogWarn" }),
+  "plain Spring Boot log levels should receive semantic highlights")
+assert(has_extmark(semantic_marks, { row = 0, start_col = 36, end_col = 55, hl_group = "ServicesLogLogger" }),
+  "plain Spring Boot logger names should receive semantic highlights")
+assert(has_extmark(semantic_marks, { row = 0, start_col = 56, end_col = 59, hl_group = "ServicesLogLineNumber" }),
+  "plain Spring Boot logger line numbers should receive semantic highlights")
+highlighted:dispose()
 
 output:push("stdout", "\27[31mred")
 output:push("stdout", " text\27[0m\n")
