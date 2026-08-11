@@ -12,9 +12,18 @@ return {
           i = { "@codeblock.inner" }, -- 仅内容
         }, {
           n_lines = 200,              -- 可单独为该对象提高搜索范围
-          -- 指定语言可选：{ lang = "markdown" }
+          lang = "markdown",          -- 围栏内可能切换到注入语言，仍按 Markdown 查询代码块
         }),
       },
+    })
+
+    vim.api.nvim_create_autocmd("FileType", {
+      pattern = "markdown",
+      callback = function(args)
+        vim.keymap.set("x", "ic", function()
+          require("mini.ai").select_textobject("i", "c")
+        end, { buffer = args.buf, desc = "Select inner Markdown code block" })
+      end,
     })
 
     vim.api.nvim_create_autocmd("FileType", {
