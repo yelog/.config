@@ -121,19 +121,29 @@ assert(lines[1]:find("web:dev", 1, true) or lines[2]:find("web:dev", 1, true),
   "panel list should render service names")
 
 local orders = runtime:get("springboot::orders")
+local web = runtime:get("npm::web::dev")
 orders.output:push("stdout", log_batch("orders log", 32))
 assert(vim.wait(500, function()
   return vim.api.nvim_buf_get_lines(orders.output.bufnr, -2, -1, false)[1] == "orders log 32"
 end), "service output should render before panel selection")
 
-assert(panel:focus(instance, orders.key), "focusing a row should select its service")
-assert_equal(orders.output.bufnr, vim.api.nvim_win_get_buf(instance.output_win),
+assert(panel:focus(instance, web.key), "focusing a row should select its service")
+assert_equal(web.output.bufnr, vim.api.nvim_win_get_buf(instance.output_win),
   "focused services should replace the output buffer in place")
+assert_equal(web.key, instance.rows[vim.api.nvim_win_get_cursor(instance.list_win)[1]],
+  "focusing a service should move the list cursor to its row")
+instance.output_states[web.key] = { following = false, unseen_lines = 3, view = nil }
+assert(panel:focus(instance, web.key, { follow = true }), "focusing with follow should succeed")
+assert_equal(true, instance.output_states[web.key].following,
+  "focusing with follow should resume live output")
+assert_equal(0, instance.output_states[web.key].unseen_lines,
+  "resuming live output should clear unseen lines")
 assert_equal(true, vim.wo[instance.output_win].wrap, "normal output panes should soft-wrap")
 assert_equal(true, vim.wo[instance.output_win].linebreak, "normal output panes should use linebreak")
 assert(at_tail(instance.output_win), "normal output should tail when first shown")
 assert_equal(instance.list_win, vim.api.nvim_get_current_win(), "tailing an initial output should retain list focus")
 
+assert(panel:focus(instance, orders.key), "focusing the log fixture should succeed")
 assert(panel:close(), "closing an open panel should succeed")
 panel:open(root)
 instance = panel.panels[vim.api.nvim_get_current_tabpage()]

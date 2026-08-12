@@ -26,6 +26,10 @@ assert(
 assert(lsp:find('exclude = { "jdtls", "copilot" }', 1, true), "Mason must not auto-enable a second Copilot LSP client")
 
 assert(jdtls:find('require("custom.java_runtime")', 1, true), "JDTLS should use validated Java runtime discovery")
+assert(
+  read("lua/key-map.lua"):find('map("n", "<leader>jt", function()', 1, true),
+  "the nearest Java test shortcut should be available before JDTLS attaches"
+)
 assert(jdtls:find("cmd_env", 1, true), "JDTLS should receive an explicit launcher JAVA_HOME")
 assert(
   read("lua/key-map.lua"):find('custom.jdtls_workspace_cleaner', 1, true),

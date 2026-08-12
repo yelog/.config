@@ -1,6 +1,7 @@
 local M = {}
 
 local last_task
+local last_service
 
 local web_filetypes = {
   javascript = true,
@@ -49,8 +50,31 @@ local function task(name, cmd, cwd)
   }
 end
 
+local function prepare_maven_test(definition, profile)
+  local command = vim.deepcopy(definition.cmd)
+  local executable = vim.fs.basename(tostring(command[1] or ""))
+  if type(profile) == "string" and profile ~= ""
+    and (executable == "mvn" or executable == "mvnw" or executable == "mvn.cmd") then
+    table.insert(command, 2, "-P" .. profile)
+  end
+  return command
+end
+
+local function maven_context(context)
+  local root = context.maven_root
+  local module_pom = context.module_pom
+  if not root or not module_pom then
+    local ok, profiles = pcall(require, "custom.maven_profiles")
+    if ok then
+      root = root or profiles.find_project_root(context.file)
+      module_pom = module_pom or profiles.find_nearest_pom(context.file)
+    end
+  end
+  root = root or context.root
+  return root, module_pom
+end
+
 local function java_task(action, context)
-  local root = context.root
   local lines = context.lines or {}
   local class = vim.fs.basename(context.file):gsub("%.java$", "")
   local package_name
@@ -71,25 +95,45 @@ local function java_task(action, context)
     end
   end
 
-  if exists(root .. "/mvnw", context) or exists(root .. "/pom.xml", context) then
-    local executable = exists(root .. "/mvnw", context) and "./mvnw" or "mvn"
-    if action == "all" then
-      return task("Test all (Maven)", { executable, "test" }, root)
+  local maven_root, module_pom = maven_context(context)
+  if exists(maven_root .. "/mvnw", context) or exists(maven_root .. "/pom.xml", context) then
+    local executable = exists(maven_root .. "/mvnw", context) and "./mvnw" or "mvn"
+    local cmd = { executable }
+    if action ~= "all" and module_pom then
+      local module = relative_path(maven_root, vim.fs.dirname(module_pom))
+      if module ~= "." and module ~= vim.fs.dirname(module_pom) then
+        vim.list_extend(cmd, { "-pl", module, "-am" })
+      end
     end
-    return task("Test " .. target, { executable, "-Dtest=" .. target, "test" }, root)
+    table.insert(cmd, "-Dmoss.skipTests=false")
+    if action == "all" then
+      table.insert(cmd, "test")
+      return task("Test all (Maven)", cmd, maven_root)
+    end
+    vim.list_extend(cmd, { "-Dsurefire.failIfNoSpecifiedTests=false", "-Dtest=" .. target, "test" })
+    local definition = task("Test " .. target, cmd, maven_root)
+    local display_name = target:match("([%w_$]+#[%w_$]+)$") or target:match("([%w_$]+)$") or target
+    definition.service = {
+      key = "test::" .. vim.fn.sha256(maven_root .. "\0" .. target):sub(1, 16),
+      name = display_name,
+      service_type = "test",
+      project_root = maven_root,
+      target = target,
+    }
+    return definition
   end
 
   if
-    exists(root .. "/gradlew", context)
-    or exists(root .. "/build.gradle", context)
-    or exists(root .. "/build.gradle.kts", context)
+    exists(context.root .. "/gradlew", context)
+    or exists(context.root .. "/build.gradle", context)
+    or exists(context.root .. "/build.gradle.kts", context)
   then
-    local executable = exists(root .. "/gradlew", context) and "./gradlew" or "gradle"
+    local executable = exists(context.root .. "/gradlew", context) and "./gradlew" or "gradle"
     if action == "all" then
-      return task("Test all (Gradle)", { executable, "test" }, root)
+      return task("Test all (Gradle)", { executable, "test" }, context.root)
     end
     target = target:gsub("#", ".")
-    return task("Test " .. target, { executable, "test", "--tests", target }, root)
+    return task("Test " .. target, { executable, "test", "--tests", target }, context.root)
   end
 
   return nil, "No Maven or Gradle build found"
@@ -208,17 +252,57 @@ function M.build(action, context)
   return nil, "No test runner for " .. (context.filetype or "unknown filetype")
 end
 
-function M.run(action)
-  local definition, err = M.build(action)
+local function run_service(definition)
+  local service_info = definition.service
+  local panel = require("services.panel").instance()
+  local active_panel = panel:open(service_info.project_root)
+  local runtime = require("services.runtime").instance()
+  local service = runtime:register({
+    key = service_info.key,
+    name = service_info.name,
+    service_type = service_info.service_type,
+    cmd = definition.cmd,
+    cwd = definition.cwd,
+    color_policy = "preserve",
+    prepare = prepare_maven_test,
+    metadata = {
+      service_type = service_info.service_type,
+      project_root = service_info.project_root,
+      test_target = service_info.target,
+    },
+  })
+  local profile = require("services.state").get_profile(service_info.project_root)
+  runtime:restart(service.key, { profile = profile })
+  panel:render(active_panel)
+  panel:focus(active_panel, service.key, { follow = true })
+  last_service = { key = service.key, root = service_info.project_root }
+end
+
+function M.run(action, context)
+  local definition, err = M.build(action, context)
   if not definition then
     vim.notify(err, vim.log.levels.WARN)
     return
   end
+  if definition.service then
+    run_service(definition)
+    return
+  end
+  last_service = nil
   last_task = require("overseer").new_task(definition)
   last_task:start()
 end
 
 function M.rerun()
+  if last_service then
+    local panel = require("services.panel").instance()
+    local active_panel = panel:open(last_service.root)
+    local profile = require("services.state").get_profile(last_service.root)
+    require("services.runtime").instance():restart(last_service.key, { profile = profile })
+    panel:render(active_panel)
+    panel:focus(active_panel, last_service.key, { follow = true })
+    return
+  end
   if not last_task then
     vim.notify("No test task has been run", vim.log.levels.WARN)
     return
@@ -227,6 +311,12 @@ function M.rerun()
 end
 
 function M.open_output()
+  if last_service then
+    local panel = require("services.panel").instance()
+    local active_panel = panel:open(last_service.root)
+    panel:focus(active_panel, last_service.key)
+    return
+  end
   if last_task and last_task:get_bufnr() then
     last_task:open_output("horizontal")
   else

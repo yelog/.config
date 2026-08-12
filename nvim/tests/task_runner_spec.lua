@@ -25,11 +25,123 @@ local maven = runner.build("nearest", {
   files = { ["/project/mvnw"] = true },
 })
 assert_equal(
-  { "./mvnw", "-Dtest=com.acme.OrderTest#createsOrder", "test" },
+  {
+    "./mvnw",
+    "-Dmoss.skipTests=false",
+    "-Dsurefire.failIfNoSpecifiedTests=false",
+    "-Dtest=com.acme.OrderTest#createsOrder",
+    "test",
+  },
   maven.cmd,
   "Maven nearest should target the package, class, and method"
 )
 assert_equal("/project", maven.cwd, "Java tasks should run at the build root")
+
+local reactor_maven = runner.build("nearest", {
+  root = "/workspace/services/message",
+  maven_root = "/workspace",
+  module_pom = "/workspace/services/message/pom.xml",
+  file = "/workspace/services/message/src/test/java/com/lenovo/moss/EmailUtilTest.java",
+  filetype = "java",
+  cursor_line = 5,
+  lines = {
+    "package com.lenovo.moss;",
+    "class EmailUtilTest {",
+    "  @Test",
+    "  void testNormalEmail() {",
+    "  }",
+    "}",
+  },
+  files = { ["/workspace/pom.xml"] = true },
+})
+assert_equal({
+  "mvn",
+  "-pl",
+  "services/message",
+  "-am",
+  "-Dmoss.skipTests=false",
+  "-Dsurefire.failIfNoSpecifiedTests=false",
+  "-Dtest=com.lenovo.moss.EmailUtilTest#testNormalEmail",
+  "test",
+}, reactor_maven.cmd, "Maven nearest should select the reactor module and enable tests")
+assert_equal("/workspace", reactor_maven.cwd, "Maven reactor tests should run at the aggregator root")
+assert_equal("EmailUtilTest#testNormalEmail", reactor_maven.service.name,
+  "Java nearest should expose the method name to the services panel")
+assert_equal("test", reactor_maven.service.service_type,
+  "Java tests should use a dedicated services panel category")
+assert_equal("/workspace", reactor_maven.service.project_root,
+  "Java test services should belong to the Maven reactor root")
+
+local registered_definition
+local restarted_key
+local restarted_opts
+local focused_key
+local opened_root
+local selected_profile = "moss-sit"
+local fake_service = { key = "test::fake" }
+package.loaded["services.runtime"] = {
+  instance = function()
+    return {
+      register = function(_, definition)
+        registered_definition = definition
+        fake_service.key = definition.key
+        return fake_service
+      end,
+      restart = function(_, key, opts)
+        restarted_key = key
+        restarted_opts = opts
+      end,
+    }
+  end,
+}
+package.loaded["services.state"] = {
+  get_profile = function() return selected_profile end,
+}
+package.loaded["services.panel"] = {
+  instance = function()
+    return {
+      open = function(_, root)
+        opened_root = root
+        return { root = root }
+      end,
+      render = function() end,
+      focus = function(_, _, key) focused_key = key end,
+    }
+  end,
+}
+runner.run("nearest", {
+  root = "/workspace/services/message",
+  maven_root = "/workspace",
+  module_pom = "/workspace/services/message/pom.xml",
+  file = "/workspace/services/message/src/test/java/com/lenovo/moss/EmailUtilTest.java",
+  filetype = "java",
+  cursor_line = 5,
+  lines = {
+    "package com.lenovo.moss;",
+    "class EmailUtilTest {",
+    "  @Test",
+    "  void testNormalEmail() {",
+    "  }",
+    "}",
+  },
+  files = { ["/workspace/pom.xml"] = true },
+})
+assert_equal("/workspace", opened_root, "running a Java test should open the services panel at the project root")
+assert_equal("EmailUtilTest#testNormalEmail", registered_definition.name,
+  "the registered service should display the test method")
+assert_equal(registered_definition.key, restarted_key, "running a Java test should start its service")
+assert_equal({ profile = "moss-sit" }, restarted_opts,
+  "running a Java test should use the services panel Maven profile")
+assert_equal(registered_definition.key, focused_key, "the services panel should focus the running test")
+assert_equal({ "mvn", "-Pmoss-sit", "test" }, registered_definition.prepare({ cmd = { "mvn", "test" } }, "moss-sit"),
+  "Java test services should insert a selected Maven profile")
+assert_equal({ "mvn", "test" }, registered_definition.prepare({ cmd = { "mvn", "test" } }, nil),
+  "Java test services should preserve Maven activeByDefault when no profile is selected")
+
+selected_profile = "moss-mes-isg-dev"
+runner.rerun()
+assert_equal({ profile = "moss-mes-isg-dev" }, restarted_opts,
+  "rerunning a Java test should read the latest services panel Maven profile")
 
 local gradle = runner.build("file", {
   root = "/project",

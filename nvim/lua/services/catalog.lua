@@ -25,9 +25,15 @@ local service_types = {
     icon = fallback_type.icon,
     hl = fallback_type.hl,
   },
+  test = {
+    label = "Test",
+    title = "TEST",
+    icon = "󰙨",
+    hl = "DiagnosticInfo",
+  },
 }
 
-local service_type_order = { "springboot", "npm", "service" }
+local service_type_order = { "springboot", "npm", "service", "test" }
 
 local function normalize_keys(keys)
   local normalized = {}

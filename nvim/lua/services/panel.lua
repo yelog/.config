@@ -306,13 +306,25 @@ function Panel:_show_output(panel, service)
   return true
 end
 
-function Panel:focus(panel, key)
+function Panel:focus(panel, key, opts)
   local service = self.runtime:get(key)
   if not service or vim.fs.normalize(panel.root) ~= vim.fs.normalize(service.metadata.project_root) then return false end
   if panel.focused_key ~= key then self:_save_output_view(panel) end
   panel.focused_key = key
   self:_remember_focus(panel, key)
+  if opts and opts.follow then
+    local state = self:_output_state(panel, service)
+    state.following = true
+    state.unseen_lines = 0
+    state.view = nil
+  end
   self:_show_output(panel, service)
+  for row, row_key in ipairs(panel.rows) do
+    if row_key == key then
+      pcall(vim.api.nvim_win_set_cursor, panel.list_win, { row, 0 })
+      break
+    end
+  end
   return true
 end
 
