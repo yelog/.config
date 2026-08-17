@@ -32,6 +32,42 @@
     "/Users/yelog/workspace/swift/VibeBar/plugins/opencode-vibebar-plugin"
   ],
   "provider": {
+    "omlx": {
+      "models": {
+        "Qwen3.6-35B-A3B-4bit-MTPLX-Optimized-Speed": {
+          "attachment": false,
+          "cost": {
+            "input": 0,
+            "output": 0
+          },
+          "family": "qwen3.6",
+          "limit": {
+            "context": 262144,
+            "output": 32768
+          },
+          "modalities": {
+            "input": [
+              "text"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "name": "Qwen3.6 35B A3B (oMLX local)",
+          "options": {
+            "store": false
+          },
+          "reasoning": true,
+          "release_date": "2026-01-01",
+          "temperature": true,
+          "tool_call": true
+        }
+      },
+      "options": {
+        "apiKey": "omlx",
+        "baseURL": "http://localhost:7011/v1"
+      }
+    },
     "xrouter": {
       "models": {
         "gpt-4o": {
