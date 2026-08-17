@@ -1,25 +1,25 @@
 return {
   "yetone/avante.nvim",
   event = "VeryLazy",
-  lazy = true,     -- 启动加载需要800ms, 所以改为懒加载
+  lazy = true, -- 启动加载需要800ms, 所以改为懒加载
   -- dev = true,
   version = false, -- set this if you want to always pull the latest change
   opts = {
     ---@alias Provider "claude" | "openai" | "azure" | "gemini" | "cohere" | "copilot" | string
-    provider = "xrouter",                  -- Recommend using Claude
+    provider = "xrouter", -- OpenCode Go: deepseek-v4-flash
     auto_suggestions_provider = "xrouter", -- Since auto-suggestions are a high-frequency operation and therefore expensive, it is recommended to specify an inexpensive provider or even a free provider: copilot
     providers = {
       copilot = {
-        endpoint = 'https://api.githubcopilot.com/',
-        model = 'gpt-4.1',
+        endpoint = "https://api.githubcopilot.com/",
+        model = "gpt-4.1",
         -- model = 'gpt-5',
         -- model = 'o4-mini',
         extra_reqeust_body = {
           allow_insecure = true, -- Do not allow insecure server connections
-          timeout = 30000,     -- Timeout in milliseconds
-          temperature = 0.1,   -- kinda creative
+          timeout = 30000, -- Timeout in milliseconds
+          temperature = 0.1, -- kinda creative
           max_tokens = 8192,
-        }
+        },
       },
       ollama = {
         -- ["local"] = true,
@@ -51,17 +51,17 @@ return {
         model = "deepseek-coder",
       },
       openrouter = {
-        __inherited_from = 'openai',
-        endpoint = 'https://openrouter.ai/api/v1',
-        api_key_name = 'OPENROUTER_API_KEY_CHRIS',
+        __inherited_from = "openai",
+        endpoint = "https://openrouter.ai/api/v1",
+        api_key_name = "OPENROUTER_API_KEY_CHRIS",
         -- model = 'deepseek/deepseek-r1',
-        model = 'anthropic/claude-3.7-sonnet',
+        model = "anthropic/claude-3.7-sonnet",
       },
       xrouter = {
         __inherited_from = "openai",
         endpoint = "https://xrouter.uk/v1",
         api_key_name = "X_ROUTER_KEY",
-        model = "gpt-5.4",
+        model = "gpt-5.6-luna",
       },
     },
     ---Specify the special dual_boost mode
@@ -77,8 +77,7 @@ return {
       enabled = false,
       first_provider = "openai",
       second_provider = "claude",
-      prompt =
-      "Based on the two reference outputs below, generate a response that incorporates elements from both but reflects your own judgment and unique perspective. Do not provide any explanation, just give the response directly. Reference Output 1: [{{provider1_output}}], Reference Output 2: [{{provider2_output}}]",
+      prompt = "Based on the two reference outputs below, generate a response that incorporates elements from both but reflects your own judgment and unique perspective. Do not provide any explanation, just give the response directly. Reference Output 1: [{{provider1_output}}], Reference Output 2: [{{provider2_output}}]",
       timeout = 60000, -- Timeout in milliseconds
     },
     behaviour = {
@@ -125,10 +124,10 @@ return {
     windows = {
       ---@type "right" | "left" | "top" | "bottom"
       position = "right", -- the position of the sidebar
-      wrap = true,        -- similar to vim.o.wrap
-      width = 30,         -- default % based on available width
+      wrap = true, -- similar to vim.o.wrap
+      width = 30, -- default % based on available width
       sidebar_header = {
-        enabled = true,   -- true, false to enable/disable the header
+        enabled = true, -- true, false to enable/disable the header
         align = "center", -- left, center, right for title
         rounded = true,
       },
@@ -141,7 +140,7 @@ return {
         start_insert = true, -- Start insert mode when opening the edit window
       },
       ask = {
-        floating = false,    -- Open the 'AvanteAsk' prompt in a floating window
+        floating = false, -- Open the 'AvanteAsk' prompt in a floating window
         start_insert = true, -- Start insert mode when opening the ask window
         border = "rounded",
         ---@type "ours" | "theirs"
@@ -187,7 +186,7 @@ return {
     --- The below dependencies are optional,
     -- "hrsh7th/nvim-cmp",            -- autocompletion for avante commands and mentions
     "nvim-tree/nvim-web-devicons", -- or echasnovski/mini.icons
-    "zbirenbaum/copilot.lua",      -- for providers='copilot'
+    "zbirenbaum/copilot.lua", -- for providers='copilot'
     -- {
     --   -- support for image pasting
     --   "HakonHarnes/img-clip.nvim",
