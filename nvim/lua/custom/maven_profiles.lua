@@ -13,6 +13,8 @@ end
 
 local runner = default_runner
 
+local available_cache = {}
+
 local function empty_state()
   return { projects = {} }
 end
@@ -177,6 +179,28 @@ function M.parse_profiles(output)
     end
   end
   return normalize_profiles(profiles)
+end
+
+local function parse_pom_profiles(root)
+  root = normalize_root(root)
+  if not root then return {} end
+
+  local ok, lines = pcall(vim.fn.readfile, root .. "/pom.xml")
+  if not ok then return {} end
+
+  local content = table.concat(lines, "\n"):gsub("<!%-%-[%s%S]-%-%->", "")
+  local profiles = {}
+  local seen = {}
+  for block in content:gmatch("<profile%f[%W][^>]*>([%s%S]-)</profile>") do
+    local id = block:match("<id[^>]*>%s*([^<]-)%s*</id>")
+    id = id and vim.trim(id) or nil
+    if id and id ~= "" and not seen[id] then
+      seen[id] = true
+      table.insert(profiles, id)
+    end
+  end
+  table.sort(profiles)
+  return profiles
 end
 
 function M.get_profiles(root)
@@ -396,6 +420,20 @@ function M.list_available(root, callback)
     return nil
   end
 
+  local direct = parse_pom_profiles(root)
+  if #direct > 0 then
+    callback(nil, direct)
+    return nil
+  end
+
+  local stat = vim.uv.fs_stat(pom_path)
+  local mtime = stat and stat.mtime and stat.mtime.sec or 0
+  local cached = available_cache[root]
+  if cached and cached.mtime == mtime then
+    callback(nil, cached.profiles)
+    return nil
+  end
+
   local command = {
     maven_executable(),
     "--batch-mode",
@@ -410,7 +448,9 @@ function M.list_available(root, callback)
       callback("Failed to list Maven profiles: " .. detail, nil)
       return
     end
-    callback(nil, M.parse_profiles(result.stdout))
+    local profiles = M.parse_profiles(result.stdout)
+    available_cache[root] = { mtime = mtime, profiles = profiles }
+    callback(nil, profiles)
   end)
   if not ok then
     callback("Failed to start Maven: " .. tostring(handle), nil)

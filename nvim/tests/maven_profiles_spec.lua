@@ -120,5 +120,49 @@ end)
 assert(missing_error:find("pom.xml", 1, true), "missing Maven project should explain the missing pom.xml")
 assert_equal({}, profiles.get_profiles(missing_root), "failed lookup must not mutate selection")
 
+local fast_root = temp_dir .. "/fast-project"
+vim.fn.mkdir(fast_root, "p")
+vim.fn.writefile({
+  "<project>",
+  "  <profiles>",
+  "    <profile><id>local</id></profile>",
+  "    <profile><id>dev</id></profile>",
+  "  </profiles>",
+  "</project>",
+}, fast_root .. "/pom.xml")
+
+local fast_command
+local fast_profiles
+profiles.setup({
+  path = state_path,
+  runner = function(command, _, callback)
+    fast_command = command
+    callback({ code = 0, stdout = "", stderr = "" })
+  end,
+})
+profiles.list_available(fast_root, function(err, available)
+  assert_equal(nil, err, "fast-path lookup should not fail")
+  fast_profiles = available
+end)
+assert_equal({ "dev", "local" }, fast_profiles,
+  "profiles in the root pom should be parsed without invoking Maven")
+assert_equal(nil, fast_command, "fast path must not invoke Maven")
+
+local cache_root = temp_dir .. "/cache-project"
+vim.fn.mkdir(cache_root, "p")
+vim.fn.writefile({ "<project />" }, cache_root .. "/pom.xml")
+local calls = 0
+profiles.setup({
+  path = state_path,
+  runner = function(command, _, callback)
+    calls = calls + 1
+    callback({ code = 0, stdout = output, stderr = "" })
+  end,
+})
+profiles.list_available(cache_root, function() end)
+assert_equal(1, calls, "first fallback lookup should run Maven")
+profiles.list_available(cache_root, function() end)
+assert_equal(1, calls, "cached fallback lookup should not run Maven again")
+
 vim.fn.delete(temp_dir, "rf")
 print("maven-profile-tests: ok")
