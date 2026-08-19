@@ -1,108 +1,104 @@
-## My Config
-This is my config about tmux/nvim/ranger
+# .config — yelog 的 dotfiles
+
+macOS 开发环境配置仓库，通过 git + 子模块管理 `~/.config` 下 40+ 个工具的配置。
+
+## 快速开始
 
 ```bash
 git clone --recursive https://github.com/yelog/.config.git ~/.config
+~/.config/init.sh
 ```
 
-## Import stuff
+`init.sh` 在 macOS 上建立符号链接并安装依赖：
 
-### neovim
+- `~/.ideavimrc` → `~/.config/ideavimrc`
+- `~/.hammerspoon` → `~/.config/hammerspoon`
+- `~/.zshrc` → `~/.config/zsh/zshrc`
+- `~/mcpservers.json` → `~/.config/mcp/mcpservers.json`
+- `brew install zsh` 并设为默认 shell
 
-#### install
+## 模块总览
 
-```bash
-# Download source code
-git clone https://github.com/neovim/neovim.git
-# install cmake and dependency
-sudo yum install -y cmake gcc-c++ libtool unzip
-# compile with cmake
-make CMAKE_BUILD_TYPE=Release
-# install
-make install
-# vim-plug
-sh -c 'curl -fLo "${XDG_DATA_HOME:-$HOME/.local/share}"/nvim/site/autoload/plug.vim --create-dirs \
-       https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
-```
+### 编辑器
 
-#### lsp
+| 模块 | 说明 |
+|---|---|
+| `nvim/` | Neovim 配置，主力开发环境。重点：Java/Spring Cloud 调试（Overseer 服务面板 + DAP）、Maven dashboard、JDTLS、MyBatis 符号导航。见 [nvim/README.md](nvim/README.md) |
+| `ideavimrc` | IntelliJ IDEA 的 Vim 模拟配置（已回退到 nvim 工作流，Hyper 快捷键已停用） |
 
-```bash
-# install js/ts support
-npm i -g typescript typescript-language-server
-```
+### 终端
 
+| 模块 | 说明 |
+|---|---|
+| `kitty/` | 日常终端，含自定义布局脚本与主题切换（jb-theme/snazzy） |
+| `ghostty/` | 备用终端，含 shader 与 [CLAUDE.md](ghostty/CLAUDE.md) |
+| `wezterm/` | 备用终端 |
+| `alacritty/` | 备用终端（toml 与 yml 双版本并存） |
+| `tmux/` | tmux.conf + powerline/tpm/sensible，子模块管理 |
+| `zsh/` | zshrc + fzf 增强（fzf.sh、fzf-preview.sh） |
+| `starship.toml` / `neofetch/` | prompt 与系统信息 |
 
-### lazygit
+### 窗口管理与快捷键
 
-```bash
-yum install dnf
-dnf install 'dnf-command(copr)'
-dnf copr enable atim/lazygit -y
-dnf install -y lazygit
-```
+| 模块 | 说明 |
+|---|---|
+| `yabai/` + `spacebar/` + `skhd/` | 平铺窗口管理 + 快捷键（含输入法状态脚本） |
+| `aerospace/` | 另一套平铺 WM 配置 |
+| `hammerspoon/` | 窗口布局（九宫格/分屏）与应用切换（Hyper 键）。见 [hammerspoon/README.md](hammerspoon/README.md) |
+| `karabiner/` | Caps 长按 → Hyper（`cmd+shift+alt`）复杂修改 |
 
-### neofetch
+### 文件管理
 
-```bash
-dnf copr enable konimex/neofetch
-dnf install neofetch
-```
+| 模块 | 说明 |
+|---|---|
+| `ranger/` | 主力文件管理器（rc.conf + rifle + scope.sh） |
+| `yazi/` | 备用（toml 全套配置 + 插件） |
+| `lf/` / `joshuto/` | 备用 |
 
-### zsh
+### 输入法
 
-[github](https://github.com/ohmyzsh/ohmyzsh.git)
-```bash
-# 安装zsh
-brew install zsh zsh-completions
-# 设置 zsh 为默认shell
-chsh -s $(which zsh)
-# 查检-需要关闭终端重新打开后生效
-echo $SHELL
-# 1、通过curl方式安装：
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-# 2、通过wget方式安装
-sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-# 修改配置文件
-ln ~/.config/zsh/zshrc ~/.zshrc
-# 下载主题
-git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
-# autosuggestions
-git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
-# history
- git clone https://github.com/zsh-users/zsh-history-substring-search ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-history-substring-search
-# syntax
-git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
-```
+| 模块 | 说明 |
+|---|---|
+| `rime/` | 万象拼音方案 + macOS ↔ iPhone（Hamster/iCloud）同步。见 [rime/README.md](rime/README.md) |
 
-### ranger
+### AI 编码
 
-```bash
-pip install ranger-fm
+| 模块 | 说明 |
+|---|---|
+| `opencode/` | opencode CLI 配置（xrouter/omlx 等 provider）与 skills |
+| `.claude/` | Claude Code 本地设置 |
+| `codexbar/` | CodexBar 菜单栏工具的 provider 配置 |
+| `github-copilot/` | Copilot 认证与 JetBrains 配置 |
+| `*.avanterules` | avante.nvim 的规则体系（agentic/base/editing 等） |
 
-```
-### tmux
+### 数据库
 
-[install tmux](https://github.com/tmux/tmux/wiki/Installing)
+| 模块 | 说明 |
+|---|---|
+| `vi-sql/` | 终端 SQL 客户端（PostgreSQL，Vim 键位，keyring 凭据） |
 
-```bash
-ln ~/.config/tmux/tmux.conf ~/.tmux.conf
-```
+### 其他
 
-### rainbarf
+| 模块 | 说明 |
+|---|---|
+| `git/` / `gh/` | git 与 GitHub CLI 配置 |
+| `zellij/` | 终端多路复用器（[CLAUDE.md](zellij/CLAUDE.md)） |
+| `herdr/` | 会话持久化配置 |
+| `neovide/` `ueberzugpp/` `warpd/` `docs/` | 图形化 nvim、终端预览、鼠标导航、功能设计文档（[docs/plans/](docs/plans/)） |
 
-```bash
-# Download source code
-git clone https://github.com/creaktive/rainbarf.git
-# install dependency
-yum install -y perl-Module-Build perl-Test-Simple
-# install
-perl Build.PL
-./Build test
-./Bauild install
-```
+## 子模块
 
-# HammerSpoon
+| 路径 | 上游 |
+|---|---|
+| `tmux/plugins/tpm` | tmux-plugins/tpm |
+| `tmux/plugins/tmux-powerline` | erikw/tmux-powerline |
+| `tmux/plugins/tmux-sensible` | tmux-plugins/tmux-sensible |
+| `tmux/vendor/tmux-mem-cpu-load` | thewtex/tmux-mem-cpu-load |
+| `ranger/plugins/ranger_devicons` | alexanderjeurissen/ranger_devicons |
 
-[[hammerspoon-配置]]
+## 文档导航
 
+- [nvim/README.md](nvim/README.md) — Java/Spring Cloud 调试手册（服务面板、DAP、Maven、MyBatis）
+- [hammerspoon/README.md](hammerspoon/README.md) — 全局快捷键总表
+- [rime/README.md](rime/README.md) — 万象拼音与双端同步
+- [docs/plans/](docs/plans/) — nvim 功能的设计/计划文档（Maven 依赖分析、服务面板、Spring 导航等）
