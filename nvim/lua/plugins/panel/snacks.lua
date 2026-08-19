@@ -6,6 +6,13 @@ return {
   opts = {
     picker = {
       enabled = true,
+      win = {
+        input = {
+          keys = {
+            ["<Esc>"] = { "close", mode = { "n", "i" } },
+          },
+        },
+      },
       sources = {
         grep = require("custom.project_search").source(),
       },
