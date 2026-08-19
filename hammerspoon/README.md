@@ -20,7 +20,6 @@
     * `hyperKey + V` 打开 `WeChat`
     * `hyperKey + Q` 打开 `QQ`
     * `hyperKey + F` 打开 `Finder`
-    * `hyperKey + I` 打开 `IntelliJ IDEA`
     * `hyperKey + Y` 打开 `Discord`
     * `hyperKey + T` 打开 `Terminal`
     * `hyperKey + O` 打开 `Apifox`
