@@ -1,5 +1,5 @@
 version = 4
-active_profile = "9d5aa2da-9f31-4dbc-b2b6-0844ff79b41e"
+active_profile = "7e1cc7b3-62e3-4a66-8688-20b8ba9d5bd4"
 
 [[profiles]]
 profile_id = "7e1cc7b3-62e3-4a66-8688-20b8ba9d5bd4"
@@ -9,7 +9,7 @@ active_tab = "dbac364d-e5cf-41e4-a44f-7fd1947999bd"
 id = "dbac364d-e5cf-41e4-a44f-7fd1947999bd"
 name = "console"
 sql_file = "dbac364d-e5cf-41e4-a44f-7fd1947999bd.sql"
-transaction_mode = "auto"
+transaction_mode = "manual"
 open = true
 
 [profiles.consoles.target]
@@ -43,9 +43,15 @@ database = "moss_biz"
 schema = "tools"
 object = "ai_agent"
 
+[[profiles.tabs]]
+kind = "dashboard"
+dashboard_id = "017d5b2f-971d-4005-b7ce-e98ce8a01a12"
+page = "overview"
+refresh_enabled = true
+
 [[profiles]]
 profile_id = "9d5aa2da-9f31-4dbc-b2b6-0844ff79b41e"
-active_tab = "910fc25a-b72d-4571-8a5f-3393f939b0fa"
+active_tab = "025b951f-b8f6-46d6-a263-83a54586e039"
 
 [[profiles.consoles]]
 id = "2b460750-9469-4791-8cef-eff74611838e"
@@ -75,9 +81,15 @@ schema = "tools"
 kind = "console"
 console_id = "910fc25a-b72d-4571-8a5f-3393f939b0fa"
 
+[[profiles.tabs]]
+kind = "dashboard"
+dashboard_id = "025b951f-b8f6-46d6-a263-83a54586e039"
+page = "overview"
+refresh_enabled = true
+
 [[profiles]]
 profile_id = "9618b337-e880-4ae5-bcee-029e36de266b"
-active_tab = "e87ecc57-a9ca-487b-ba43-020d67aaba26"
+active_tab = "59203f01-e04a-4d98-82c5-300f436a5631"
 
 [[profiles.consoles]]
 id = "e87ecc57-a9ca-487b-ba43-020d67aaba26"
@@ -94,6 +106,34 @@ schema = "tools"
 [[profiles.tabs]]
 kind = "console"
 console_id = "e87ecc57-a9ca-487b-ba43-020d67aaba26"
+
+[[profiles.tabs]]
+kind = "relation"
+id = "396e5649-fff8-42a2-a55c-0403e3d8bfa6"
+catalog_kind = "table"
+title = "ai_agent_audit_log"
+view = "data"
+
+[profiles.tabs.object_id]
+connection_id = "9618b337-e880-4ae5-bcee-029e36de266b"
+kind = "table"
+native_path = [
+    "kms",
+    "tools",
+    "ai_agent_audit_log",
+    "307434",
+]
+
+[profiles.tabs.qualified_name]
+database = "kms"
+schema = "tools"
+object = "ai_agent_audit_log"
+
+[[profiles.tabs]]
+kind = "dashboard"
+dashboard_id = "59203f01-e04a-4d98-82c5-300f436a5631"
+page = "overview"
+refresh_enabled = true
 
 [[profiles]]
 profile_id = "91c4e050-d62d-4a28-a985-5baf8a72ea18"

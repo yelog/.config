@@ -35,12 +35,13 @@
         "--project",
         ".",
         "--write-policy",
-        "deny"
+        "non-production"
       ],
       "cwd": "."
     }
   },
   "permission": {
+    "*": "allow",
     "lazydb_get_context": "allow",
     "lazydb_list_connections": "allow",
     "lazydb_search_schema": "allow",

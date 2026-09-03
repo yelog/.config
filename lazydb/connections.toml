@@ -1,17 +1,9 @@
 version = 6
-
-[[groups]]
-id = "05d389db-c3b0-437e-b962-6b27929bd8ae"
-name = "测试环境"
-
-[[groups]]
-id = "e7cf7d4d-c786-4998-b362-f587f2a1bf2c"
-name = "生产环境"
+groups = []
 
 [[profiles]]
 id = "7e1cc7b3-62e3-4a66-8688-20b8ba9d5bd4"
 name = "lssc-uat"
-group_id = "05d389db-c3b0-437e-b962-6b27929bd8ae"
 kind = "postgres"
 url_format = "jdbc-postgre-sql"
 host = "10.188.132.29"
