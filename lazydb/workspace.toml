@@ -1,0 +1,122 @@
+version = 4
+active_profile = "9d5aa2da-9f31-4dbc-b2b6-0844ff79b41e"
+
+[[profiles]]
+profile_id = "7e1cc7b3-62e3-4a66-8688-20b8ba9d5bd4"
+active_tab = "dbac364d-e5cf-41e4-a44f-7fd1947999bd"
+
+[[profiles.consoles]]
+id = "dbac364d-e5cf-41e4-a44f-7fd1947999bd"
+name = "console"
+sql_file = "dbac364d-e5cf-41e4-a44f-7fd1947999bd.sql"
+transaction_mode = "auto"
+open = true
+
+[profiles.consoles.target]
+profile_id = "7e1cc7b3-62e3-4a66-8688-20b8ba9d5bd4"
+database = "moss_biz"
+schema = "tools"
+
+[[profiles.tabs]]
+kind = "console"
+console_id = "dbac364d-e5cf-41e4-a44f-7fd1947999bd"
+
+[[profiles.tabs]]
+kind = "relation"
+id = "c72d973a-8c16-42b1-9512-7157de09837f"
+catalog_kind = "table"
+title = "ai_agent"
+view = "data"
+
+[profiles.tabs.object_id]
+connection_id = "7e1cc7b3-62e3-4a66-8688-20b8ba9d5bd4"
+kind = "table"
+native_path = [
+    "moss_biz",
+    "tools",
+    "ai_agent",
+    "75662",
+]
+
+[profiles.tabs.qualified_name]
+database = "moss_biz"
+schema = "tools"
+object = "ai_agent"
+
+[[profiles]]
+profile_id = "9d5aa2da-9f31-4dbc-b2b6-0844ff79b41e"
+active_tab = "910fc25a-b72d-4571-8a5f-3393f939b0fa"
+
+[[profiles.consoles]]
+id = "2b460750-9469-4791-8cef-eff74611838e"
+name = "console"
+sql_file = "2b460750-9469-4791-8cef-eff74611838e.sql"
+transaction_mode = "auto"
+open = false
+
+[profiles.consoles.target]
+profile_id = "9d5aa2da-9f31-4dbc-b2b6-0844ff79b41e"
+database = "moss"
+schema = "tools"
+
+[[profiles.consoles]]
+id = "910fc25a-b72d-4571-8a5f-3393f939b0fa"
+name = "console"
+sql_file = "910fc25a-b72d-4571-8a5f-3393f939b0fa.sql"
+transaction_mode = "auto"
+open = true
+
+[profiles.consoles.target]
+profile_id = "9d5aa2da-9f31-4dbc-b2b6-0844ff79b41e"
+database = "moss"
+schema = "tools"
+
+[[profiles.tabs]]
+kind = "console"
+console_id = "910fc25a-b72d-4571-8a5f-3393f939b0fa"
+
+[[profiles]]
+profile_id = "9618b337-e880-4ae5-bcee-029e36de266b"
+active_tab = "e87ecc57-a9ca-487b-ba43-020d67aaba26"
+
+[[profiles.consoles]]
+id = "e87ecc57-a9ca-487b-ba43-020d67aaba26"
+name = "console"
+sql_file = "e87ecc57-a9ca-487b-ba43-020d67aaba26.sql"
+transaction_mode = "auto"
+open = true
+
+[profiles.consoles.target]
+profile_id = "9618b337-e880-4ae5-bcee-029e36de266b"
+database = "kms"
+schema = "tools"
+
+[[profiles.tabs]]
+kind = "console"
+console_id = "e87ecc57-a9ca-487b-ba43-020d67aaba26"
+
+[[profiles]]
+profile_id = "91c4e050-d62d-4a28-a985-5baf8a72ea18"
+active_tab = "e0c6f413-30a9-482d-8412-ae69eb687546"
+
+[[profiles.consoles]]
+id = "6b2d508d-42cc-4485-99dd-254348fc1889"
+name = "console"
+sql_file = "6b2d508d-42cc-4485-99dd-254348fc1889.sql"
+transaction_mode = "auto"
+open = true
+
+[profiles.consoles.target]
+profile_id = "91c4e050-d62d-4a28-a985-5baf8a72ea18"
+database = "hrjqp"
+schema = "hrjqp"
+
+[[profiles.tabs]]
+kind = "console"
+console_id = "6b2d508d-42cc-4485-99dd-254348fc1889"
+
+[[profiles.tabs]]
+kind = "dashboard"
+dashboard_id = "e0c6f413-30a9-482d-8412-ae69eb687546"
+page = "overview"
+refresh_enabled = true

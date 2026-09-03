@@ -1,17 +1,17 @@
 return {
   {
-    'saghen/blink.cmp',
+    "saghen/blink.cmp",
     lazy = false, -- lazy loading handled internally
     -- optional: provides snippets for the snippet source
     dependencies = {
-      'onsails/lspkind.nvim',
-      'nvim-mini/mini.icons',
-      'Kaiser-Yang/blink-cmp-avante',
-      { 'L3MON4D3/LuaSnip', version = 'v2.*' },
-      'joelazar/blink-calc',
+      "onsails/lspkind.nvim",
+      "nvim-mini/mini.icons",
+      "Kaiser-Yang/blink-cmp-avante",
+      { "L3MON4D3/LuaSnip", version = "v2.*" },
+      "joelazar/blink-calc",
       "archie-judd/blink-cmp-words",
       {
-        'mikavilpas/blink-ripgrep.nvim',
+        "mikavilpas/blink-ripgrep.nvim",
         version = "*", -- use the latest stable version
       },
       "fang2hou/blink-copilot",
@@ -21,7 +21,7 @@ return {
 
     -- use a release tag to download pre-built binaries
     -- v0.8.1 会闪退
-    version = '1.*',
+    version = "1.*",
     -- OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
     -- build = 'cargo build --release',
     -- If you use nix, you can build from source using latest nightly rust with:
@@ -36,14 +36,14 @@ return {
       -- see the "default configuration" section below for full documentation on how to define
       -- your own keymap.
       keymap = {
-        preset = 'default',
+        preset = "default",
         ["<Tab>"] = {
           "snippet_forward",
           -- function() -- if you are using Neovim's native inline completions
           --   return vim.lsp.inline_completion.get()
           -- end,
           "select_and_accept",
-          "fallback"
+          "fallback",
         },
         ["<S-Tab>"] = { "select_prev", "fallback" },
         ["<CR>"] = { "select_and_accept", "fallback" },
@@ -55,10 +55,10 @@ return {
           },
         },
         keymap = {
-          preset = 'default',
+          preset = "default",
           ["<Tab>"] = { "select_and_accept", "fallback" },
           ["<S-Tab>"] = { "select_prev", "fallback" },
-        }
+        },
       },
 
       -- appearance = {
@@ -75,11 +75,11 @@ return {
         -- 'prefix' will fuzzy match on the text before the cursor
         -- 'full' will fuzzy match on the text before *and* after the cursor
         -- example: 'foo_|_bar' will match 'foo_' for 'prefix' and 'foo__bar' for 'full'
-        keyword = { range = 'full' },
+        keyword = { range = "full" },
 
         -- Disable auto brackets
         -- NOTE: some LSPs may add auto brackets themselves anyway
-        accept = { auto_brackets = { enabled = false }, },
+        accept = { auto_brackets = { enabled = false } },
 
         -- Insert completion item on selection, don't select by default
         list = { selection = { preselect = true, auto_insert = false } },
@@ -90,63 +90,73 @@ return {
         documentation = {
           auto_show = true,
           auto_show_delay_ms = 500,
-          window = { border = 'single' },
+          window = { border = "single" },
         },
 
         -- Display a preview of the selected item on the current line
         ghost_text = { enabled = true },
 
         menu = {
-          auto_show = true,   -- automatically show the menu when typing
-          border = 'rounded', -- border style for the menu
+          auto_show = true, -- automatically show the menu when typing
+          border = "rounded", -- border style for the menu
         },
       },
-      snippets = { preset = 'luasnip' },
+      snippets = { preset = "luasnip" },
       -- default list of enabled providers defined so that you can extend it
       -- elsewhere in your config, without redefining it, via `opts_extend`
       sources = {
-        default = { 'copilot', 'snippets', 'i18n', 'lsp', 'avante', 'path', 'buffer', 'ripgrep', 'calc', 'dictionary' },
+        default = {
+          "copilot",
+          "snippets",
+          "i18n",
+          "lsp",
+          "avante",
+          "path",
+          "buffer",
+          -- "ripgrep",
+          "calc",
+          "dictionary",
+        },
         -- optionally disable cmdline completions
         -- cmdline = {},
         providers = {
-          lsp        = {
+          lsp = {
             score_offset = 100, -- 👈 强力加权
-            fallbacks = {}
+            fallbacks = {},
           },
-          snippets   = {
+          snippets = {
             score_offset = 10, -- 👈 强力加权
-            fallbacks = {}
+            fallbacks = {},
           },
-          avante     = {
-            module = 'blink-cmp-avante',
-            name = 'Avante',
+          avante = {
+            module = "blink-cmp-avante",
+            name = "Avante",
             opts = {
               -- options for blink-cmp-avante
-            }
-          },
-          i18n       = {
-            name = 'i18n',
-            module = 'i18n.integration.blink_source',
-            opts = {
             },
           },
-          calc       = {
-            name = 'Calc',
-            module = 'blink-calc',
+          i18n = {
+            name = "i18n",
+            module = "i18n.integration.blink_source",
+            opts = {},
           },
-          ripgrep    = {
+          calc = {
+            name = "Calc",
+            module = "blink-calc",
+          },
+          ripgrep = {
             module = "blink-ripgrep",
             name = "Ripgrep",
             opts = {},
           },
-          copilot    = {
+          copilot = {
             name = "copilot",
             module = "blink-copilot",
             score_offset = 100,
             async = true,
           },
           -- Use the thesaurus source
-          thesaurus  = {
+          thesaurus = {
             name = "blink-cmp-words",
             module = "blink-cmp-words.thesaurus",
             -- All available options
@@ -188,7 +198,7 @@ return {
               definition_pointers = { "!", "&", "^" },
             },
           },
-        }
+        },
       },
     },
   },

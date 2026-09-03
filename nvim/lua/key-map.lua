@@ -373,7 +373,7 @@ map("n", "<c-p>", function() vim.cmd("bprevious") end, { desc = "Prev buffer" })
 map("n", "<leader>bo", function() Snacks.bufdelete.other() end, { desc = "Close other buffers" })
 
 -- yazi
-map("n", "<C-e>", function()
+map("n", "<D-e>", function()
   local yazi_buf = nil
   for _, buf in ipairs(vim.api.nvim_list_bufs()) do
     if vim.bo[buf].filetype == "yazi" then

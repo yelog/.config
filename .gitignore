@@ -38,6 +38,9 @@
 !/fastfetch/
 !/claude-code/
 !/opencode/
+!/lazydb/
+/lazydb/sql/
+/lazydb/credential.key
 !/rime/
 !/docs/
 !/skills/
