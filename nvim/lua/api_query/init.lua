@@ -34,17 +34,28 @@ function M.setup(opts)
     vim.api.nvim_create_user_command("ApiQueryDiagnostics", M.diagnostics, {})
     vim.api.nvim_create_user_command("ApiQueryFrameworks", M.frameworks, {})
   end
+  local group = vim.api.nvim_create_augroup("ApiQueryIndex", { clear = true })
+  vim.api.nvim_create_autocmd({ "BufWritePost", "FileChangedShellPost" }, {
+    group = group,
+    pattern = { "*.java", "*.py", "*.go", "*.js", "*.jsx", "*.ts", "*.tsx" },
+    callback = function(args)
+      local index = index_module()
+      if index and type(index.invalidate) == "function" then index.invalidate(args.file, config.get()) end
+    end,
+  })
   return options
 end
 
 function M.open(opts)
   local index = index_module()
   if not index then return end
-  if type(index.open) == "function" then
-    local result = index.open(vim.tbl_extend("force", config.get(), opts or {}))
-    if type(result) == "table" then return require("api_query.picker").open(result, opts) end
+  opts = vim.tbl_deep_extend("force", config.get(), opts or {})
+  local picker = require("api_query.picker")
+  if type(index.finder) == "function" then
+    return picker.open(index.finder(opts, picker.item_for), opts.picker or opts)
   end
-  return require("api_query.picker").open(endpoints(index, opts), opts)
+  if type(index.open) == "function" then return picker.open(index.open(opts), opts.picker or opts) end
+  return picker.open(endpoints(index, opts), opts.picker or opts)
 end
 
 function M.refresh(force)
