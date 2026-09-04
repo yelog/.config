@@ -1,0 +1,26 @@
+#!/bin/zsh
+
+# Run OpenCode 2 with the migrated config without changing OpenCode 1.
+set -e
+
+SCRIPT_DIR="${0:A:h}"
+export OPENCODE_CONFIG_DIR="$SCRIPT_DIR-v2"
+
+# Use a private v2 server so it cannot reuse OpenCode 1's shared service.
+if (( $# == 0 )); then
+  exec command opencode2 --standalone
+fi
+
+case "$1" in
+  run|mini)
+    command_name="$1"
+    shift
+    exec command opencode2 --standalone "$command_name" "$@"
+    ;;
+  --standalone)
+    exec command opencode2 "$@"
+    ;;
+  *)
+    exec command opencode2 --standalone "$@"
+    ;;
+esac

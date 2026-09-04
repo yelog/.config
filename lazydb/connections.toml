@@ -1,9 +1,13 @@
 version = 6
-groups = []
+
+[[groups]]
+id = "ca9a4c5a-9779-456a-8cec-ff11e53bdf6d"
+name = "生产环境"
 
 [[profiles]]
 id = "7e1cc7b3-62e3-4a66-8688-20b8ba9d5bd4"
 name = "lssc-uat"
+group_id = "ca9a4c5a-9779-456a-8cec-ff11e53bdf6d"
 kind = "postgres"
 url_format = "jdbc-postgre-sql"
 host = "10.188.132.29"
@@ -16,7 +20,8 @@ read_only = false
 environment = "development"
 
 [profiles.access]
-scope = "global"
+scope = "projects"
+roots = ["/Users/yelog/workspace/tui/lazydb"]
 
 [profiles.credential_policy]
 policy = "local_encrypted"
@@ -34,7 +39,10 @@ name = "moss_biz"
 
 [profiles.catalog_scope.databases.items.schemas]
 mode = "selected"
-items = ["tools"]
+items = [
+    "test_schema",
+    "tools",
+]
 
 [[profiles]]
 id = "9d5aa2da-9f31-4dbc-b2b6-0844ff79b41e"
@@ -104,7 +112,11 @@ name = "kms"
 
 [profiles.catalog_scope.databases.items.schemas]
 mode = "selected"
-items = ["tools"]
+items = [
+    "lkms",
+    "report",
+    "tools",
+]
 
 [[profiles]]
 id = "91c4e050-d62d-4a28-a985-5baf8a72ea18"

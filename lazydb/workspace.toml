@@ -3,13 +3,25 @@ active_profile = "7e1cc7b3-62e3-4a66-8688-20b8ba9d5bd4"
 
 [[profiles]]
 profile_id = "7e1cc7b3-62e3-4a66-8688-20b8ba9d5bd4"
-active_tab = "dbac364d-e5cf-41e4-a44f-7fd1947999bd"
+active_tab = "8e679d7f-ac74-4cce-9973-13f5c449c3ff"
 
 [[profiles.consoles]]
 id = "dbac364d-e5cf-41e4-a44f-7fd1947999bd"
 name = "console"
 sql_file = "dbac364d-e5cf-41e4-a44f-7fd1947999bd.sql"
 transaction_mode = "manual"
+open = false
+
+[profiles.consoles.target]
+profile_id = "7e1cc7b3-62e3-4a66-8688-20b8ba9d5bd4"
+database = "moss_biz"
+schema = "tools"
+
+[[profiles.consoles]]
+id = "5bf151e8-ff51-44ff-88a5-1e76a4023f94"
+name = "console"
+sql_file = "5bf151e8-ff51-44ff-88a5-1e76a4023f94.sql"
+transaction_mode = "auto"
 open = true
 
 [profiles.consoles.target]
@@ -19,33 +31,11 @@ schema = "tools"
 
 [[profiles.tabs]]
 kind = "console"
-console_id = "dbac364d-e5cf-41e4-a44f-7fd1947999bd"
-
-[[profiles.tabs]]
-kind = "relation"
-id = "c72d973a-8c16-42b1-9512-7157de09837f"
-catalog_kind = "table"
-title = "ai_agent"
-view = "data"
-
-[profiles.tabs.object_id]
-connection_id = "7e1cc7b3-62e3-4a66-8688-20b8ba9d5bd4"
-kind = "table"
-native_path = [
-    "moss_biz",
-    "tools",
-    "ai_agent",
-    "75662",
-]
-
-[profiles.tabs.qualified_name]
-database = "moss_biz"
-schema = "tools"
-object = "ai_agent"
+console_id = "5bf151e8-ff51-44ff-88a5-1e76a4023f94"
 
 [[profiles.tabs]]
 kind = "dashboard"
-dashboard_id = "017d5b2f-971d-4005-b7ce-e98ce8a01a12"
+dashboard_id = "8e679d7f-ac74-4cce-9973-13f5c449c3ff"
 page = "overview"
 refresh_enabled = true
 
