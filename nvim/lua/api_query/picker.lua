@@ -112,16 +112,19 @@ end
 function M.open(items, opts)
   items = items or {}
   opts = opts or {}
+  local is_finder = type(items) == "function"
   local picker_items = {}
-  for _, item in ipairs(items) do picker_items[#picker_items + 1] = item_for(item) end
+  if not is_finder then for _, item in ipairs(items) do picker_items[#picker_items + 1] = item_for(item) end end
   local snacks = rawget(_G, "Snacks")
   if not snacks or not snacks.picker or type(snacks.picker.pick) ~= "function" then
+    if is_finder then return notify("Snacks is required for asynchronous API indexing", vim.log.levels.WARN) end
     return choose_fallback(picker_items)
   end
 
   local picker_opts = {
     title = opts.title or "API Query",
-    items = picker_items,
+    show_delay = 0,
+    show_empty = true,
     format = format_endpoint,
     confirm = function(picker, item)
       picker:close()
@@ -140,6 +143,19 @@ function M.open(items, opts)
       ["<c-r>"] = { "api_request_run", mode = { "n", "i" } },
     } } },
   }
+  if is_finder then
+    picker_opts.finder = function(find_opts, ctx)
+      local source = items(find_opts, ctx)
+      if type(source) ~= "function" then
+        return vim.tbl_map(item_for, source or {})
+      end
+      return function(cb)
+        source(function(item) cb(item_for(item)) end)
+      end
+    end
+  else
+    picker_opts.items = picker_items
+  end
   return snacks.picker.pick(picker_opts)
 end
 

@@ -1,7 +1,7 @@
 local M = {}
 
 M.defaults = {
-  cache = { persistent = true, debounce_ms = 400 },
+  cache = { persistent = false, debounce_ms = 400 },
   scan = {
     libraries = false,
     exclude = { ".git", "node_modules", "vendor", "target", "build", "dist" },
