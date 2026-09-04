@@ -711,21 +711,28 @@ return {
       -- }
 
       -- The final touch! 文字和左右两侧的填充背景色
-      local function tabline_background(self)
-        local tabline_bg = utils.get_highlight("TabLine").bg
-        if not self.is_active then return tabline_bg end
+      local function tabline_highlight(self)
+        local normal = utils.get_highlight("Normal")
+        local tabline = utils.get_highlight("TabLine")
+        if not self.is_active then
+          return { fg = tabline.fg or normal.fg, bg = tabline.bg or normal.bg }
+        end
 
-        return utils.get_highlight("PmenuSel").bg
-          or utils.get_highlight("TabLineSel").bg
-          or utils.get_highlight("CursorLine").bg
-          or tabline_bg
+        local selected = utils.get_highlight("PmenuSel")
+        local tabline_selected = utils.get_highlight("TabLineSel")
+        return {
+          fg = selected.fg or tabline_selected.fg or normal.fg,
+          bg = selected.bg
+            or tabline_selected.bg
+            or utils.get_highlight("CursorLine").bg
+            or tabline.bg
+            or normal.bg,
+        }
       end
 
       local TablineBufferBlock = {
         hl = function(self)
-          return {
-            bg = tabline_background(self),
-          }
+          return tabline_highlight(self)
         end,
         { provider = " " },
         TablineFileNameBlock,

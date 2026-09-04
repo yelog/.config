@@ -3,10 +3,11 @@ local config_root = vim.fs.dirname(vim.fs.dirname(test_file))
 local captured_buffer_block
 local highlights = {
   PmenuSel = { bg = "#32426b" },
-  TabLineSel = { bg = "#343a55" },
+  TabLineSel = { fg = "#f0f0f0", bg = "#343a55" },
   CursorLine = { bg = "#292e42" },
-  TabLine = { bg = "#000000" },
-  default = { fg = "#ffffff" },
+  TabLine = { fg = "#a0a0a0", bg = "#000000" },
+  Normal = { fg = "#ffffff", bg = "#101010" },
+  default = {},
 }
 
 package.preload["heirline.conditions"] = function()
@@ -43,8 +44,12 @@ assert(captured_buffer_block[3].provider == " ",
   "buffer tabs must have right padding")
 assert(captured_buffer_block.hl({ is_active = true }).bg == "#32426b",
   "active buffer tabs must use the PmenuSel background when it is available")
+assert(captured_buffer_block.hl({ is_active = true }).fg == "#f0f0f0",
+  "active buffer tabs must use the TabLineSel foreground when PmenuSel has none")
 assert(captured_buffer_block.hl({ is_active = false }).bg == "#000000",
   "inactive buffer tabs must use the TabLine background")
+assert(captured_buffer_block.hl({ is_active = false }).fg == "#a0a0a0",
+  "inactive buffer tabs must use the TabLine foreground")
 highlights.PmenuSel.bg = nil
 assert(captured_buffer_block.hl({ is_active = true }).bg == "#343a55",
   "active buffer tabs must fall back to TabLineSel when PmenuSel has no background")
@@ -54,4 +59,7 @@ assert(captured_buffer_block.hl({ is_active = true }).bg == "#292e42",
 highlights.CursorLine.bg = nil
 assert(captured_buffer_block.hl({ is_active = true }).bg == "#000000",
   "active buffer tabs must fall back to TabLine when no active-tab highlight has a background")
+highlights.TabLine.fg = nil
+assert(captured_buffer_block.hl({ is_active = false }).fg == "#ffffff",
+  "inactive buffer tabs must fall back to the Normal foreground")
 print("heirline-tabline-tests: ok")
