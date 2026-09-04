@@ -38,7 +38,10 @@ name = "moss_biz"
 
 [profiles.catalog_scope.databases.items.schemas]
 mode = "selected"
-items = ["tools"]
+items = [
+    "test_schema",
+    "tools",
+]
 
 [[profiles]]
 id = "9d5aa2da-9f31-4dbc-b2b6-0844ff79b41e"
