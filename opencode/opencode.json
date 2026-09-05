@@ -380,6 +380,37 @@
             "xhigh": {}
           }
         },
+        "gpt-6-astra": {
+          "attachment": true,
+          "family": "gpt-6",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "name": "GPT-6 Astra",
+          "options": {
+            "store": false
+          },
+          "reasoning": true,
+          "temperature": true,
+          "tool_call": true,
+          "variants": {
+            "high": {},
+            "low": {},
+            "medium": {},
+            "xhigh": {}
+          }
+        },
         "gpt-5.6-sol": {
           "attachment": true,
           "family": "gpt-5",
