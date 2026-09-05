@@ -9,7 +9,7 @@ active_tab = "dbac364d-e5cf-41e4-a44f-7fd1947999bd"
 id = "dbac364d-e5cf-41e4-a44f-7fd1947999bd"
 name = "console"
 sql_file = "dbac364d-e5cf-41e4-a44f-7fd1947999bd.sql"
-transaction_mode = "manual"
+transaction_mode = "auto"
 open = true
 
 [profiles.consoles.target]
@@ -18,9 +18,9 @@ database = "moss_biz"
 schema = "tools"
 
 [[profiles.consoles]]
-id = "5bf151e8-ff51-44ff-88a5-1e76a4023f94"
-name = "console"
-sql_file = "5bf151e8-ff51-44ff-88a5-1e76a4023f94.sql"
+id = "45a3ab1d-8de4-4a05-a5a8-8ec5c060bba3"
+name = "console_1"
+sql_file = "45a3ab1d-8de4-4a05-a5a8-8ec5c060bba3.sql"
 transaction_mode = "auto"
 open = false
 
@@ -32,6 +32,28 @@ schema = "tools"
 [[profiles.tabs]]
 kind = "console"
 console_id = "dbac364d-e5cf-41e4-a44f-7fd1947999bd"
+
+[[profiles.tabs]]
+kind = "relation"
+id = "c91491a9-810f-4df8-8c68-46d15c9246b7"
+catalog_kind = "table"
+title = "test_tb"
+view = "data"
+
+[profiles.tabs.object_id]
+connection_id = "7e1cc7b3-62e3-4a66-8688-20b8ba9d5bd4"
+kind = "table"
+native_path = [
+    "moss_biz",
+    "test_schema",
+    "test_tb",
+    "176314",
+]
+
+[profiles.tabs.qualified_name]
+database = "moss_biz"
+schema = "test_schema"
+object = "test_tb"
 
 [[profiles]]
 profile_id = "9d5aa2da-9f31-4dbc-b2b6-0844ff79b41e"

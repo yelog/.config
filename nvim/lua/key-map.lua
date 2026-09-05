@@ -216,8 +216,8 @@ map("n", "<D-S-M>", function()
     end
   end
 end, { desc = "Search symbols" })
-map("n", "<D-S-i>", function() require("api_query").open() end, { desc = "Query API endpoint" })
-map("n", "<leader>iq", function() require("api_query").open() end, { desc = "Query API endpoint" })
+map({ "n", "x" }, "<D-S-i>", function() require("restful").open() end, { desc = "Query API endpoint" })
+map({ "n", "x" }, "<leader>iq", function() require("restful").open() end, { desc = "Query API endpoint" })
 -- map("n", "<D-S-O>", function() require("fzf-lua").files() end, { desc = "Search file" })
 -- 读取“当前”的可视选区文本（不必退出可视模式）
 local function get_current_visual_selection()
