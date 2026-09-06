@@ -7,6 +7,7 @@ package.path = table.concat({
 }, ";")
 
 vim.opt.rtp:append(vim.fn.expand("~/.local/share/nvim/lazy/nui.nvim"))
+vim.opt.rtp:append("/Users/yelog/workspace/vi/maven.nvim")
 
 local loaded_pom
 local loaded_args
@@ -17,7 +18,7 @@ local original_dependency_builder = function()
 end
 command_builder.build_mvn_dependencies_cmd = original_dependency_builder
 package.preload["maven.utils.cmd_builder"] = function() return command_builder end
-package.preload["custom.maven_profiles"] = function()
+package.preload["maven.profiles"] = function()
   return {
     find_nearest_pom = function()
       if dependency_loads == 0 then return "/workspace/demo/module/pom.xml" end
@@ -27,10 +28,11 @@ package.preload["custom.maven_profiles"] = function()
 end
 package.preload["maven.sources"] = function()
   return {
-    load_project_dependencies = function(pom, _, callback)
+    load_project_dependencies = function(pom, _, callback, opts)
       dependency_loads = dependency_loads + 1
       loaded_pom = pom
       loaded_args = command_builder.build_mvn_dependencies_cmd(pom, "/tmp", "dependencies.txt").args
+      if opts and opts.update_snapshots then table.insert(loaded_args, 1, "-U") end
       callback("SUCCEED", {
         { id = "root", group_id = "org.demo", artifact_id = "root", version = "1.0", scope = "compile", size = 2, conflict_version = "0.9" },
         { id = "framework", parent_id = "root", group_id = "org.demo", artifact_id = "framework-core", version = "1.0", scope = "compile", size = 4 },
@@ -43,7 +45,7 @@ package.preload["maven.utils"] = function()
   return { SUCCEED_STATE = "SUCCEED", humanize_size = function() return nil end }
 end
 
-local analyzer = require("custom.maven_dependency_analyzer")
+local analyzer = require("maven.ui.dependency_analyzer")
 analyzer.setup()
 
 assert(vim.fn.exists(":MavenDependencies") == 2, "dependency analyzer command should be registered without loading NUI")

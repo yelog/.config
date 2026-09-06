@@ -45,7 +45,8 @@ package.preload["maven.config"] = function()
   return { options = { console = { show_lifecycle_execution = true } } }
 end
 
-local reactor = require("custom.maven_reactor_execution")
+vim.opt.rtp:append("/Users/yelog/workspace/vi/maven.nvim")
+local reactor = require("maven.reactor_execution")
 local aggregator = { pom_xml_path = "/workspace/pom.xml", modules = { {} } }
 local leaf = { pom_xml_path = "/workspace/api/pom.xml", modules = {} }
 

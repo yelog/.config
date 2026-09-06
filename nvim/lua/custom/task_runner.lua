@@ -64,10 +64,10 @@ local function maven_context(context)
   local root = context.maven_root
   local module_pom = context.module_pom
   if not root or not module_pom then
-    local ok, profiles = pcall(require, "custom.maven_profiles")
+    local ok, maven = pcall(require, "maven")
     if ok then
-      root = root or profiles.find_project_root(context.file)
-      module_pom = module_pom or profiles.find_nearest_pom(context.file)
+      root = root or maven.find_project_root(context.file)
+      module_pom = module_pom or maven.find_nearest_pom(context.file)
     end
   end
   root = root or context.root

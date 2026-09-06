@@ -710,8 +710,8 @@ function Panel:toggle(root)
 end
 
 function Panel:select_profile(panel)
-  local maven_profiles = require("custom.maven_profiles")
-  maven_profiles.list_available(panel.root, function(error, profiles)
+  local maven = require("maven")
+  maven.list_profiles(panel.root, function(error, profiles)
     if error then
       vim.notify(error, vim.log.levels.ERROR)
       return
@@ -724,13 +724,12 @@ function Panel:select_profile(panel)
     for _, profile in ipairs(profiles) do
       table.insert(choices, { label = profile, profile = profile })
     end
-    local current = maven_profiles.get_primary_profile(panel.root)
+    local current = maven.get_primary_profile(panel.root)
     vim.ui.select(choices, {
       prompt = "Spring profile",
       format_item = function(item) return (item.profile == current and "* " or "  ") .. item.label end,
     }, function(choice)
-      if not choice or not maven_profiles.set_profiles(panel.root, choice.profile and { choice.profile } or {}) then return end
-      maven_profiles.apply_current(panel.root)
+      if not choice or not maven.set_profiles(panel.root, choice.profile and { choice.profile } or {}) then return end
       for _, service in ipairs(self.runtime:list(panel.root)) do
         if service.service_type == "springboot" and service.status == "RUNNING" then
           self.runtime:restart(service.key, { profile = choice.profile })

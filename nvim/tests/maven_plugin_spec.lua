@@ -29,21 +29,21 @@ package.preload["maven"] = function()
     end,
   }
 end
-package.preload["custom.maven_project_tree"] = function()
+package.preload["maven.project_tree"] = function()
   return {
     install = function()
       table.insert(setup_order, "project_tree")
     end,
   }
 end
-package.preload["custom.maven_reactor_execution"] = function()
+package.preload["maven.reactor_execution"] = function()
   return {
     install = function()
       table.insert(setup_order, "reactor_execution")
     end,
   }
 end
-package.preload["custom.maven_profiles"] = function()
+package.preload["maven.profiles"] = function()
   return {
     apply_current = function()
       apply_current_calls = apply_current_calls + 1
@@ -54,8 +54,10 @@ end
 
 local spec = dofile(config_root .. "/lua/plugins/panel/maven.lua")
 
-assert_equal("oclay1st/maven.nvim", spec[1], "Maven dashboard should use the selected upstream plugin")
-assert_equal({ "Maven", "MavenExec", "MavenInit", "MavenFavorites" }, spec.cmd,
+assert_equal("~/workspace/vi/maven.nvim", spec.dir, "Maven dashboard should use the local plugin fork")
+assert_equal("maven.nvim", spec.name, "Maven dashboard should keep a stable lazy plugin name")
+assert_equal(false, spec.lazy, "Maven APIs must be available to Services before a Maven command")
+assert_equal({ "Maven", "MavenExec", "MavenInit", "MavenFavorites", "MavenProfiles", "MavenProfilesClear", "MavenPresetAdd", "MavenPresetRemove", "MavenDependencies" }, spec.cmd,
   "upstream Maven commands should trigger lazy loading")
 assert_equal({ "MunifTanjim/nui.nvim" }, spec.dependencies, "Maven dashboard should reuse NUI")
 assert_equal("mvn", spec.opts.mvn_executable, "Maven dashboard should use the installed Maven executable")
@@ -67,26 +69,26 @@ assert_equal(true, spec.opts.console.show_dependencies_load_execution,
 
 spec.config(nil, spec.opts)
 assert_equal(spec.opts, captured_options, "Maven setup should receive the configured options")
-assert_equal({ "maven", "project_tree", "reactor_execution", "profiles" }, setup_order,
-  "Maven setup should install hierarchy and reactor adapters before applying stored profiles")
-assert_equal(1, apply_current_calls, "Maven setup should apply the stored profile after configuration")
+assert_equal({ "maven" }, setup_order, "the consumer config should only initialize the plugin")
+assert_equal(0, apply_current_calls, "profile initialization belongs to the plugin")
 
 local init = read("init.lua")
 local keymaps = read("lua/key-map.lua")
 local tools = read("lua/plugins/tools.lua")
-assert_contains(init, 'require("custom.maven_profiles").setup()', "profile helper should register its commands at startup")
-assert_contains(init, 'require("custom.maven_dependency_analyzer").setup()',
-  "dependency analyzer should register its command at startup")
+assert(not init:find('require("custom.maven_profiles").setup()', 1, true),
+  "profile initialization should belong to the plugin")
+assert(not init:find('require("custom.maven_dependency_analyzer").setup()', 1, true),
+  "dependency analyzer initialization should belong to the plugin")
 assert_contains(tools, 'vim.g.rooter_buftypes = { "" }', "Rooter should ignore NUI nofile buffers")
 assert_contains(keymaps, '{ "<leader>o", group = "Operations" }', "Which-Key should expose Maven under Operations")
-assert_contains(keymaps, 'require("custom.maven_profiles").open_dashboard()',
+assert_contains(keymaps, 'require("maven").open_dashboard()',
   "Maven panel should resolve the current project's root before opening")
 assert_contains(keymaps, 'map("n", "<leader>op", "<cmd>MavenProfiles<cr>"', "Maven profile picker should have a mapping")
-assert_contains(keymaps, 'require("custom.maven_profiles").open_execution()',
+assert_contains(keymaps, 'require("maven").open_execution()',
   "Maven execution should resolve the current project's root before opening")
-assert_contains(keymaps, 'require("custom.maven_profiles").open_favorites()',
+assert_contains(keymaps, 'require("maven").open_favorites()',
   "Maven favorites should resolve the current project's root before opening")
-assert_contains(keymaps, 'require("custom.maven_dependency_analyzer").open()',
+assert_contains(keymaps, 'require("maven").open_dependencies()',
   "dependency analyzer should have a dedicated keymap")
 
 print("maven-plugin-spec-tests: ok")

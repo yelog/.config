@@ -37,15 +37,16 @@ local upstream_project_view = {
 local analyzer_calls = {}
 
 package.preload["maven.ui.projects_view"] = function() return upstream_project_view end
-package.preload["custom.maven_dependency_analyzer"] = function()
+vim.opt.rtp:append("/Users/yelog/workspace/vi/maven.nvim")
+package.preload["maven"] = function()
   return {
-    open = function(...)
+    open_dependencies = function(...)
       table.insert(analyzer_calls, { ... })
     end,
   }
 end
 
-local project_tree = require("custom.maven_project_tree")
+local project_tree = require("maven.project_tree")
 
 local root = project("/workspace/pom.xml", "/workspace", "root")
 local api = project("/workspace/api/pom.xml", "/workspace/api", "api")
@@ -146,7 +147,7 @@ local view = {
 upstream_project_view._setup_win_maps(view)
 assert(maps.a, "the project view should install an analysis mapping")
 maps.a()
-assert_equal({ false, false, "/workspace/module/pom.xml" }, analyzer_calls[1],
+assert_equal({ { pom = "/workspace/module/pom.xml" } }, analyzer_calls[1],
   "panel analysis should open the unified analyzer for the selected module POM")
 
 local notifications = {}

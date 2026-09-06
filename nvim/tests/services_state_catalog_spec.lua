@@ -60,7 +60,7 @@ vim.fn.writefile({
 }, project_root .. "/pom.xml")
 assert_equal({ "dev", "local" }, state.parse_maven_profiles(project_root), "profiles should be unique and sorted")
 
-package.preload["custom.maven_profiles"] = function()
+package.preload["maven"] = function()
   return { get_primary_profile = function(root) return root == project_root and "dev" or nil end }
 end
 assert_equal("dev", state.get_profile(project_root), "Maven projects should use the Maven profile selection")

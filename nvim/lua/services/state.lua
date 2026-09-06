@@ -94,8 +94,8 @@ function M.get_profile(project_root)
   if not root then return nil end
 
   if vim.fn.filereadable(root .. "/pom.xml") == 1 then
-    local ok, maven_profiles = pcall(require, "custom.maven_profiles")
-    if ok and maven_profiles.get_primary_profile then return maven_profiles.get_primary_profile(root) end
+    local ok, maven = pcall(require, "maven")
+    if ok and maven.get_primary_profile then return maven.get_primary_profile(root) end
   end
 
   local project = load_state().projects[root]

@@ -16,8 +16,9 @@ end
 
 local temp_dir = vim.fn.tempname()
 vim.fn.mkdir(temp_dir, "p")
+vim.opt.rtp:append("/Users/yelog/workspace/vi/maven.nvim")
 
-local profiles = require("custom.maven_profiles")
+local profiles = require("maven.profiles")
 local state_path = temp_dir .. "/maven-profiles.json"
 local output = table.concat({
   "[INFO] Listing Profiles for Project:",

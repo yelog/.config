@@ -1,6 +1,11 @@
 return {
-  "oclay1st/maven.nvim",
-  cmd = { "Maven", "MavenExec", "MavenInit", "MavenFavorites" },
+  dir = "~/workspace/vi/maven.nvim",
+  name = "maven.nvim",
+  lazy = false,
+  cmd = {
+    "Maven", "MavenExec", "MavenInit", "MavenFavorites",
+    "MavenProfiles", "MavenProfilesClear", "MavenPresetAdd", "MavenPresetRemove", "MavenDependencies",
+  },
   dependencies = { "MunifTanjim/nui.nvim" },
   opts = {
     mvn_executable = "mvn",
@@ -15,8 +20,5 @@ return {
   },
   config = function(_, opts)
     require("maven").setup(opts)
-    require("custom.maven_project_tree").install()
-    require("custom.maven_reactor_execution").install()
-    require("custom.maven_profiles").apply_current()
   end,
 }

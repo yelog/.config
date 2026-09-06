@@ -419,13 +419,13 @@ map("n", "<leader>oa", function()
     end
   end
 end, { desc = "Start all services" })
-map("n", "<leader>om", function() require("custom.maven_profiles").open_dashboard() end, { desc = "Toggle Maven panel" })
+map("n", "<leader>om", function() require("maven").open_dashboard() end, { desc = "Toggle Maven panel" })
 map("n", "<leader>op", "<cmd>MavenProfiles<cr>", { desc = "Select Maven profiles" })
-map("n", "<leader>ox", function() require("custom.maven_profiles").open_execution() end,
+map("n", "<leader>ox", function() require("maven").open_execution() end,
   { desc = "Execute Maven command" })
-map("n", "<leader>of", function() require("custom.maven_profiles").open_favorites() end,
+map("n", "<leader>of", function() require("maven").open_favorites() end,
   { desc = "Maven favorite commands" })
-map("n", "<leader>oD", function() require("custom.maven_dependency_analyzer").open() end,
+map("n", "<leader>oD", function() require("maven").open_dependencies() end,
   { desc = "Analyze Maven dependencies" })
 
 -- finite project tasks

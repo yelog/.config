@@ -14,7 +14,8 @@ local function assert_equal(expected, actual, message)
   end
 end
 
-local model = require("custom.maven_dependency_model")
+vim.opt.rtp:append("/Users/yelog/workspace/vi/maven.nvim")
+local model = require("maven.dependencies.model")
 local dependencies = {
   { id = "a", group_id = "org.demo", artifact_id = "root", version = "1.0", scope = "compile", size = 10 },
   { id = "b", parent_id = "a", group_id = "org.demo", artifact_id = "shared", version = "2.0", scope = "compile", size = 20 },
