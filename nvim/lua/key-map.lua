@@ -388,6 +388,7 @@ map("n", "<D-e>", function()
     require("yazi").yazi()
   end
 end, { desc = "Toggle Yazi" })
+map("t", "<D-e>", "<C-e>", { desc = "Quit Yazi" })
 map("n", "<leader>te", "<cmd>Neotree left toggle<cr>", { desc = "Toggle Neo-tree" })
 
 -- lazygit
