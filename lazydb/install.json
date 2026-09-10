@@ -1,9 +1,0 @@
-{
-  "schema": 1,
-  "product": "lazydb",
-  "manager": "native",
-  "channel": "stable",
-  "version": "0.1.0",
-  "target": "aarch64-apple-darwin",
-  "path": "/Users/yelog/.local/bin/lazydb"
-}
