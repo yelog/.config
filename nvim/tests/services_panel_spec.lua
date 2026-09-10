@@ -81,6 +81,7 @@ local runtime = require("services.runtime").new({
 local selected = { "npm::web::dev", "springboot::orders" }
 local state = {
   get_selected_services = function() return selected end,
+  has_selected_services = function() return true end,
   set_selected_services = function(_, keys)
     selected = keys
     return true

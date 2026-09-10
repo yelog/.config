@@ -60,6 +60,31 @@ assert_equal(
   "JAVA_HOME should not be mislabeled or duplicated"
 )
 
+local sdkman_runtimes, sdkman_launcher = java_runtime.discover({ JAVA_HOME = "/jdk17" }, {
+  sdkman_homes = { "/jdk17", "/jdk21" },
+  is_java_home = opts.is_java_home,
+  version = opts.version,
+})
+assert_equal("/jdk21", sdkman_launcher, "SDKMAN Java 21 should launch JDTLS when JAVA_HOME is Java 17")
+assert_equal(
+  {
+    { name = "JavaSE-17", path = "/jdk17" },
+    { name = "JavaSE-21", path = "/jdk21", default = true },
+  },
+  sdkman_runtimes,
+  "SDKMAN Java 21 should be added without replacing the Java 17 project runtime"
+)
+
+local _, explicit_launcher = java_runtime.discover({
+  JAVA_HOME = "/jdk17",
+  NVIM_JAVA_HOME = "/jdk21-explicit",
+}, {
+  sdkman_homes = { "/jdk21" },
+  is_java_home = function(home) return home == "/jdk21-explicit" or opts.is_java_home(home) end,
+  version = function(home) return home == "/jdk21-explicit" and 21 or opts.version(home) end,
+})
+assert_equal("/jdk21-explicit", explicit_launcher, "NVIM_JAVA_HOME should override SDKMAN Java")
+
 local old_runtimes, old_launcher = java_runtime.discover({ JAVA_HOME = "/jdk17" }, opts)
 assert_equal(nil, old_launcher, "JDTLS should not launch on a Java version older than 21")
 assert_equal(

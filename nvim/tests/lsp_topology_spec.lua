@@ -40,6 +40,10 @@ assert(
   "Mason should ensure Spring Boot language tools"
 )
 assert(spring_boot:find("BufReadPre bootstrap*.yml", 1, true), "Spring Boot LS should load before bootstrap YAML filetypes")
+assert(spring_boot:find('require("custom.java_runtime").discover()', 1, true),
+  "Spring Boot LS should discover its own launcher JVM")
+assert(spring_boot:find('java_cmd = launcher_home and (launcher_home .. "/bin/java")', 1, true),
+  "Spring Boot LS should use the discovered launcher JVM")
 assert(spring_boot:find("BufReadPre application*.yml", 1, true), "Spring Boot LS should load before application YAML filetypes")
 
 assert(treesitter:find('"rust"', 1, true), "Treesitter should install the Rust parser")

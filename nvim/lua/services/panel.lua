@@ -673,6 +673,12 @@ function Panel:open(root)
   root = root or find_project_root()
   local definitions = self.discover(root)
   local selected = self.state.get_selected_services(root)
+  if not self.state.has_selected_services(root) and #selected == 0 then
+    for _, definition in ipairs(definitions) do
+      if definition.service_type == "springboot" then table.insert(selected, definition.key) end
+    end
+    if #selected > 0 then self.state.set_selected_services(root, selected) end
+  end
   self.runtime:reconcile(root, definitions, selected)
 
   local tab = vim.api.nvim_get_current_tabpage()

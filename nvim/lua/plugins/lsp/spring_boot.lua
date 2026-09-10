@@ -18,6 +18,13 @@ return {
       "BufNewFile bootstrap*.properties",
     },
     dependencies = { "neovim/nvim-lspconfig" },
-    opts = {},
+    opts = function()
+      local _, launcher_home = require("custom.java_runtime").discover()
+      return {
+        -- Spring Boot Tools follows JAVA_HOME by default. Keep it on the
+        -- JDTLS-compatible JVM without changing the project's Java runtime.
+        java_cmd = launcher_home and (launcher_home .. "/bin/java") or nil,
+      }
+    end,
   },
 }

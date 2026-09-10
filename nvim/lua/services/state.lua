@@ -131,6 +131,13 @@ function M.get_selected_services(project_root)
   return normalize_service_keys(project.selected_services)
 end
 
+function M.has_selected_services(project_root)
+  local root = normalize_root(project_root)
+  if not root then return false end
+  local project = load_state().projects[root]
+  return type(project) == "table" and type(project.selected_services) == "table"
+end
+
 function M.set_selected_services(project_root, keys)
   local root = normalize_root(project_root)
   if not root or type(keys) ~= "table" then return false end

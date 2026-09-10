@@ -4,7 +4,7 @@ This configuration supports Java launch debugging for Maven multi-module Spring 
 
 ## Prerequisites
 
-- JDK 21 to run jdtls. Project runtimes may still use Java 8, 11, 17, or 21 through the configured `JAVA_HOME*` variables.
+- JDK 21 to run jdtls. If the active `JAVA_HOME` is Java 17, the configuration automatically discovers a Java 21+ JDK installed by SDKMAN and uses it only for jdtls. Project runtimes and Maven/Spring Boot processes keep using the active Java 17.
 - Maven available as `mvn`.
 - A repository containing one or more classes annotated with `@SpringBootApplication`.
 - Mason packages `jdtls`, `vscode-spring-boot-tools`, `java-debug-adapter`, and `java-test`.
