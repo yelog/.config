@@ -569,3 +569,10 @@ export CLAUDE_CODE_MAX_OUTPUT_TOKENS=64000
 if [[ -n "$ZELLIJ" ]]; then
   zellij action rename-tab "${PWD##*/}" 2>/dev/null
 fi
+
+# >>> LazyDB installer >>>
+case ":$PATH:" in
+    *:/Users/yelog/.local/bin:*) ;;
+    *) export PATH=/Users/yelog/.local/bin:"$PATH" ;;
+esac
+# <<< LazyDB installer <<<
