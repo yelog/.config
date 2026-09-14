@@ -550,6 +550,8 @@ export PATH="$BUN_INSTALL/bin:$PATH"
 
 # opencode
 export PATH=/Users/yelog/.opencode/bin:$PATH
+alias opencode1="$HOME/.config/opencode/opencode1"
+alias opencode2="$HOME/.config/opencode/opencode2"
 
 # Added by Antigravity
 export PATH="/Users/yelog/.antigravity/antigravity/bin:$PATH"

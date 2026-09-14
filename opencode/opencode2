@@ -1,26 +1,43 @@
 #!/bin/zsh
 
-# Run OpenCode 2 with the migrated config without changing OpenCode 1.
+# Keep V2 configuration and background-service state separate from V1.
 set -e
 
 SCRIPT_DIR="${0:A:h}"
 export OPENCODE_CONFIG_DIR="$SCRIPT_DIR-v2"
+export XDG_STATE_HOME="$HOME/.local/state/opencode-v2"
+OPENCODE_BINARY="$HOME/.opencode/bin/opencode"
 
-# Use a private v2 server so it cannot reuse OpenCode 1's shared service.
-if (( $# == 0 )); then
-  exec command opencode2 --standalone
-fi
+# Respect an explicit connection choice, including --server=URL.
+for argument in "$@"; do
+  case "$argument" in
+    --) break ;;
+    --standalone|--server|--server=*) exec "$OPENCODE_BINARY" "$@" ;;
+  esac
+done
 
-case "$1" in
-  run|mini)
-    command_name="$1"
-    shift
-    exec command opencode2 --standalone "$command_name" "$@"
+# Locate the subcommand after any global flags.
+command_name=""
+for (( index = 1; index <= $#; index++ )); do
+  case "${argv[index]}" in
+    --log-level|--completions) (( index += 1 )) ;;
+    --log-level=*|--completions=*|--print-logs|--wizard|--help|-h|--version|-v) ;;
+    *) command_name="${argv[index]}"; break ;;
+  esac
+done
+
+case "$command_name" in
+  upgrade|update|uninstall|acp|debug|auth|mcp|plugin|models|stats|session|service|pair|serve)
+    exec "$OPENCODE_BINARY" "$@"
     ;;
-  --standalone)
-    exec command opencode2 "$@"
+  run|mini|api)
+    # Subcommand flags must follow the subcommand, not the root command.
+    prefix=("${argv[1,index]}")
+    shift "$index"
+    exec "$OPENCODE_BINARY" "${prefix[@]}" --standalone "$@"
     ;;
   *)
-    exec command opencode2 --standalone "$@"
+    # TUI, including a directory argument or root-level options.
+    exec "$OPENCODE_BINARY" --standalone "$@"
     ;;
 esac

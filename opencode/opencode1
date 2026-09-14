@@ -1,0 +1,7 @@
+#!/bin/zsh
+
+# A pinned V1 entrypoint for plugins that have not migrated to OpenCode 2.
+set -e
+export OPENCODE_CONFIG_DIR="${0:A:h}"
+export XDG_STATE_HOME="$HOME/.local/state/opencode-v1"
+exec npx --yes --package=opencode-ai@1.18.30 opencode "$@"
