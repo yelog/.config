@@ -38,6 +38,7 @@
 !/fastfetch/
 !/claude-code/
 !/opencode/
+!/opencode-v2/
 !/lazydb/
 /lazydb/sql/
 /lazydb/credential.key
@@ -54,3 +55,5 @@
 /nvim/lazy-lock.json
 /lazygit/state.yml
 .DS_Store
+
+node_modules

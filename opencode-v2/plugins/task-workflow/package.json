@@ -1,0 +1,8 @@
+{
+  "name": "local-task-workflow",
+  "private": true,
+  "type": "module",
+  "dependencies": { "@opencode/plugin": "2.0.3" },
+  "devDependencies": { "typescript": "^5.9.3", "@types/node": "^22.0.0" },
+  "scripts": { "check": "tsc --noEmit --module nodenext --moduleResolution nodenext --target es2022 --skipLibCheck index.ts" }
+}
