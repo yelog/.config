@@ -16,6 +16,7 @@ return {
       function()
         require("lazydb").toggle()
       end,
+      mode = { "n", "t" },
       desc = "Toggle LazyDB",
     },
   },
