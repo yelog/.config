@@ -7,7 +7,29 @@
 - 模型：Astra = `xrouter/gpt-6-astra`，Luna = `xrouter/gpt-5.6-luna`
 - 当前适配：OpenCode V2.0.3
 
-这是 opencode2 的全局插件，所有项目都能看到命令；当前 worktree 目录前缀按 LazyDB 定制为 `lazydb-`。请在 LazyDB 主工作空间使用。
+这是 opencode2 的全局插件，可以在不同 Git 项目中使用。新任务默认集中放在主 checkout 旁的 `<仓库名>-worktree/<任务名称>`，例如 `../my-api-worktree/add-cache`、`../lazydb-worktree/add-cache`。仓库名取自 Git 主 checkout，即使从已有 worktree 启动，也使用同一个默认父目录。
+
+## 项目级配置（可选）
+
+在启动 checkout 根目录创建 `.opencode/task-workflow.json`（严格 JSON，不含注释）：
+
+```json
+{
+  "prefix": "my-api",
+  "parent": "../my-api-worktree",
+  "planDirectory": "docs/plans",
+  "models": {
+    "astra": { "providerID": "xrouter", "id": "gpt-6-astra" },
+    "luna": { "providerID": "xrouter", "id": "gpt-5.6-luna" }
+  }
+}
+```
+
+所有字段均可省略。prefix 默认主 checkout 目录名，仅用于构造默认父目录 `<prefix>-worktree`；任务子目录不再重复此前缀。parent 默认主 checkout 旁的 `<prefix>-worktree`，显式设置时覆盖默认父目录；相对路径从启动 checkout 根目录解析，也支持绝对路径。planDirectory 默认 `docs/plans`，必须是仓库内相对路径。模型可以只覆盖一个角色，但该角色需要完整 providerID 和 id。astra/luna 是阶段角色名称，允许替换成其他可用模型。
+
+配置及目录布局只在 `/task` 启动时读取，随后保存到任务状态。修改项目配置不会改变已有任务的模型、目录和计划路径；旧版配置快照继续使用 `<prefix>-<任务名称>` 布局，没有配置快照的旧任务仍按原 lazydb 前缀恢复。现有 worktree 不搬迁。已有项目若显式设置 parent，新任务仍尊重该父目录，但子目录改为任务名称。
+
+从已有 worktree 启动时，以该 checkout 为起点，并合并回它启动时的分支；不会自动切换到主 checkout。请从你希望最终接收合并的 checkout 启动。项目仍需要 Git、可用的模型及 writing-plans/git-commit Skills。非 Git 目录不支持。
 
 ## 开始使用
 
@@ -17,7 +39,7 @@
 4. 输入：
 
 ```text
-/task 优化 Redis 上下文帮助，先分析当前行为和问题，再给出最佳方案并逐项实施
+/task 优化 Redis 上下文帮助
 ```
 
 命令后面的全部文本都是需求，无需提供任务名称。Astra 完成计划后，Luna 根据会话上下文、需求和完整计划生成英文名称。插件检查本地分支、目录（包括符号链接）及 Git worktree 登记；重名时自动尝试 `-2`、`-3` 等后缀，并通过独占创建目录和 Git 分支创建再次防止并发冲突。一个会话承载一个任务；新任务使用新会话。
@@ -31,9 +53,11 @@
 | implement | Luna | 创建 worktree、移动会话、逐项实施及复核、写 implementation.md |
 | integrate | Luna | 验证、调用 git-commit、提交、合并、写 integration.md |
 
-例如 Luna 生成 `redis-context-help`，会创建分支 `task/redis-context-help`，目录 `/Users/yelog/workspace/tui/lazydb-redis-context-help`；若重名则使用可用后缀。起点是启动任务时主工作空间的 HEAD。实际名称会显示在会话和 `/task-status` 中。
+例如 Luna 生成 `redis-context-help`，会创建分支 `task/redis-context-help`，目录 `/Users/yelog/workspace/tui/lazydb-worktree/redis-context-help`；若重名则使用可用后缀。起点是启动任务时工作空间的 HEAD。实际名称会显示在会话和 `/task-status` 中。
 
-计划会复制到新 worktree 的 `docs/plans/redis-context-help.md`，随任务提交。完成后会话返回原工作空间。任务分支和 worktree 保留，便于检查；不会自动 push。
+计划会复制到新 worktree 的 `docs/plans/redis-context-help.md`，随任务提交。合并和验证通过后，会话先返回原工作空间，插件再执行 `git worktree remove` 和 `git branch -d`，删除本任务的 worktree 及分支。不会自动 push。公共父目录与 Git common directory 下的任务报告保留。
+
+清理前核对目标分支、合并提交、任务 worktree 分支与 HEAD，以及未提交/未跟踪文件。不会使用强制删除；正常 Git worktree 删除也会移除该目录内被忽略的构建产物。若清理失败，任务停在清理阶段，处理原因后 `/task-resume` 只重试清理，不再调用模型重复实施或合并。已标记 done 的历史任务不会被批量清理；新版下继续执行的未完成任务会使用自动清理。
 
 ## 查看进度
 
@@ -87,7 +111,7 @@
 - **权限询问**：按 OpenCode 提示允许任务需要的操作，尤其是新 worktree 和 `.git/opencode-tasks` 的文件访问。插件没有更改全局工具权限。
 - **需要补充需求**：先在原会话说明补充内容，处理完后 resume。
 - **合并冲突或验证失败**：查看当前会话和报告，处理后 resume。插件不会把“模型停止输出”当作成功。
-- **要修改模型**：编辑 `index.ts` 顶部 `models` 中的 providerID/id，重启 opencode2。
+- **要修改模型**：在项目 `.opencode/task-workflow.json` 中覆盖 models，对之后启动的任务生效。全局默认值仍位于 `index.ts` 顶部 models。
 - **禁用**：从 V2 配置的 `plugins` 中移除本插件路径，重启 opencode2。
 
 ## 验证与维护

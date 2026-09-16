@@ -2,7 +2,7 @@ import { test, expect } from 'bun:test'
 import { mkdtemp, readFile, writeFile, rm, realpath, mkdir } from 'node:fs/promises'
 import { execFileSync } from 'node:child_process'
 import path from 'node:path'
-import plugin, { parseName } from './index'
+import plugin, { parseName, settingsFor, taskDirectory } from './index'
 
 test('name parsing tolerates wrappers without accepting arbitrary prose or paths', () => {
   for (const value of ['redis-pane', '`redis-pane`', '```text\nredis-pane\n```', '{"name":"redis-pane"}', 'task/redis-pane']) expect(parseName(value)).toBe('redis-pane')
@@ -16,9 +16,11 @@ test('four stages switch models, create worktree, commit, merge and return; miss
   await writeFile(path.join(temp, 'README.md'), 'base\n')
   git(temp, 'add', '.'); git(temp, 'commit', '-m', 'initial')
   const stem = path.basename(temp).toLowerCase()
-  const occupied = path.join(path.dirname(temp), `lazydb-${stem}-2`)
+  const prefix = path.basename(temp)
+  const parent = path.join(path.dirname(temp), `${prefix}-worktree`)
+  const occupied = path.join(parent, `${stem}-2`)
   git(temp, 'branch', `task/${stem}`)
-  await mkdir(occupied)
+  await mkdir(occupied, { recursive: true })
   let directory = temp, block = true
   let namingCalls = 0
   const commands = new Map<string, any>(), selected: string[] = []
@@ -53,7 +55,11 @@ test('four stages switch models, create worktree, commit, merge and return; miss
         const file = /最后写入回执 ([^\n]+)，内容为/.exec(text)![1]
         const artifact: any = { analyze: 'analysis.md', plan: 'plan.md', implement: 'implementation.md', integrate: 'integration.md' }
         await writeFile(path.join(folder, artifact[receipt.stage]), '# verified\n')
-        if (receipt.stage === 'implement') await writeFile(path.join(directory, 'feature.txt'), 'implemented\n')
+        if (receipt.stage === 'implement') {
+          expect((await settingsFor(directory)).parent).toBe(parent)
+          expect((await settingsFor(directory)).prefix).toBe(prefix)
+          await writeFile(path.join(directory, 'feature.txt'), 'implemented\n')
+        }
         if (receipt.stage === 'integrate') {
           git(directory, 'add', '.'); git(directory, 'commit', '-m', 'feat: test task')
           git(temp, 'merge', '--no-edit', `task/${stem}-3`)
@@ -73,10 +79,16 @@ test('four stages switch models, create worktree, commit, merge and return; miss
     expect(await done).toContain('已完成并合并')
     expect(selected).toEqual(['gpt-6-astra', 'gpt-6-astra', 'gpt-6-astra', 'gpt-5.6-luna', 'gpt-5.6-luna', 'gpt-5.6-luna'])
     expect(directory).toBe(temp)
+    const tree = path.join(parent, `${stem}-3`)
+    expect(JSON.parse(await readFile(path.join(folder, 'state.json'), 'utf8')).tree).toBe(tree)
+    expect(git(temp, 'branch', '--list', `task/${stem}-3`)).toBe('')
+    expect(git(temp, 'worktree', 'list', '--porcelain')).not.toContain(tree)
+    expect(await Bun.file(path.join(tree, '.git')).exists()).toBe(false)
     expect(await readFile(path.join(temp, 'feature.txt'), 'utf8')).toBe('implemented\n')
     expect(JSON.parse(await readFile(path.join(folder, 'state.json'), 'utf8')).status).toBe('done')
     expect(namingCalls).toBe(2)
     // Reproduce the user's partial manual repair: branch/tree exist but flags/name were omitted.
+    git(temp, 'worktree', 'add', '-b', `task/${stem}-3`, tree, 'HEAD')
     const repaired = JSON.parse(await readFile(path.join(folder, 'state.json'), 'utf8'))
     repaired.step = 2; repaired.status = 'running'; repaired.name = '待 Luna 命名'; delete repaired.worktreeCreated
     await writeFile(path.join(folder, 'state.json'), JSON.stringify(repaired))
@@ -92,9 +104,52 @@ test('four stages switch models, create worktree, commit, merge and return; miss
     expect(await done).toContain('已完成并合并')
     expect(namingCalls).toBe(2)
     expect(JSON.parse(await readFile(path.join(folder, 'state.json'), 'utf8')).name).toBe(`${stem}-3`)
+    // Failed cleanup resumes without another model request or integration.
+    git(temp, 'worktree', 'add', '-b', `task/${stem}-3`, tree, 'HEAD')
+    await writeFile(path.join(tree, 'local.txt'), 'preserve me')
+    const cleanup = JSON.parse(await readFile(path.join(folder, 'state.json'), 'utf8'))
+    cleanup.status = 'blocked'
+    await writeFile(path.join(folder, 'state.json'), JSON.stringify(cleanup))
+    const calls = selected.length
+    done = notification()
+    await commands.get('task-resume').execute({ sessionID })
+    expect(await done).toContain('未提交文件')
+    expect(await readFile(path.join(tree, 'local.txt'), 'utf8')).toBe('preserve me')
+    await rm(path.join(tree, 'local.txt'))
+    done = notification()
+    await commands.get('task-resume').execute({ sessionID })
+    expect(await done).toContain('已完成并合并')
+    expect(selected.length).toBe(calls)
+    expect(git(temp, 'branch', '--list', `task/${stem}-3`)).toBe('')
   } finally {
-    try { git(temp, 'worktree', 'remove', '--force', path.join(path.dirname(temp), `lazydb-${stem}-3`)) } catch {}
-    await rm(occupied, { recursive: true, force: true })
+    try { git(temp, 'worktree', 'remove', '--force', path.join(parent, `${stem}-3`)) } catch {}
+    await rm(parent, { recursive: true, force: true })
     await rm(temp, { recursive: true, force: true })
   }
 }, 30000)
+
+test('project settings default to repository name and support validated overrides', async () => {
+  const root = await mkdtemp('/private/var/folders/d9/5sfcnz292bvbdh3nv19rvhc40000gn/T/opencode/project-settings-')
+  try {
+    execFileSync('git', ['init', '-b', 'main'], { cwd: root, stdio: 'pipe' })
+    expect((await settingsFor(root)).prefix).toBe(path.basename(root))
+    expect((await settingsFor(root)).parent).toBe(path.join(path.dirname(root), `${path.basename(root)}-worktree`))
+    await mkdir(path.join(root, '.opencode'))
+    const file = path.join(root, '.opencode/task-workflow.json')
+    await writeFile(file, JSON.stringify({ prefix: 'api', parent: '../trees', planDirectory: 'design/plans', models: { luna: { providerID: 'custom', id: 'coder' } } }))
+    const settings = await settingsFor(root)
+    expect(settings.parent).toBe(path.resolve(root, '../trees'))
+    expect(settings.models.luna.id).toBe('coder')
+    expect(settings.models.astra.id).toBe('gpt-6-astra')
+    expect(settings.planDirectory).toBe('design/plans')
+    expect(taskDirectory(settings, 'add-cache')).toBe(path.join(settings.parent, 'add-cache'))
+    const { layout, ...legacy } = settings
+    expect(taskDirectory(legacy, 'add-cache')).toBe(path.join(settings.parent, 'api-add-cache'))
+    await writeFile(file, '{"planDirectory":"../outside"}')
+    await expect(settingsFor(root)).rejects.toThrow('planDirectory')
+    await writeFile(file, '{"prefix":"../outside"}')
+    await expect(settingsFor(root)).rejects.toThrow('prefix')
+    await writeFile(file, '{"models":{"luna":{"id":"coder"}}}')
+    await expect(settingsFor(root)).rejects.toThrow('providerID')
+  } finally { await rm(root, { recursive: true, force: true }) }
+})
