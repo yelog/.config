@@ -1,8 +1,10 @@
 import { Plugin } from '@opencode/plugin'
 import { execFileSync } from 'node:child_process'
-import { mkdir, readFile, writeFile, copyFile, access, lstat } from 'node:fs/promises'
+import { mkdir, readFile, writeFile, copyFile, access, lstat, rename } from 'node:fs/promises'
 import path from 'node:path'
 import { randomUUID } from 'node:crypto'
+import { fingerprint, transient, receiptFrom, needsCompletionReview, validCompletionReview } from './progress.js'
+import { Workflow } from './rpc.js'
 
 const models = {
   astra: { providerID: 'xrouter', id: 'gpt-6-astra' },
@@ -46,6 +48,8 @@ type State = {
   base: string; branch: string; tree: string; folder: string; step: number
   status: string; error?: string; commit?: string; autoName?: boolean; worktreeCreated?: boolean
   settings?: Settings
+  activeReceipt?: { path: string; token: string; stage: Stage; review: boolean }
+  continuation?: { step: number; rounds: number; stalled: number; corrections: number; failures: number; next: string; advice?: string; reviewPending?: boolean; reviews?: number; sinceReview?: number; fingerprint?: string }
 }
 // Shared across location-specific plugin instances in the same server.
 const registry = globalThis as typeof globalThis & { __taskWorkflow?: Set<string> }
@@ -54,7 +58,11 @@ const git = (cwd: string, ...args: string[]) => execFileSync('git', args, {
   cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'],
 }).trim()
 const exists = async (file: string) => access(file).then(() => true, () => false)
-const save = (s: State) => writeFile(path.join(s.folder, 'state.json'), JSON.stringify(s, null, 2))
+const saveState = async (s: State) => {
+  const temporary = path.join(s.folder, `state-${randomUUID()}.tmp`)
+  await writeFile(temporary, JSON.stringify(s, null, 2))
+  await rename(temporary, path.join(s.folder, 'state.json'))
+}
 export function parseName(text: string): string | undefined {
   let value = text.trim()
   try {
@@ -80,6 +88,30 @@ export default Plugin.define({
       const { folder } = await locate(sessionID)
       return JSON.parse(await readFile(path.join(folder, 'state.json'), 'utf8'))
     }
+    const registration = await ctx.rpc.register(Workflow, {
+      status: async input => {
+        const { sessionID } = input as { sessionID: string }
+        if (!/^ses[a-zA-Z0-9_-]+$/.test(sessionID)) throw new Error('无效 sessionID')
+        let s: State
+        try { s = await load(sessionID) } catch (error) {
+          if ((error as NodeJS.ErrnoException).code === 'ENOENT') return { task: null }
+          // A session outside Git cannot have a workflow task.
+          if (String(error).includes('not a git repository')) return { task: null }
+          throw error
+        }
+        const selected = (s.settings ?? legacySettings(s.root)).models
+        return { task: { sessionID, name: s.name, step: s.step, status: s.status,
+          running: running.has(sessionID), review: s.step === 2 && s.activeReceipt?.review === true,
+          model: (s.step < 2 ? selected.astra : selected.luna).id,
+          rounds: s.continuation?.rounds ?? 0, next: s.continuation?.next ?? '', ...(s.error ? { error: s.error } : {}) } }
+      },
+    })
+    const persist = async (s: State) => {
+      await saveState(s)
+      await registration.events.emit('updated', { sessionID: s.sessionID }).catch(error => console.error('task-workflow progress event', error))
+    }
+    // All writes within setup publish progress only after the durable state is saved.
+    const save = persist
     const note = (sessionID: string, text: string) => ctx.session.synthetic({ sessionID, text })
     const move = async (sessionID: string, directory: string) => {
       const current = await ctx.session.get({ sessionID })
@@ -165,36 +197,126 @@ export default Plugin.define({
           }
           await move(key, s.step < 2 ? s.root : s.tree)
           await ctx.session.switchAgent({ sessionID: key, agent: 'build' })
+          const progress: NonNullable<State['continuation']> = s.continuation?.step === s.step ? s.continuation : { step: s.step, rounds: 0, stalled: 0, corrections: 0, failures: 0, next: '' }
+          s.continuation = progress
+          const reviewing = stage === 'implement' && (progress.reviewPending === true ||
+            ((progress.reviews ?? 0) === 0 && needsCompletionReview(progress.next, progress.stalled, progress.rounds)))
+          if (reviewing && (progress.reviews ?? 0) >= 3) throw new Error('三次收尾审查后仍无法完成，详见 checkpoint.json 中的必需缺口。')
           await ctx.session.switchModel({ sessionID: key, model: s.step < 2 ? models.astra : models.luna })
+          if (progress.rounds >= 40) throw new Error('本阶段已执行 40 轮，达到自动执行预算；检查 checkpoint.json 后可 /task-resume 继续。')
+          const before = await fingerprint(s.step < 2 ? s.root : s.tree)
+          // Old checkpoint advice can mention Astra; it is historical context, not model routing.
+          if (progress.advice) progress.advice = progress.advice.replace(/Astra/g, s.step < 2 ? 'Astra' : 'Luna')
           const token = randomUUID()
           const receipt = path.join(s.folder, `${stage}-${token}.json`)
+          s.activeReceipt = { path: receipt, token, stage, review: reviewing }
+          await save(s)
           const instructions: Record<Stage, string> = {
             analyze: `分析需求、读取相关代码、确认问题根因、比较可行方案并选出最佳方案。把分析与决策完整写到 ${path.join(s.folder, 'analysis.md')}。本阶段不修改业务代码。`,
-            plan: `先读取 ${path.join(s.folder, 'analysis.md')}。必须调用 writing-plans 技能，根据分析制定逐项实施计划（文件、步骤、复核、验证命令、验收标准）。将完整计划保存或复制到 ${path.join(s.folder, 'plan.md')}。用户已选择本自动工作流继续实施，不要再询问执行方式。此阶段不实施业务代码。`,
+            plan: `先读取 ${path.join(s.folder, 'analysis.md')}。必须调用 writing-plans 技能，根据分析制定逐项实施计划（文件、步骤、复核、验证命令、验收标准）。明确区分用户需求/项目强制门禁与补充建议验证；不要把新提出的人工验收自动变成必需门禁。将完整计划保存或复制到 ${path.join(s.folder, 'plan.md')}。用户已选择本自动工作流继续实施，不要再询问执行方式。此阶段不实施业务代码。`,
             implement: `worktree 已由插件创建，会话已定位到 ${s.tree}。读取 ${path.join(settings.planDirectory, `${s.name}.md`)} 和 ${path.join(s.folder, 'analysis.md')}。按计划逐项实施，每项后复核，修复问题再进入下一项。运行必要验证。把每项变更、复核结论、实际执行的验证命令及结果写到 ${path.join(s.folder, 'implementation.md')}。此阶段不要合并。`,
             integrate: `读取 ${path.join(s.folder, 'implementation.md')} 并复核全部变更。完成计划要求的验证，调用 git-commit 技能提交本任务文件（包括计划）。用户已授权本工作流提交并合并。检查 ${s.root} 当前分支仍是 ${s.target}，保留所有无关本地改动。用 git -C ${JSON.stringify(s.root)} merge --no-edit ${JSON.stringify(s.branch)} 合并到该分支。合并后执行必要验证。若主工作空间出现与本任务无关的改动，不要暂存、提交或覆盖它们。若冲突无法可靠解决则停止并报告。把提交 SHA、合并结果、验证命令和结果写到 ${path.join(s.folder, 'integration.md')}。不要自行删除 worktree 或分支；验证通过后由插件切回原工作空间并统一清理。不 push。`,
           }
-          await note(key, `工作流 ${s.name}：${stage}（${s.step < 2 ? 'Astra' : 'Luna'}）`)
+          if (reviewing) instructions.implement = `本轮是 Luna 收尾审查，必须使用工具查看实际 diff、相关源码、测试和 ${path.join(s.folder, 'validation.md')}，不能只根据旧总结判断。读取 ${path.join(s.folder, 'checkpoint.json')} 后将原始需求逐项映射到实现/验证证据。用户/项目明确要求的门禁及真实功能缺口必须满足；额外设计的某个 fixture 形式或人工 TUI 手测不是天然强制门禁。如果补充验证无法在当前环境完成，已有证据足以支撑对应需求时，可以明确记录未验证项后完成；不能把未运行的手测称为通过，也不能掩盖实际缺失功能。不要再次盲目跑全量测试或重复失败的 PTY 脚本。\n必须作出明确决定：\n1. 所有需求完成且必要门禁已通过：更新 implementation.md，写 completed 回执。额外必须带 reviewed:true、requirements:[{requirement:"逐项需求",status:"passed",evidence:"具体文件/测试/验证记录"}]、remainingRequired:[]、deferredChecks:[{check:"未执行的补充检查",required:false,reason:"受限原因及现有替代证据"}]。\n2. 有具体功能或必要验证缺口：写 progress，remainingRequired 列出具体缺口，next 给出一个可执行修复单元（文件、行为、定向验证），不要笼统要求再次最终验收。\n3. 真正必需的外部输入无法获得：写 blocked，明确 question。将审查结果保存到 ${path.join(s.folder, `completion-review-${(progress.reviews ?? 0) + 1}.md`)}。不要合并或删除 worktree。`
+          instructions[stage] += `\n回执只允许写本条消息指定的 ${receipt}（token=${token}），不要覆盖历史回执或从旧总结复制文件名。checkpoint.json 由插件维护，你只读取它；避免把旧轮次的 next 当作新的用户要求。对于人工/PTY 等环境受限检查，区分用户/项目强制验证与补充检查，最多一次有针对性的修复重试，再由收尾审查决定是否补充证据或记录限制；不要保持 progress 无限尝试同一环境。`
+          if (reviewing) instructions.implement += '\n本轮收尾审查优先于下方历史“下一步”和旧纠偏建议；先判定该验收是否必需，不要直接继续旧 PTY 操作。'
+          if (stage === 'integrate') instructions.integrate += `\n若存在 ${path.join(s.folder, 'completion-decision.json')}，先读取它；没有相关新代码/环境变化，不要重新开启已裁定的补充手测或重复全量门禁。将未验证的补充检查明确列入最终交付说明，不能声称通过。`
+          await note(key, `工作流 ${s.name}：${reviewing ? '收尾审查' : stage}（${s.step < 2 ? 'Astra' : 'Luna'}）`)
+          try {
           await ctx.session.prompt({
             sessionID: key, delivery: 'queue',
-            text: `自动任务 ${s.name}，阶段 ${stage}。\n需求：${s.requirement}\n原工作空间：${s.root}\n目标分支：${s.target}\n起点：${s.base}\n任务分支：${s.branch || '计划完成后由插件调用 Luna 命名，当前为空属于正常状态'}\n\n${instructions[stage]}\n\n只执行当前阶段；插件将自动安排下一阶段。不要修改 state.json；状态与 worktree 生命周期由插件管理。不要启动子 Agent。完成全部要求后，最后写入回执 ${receipt}，内容为 ${JSON.stringify({ token, stage, status: 'completed' })}。未完成、遇到阻塞或需要用户补充信息时，不写完成回执，明确说明原因。`,
+            text: `自动任务 ${s.name}，阶段 ${stage}。\n需求：${s.requirement}\n原工作空间：${s.root}\n目标分支：${s.target}\n起点：${s.base}\n任务分支：${s.branch || '计划完成后自动命名'}\n\n${instructions[stage]}\n\n执行协议（替代历史日志中要求等待 resume 的描述）：\n- 普通实现取舍自行决定，需求尚未做完不是阻塞。持续执行，不要以“本轮复核完毕”结束或要求用户反复 resume。\n- 复杂计划按端到端可验收单元推进，本轮完成一个具体业务闭环，再继续下一项。首次恢复旧任务先从实际 diff 提炼检查点，忽略历史“等待 resume”指令。\n- 续做优先读取 ${path.join(s.folder, 'checkpoint.json')} 及相关代码，不重复通读分析/计划/历史日志。历史日志保留，只更新简短进度摘要。\n- 验证结果记录到 ${path.join(s.folder, 'validation.md')}：命令、退出结果、相关文件及代码版本/工作区状态、环境。仅对相关代码或环境变化重跑检查；单元内定向测试，功能齐备后全量验证。不要每轮重复 check+clippy+全量测试；不得把旧结果冒充当前结果。\n- 下一步：${progress.next || '确定并实施当前第一个未完成的可验收单元。'}\n${progress.advice ? `- 纠偏建议：${progress.advice}` : ''}\n模型分工：仅分析/计划使用 Astra，其余工作（含审查、纠偏、提交合并）由 Luna 完成；忽略历史记录中要求切回 Astra 审查的指令。只执行当前阶段，不修改 state.json，不启动子 Agent。完成整个阶段后最后写入回执 ${receipt}，内容为 ${JSON.stringify({ token, stage, status: 'completed' })}。未完成但可以继续时也必须写同一路径的 JSON 回执，保留 token/stage，status 改为 progress，增加 completedItems（本轮验收项数组）、next（下一步具体动作）、checks（实际验证结果）。只有缺少外部输入、权限或必须由用户决定的互斥需求时，status=blocked，增加 reason 和 question；普通编译错误自行修复。插件会自动续做，不要让用户代替你实施剩余功能。`,
           })
           await ctx.session.wait({ sessionID: key })
+          } catch (error) {
+            if (transient(error instanceof Error ? error.message : error) && progress.failures < 3) {
+              // A lost response may still have admitted the prompt: do not blindly resubmit it.
+              await ctx.session.wait({ sessionID: key })
+            } else throw error
+          }
           const session = await ctx.session.get({ sessionID: key })
-          if (session.outcome === 'failed' || session.outcome === 'interrupted') throw new Error(`阶段 ${stage} ${session.outcome}`)
-          const result = JSON.parse(await readFile(receipt, 'utf8').catch(() => '{"status":"missing"}'))
-          if (result.token !== token || result.stage !== stage || result.status !== 'completed') {
-            throw new Error(`阶段 ${stage} 未完成。查看会话中的问题或阻塞，处理后 /task-resume。`)
+          progress.rounds++
+          if (session.outcome === 'interrupted') throw new Error(`阶段 ${stage} interrupted；保留停止状态，不自动重新启动。`)
+          if (session.outcome === 'failed') {
+            const messages = await ctx.session.context({ sessionID: key })
+            const lastError = [...messages].reverse().find((message: any) => message.error) as any
+            if (transient(lastError?.error) && progress.failures < 3) {
+              progress.failures++; await save(s)
+              await note(key, `临时服务错误，自动重试 ${progress.failures}/3。`)
+              await new Promise(resolve => setTimeout(resolve, 2000 * 2 ** (progress.failures - 1)))
+              continue
+            }
+            throw new Error(`阶段 ${stage} failed：${JSON.stringify(lastError?.error ?? '未知错误')}`)
+          }
+          progress.failures = 0
+          let result = receiptFrom(await readFile(receipt, 'utf8').catch(() => ''), token, stage)
+          if (stage === 'implement' && !reviewing && result?.status === 'completed' &&
+              ((Array.isArray(result.remainingRequired) && result.remainingRequired.length > 0) ||
+               (Array.isArray(result.deferredChecks) && result.deferredChecks.some((item: any) => item?.required === true)))) {
+            result = { ...result, status: 'progress', next: '回执声称完成但仍有必需缺口，请 Luna 收尾审查核实。' }
+            progress.reviewPending = true
+          }
+          if (reviewing) {
+            progress.reviews = (progress.reviews ?? 0) + 1
+            progress.reviewPending = false
+            progress.sinceReview = 0
+            if (result?.status === 'completed' && !validCompletionReview(result)) {
+              result = { status: 'progress', next: '收尾审查回执缺少逐项需求证据、remainingRequired 或 deferredChecks。只补齐审查，不重跑已通过的检查。' }
+              progress.reviewPending = true
+            }
+            if (!result) progress.reviewPending = true
+            await save(s)
+            if (result?.status === 'blocked') throw new Error(`收尾审查确认需要外部输入：${result.question ?? result.reason ?? '查看收尾审查报告'}`)
+          } else {
+            progress.sinceReview = (progress.sinceReview ?? 0) + 1
+            if (stage === 'implement' && result?.status === 'completed' && (progress.reviews ?? 0) > 0) {
+              result = { ...result, status: 'progress', next: '修复单元已完成，请 Luna 复核上次明确的必需缺口是否关闭。' }
+              progress.reviewPending = true
+            }
+          }
+          if (result?.status !== 'completed') {
+            const after = await fingerprint(s.step < 2 ? s.root : s.tree)
+            const changed = before !== after
+            progress.fingerprint = after
+            progress.stalled = changed ? 0 : progress.stalled + 1
+            progress.next = typeof result?.next === 'string' ? result.next : '继续实现第一个未完成单元；若已完成当前阶段，只补齐报告与完成回执，不重复实施或测试。'
+            await writeFile(path.join(s.folder, 'checkpoint.json'), JSON.stringify({ stage, round: progress.rounds, review: reviewing, codeChanged: changed, fingerprint: after, completedItems: result?.completedItems ?? [], next: progress.next, checks: result?.checks ?? [], reason: result?.reason, remainingRequired: result?.remainingRequired, deferredChecks: result?.deferredChecks, receipt: result ? receipt : null }, null, 2))
+            if (stage === 'implement') {
+              if (!reviewing && (result?.status === 'blocked' || needsCompletionReview(progress.next, progress.stalled, progress.sinceReview ?? 0))) progress.reviewPending = true
+              if (reviewing && result?.status === 'progress' && !progress.reviewPending) {
+                if (!Array.isArray(result.remainingRequired) || !result.remainingRequired.length || typeof result.next !== 'string' || !result.next.trim()) {
+                  progress.reviewPending = true
+                  progress.next = '请作出明确收尾决定：完成则给需求证据；未完成则给 remainingRequired 非空缺口和具体 next；必需外部输入则 blocked。'
+                } else {
+                  progress.stalled = 0
+                  progress.advice = `只修复收尾审查列出的必需缺口：${JSON.stringify(result.remainingRequired)}。${progress.next}`
+                }
+              }
+            } else if (result?.status === 'blocked' || progress.stalled >= 2) {
+              if (progress.corrections >= 2) throw new Error(`自动纠偏后仍无进展：${result?.reason ?? progress.next}`)
+              const plan = await readFile(path.join(s.folder, 'plan.md'), 'utf8').catch(() => '')
+              const advice = await ctx.generate.text({ model: s.step < 2 ? models.astra : models.luna, prompt: `作为工作流纠偏器，判断当前是否真的需要用户输入。输出 JSON {"needsUser":false,"next":"一个具体可实施的闭环及步骤"}，确需外部输入则 needsUser=true 并给出 question。不要把工作未完成、普通编译错误或实现复杂视作阻塞。\n需求：${s.requirement}\n阶段：${stage}\n计划：${plan}\n检查点：${JSON.stringify(result ?? {})}\n代码本轮变化：${changed}\n当前差异摘要：${git(s.step < 2 ? s.root : s.tree, 'diff', '--stat')}` })
+              await writeFile(path.join(s.folder, `correction-${stage}-${progress.corrections + 1}.txt`), advice.text)
+              let decision: any
+              try { decision = JSON.parse(advice.text.replace(/^```(?:json)?\s*|\s*```$/g, '')) } catch {}
+              if (decision?.needsUser === true) throw new Error(`需要外部输入：${decision.question ?? decision.next}`)
+              progress.advice = decision?.next ?? advice.text
+              progress.corrections++; progress.stalled = 0
+            }
+            await save(s)
+            await note(key, `阶段 ${stage} 自动续做：${progress.next}`)
+            continue
           }
           const artifact = { analyze: 'analysis.md', plan: 'plan.md', implement: 'implementation.md', integrate: 'integration.md' }[stage]
           if (!(await readFile(path.join(s.folder, artifact), 'utf8')).trim()) throw new Error(`缺少阶段产物 ${artifact}`)
+          if (reviewing) await writeFile(path.join(s.folder, 'completion-decision.json'), JSON.stringify({ ...result, fingerprint: await fingerprint(s.tree), receipt }, null, 2))
           if (stage === 'integrate') {
             if (git(s.root, 'branch', '--show-current') !== s.target) throw new Error('目标工作空间分支发生变化。')
             s.commit = git(s.tree, 'rev-parse', 'HEAD')
             git(s.root, 'merge-base', '--is-ancestor', s.commit, s.target)
             if (git(s.tree, 'status', '--porcelain')) throw new Error('任务 worktree 仍有未提交变更。')
           }
-          s.step++; await save(s)
+          s.step++; delete s.continuation; delete s.activeReceipt; await save(s)
         }
         await move(key, s.root)
         // Cleanup is resumable: a failed removal must not repeat implementation/integration.
@@ -247,7 +369,7 @@ export default Plugin.define({
         name: 'task-status', description: '查看本会话自动任务进度',
         execute: async ({ sessionID }) => {
           const s = await load(sessionID)
-          await note(sessionID, `任务：${s.name}\n状态：${running.has(sessionID) ? 'running' : s.status === 'running' ? 'interrupted（可 /task-resume）' : s.status}\n阶段：${stages[s.step] ?? 'done'}\n分支：${s.branch} → ${s.target}\nworktree：${s.tree}\n报告：${s.folder}\n${s.error ?? ''}`)
+          await note(sessionID, `任务：${s.name}\n状态：${running.has(sessionID) ? 'running' : s.status === 'running' ? 'interrupted（可 /task-resume）' : s.status}\n阶段：${stages[s.step] ?? 'done'}${s.activeReceipt?.review ? ' / Luna 收尾审查' : ''}\n轮次：${s.continuation?.rounds ?? 0}；收尾审查：${s.continuation?.reviews ?? 0}\n下一步：${s.continuation?.next ?? ''}\n当前回执：${s.activeReceipt?.path ?? ''}\n分支：${s.branch} → ${s.target}\nworktree：${s.tree}\n报告：${s.folder}\n${s.error ?? ''}`)
         },
       })
       editor.add({
@@ -256,6 +378,10 @@ export default Plugin.define({
           if (running.has(sessionID)) throw new Error('任务仍在执行。')
           const s = await load(sessionID)
           if (s.status === 'done') { await note(sessionID, '任务已经完成。'); return }
+          if (s.continuation) {
+            if (s.step === 2 && needsCompletionReview(s.continuation.next, s.continuation.stalled, s.continuation.rounds)) s.continuation.reviewPending = true
+            s.continuation.rounds = 0; s.continuation.corrections = 0; s.continuation.failures = 0; s.continuation.stalled = 0; s.continuation.reviews = 0
+          }
           void run(s).catch(error => console.error('task-workflow', error))
         },
       })
