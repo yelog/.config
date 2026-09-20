@@ -1,6 +1,6 @@
 {
   "$schema": "https://opencode.ai/v2/cli.json",
-  "plugins": [],
+  "plugins": ["-opencode.notifications"],
   "keybinds": {
     "session.tab.next": "ctrl+n",
     "session.tab.previous": "ctrl+p"

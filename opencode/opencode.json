@@ -28,6 +28,7 @@
     },
     "lazydb": {
       "type": "local",
+      "enabled": true,
       "command": [
         "lazydb",
         "mcp",

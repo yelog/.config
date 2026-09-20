@@ -18,6 +18,17 @@ export type TaskView = {
   review: boolean; model: string; rounds: number; next: string; error?: string
 }
 
+export function isTerminalTaskStatus(status: string): boolean {
+  return status === 'done' || status === 'blocked'
+}
+
+export function terminalNotification(task: TaskView): { title: string; message: string } {
+  if (task.status === 'done') {
+    return { title: `/task · ${task.name}`, message: '任务已完成，代码已合并，worktree 和分支已清理。' }
+  }
+  return { title: `/task · ${task.name}`, message: task.error ? `任务已暂停：${task.error}` : '任务已暂停或终止，请查看进度并使用 /task-resume。' }
+}
+
 export type StageKey = 'analyze' | 'plan' | 'implement' | 'integrate' | 'cleanup'
 export type StageState = 'done' | 'active' | 'pending' | 'paused'
 export type ProgressSegment = { key: StageKey; label: string; state: StageState }
