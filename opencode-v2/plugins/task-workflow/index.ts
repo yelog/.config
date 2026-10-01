@@ -9,9 +9,11 @@ import { parseScope, dirtyPaths, changedPaths, untrackedPaths, workspaceCheck } 
 
 const models = {
   astra: { providerID: 'xrouter', id: 'gpt-6-astra' },
-  luna: { providerID: 'xrouter', id: 'gpt-5.6-luna' },
+  luna: { providerID: 'xrouter', id: 'gpt-6-luna' },
 }
-type Settings = { models: typeof models; prefix: string; parent: string; planDirectory: string; layout?: 'grouped' }
+const previousDefaultLuna = { providerID: 'xrouter', id: 'gpt-5.6-luna' }
+type ModelPolicy = 'follow' | 'pinned'
+type Settings = { models: typeof models; modelPolicy: ModelPolicy; prefix: string; parent: string; planDirectory: string; layout?: 'grouped' }
 export async function settingsFor(root: string): Promise<Settings> {
   const file = path.join(root, '.opencode/task-workflow.json')
   const raw = await readFile(file, 'utf8').catch((error: NodeJS.ErrnoException) => {
@@ -20,7 +22,7 @@ export async function settingsFor(root: string): Promise<Settings> {
   })
   const config = JSON.parse(raw)
   if (!config || typeof config !== 'object' || Array.isArray(config)) throw new Error(`${file} 必须是 JSON 对象`)
-  for (const key of Object.keys(config)) if (!['models', 'prefix', 'parent', 'planDirectory'].includes(key)) throw new Error(`未知工作流配置：${key}`)
+  for (const key of Object.keys(config)) if (!['models', 'modelPolicy', 'prefix', 'parent', 'planDirectory'].includes(key)) throw new Error(`未知工作流配置：${key}`)
   // Git lists the primary checkout first, including when invoked in a linked worktree.
   const main = git(root, 'worktree', 'list', '--porcelain', '-z').split('\0')[0].replace(/^worktree /, '')
   if (!path.isAbsolute(main)) throw new Error('无法识别仓库主 checkout 路径')
@@ -38,10 +40,30 @@ export async function settingsFor(root: string): Promise<Settings> {
     const model = selected[role]
     if (!model || typeof model.providerID !== 'string' || !model.providerID.trim() || typeof model.id !== 'string' || !model.id.trim()) throw new Error(`models.${role} 需要 providerID 和 id`)
   }
-  return { models: selected, prefix, parent: path.resolve(root, parent), planDirectory: path.normalize(planDirectory), layout: 'grouped' }
+  const modelPolicy = config.modelPolicy ?? 'follow'
+  if (modelPolicy !== 'follow' && modelPolicy !== 'pinned') throw new Error('modelPolicy 必须是 follow 或 pinned')
+  return { models: selected, modelPolicy, prefix, parent: path.resolve(root, parent), planDirectory: path.normalize(planDirectory), layout: 'grouped' }
 }
 export const taskDirectory = (settings: Settings, name: string) => path.join(settings.parent, settings.layout === 'grouped' ? name : `${settings.prefix}-${name}`)
-const legacySettings = (root: string): Settings => ({ models, prefix: 'lazydb', parent: path.dirname(root), planDirectory: 'docs/plans' })
+const legacySettings = (root: string): Settings => ({ models, modelPolicy: 'follow', prefix: 'lazydb', parent: path.dirname(root), planDirectory: 'docs/plans' })
+
+export function effectiveTaskModels(saved: typeof models, policy: ModelPolicy | undefined, current: typeof models): typeof models {
+  // Explicitly pinned tasks preserve their snapshot. Follow tasks use current config.
+  // For pre-policy states, only the known former built-in Luna default is migrated;
+  // older custom model choices remain intact instead of being silently replaced.
+  if (policy === 'pinned') return saved
+  if (policy === 'follow') return current
+  const isFormerDefault = saved.luna.providerID === previousDefaultLuna.providerID && saved.luna.id === previousDefaultLuna.id
+  const currentIsDifferent = saved.luna.providerID !== current.luna.providerID || saved.luna.id !== current.luna.id
+  return isFormerDefault && currentIsDifferent ? current : saved
+}
+export function effectiveModelPolicy(saved: typeof models, policy: ModelPolicy | undefined): ModelPolicy {
+  if (policy) return policy
+  const isFormerDefault = saved.luna.providerID === previousDefaultLuna.providerID && saved.luna.id === previousDefaultLuna.id
+  // Legacy tasks with a custom snapshot remain pinned; only the former built-in
+  // default is migrated and made eligible to follow future config changes.
+  return isFormerDefault ? 'follow' : 'pinned'
+}
 const stages = ['analyze', 'plan', 'implement', 'integrate'] as const
 type Stage = typeof stages[number]
 type State = {
@@ -105,7 +127,10 @@ export default Plugin.define({
           if (String(error).includes('not a git repository')) return { task: null }
           throw error
         }
-        const selected = (s.settings ?? legacySettings(s.root)).models
+        const saved = s.settings ?? legacySettings(s.root)
+        const modelPolicy = effectiveModelPolicy(saved.models, s.settings?.modelPolicy)
+        const current = modelPolicy === 'pinned' ? saved : await settingsFor(s.root)
+        const selected = effectiveTaskModels(saved.models, s.settings?.modelPolicy, current.models)
         return { task: { sessionID, name: s.name, step: s.step, status: s.status,
           running: running.has(sessionID), review: s.step === 2 && s.activeReceipt?.review === true,
           model: (s.step < 2 ? selected.astra : selected.luna).id,
@@ -217,7 +242,14 @@ export default Plugin.define({
     }
     const run = async (s: State) => {
       const settings = s.settings ?? legacySettings(s.root)
-      const models = settings.models
+      const modelPolicy = effectiveModelPolicy(settings.models, s.settings?.modelPolicy)
+      const currentSettings = modelPolicy === 'pinned' ? settings : await settingsFor(s.root)
+      const selectedModels = effectiveTaskModels(settings.models, modelPolicy, currentSettings.models)
+      const models = selectedModels
+      if (!s.settings || s.settings.modelPolicy !== 'pinned') {
+        s.settings = { ...settings, models: selectedModels, modelPolicy }
+        await save(s)
+      }
       const key = s.sessionID
       if (running.has(key)) throw new Error('任务正在执行，使用 /task-status 查看进度。')
       running.add(key)

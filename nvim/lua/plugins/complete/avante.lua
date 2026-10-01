@@ -61,7 +61,7 @@ return {
         __inherited_from = "openai",
         endpoint = "https://xrouter.uk/v1",
         api_key_name = "X_ROUTER_KEY",
-        model = "gpt-5.6-luna",
+        model = "gpt-6-luna",
       },
     },
     ---Specify the special dual_boost mode

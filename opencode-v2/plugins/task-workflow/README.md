@@ -4,7 +4,7 @@
 
 - 插件：`~/.config/opencode-v2/plugins/task-workflow/index.ts`
 - 启用配置：`~/.config/opencode-v2/opencode.json` 的 `plugins`
-- 模型：Astra = `xrouter/gpt-6-astra`，Luna = `xrouter/gpt-5.6-luna`
+- 模型：Astra = `xrouter/gpt-6-astra`，Luna = `xrouter/gpt-6-luna`
 - 分工：仅 analyze/plan（含这两个阶段内的纠偏）使用 Astra；命名、实施、收尾审查、后期纠偏、提交合并均使用 Luna。已有任务的 reviewPending 不改变该分工，恢复审查也使用 Luna。
 - 当前适配：OpenCode V2.0.3
 
@@ -29,12 +29,12 @@
   "planDirectory": "docs/plans",
   "models": {
     "astra": { "providerID": "xrouter", "id": "gpt-6-astra" },
-    "luna": { "providerID": "xrouter", "id": "gpt-5.6-luna" }
+    "luna": { "providerID": "xrouter", "id": "gpt-6-luna" }
   }
 }
 ```
 
-所有字段均可省略。prefix 默认主 checkout 目录名，仅用于构造默认父目录 `<prefix>-worktree`；任务子目录不再重复此前缀。parent 默认主 checkout 旁的 `<prefix>-worktree`，显式设置时覆盖默认父目录；相对路径从启动 checkout 根目录解析，也支持绝对路径。planDirectory 默认 `docs/plans`，必须是仓库内相对路径。模型可以只覆盖一个角色，但该角色需要完整 providerID 和 id。astra/luna 是阶段角色名称，允许替换成其他可用模型。
+所有字段均可省略。prefix 默认主 checkout 目录名，仅用于构造默认父目录 `<prefix>-worktree`；任务子目录不再重复此前缀。parent 默认主 checkout 旁的 `<prefix>-worktree`，显式设置时覆盖默认父目录；相对路径从启动 checkout 根目录解析，也支持绝对路径。planDirectory 默认 `docs/plans`，必须是仓库内相对路径。models 可以只覆盖一个角色，但该角色需要完整 providerID 和 id。模型覆盖默认遵循后续配置变更；设置 `"modelPolicy": "pinned"` 可让任务启动时的模型快照固定。astra/luna 是阶段角色名称，允许替换成其他可用模型。
 
 配置及目录布局只在 `/task` 启动时读取，随后保存到任务状态。修改项目配置不会改变已有任务的模型、目录和计划路径；旧版配置快照继续使用 `<prefix>-<任务名称>` 布局，没有配置快照的旧任务仍按原 lazydb 前缀恢复。现有 worktree 不搬迁。已有项目若显式设置 parent，新任务仍尊重该父目录，但子目录改为任务名称。
 
@@ -117,7 +117,7 @@
 
 ```text
 ✓ 分析 → ✓ 计划 → ● 实施 → ○ 集成 → ○ 清理
-redis-value-editing · gpt-5.6-luna · 收尾审查 · 第 3 轮 · 下一步…
+redis-value-editing · gpt-6-luna · 收尾审查 · 第 3 轮 · 下一步…
 ```
 
 ✓ 表示阶段已完成，● 表示当前执行阶段，○ 表示尚未进入，! 表示当前阶段暂停。阶段颜色使用语义化主题色：已完成为绿色；分析为青色、计划为紫色、实施为蓝色、集成为橙色、清理为绿色；当前阶段加粗，未开始阶段使用低亮度灰色，暂停使用橙色。这样即使终端不支持颜色，符号仍保留原有含义。

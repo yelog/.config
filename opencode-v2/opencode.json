@@ -101,8 +101,10 @@
     },
     "xrouter": {
       "name": "XRouter",
-      "env": ["X_ROUTER_KEY"],
-      "package": "@opencode-ai/ai/providers/openai-compatible",
+      "env": [
+        "X_ROUTER_KEY"
+      ],
+      "package": "@opencode/ai/providers/openai-compatible",
       "settings": {
         "baseURL": "https://xrouter.uk/v1"
       },
@@ -111,57 +113,540 @@
           "modelID": "gpt-4o",
           "name": "GPT 4o",
           "family": "gpt-4",
-          "limit": { "context": 400000, "output": 128000 },
-          "capabilities": { "input": ["text", "image", "pdf"], "output": ["text"], "tools": true }
+          "limit": {
+            "context": 400000,
+            "output": 128000
+          },
+          "capabilities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          }
         },
         "gpt-5.3-codex": {
           "modelID": "gpt-5.3-codex",
           "name": "GPT-5.3 Codex",
           "family": "gpt-5-codex",
-          "limit": { "context": 400000, "output": 128000 },
-          "capabilities": { "input": ["text", "image", "pdf"], "output": ["text"], "tools": true }
+          "limit": {
+            "context": 400000,
+            "output": 128000
+          },
+          "capabilities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "variants": [
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
+          }
         },
         "gpt-5.4": {
           "modelID": "gpt-5.4",
           "name": "GPT-5.4",
           "family": "gpt-5",
-          "limit": { "context": 1050000, "output": 128000 },
-          "capabilities": { "input": ["text", "image", "pdf"], "output": ["text"], "tools": true }
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "capabilities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
+            },
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            }
+          ],
+          "settings": {
+            "reasoningEffort": "none"
+          }
         },
         "gpt-5.5": {
           "modelID": "gpt-5.5",
           "name": "GPT-5.5",
           "family": "gpt-5",
-          "limit": { "context": 1050000, "output": 128000 },
-          "capabilities": { "input": ["text", "image", "pdf"], "output": ["text"], "tools": true }
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "capabilities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
+            },
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
+          }
         },
         "gpt-5.6-luna": {
           "modelID": "gpt-5.6-luna",
           "name": "GPT-5.6 Luna",
           "family": "gpt-5",
-          "limit": { "context": 1050000, "output": 128000 },
-          "capabilities": { "input": ["text", "image", "pdf"], "output": ["text"], "tools": true }
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "capabilities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
+            },
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
+          }
         },
         "gpt-6-astra": {
           "modelID": "gpt-6-astra",
           "name": "GPT-6 Astra",
           "family": "gpt-6",
-          "limit": { "context": 1050000, "output": 128000 },
-          "capabilities": { "input": ["text", "image", "pdf"], "output": ["text"], "tools": true }
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "capabilities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "variants": [
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
+          }
         },
         "gpt-5.6-sol": {
           "modelID": "gpt-5.6-sol",
           "name": "GPT-5.6 Sol",
           "family": "gpt-5",
-          "limit": { "context": 1050000, "output": 128000 },
-          "capabilities": { "input": ["text", "image", "pdf"], "output": ["text"], "tools": true }
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "capabilities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
+            },
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
+          }
         },
         "gpt-5.6-terra": {
           "modelID": "gpt-5.6-terra",
           "name": "GPT-5.6 Terra",
           "family": "gpt-5",
-          "limit": { "context": 1050000, "output": 128000 },
-          "capabilities": { "input": ["text", "image", "pdf"], "output": ["text"], "tools": true }
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "capabilities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
+            },
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
+          }
+        },
+        "gpt-6-luna": {
+          "modelID": "gpt-6-luna",
+          "name": "GPT-6 Luna",
+          "family": "gpt-6",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "capabilities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
+            },
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
+          }
+        },
+        "gpt-6-sol": {
+          "modelID": "gpt-6-sol",
+          "name": "GPT-6 Sol",
+          "family": "gpt-6",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "capabilities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
+            },
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
+          }
         }
       }
     }
