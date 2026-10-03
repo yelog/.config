@@ -1,6 +1,6 @@
 # Task Workflow Implementation Plan
 
-**Goal:** 在 OpenCode V2 中一键执行 Astra 分析与计划、Luna 实施与合并。
+**Goal:** 在 OpenCode V2 中一键执行 GPT-6.1 Sol 分析与计划、Luna 实施与合并。
 
 **Architecture:** 本地插件注册 task、task-status、task-resume 命令。使用同一会话保留上下文，插件持久化阶段并检查阶段产物，在 worktree 阶段移动会话目录。
 

@@ -1,11 +1,11 @@
-# Astra → Luna 自动开发工作流
+# GPT-6.1 Sol → Luna 自动开发工作流
 
 ## 安装位置
 
 - 插件：`~/.config/opencode-v2/plugins/task-workflow/index.ts`
 - 启用配置：`~/.config/opencode-v2/opencode.json` 的 `plugins`
-- 模型：Astra = `xrouter/gpt-6-astra`，Luna = `xrouter/gpt-6-luna`
-- 分工：仅 analyze/plan（含这两个阶段内的纠偏）使用 Astra；命名、实施、收尾审查、后期纠偏、提交合并均使用 Luna。已有任务的 reviewPending 不改变该分工，恢复审查也使用 Luna。
+- 模型：分析/计划角色（兼容配置键 `astra`）= `xrouter/gpt-6.1-sol`，实施角色 `luna` = `xrouter/gpt-6-luna`
+- 分工：仅 analyze/plan（含这两个阶段内的纠偏）使用 GPT-6.1 Sol；命名、实施、收尾审查、后期纠偏、提交合并均使用 Luna。已有任务的 reviewPending 不改变该分工，恢复审查也使用 Luna。
 - 当前适配：OpenCode V2.0.3
 
 这是 opencode2 的全局插件，可以在不同 Git 项目中使用。新任务默认集中放在主 checkout 旁的 `<仓库名>-worktree/<任务名称>`，例如 `../my-api-worktree/add-cache`、`../lazydb-worktree/add-cache`。仓库名取自 Git 主 checkout，即使从已有 worktree 启动，也使用同一个默认父目录。
@@ -28,13 +28,13 @@
   "parent": "../my-api-worktree",
   "planDirectory": "docs/plans",
   "models": {
-    "astra": { "providerID": "xrouter", "id": "gpt-6-astra" },
+    "astra": { "providerID": "xrouter", "id": "gpt-6.1-sol" },
     "luna": { "providerID": "xrouter", "id": "gpt-6-luna" }
   }
 }
 ```
 
-所有字段均可省略。prefix 默认主 checkout 目录名，仅用于构造默认父目录 `<prefix>-worktree`；任务子目录不再重复此前缀。parent 默认主 checkout 旁的 `<prefix>-worktree`，显式设置时覆盖默认父目录；相对路径从启动 checkout 根目录解析，也支持绝对路径。planDirectory 默认 `docs/plans`，必须是仓库内相对路径。models 可以只覆盖一个角色，但该角色需要完整 providerID 和 id。模型覆盖默认遵循后续配置变更；设置 `"modelPolicy": "pinned"` 可让任务启动时的模型快照固定。astra/luna 是阶段角色名称，允许替换成其他可用模型。
+所有字段均可省略。prefix 默认主 checkout 目录名，仅用于构造默认父目录 `<prefix>-worktree`；任务子目录不再重复此前缀。parent 默认主 checkout 旁的 `<prefix>-worktree`，显式设置时覆盖默认父目录；相对路径从启动 checkout 根目录解析，也支持绝对路径。planDirectory 默认 `docs/plans`，必须是仓库内相对路径。models 可以只覆盖一个角色，但该角色需要完整 providerID 和 id。模型覆盖默认遵循后续配置变更；设置 `"modelPolicy": "pinned"` 可让任务启动时的模型快照固定。`astra`/`luna` 是兼容配置键（分别表示分析/计划和实施/集成角色），允许替换成其他可用模型。
 
 配置及目录布局只在 `/task` 启动时读取，随后保存到任务状态。修改项目配置不会改变已有任务的模型、目录和计划路径；旧版配置快照继续使用 `<prefix>-<任务名称>` 布局，没有配置快照的旧任务仍按原 lazydb 前缀恢复。现有 worktree 不搬迁。已有项目若显式设置 parent，新任务仍尊重该父目录，但子目录改为任务名称。
 
@@ -51,14 +51,14 @@
 /task 优化 Redis 上下文帮助
 ```
 
-命令后面的全部文本都是需求，无需提供任务名称。Astra 完成计划后，Luna 根据会话上下文、需求和完整计划生成英文名称。插件检查本地分支、目录（包括符号链接）及 Git worktree 登记；重名时自动尝试 `-2`、`-3` 等后缀，并通过独占创建目录和 Git 分支创建再次防止并发冲突。一个会话承载一个任务；新任务使用新会话。
+命令后面的全部文本都是需求，无需提供任务名称。GPT-6.1 Sol 完成计划后，Luna 根据会话上下文、需求和完整计划生成英文名称。插件检查本地分支、目录（包括符号链接）及 Git worktree 登记；重名时自动尝试 `-2`、`-3` 等后缀，并通过独占创建目录和 Git 分支创建再次防止并发冲突。一个会话承载一个任务；新任务使用新会话。
 
 插件自动执行：
 
 | 阶段 | 模型 | 行为 |
 | --- | --- | --- |
-| analyze | Astra | 分析现有实现、根因、方案取舍，写 analysis.md |
-| plan | Astra | 调用 writing-plans，写完整 plan.md |
+| analyze | GPT-6.1 Sol | 分析现有实现、根因、方案取舍，写 analysis.md |
+| plan | GPT-6.1 Sol | 调用 writing-plans，写完整 plan.md |
 | implement | Luna | 创建 worktree、移动会话、逐项实施及复核、写 implementation.md |
 | integrate | Luna | 验证、调用 git-commit、提交、合并、写 integration.md |
 
@@ -142,7 +142,7 @@ redis-value-editing · gpt-6-luna · 收尾审查 · 第 3 轮 · 下一步…
 
 模型回执支持 completed（整个阶段完成）、progress（有进展，自动续做）、blocked（声明外部阻塞）。缺少或格式错误的回执先自动补做，不立即要求用户 resume。新协议要求复杂任务按端到端可验收单元推进，普通实现取舍自行决定。
 
-实施阶段连续两轮工作区内容无变化、连续六轮未完成、模型声明 blocked，或下一步涉及人工交互验收/PTY 时，进入 **Luna 收尾审查**。同一会话继续使用 Luna，通过实际工具读取源码、diff 和验证记录，区分真正功能缺口与补充验收。其他阶段仍使用短文本纠偏（最多两次），模型跟随当前阶段：分析/计划用 Astra，后期用 Luna。每次人工恢复最多 40 轮、最多三次收尾审查，避免无限空转。源码指纹包含 HEAD、已跟踪 diff 和未跟踪文件内容（排除默认 docs/plans）；这是停滞启发式检测，不等于功能验收。
+实施阶段连续两轮工作区内容无变化、连续六轮未完成、模型声明 blocked，或下一步涉及人工交互验收/PTY 时，进入 **Luna 收尾审查**。同一会话继续使用 Luna，通过实际工具读取源码、diff 和验证记录，区分真正功能缺口与补充验收。其他阶段仍使用短文本纠偏（最多两次），模型跟随当前阶段：分析/计划用 GPT-6.1 Sol，后期用 Luna。每次人工恢复最多 40 轮、最多三次收尾审查，避免无限空转。源码指纹包含 HEAD、已跟踪 diff 和未跟踪文件内容（排除默认 docs/plans）；这是停滞启发式检测，不等于功能验收。
 
 收尾审查有三种结果：
 - 完成：必须提供逐项需求证据、空 remainingRequired，以及 deferredChecks（可为空）。只能延后非强制的补充检查，并写明原因；实际功能缺口或用户/项目强制验证不能跳过。结构校验通过后才进入集成，证据真实性仍由审查模型负责。

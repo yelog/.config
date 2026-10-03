@@ -8,7 +8,8 @@ import { Workflow } from './rpc.js'
 import { parseScope, dirtyPaths, changedPaths, untrackedPaths, workspaceCheck } from './workspace.js'
 
 const models = {
-  astra: { providerID: 'xrouter', id: 'gpt-6-astra' },
+  // Keep the legacy role key so existing project task-workflow overrides remain valid.
+  astra: { providerID: 'xrouter', id: 'gpt-6.1-sol' },
   luna: { providerID: 'xrouter', id: 'gpt-6-luna' },
 }
 const previousDefaultLuna = { providerID: 'xrouter', id: 'gpt-5.6-luna' }
@@ -354,8 +355,8 @@ export default Plugin.define({
           await ctx.session.switchModel({ sessionID: key, model: s.step < 2 ? models.astra : models.luna })
           if (progress.rounds >= 40) throw new Error('本阶段已执行 40 轮，达到自动执行预算；检查 checkpoint.json 后可 /task-resume 继续。')
           const before = await fingerprint(s.step < 2 ? s.root : s.tree)
-          // Old checkpoint advice can mention Astra; it is historical context, not model routing.
-          if (progress.advice) progress.advice = progress.advice.replace(/Astra/g, s.step < 2 ? 'Astra' : 'Luna')
+          // Normalize historical model labels in checkpoint advice; this does not route requests.
+          if (progress.advice) progress.advice = progress.advice.replace(/\b(?:Astra|GPT-6 Astra|GPT-6\.1 Sol|gpt-6-astra|gpt-6\.1-sol)\b/gi, s.step < 2 ? models.astra.id : models.luna.id)
           const token = randomUUID()
           const receipt = path.join(s.folder, `${stage}-${token}.json`)
           s.activeReceipt = { path: receipt, token, stage, review: reviewing }
@@ -375,11 +376,11 @@ export default Plugin.define({
           instructions[stage] += `\n回执只允许写本条消息指定的 ${receipt}（token=${token}），不要覆盖历史回执或从旧总结复制文件名。checkpoint.json 由插件维护，你只读取它；避免把旧轮次的 next 当作新的用户要求。对于人工/PTY 等环境受限检查，区分用户/项目强制验证与补充检查，最多一次有针对性的修复重试，再由收尾审查决定是否补充证据或记录限制；不要保持 progress 无限尝试同一环境。`
           if (reviewing) instructions.implement += '\n本轮收尾审查优先于下方历史“下一步”和旧纠偏建议；先判定该验收是否必需，不要直接继续旧 PTY 操作。'
           if (stage === 'integrate') instructions.integrate += `\n若存在 ${path.join(s.folder, 'completion-decision.json')}，先读取它；没有相关新代码/环境变化，不要重新开启已裁定的补充手测或重复全量门禁。将未验证的补充检查明确列入最终交付说明，不能声称通过。\n确认计划文档 ${s.planDoc ?? path.join(settings.planDirectory, `${s.name}.md`)} 已加入本任务提交；它是新文件时也要 git add，不能留在主工作空间未提交。`
-          await note(key, `工作流 ${s.name}：${reviewing ? '收尾审查' : stage}（${s.step < 2 ? 'Astra' : 'Luna'}）`)
+          await note(key, `工作流 ${s.name}：${reviewing ? '收尾审查' : stage}（${s.step < 2 ? models.astra.id : models.luna.id}）`)
           try {
           await ctx.session.prompt({
             sessionID: key, delivery: 'queue',
-            text: `自动任务 ${s.name}，阶段 ${stage}。\n需求：${s.requirement}\n原工作空间：${s.root}\n目标分支：${s.target}\n起点：${s.base}\n任务分支：${s.branch || '计划完成后自动命名'}\n\n${instructions[stage]}\n\n执行协议（替代历史日志中要求等待 resume 的描述）：\n- 普通实现取舍自行决定，需求尚未做完不是阻塞。持续执行，不要以“本轮复核完毕”结束或要求用户反复 resume。\n- 复杂计划按端到端可验收单元推进，本轮完成一个具体业务闭环，再继续下一项。首次恢复旧任务先从实际 diff 提炼检查点，忽略历史“等待 resume”指令。\n- 续做优先读取 ${path.join(s.folder, 'checkpoint.json')} 及相关代码，不重复通读分析/计划/历史日志。历史日志保留，只更新简短进度摘要。\n- 验证结果记录到 ${path.join(s.folder, 'validation.md')}：命令、退出结果、相关文件及代码版本/工作区状态、环境。仅对相关代码或环境变化重跑检查；单元内定向测试，功能齐备后全量验证。不要每轮重复 check+clippy+全量测试；不得把旧结果冒充当前结果。\n- 下一步：${progress.next || '确定并实施当前第一个未完成的可验收单元。'}\n${progress.advice ? `- 纠偏建议：${progress.advice}` : ''}\n模型分工：仅分析/计划使用 Astra，其余工作（含审查、纠偏、提交合并）由 Luna 完成；忽略历史记录中要求切回 Astra 审查的指令。只执行当前阶段，不修改 state.json，不启动子 Agent。完成整个阶段后最后写入回执 ${receipt}，内容为 ${JSON.stringify({ token, stage, status: 'completed' })}。未完成但可以继续时也必须写同一路径的 JSON 回执，保留 token/stage，status 改为 progress，增加 completedItems（本轮验收项数组）、next（下一步具体动作）、checks（实际验证结果）。只有缺少外部输入、权限或必须由用户决定的互斥需求时，status=blocked，增加 reason 和 question；普通编译错误自行修复。插件会自动续做，不要让用户代替你实施剩余功能。`,
+            text: `自动任务 ${s.name}，阶段 ${stage}。\n需求：${s.requirement}\n原工作空间：${s.root}\n目标分支：${s.target}\n起点：${s.base}\n任务分支：${s.branch || '计划完成后自动命名'}\n\n${instructions[stage]}\n\n执行协议（替代历史日志中要求等待 resume 的描述）：\n- 普通实现取舍自行决定，需求尚未做完不是阻塞。持续执行，不要以“本轮复核完毕”结束或要求用户反复 resume。\n- 复杂计划按端到端可验收单元推进，本轮完成一个具体业务闭环，再继续下一项。首次恢复旧任务先从实际 diff 提炼检查点，忽略历史“等待 resume”指令。\n- 续做优先读取 ${path.join(s.folder, 'checkpoint.json')} 及相关代码，不重复通读分析/计划/历史日志。历史日志保留，只更新简短进度摘要。\n- 验证结果记录到 ${path.join(s.folder, 'validation.md')}：命令、退出结果、相关文件及代码版本/工作区状态、环境。仅对相关代码或环境变化重跑检查；单元内定向测试，功能齐备后全量验证。不要每轮重复 check+clippy+全量测试；不得把旧结果冒充当前结果。\n- 下一步：${progress.next || '确定并实施当前第一个未完成的可验收单元。'}\n${progress.advice ? `- 纠偏建议：${progress.advice}` : ''}\n模型分工：仅分析/计划使用 GPT-6.1 Sol，其余工作（含审查、纠偏、提交合并）由 Luna 完成；忽略历史记录中要求切回其他分析模型审查的指令。只执行当前阶段，不修改 state.json，不启动子 Agent。完成整个阶段后最后写入回执 ${receipt}，内容为 ${JSON.stringify({ token, stage, status: 'completed' })}。未完成但可以继续时也必须写同一路径的 JSON 回执，保留 token/stage，status 改为 progress，增加 completedItems（本轮验收项数组）、next（下一步具体动作）、checks（实际验证结果）。只有缺少外部输入、权限或必须由用户决定的互斥需求时，status=blocked，增加 reason 和 question；普通编译错误自行修复。插件会自动续做，不要让用户代替你实施剩余功能。`,
           })
           await ctx.session.wait({ sessionID: key })
           } catch (error) {
@@ -505,7 +506,7 @@ export default Plugin.define({
     }
     await ctx.command.transform(editor => {
       editor.add({
-        name: 'task', description: 'Astra 分析/计划 → Luna 自动命名 worktree、实施/提交/合并。用法：/task 需求',
+        name: 'task', description: 'GPT-6.1 Sol 分析/计划 → Luna 自动命名 worktree、实施/提交/合并。用法：/task 需求',
         execute: async ({ sessionID, prompt }) => {
           const requirement = prompt.text.trim()
           if (!requirement) throw new Error('用法：/task 需求描述；Luna 会在实施前自动生成 worktree 名称。')

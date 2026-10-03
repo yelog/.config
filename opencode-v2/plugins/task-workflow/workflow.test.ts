@@ -28,13 +28,16 @@ test('notifications are terminal-only and use task-specific messages', () => {
   expect(terminalNotification({ ...task, status: 'blocked', error: '需要权限' }).message).toContain('需要权限')
 })
 
-test('existing task model snapshots migrate old built-in Luna but preserve pinned and custom models', () => {
-  const current: any = { astra: { providerID: 'xrouter', id: 'gpt-6-astra' }, luna: { providerID: 'xrouter', id: 'gpt-6-luna' } }
+test('following tasks use current model defaults while pinned and custom snapshots are preserved', () => {
+  const current: any = { astra: { providerID: 'xrouter', id: 'gpt-6.1-sol' }, luna: { providerID: 'xrouter', id: 'gpt-6-luna' } }
   const old: any = { ...current, luna: { providerID: 'xrouter', id: 'gpt-5.6-luna' } }
   expect(effectiveTaskModels(old, undefined, current).luna.id).toBe('gpt-6-luna')
   expect(effectiveModelPolicy(old, undefined)).toBe('follow')
   expect(effectiveTaskModels(old, 'follow', current).luna.id).toBe('gpt-6-luna')
   expect(effectiveTaskModels(old, 'pinned', current).luna.id).toBe('gpt-5.6-luna')
+  const oldAnalysisModel = { ...current, astra: { providerID: 'xrouter', id: 'gpt-6-astra' } }
+  expect(effectiveTaskModels(oldAnalysisModel, 'follow', current).astra.id).toBe('gpt-6.1-sol')
+  expect(effectiveTaskModels(oldAnalysisModel, 'pinned', current).astra.id).toBe('gpt-6-astra')
   const custom = { ...old, luna: { providerID: 'custom', id: 'my-luna' } }
   expect(effectiveTaskModels(custom, undefined, current).luna).toEqual(custom.luna)
   expect(effectiveModelPolicy(custom, undefined)).toBe('pinned')
@@ -58,7 +61,7 @@ test('name parsing tolerates wrappers without accepting arbitrary prose or paths
   for (const value of ['请使用 redis-pane', '../redis-pane', '', '{"name":42}']) expect(parseName(value)).toBeUndefined()
 })
 
-test('automatic continuation, Astra correction, worktree integration and cleanup recovery', async () => {
+test('automatic continuation, GPT-6.1 Sol correction, worktree integration and cleanup recovery', async () => {
   const temp = await realpath(await mkdtemp('/private/var/folders/d9/5sfcnz292bvbdh3nv19rvhc40000gn/T/opencode/task-workflow-test-'))
   const git = (cwd: string, ...args: string[]) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: 'pipe' }).trim()
   git(temp, 'init', '-b', 'main'); git(temp, 'config', 'user.name', 'Workflow Test'); git(temp, 'config', 'user.email', 'test@example.invalid')
@@ -88,7 +91,7 @@ test('automatic continuation, Astra correction, worktree integration and cleanup
       } } }
     } },
     generate: { text: async ({ prompt, model }: any) => {
-      if (model.id === 'gpt-6-astra') {
+      if (model.id === 'gpt-6.1-sol') {
         corrections++
         return { text: JSON.stringify({ needsUser: false, next: '完成当前分析并写入回执，不重复检查。' }) }
       }
@@ -143,7 +146,7 @@ test('automatic continuation, Astra correction, worktree integration and cleanup
     let done = notification()
     await commands.get('task').execute({ sessionID, prompt: { text: 'test requirement' } })
     expect(await done).toContain('已完成并合并')
-    expect(selected).toEqual(['gpt-6-astra', 'gpt-6-astra', 'gpt-6-astra', 'gpt-6-astra', 'gpt-6-luna', 'gpt-6-luna', 'gpt-6-luna', 'gpt-6-luna'])
+    expect(selected).toEqual(['gpt-6.1-sol', 'gpt-6.1-sol', 'gpt-6.1-sol', 'gpt-6.1-sol', 'gpt-6-luna', 'gpt-6-luna', 'gpt-6-luna', 'gpt-6-luna'])
     expect(reviewCalls).toBe(1)
     expect(JSON.parse(await readFile(path.join(folder, 'completion-decision.json'), 'utf8')).deferredChecks[0].check).toBe('manual TUI')
     expect(corrections).toBe(1)
@@ -429,13 +432,14 @@ test('project settings default to repository name and support validated override
     execFileSync('git', ['init', '-b', 'main'], { cwd: root, stdio: 'pipe' })
     expect((await settingsFor(root)).prefix).toBe(path.basename(root))
     expect((await settingsFor(root)).parent).toBe(path.join(path.dirname(root), `${path.basename(root)}-worktree`))
+    expect((await settingsFor(root)).models.astra).toEqual({ providerID: 'xrouter', id: 'gpt-6.1-sol' })
     await mkdir(path.join(root, '.opencode'))
     const file = path.join(root, '.opencode/task-workflow.json')
     await writeFile(file, JSON.stringify({ prefix: 'api', parent: '../trees', planDirectory: 'design/plans', models: { luna: { providerID: 'custom', id: 'coder' } } }))
     const settings = await settingsFor(root)
     expect(settings.parent).toBe(path.resolve(root, '../trees'))
     expect(settings.models.luna.id).toBe('coder')
-    expect(settings.models.astra.id).toBe('gpt-6-astra')
+    expect(settings.models.astra).toEqual({ providerID: 'xrouter', id: 'gpt-6.1-sol' })
     expect(settings.planDirectory).toBe('design/plans')
     expect(taskDirectory(settings, 'add-cache')).toBe(path.join(settings.parent, 'add-cache'))
     const { layout, ...legacy } = settings
