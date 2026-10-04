@@ -57,3 +57,7 @@
 .DS_Store
 
 node_modules
+
+# Local runtime artifacts
+/kitty/__pycache__/lazydb_resize.cpython-314.pyc
+/opencode-v2/service.json
