@@ -48,6 +48,13 @@ return {
       --   hl.markdownH3Delimiter = hl.markdownH3
       --   hl.markdownH4Delimiter = hl.markdownH4
         hl.Visual = { bg = "#6D6BC8" }
+        -- Keep TokyoNight's tabline backgrounds, but make its dim default text readable.
+        hl.TabLine = vim.tbl_extend("force", hl.TabLine or {}, {
+          fg = c.fg_dark or c.fg,
+        })
+        hl.TabLineSel = vim.tbl_extend("force", hl.TabLineSel or {}, {
+          fg = c.fg,
+        })
       --   hl.markdownBold = { bold = true, fg = "#ef9020" }
       --   hl.markdownCode = { fg = "#ffb454", bg = "#354251" }
       --   hl.markdownItalic = { italic = true, fg = "#d8e020" }

@@ -721,7 +721,8 @@ return {
         local selected = utils.get_highlight("PmenuSel")
         local tabline_selected = utils.get_highlight("TabLineSel")
         return {
-          fg = selected.fg or tabline_selected.fg or normal.fg,
+          -- PmenuSel is a completion-menu highlight; use its background only.
+          fg = tabline_selected.fg or normal.fg or tabline.fg,
           bg = selected.bg
             or tabline_selected.bg
             or utils.get_highlight("CursorLine").bg
