@@ -23,6 +23,12 @@ local lsp = read("lua/plugins/lsp/lsp.lua")
 local snacks = read("lua/plugins/panel/snacks.lua")
 local fzf_lua = read("lua/plugins/panel/fzf-lua.lua")
 local grug_far = read("lua/plugins/grug-far.lua")
+local indent_guides = read("lua/plugins/style/indent-blankline.lua")
+local noice = read("lua/plugins/style/noice.lua")
+local mini = read("lua/plugins/panel/mini.lua")
+local treesitter = read("lua/plugins/lsp/treesitter.lua")
+local trouble = read("lua/plugins/panel/trouble.lua")
+local dap_view = read("lua/plugins/panel/dap-view.lua")
 local base = read("base.vim")
 
 assert_not_contains(keymaps, "Autosession delete", "Resession should be the only session deletion implementation")
@@ -70,6 +76,40 @@ assert_not_contains(fzf_lua, 'formatter = "path.dirname_first"',
   "fzf-lua should not override the file layout owned by Snacks")
 assert_not_contains(base, "noremap <LEADER>sw", "Snacks should be the sole wrap toggle")
 assert_contains(keymaps, '{ "<leader>x", group = "Tasks" }', "Which-Key should expose the Tasks namespace")
+
+assert_contains(snacks, "notifier = {\n      enabled = true", "Snacks should own vim.notify")
+assert_contains(snacks, "indent = { enabled = true }", "Snacks should own indent guides")
+assert_contains(noice, "notify = { enabled = false }", "Noice should not compete with Snacks for vim.notify")
+assert_contains(noice, 'view = "mini"', "Noice messages should use an auto-hiding mini view")
+assert_contains(noice, 'view_error = "mini"', "Errors should not create persistent Noice popup windows")
+assert_contains(noice, 'timeout = 2000', "Noice mini messages should auto-hide quickly")
+assert_contains(noice, 'progress = {\n          enabled = true,\n          view = "mini"',
+  "LSP progress should use a transient mini view instead of a large popup")
+assert_contains(noice, 'message = {\n          enabled = true,\n          view = "mini"',
+  "LSP status messages should use the same transient mini view")
+local _, lsp_config_count = noice:gsub("      lsp = {", "")
+assert(lsp_config_count == 1, "Noice should use one merged LSP configuration block")
+assert_contains(indent_guides, "indent = {\n          enable = false", "hlchunk should retain chunks without duplicate indent guides")
+assert_contains(mini, 'F = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" })',
+  "Mini.ai should own Tree-sitter function-definition textobjects")
+assert_contains(mini, 'C = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" })',
+  "Mini.ai should own Tree-sitter class textobjects")
+assert_contains(mini, 'pattern = "markdown"', "Markdown code-block textobjects should be buffer-local")
+assert_contains(mini, 'vim.b[args.buf].miniai_config = {', "Markdown textobjects should not override global Mini.ai objects")
+local global_ai_textobjects = mini:match("custom_textobjects = {(.-)\n      },")
+assert(global_ai_textobjects, "Mini.ai should declare its global textobjects")
+assert_not_contains(global_ai_textobjects, "c =", "The Markdown `c` textobject should not be global")
+assert_not_contains(treesitter, 'select_textobject("@function.outer"',
+  "Tree-sitter textobjects should not override Mini.ai function mappings")
+assert_not_contains(treesitter, 'select_textobject("@class.outer"',
+  "Tree-sitter textobjects should not override Mini.ai class mappings")
+assert_contains(treesitter, 'select_textobject("@local.scope"', "Tree-sitter local-scope selection should remain available")
+assert(not vim.uv.fs_stat(config_root .. "/lua/plugins/style/cursorword.lua"),
+  "vim-cursorword should be removed because vim-illuminate already highlights the word under the cursor")
+assert_contains(trouble, '"<leader>xx"', "Trouble should expose workspace diagnostics")
+assert_contains(trouble, '"<leader>xX"', "Trouble should expose buffer diagnostics")
+assert_contains(dap_view, '"<leader>du"', "nvim-dap-view should have a dedicated toggle mapping")
+assert_contains(dap_view, '"mfussenegger/nvim-dap"', "nvim-dap-view should reuse the configured DAP client")
 
 assert_contains(grug_far, '"MagicDuck/grug-far.nvim"', "grug-far should provide project-wide replacement")
 assert_contains(grug_far, '"<D-S-R>"', "Cmd+Shift+R should open grug-far")

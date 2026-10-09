@@ -6,23 +6,27 @@ return {
     ai.setup({
       n_lines = 200, -- 适当加大搜索半径，方便大文件中定位代码块
       custom_textobjects = {
-        -- 给 Markdown 代码块绑定对象 id = 'c'
-        c = ai.gen_spec.treesitter({
-          a = { "@codeblock.outer" }, -- 包含围栏 ```…```
-          i = { "@codeblock.inner" }, -- 仅内容
-        }, {
-          n_lines = 200,              -- 可单独为该对象提高搜索范围
-          lang = "markdown",          -- 围栏内可能切换到注入语言，仍按 Markdown 查询代码块
-        }),
+        -- Tree-sitter definitions use uppercase objects; lowercase af/if remain Mini.ai function calls.
+        F = ai.gen_spec.treesitter({ a = "@function.outer", i = "@function.inner" }),
+        C = ai.gen_spec.treesitter({ a = "@class.outer", i = "@class.inner" }),
       },
     })
 
     vim.api.nvim_create_autocmd("FileType", {
       pattern = "markdown",
       callback = function(args)
-        vim.keymap.set("x", "ic", function()
-          require("mini.ai").select_textobject("i", "c")
-        end, { buffer = args.buf, desc = "Select inner Markdown code block" })
+        vim.b[args.buf].miniai_config = {
+          custom_textobjects = {
+            -- Markdown's `c` object selects fenced code blocks without changing Mini.ai elsewhere.
+            c = ai.gen_spec.treesitter({
+              a = { "@codeblock.outer" },
+              i = { "@codeblock.inner" },
+            }, {
+              n_lines = 200,
+              lang = "markdown",
+            }),
+          },
+        }
       end,
     })
 

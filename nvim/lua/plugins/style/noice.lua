@@ -9,6 +9,15 @@ return {
           ["vim.lsp.util.stylize_markdown"] = true,
           ["cmp.entry.get_documentation"] = true,
         },
+        progress = {
+          enabled = true,
+          view = "mini", -- Keep Java/Spring import progress transient and out of a large popup.
+          throttle = 100,
+        },
+        message = {
+          enabled = true,
+          view = "mini",
+        },
       },
       -- you can enable a preset for easier configuration
       presets = {
@@ -43,9 +52,9 @@ return {
         -- NOTE: If you enable messages, then the cmdline is enabled automatically.
         -- This is a current Neovim limitation.
         enabled = true,              -- enables the Noice messages UI
-        view = "notify",             -- default view for messages
-        view_error = "notify",       -- view for errors
-        view_warn = "notify",        -- view for warnings
+        view = "mini",               -- Transient bottom-corner messages; auto-hide by default
+        view_error = "mini",         -- Avoid persistent center-screen error popups
+        view_warn = "mini",          -- Avoid persistent center-screen warning popups
         view_history = "messages",   -- view for :messages
         view_search = "virtualtext", -- view for search count messages. Set to `false` to disable
       },
@@ -105,23 +114,17 @@ return {
           filter_opts = { reverse = true },
         },
       },
-      notify = {
-        -- Noice can be used as `vim.notify` so you can route any notification like other messages
-        -- Notification messages have their level and other properties set.
-        -- event is always "notify" and kind can be any log level as a string
-        -- The default routes will forward notifications to nvim-notify
-        -- Benefit of using Noice for this is the routing and consistent history view
-        enabled = true,
-        view = "notify",
+      -- Snacks owns vim.notify; Noice messages use its transient mini view.
+      notify = { enabled = false },
+      views = {
+        mini = {
+          timeout = 2000,
+        },
       },
     })
   end,
   dependencies = {
     -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
     "MunifTanjim/nui.nvim",
-    -- OPTIONAL:
-    --   `nvim-notify` is only needed, if you want to use the notification view.
-    --   If not available, we use `mini` as the fallback
-    "rcarriga/nvim-notify",
   },
 }
