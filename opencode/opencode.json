@@ -1,229 +1,198 @@
 {
-  "$schema": "https:\/\/opencode.ai\/config.json",
+  "$schema": "https://opencode.ai/config.json",
+  "permissions": [
+    {
+      "action": "*",
+      "resource": "*",
+      "effect": "allow"
+    },
+    {
+      "action": "lazydb_execute_change",
+      "resource": "*",
+      "effect": "ask"
+    },
+    {
+      "action": "lazydb_execute_file",
+      "resource": "*",
+      "effect": "ask"
+    }
+  ],
   "mcp": {
-    "chrome-devtools": {
-      "command": [
-        "npx",
-        "-y",
-        "chrome-devtools-mcp@latest"
-      ],
-      "type": "local"
-    },
-    "codegraph": {
-      "command": [
-        "codegraph",
-        "serve",
-        "--mcp"
-      ],
-      "enabled": true,
-      "type": "local"
-    },
-    "context7": {
-      "enabled": true,
-      "headers": {
-        "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+    "servers": {
+      "chrome-devtools": {
+        "type": "local",
+        "command": [
+          "npx",
+          "-y",
+          "chrome-devtools-mcp@latest"
+        ]
       },
-      "type": "remote",
-      "url": "https:\/\/mcp.context7.com\/mcp"
-    },
-    "lazydb": {
-      "type": "local",
-      "enabled": true,
-      "command": [
-        "lazydb",
-        "mcp",
-        "serve",
-        "--project",
-        ".",
-        "--write-policy",
-        "non-production"
-      ],
-      "cwd": "."
+      "codegraph": {
+        "type": "local",
+        "command": [
+          "codegraph",
+          "serve",
+          "--mcp"
+        ]
+      },
+      "context7": {
+        "type": "remote",
+        "url": "https://mcp.context7.com/mcp",
+        "oauth": false,
+        "headers": {
+          "CONTEXT7_API_KEY": "{env:CONTEXT7_API_KEY}"
+        }
+      },
+      "lazydb": {
+        "type": "local",
+        "disabled": false,
+        "command": [
+          "lazydb",
+          "mcp",
+          "serve",
+          "--project",
+          ".",
+          "--write-policy",
+          "non-production"
+        ],
+        "cwd": "."
+      }
     }
   },
-  "permission": {
-    "*": "allow",
-    "lazydb_get_context": "allow",
-    "lazydb_list_connections": "allow",
-    "lazydb_search_schema": "allow",
-    "lazydb_describe_object": "allow",
-    "lazydb_query": "allow",
-    "lazydb_execute_change": "ask",
-    "lazydb_execute_file": "ask"
-  },
-  "plugin": [
-    "\/Users\/yelog\/workspace\/swift\/VibeBar\/plugins\/opencode-vibebar-plugin"
-  ],
-  "provider": {
+  "plugins": [],
+  "providers": {
     "omlx": {
+      "name": "oMLX",
+      "package": "@opencode-ai/ai/providers/openai-compatible",
+      "settings": {
+        "apiKey": "omlx",
+        "baseURL": "http://localhost:7011/v1"
+      },
       "models": {
         "Qwen3.6-35B-A3B-4bit-MTPLX-Optimized-Speed": {
-          "attachment": false,
-          "cost": {
-            "input": 0,
-            "output": 0
-          },
+          "modelID": "Qwen3.6-35B-A3B-4bit-MTPLX-Optimized-Speed",
+          "name": "Qwen3.6 35B A3B (oMLX local)",
           "family": "qwen3.6",
           "limit": {
             "context": 262144,
             "output": 32768
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text"
             ],
             "output": [
               "text"
-            ]
-          },
-          "name": "Qwen3.6 35B A3B (oMLX local)",
-          "options": {
-            "store": false
-          },
-          "reasoning": true,
-          "release_date": "2026-01-01",
-          "temperature": true,
-          "tool_call": true
+            ],
+            "tools": true
+          }
         }
-      },
-      "options": {
-        "apiKey": "omlx",
-        "baseURL": "http:\/\/localhost:7011\/v1"
       }
     },
     "sensenova": {
+      "name": "SenseNova",
+      "env": [
+        "SENSENOVA_KEY"
+      ],
+      "package": "@opencode-ai/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "https://token.sensenova.cn/v1"
+      },
       "models": {
         "deepseek-v4-flash": {
-          "attachment": false,
+          "modelID": "deepseek-v4-flash",
+          "name": "DeepSeek V4 Flash",
           "family": "deepseek-v4",
           "limit": {
             "context": 1000000,
             "output": 65536
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text"
             ],
             "output": [
               "text"
-            ]
-          },
-          "name": "DeepSeek V4 Flash",
-          "options": {
-            "store": false
-          },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "high": {},
-            "low": {},
-            "max": {},
-            "medium": {}
+            ],
+            "tools": true
           }
         },
         "glm-5.2": {
-          "attachment": false,
+          "modelID": "glm-5.2",
+          "name": "GLM-5.2",
           "family": "glm-5",
           "limit": {
             "context": 1000000,
             "output": 131072
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text"
             ],
             "output": [
               "text"
-            ]
-          },
-          "name": "GLM-5.2",
-          "options": {
-            "store": false
-          },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "high": {},
-            "low": {},
-            "max": {},
-            "medium": {}
+            ],
+            "tools": true
           }
         },
         "sensenova-6.8-flash-lite": {
-          "attachment": true,
+          "modelID": "sensenova-6.8-flash-lite",
+          "name": "SenseNova 6.8 Flash Lite",
           "family": "sensenova",
           "limit": {
             "context": 262144,
             "output": 65536
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image"
             ],
             "output": [
               "text"
-            ]
-          },
-          "name": "SenseNova 6.8 Flash Lite",
-          "options": {
-            "store": false
-          },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "high": {},
-            "low": {},
-            "max": {},
-            "medium": {}
+            ],
+            "tools": true
           }
         },
         "sensenova-u1-fast": {
-          "attachment": false,
+          "modelID": "sensenova-u1-fast",
+          "name": "SenseNova U1 Fast",
           "family": "sensenova-u1",
           "limit": {
             "context": 32768,
             "output": 1
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text"
             ],
             "output": [
               "image"
-            ]
-          },
-          "name": "SenseNova U1 Fast",
-          "options": {
-            "store": false
-          },
-          "reasoning": false,
-          "temperature": false,
-          "tool_call": false
+            ],
+            "tools": false
+          }
         }
-      },
-      "options": {
-        "apiKey": "{env:SENSENOVA_KEY}",
-        "baseURL": "https:\/\/token.sensenova.cn\/v1"
       }
     },
     "xrouter": {
+      "name": "XRouter",
+      "env": [
+        "X_ROUTER_KEY"
+      ],
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "https://xrouter.uk/v1"
+      },
       "models": {
         "gpt-4o": {
-          "attachment": true,
-          "cost": {
-            "input": 0.33000000000000002,
-            "output": 2.6400000000000001
-          },
+          "modelID": "gpt-4o",
+          "name": "GPT 4o",
           "family": "gpt-4",
           "limit": {
             "context": 400000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -231,29 +200,19 @@
             ],
             "output": [
               "text"
-            ]
-          },
-          "name": "GPT 4o",
-          "options": {
-            "store": false
-          },
-          "reasoning": false,
-          "release_date": "2026-04-01",
-          "temperature": true,
-          "tool_call": true
+            ],
+            "tools": true
+          }
         },
         "gpt-5.3-codex": {
-          "attachment": true,
-          "cost": {
-            "input": 1,
-            "output": 10
-          },
+          "modelID": "gpt-5.3-codex",
+          "name": "GPT-5.3 Codex",
           "family": "gpt-5-codex",
           "limit": {
             "context": 400000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -261,44 +220,48 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-5.3 Codex",
-          "options": {
-            "store": false,
-            "reasoningEffort": "medium"
-          },
-          "reasoning": true,
-          "release_date": "2026-03-01",
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
+          "variants": [
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
             },
-            "medium": {
-              "reasoningEffort": "medium"
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
             },
-            "high": {
-              "reasoningEffort": "high"
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
             },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
             }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
           }
         },
         "gpt-5.4": {
-          "attachment": true,
-          "cost": {
-            "input": 1,
-            "output": 10
-          },
+          "modelID": "gpt-5.4",
+          "name": "GPT-5.4",
           "family": "gpt-5",
           "limit": {
             "context": 1050000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -306,47 +269,54 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-5.4",
-          "options": {
-            "store": false,
-            "reasoningEffort": "none"
-          },
-          "reasoning": true,
-          "release_date": "2026-04-01",
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "none": {
-              "reasoningEffort": "none"
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
             },
-            "low": {
-              "reasoningEffort": "low"
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
             },
-            "medium": {
-              "reasoningEffort": "medium"
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
             },
-            "high": {
-              "reasoningEffort": "high"
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
             },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
             }
+          ],
+          "settings": {
+            "reasoningEffort": "none"
           }
         },
         "gpt-5.5": {
-          "attachment": true,
-          "cost": {
-            "input": 7.5,
-            "output": 60
-          },
+          "modelID": "gpt-5.5",
+          "name": "GPT-5.5",
           "family": "gpt-5",
           "limit": {
             "context": 1050000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -354,43 +324,54 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-5.5",
-          "options": {
-            "store": false,
-            "reasoningEffort": "medium"
-          },
-          "reasoning": true,
-          "release_date": "2026-05-01",
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "none": {
-              "reasoningEffort": "none"
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
             },
-            "low": {
-              "reasoningEffort": "low"
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
             },
-            "medium": {
-              "reasoningEffort": "medium"
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
             },
-            "high": {
-              "reasoningEffort": "high"
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
             },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
             }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
           }
         },
         "gpt-5.6-luna": {
-          "attachment": true,
+          "modelID": "gpt-5.6-luna",
+          "name": "GPT-5.6 Luna",
           "family": "gpt-5",
           "limit": {
             "context": 1050000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -398,45 +379,60 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-5.6 Luna",
-          "options": {
-            "store": false,
-            "reasoningEffort": "medium"
-          },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "none": {
-              "reasoningEffort": "none"
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
             },
-            "low": {
-              "reasoningEffort": "low"
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
             },
-            "medium": {
-              "reasoningEffort": "medium"
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
             },
-            "high": {
-              "reasoningEffort": "high"
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
             },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
             },
-            "max": {
-              "reasoningEffort": "max"
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
             }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
           }
         },
         "gpt-6-astra": {
-          "attachment": true,
+          "modelID": "gpt-6-astra",
+          "name": "GPT-6 Astra",
           "family": "gpt-6",
           "limit": {
             "context": 1050000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -444,42 +440,109 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-6 Astra",
-          "options": {
-            "store": false,
-            "reasoningEffort": "medium"
-          },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
+          "variants": [
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
             },
-            "medium": {
-              "reasoningEffort": "medium"
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
             },
-            "high": {
-              "reasoningEffort": "high"
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
             },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
             },
-            "max": {
-              "reasoningEffort": "max"
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
             }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
+          }
+        },
+        "gpt-6.1-sol": {
+          "modelID": "gpt-6.1-sol",
+          "name": "GPT-6.1 Sol",
+          "family": "gpt-6",
+          "limit": {
+            "context": 1050000,
+            "output": 128000
+          },
+          "capabilities": {
+            "input": [
+              "text",
+              "image",
+              "pdf"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "variants": [
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
           }
         },
         "gpt-5.6-sol": {
-          "attachment": true,
+          "modelID": "gpt-5.6-sol",
+          "name": "GPT-5.6 Sol",
           "family": "gpt-5",
           "limit": {
             "context": 1050000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -487,45 +550,60 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-5.6 Sol",
-          "options": {
-            "store": false,
-            "reasoningEffort": "medium"
-          },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "none": {
-              "reasoningEffort": "none"
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
             },
-            "low": {
-              "reasoningEffort": "low"
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
             },
-            "medium": {
-              "reasoningEffort": "medium"
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
             },
-            "high": {
-              "reasoningEffort": "high"
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
             },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
             },
-            "max": {
-              "reasoningEffort": "max"
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
             }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
           }
         },
         "gpt-5.6-terra": {
-          "attachment": true,
+          "modelID": "gpt-5.6-terra",
+          "name": "GPT-5.6 Terra",
           "family": "gpt-5",
           "limit": {
             "context": 1050000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -533,45 +611,60 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-5.6 Terra",
-          "options": {
-            "store": false,
-            "reasoningEffort": "medium"
-          },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "none": {
-              "reasoningEffort": "none"
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
             },
-            "low": {
-              "reasoningEffort": "low"
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
             },
-            "medium": {
-              "reasoningEffort": "medium"
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
             },
-            "high": {
-              "reasoningEffort": "high"
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
             },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
             },
-            "max": {
-              "reasoningEffort": "max"
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
             }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
           }
         },
         "gpt-6-luna": {
-          "attachment": true,
+          "modelID": "gpt-6-luna",
+          "name": "GPT-6 Luna",
           "family": "gpt-6",
           "limit": {
             "context": 1050000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -579,45 +672,60 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-6 Luna",
-          "options": {
-            "store": false,
-            "reasoningEffort": "medium"
-          },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "none": {
-              "reasoningEffort": "none"
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
             },
-            "low": {
-              "reasoningEffort": "low"
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
             },
-            "medium": {
-              "reasoningEffort": "medium"
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
             },
-            "high": {
-              "reasoningEffort": "high"
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
             },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
             },
-            "max": {
-              "reasoningEffort": "max"
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
             }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
           }
         },
         "gpt-6-sol": {
-          "attachment": true,
+          "modelID": "gpt-6-sol",
+          "name": "GPT-6 Sol",
           "family": "gpt-6",
           "limit": {
             "context": 1050000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -625,53 +733,72 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-6 Sol",
-          "options": {
-            "store": false,
-            "reasoningEffort": "medium"
-          },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "none": {
-              "reasoningEffort": "none"
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
             },
-            "low": {
-              "reasoningEffort": "low"
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
             },
-            "medium": {
-              "reasoningEffort": "medium"
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
             },
-            "high": {
-              "reasoningEffort": "high"
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
             },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
             },
-            "max": {
-              "reasoningEffort": "max"
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
             }
+          ],
+          "settings": {
+            "reasoningEffort": "medium"
           }
         }
-      },
-      "options": {
-        "apiKey": "{env:X_ROUTER_KEY}",
-        "baseURL": "https:\/\/xrouter.uk\/v1"
       }
     },
     "cpa": {
+      "name": "CPA",
+      "env": [
+        "CPA_KEY"
+      ],
+      "package": "@opencode/ai/providers/openai-compatible",
+      "settings": {
+        "baseURL": "http://127.0.0.1:8317/v1"
+      },
       "models": {
         "gpt-5.6-luna": {
-          "attachment": true,
+          "modelID": "gpt-5.6-luna",
+          "name": "GPT-5.6 Luna",
           "family": "gpt-5",
           "limit": {
             "context": 1050000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -679,30 +806,40 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-5.6 Luna",
-          "options": {
+          "body": {
             "store": false
           },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "high": {},
-            "low": {},
-            "medium": {},
-            "xhigh": {}
-          }
+          "variants": [
+            {
+              "id": "high",
+              "settings": {}
+            },
+            {
+              "id": "low",
+              "settings": {}
+            },
+            {
+              "id": "medium",
+              "settings": {}
+            },
+            {
+              "id": "xhigh",
+              "settings": {}
+            }
+          ]
         },
         "gpt-6-astra": {
-          "attachment": true,
+          "modelID": "gpt-6-astra",
+          "name": "GPT-6 Astra",
           "family": "gpt-6",
           "limit": {
             "context": 1050000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -710,30 +847,40 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-6 Astra",
-          "options": {
+          "body": {
             "store": false
           },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "high": {},
-            "low": {},
-            "medium": {},
-            "xhigh": {}
-          }
+          "variants": [
+            {
+              "id": "high",
+              "settings": {}
+            },
+            {
+              "id": "low",
+              "settings": {}
+            },
+            {
+              "id": "medium",
+              "settings": {}
+            },
+            {
+              "id": "xhigh",
+              "settings": {}
+            }
+          ]
         },
         "gpt-5.6-sol": {
-          "attachment": true,
+          "modelID": "gpt-5.6-sol",
+          "name": "GPT-5.6 Sol",
           "family": "gpt-5",
           "limit": {
             "context": 1050000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -741,30 +888,40 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-5.6 Sol",
-          "options": {
+          "body": {
             "store": false
           },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "high": {},
-            "low": {},
-            "medium": {},
-            "xhigh": {}
-          }
+          "variants": [
+            {
+              "id": "high",
+              "settings": {}
+            },
+            {
+              "id": "low",
+              "settings": {}
+            },
+            {
+              "id": "medium",
+              "settings": {}
+            },
+            {
+              "id": "xhigh",
+              "settings": {}
+            }
+          ]
         },
         "gpt-5.6-terra": {
-          "attachment": true,
+          "modelID": "gpt-5.6-terra",
+          "name": "GPT-5.6 Terra",
           "family": "gpt-5",
           "limit": {
             "context": 1050000,
             "output": 128000
           },
-          "modalities": {
+          "capabilities": {
             "input": [
               "text",
               "image",
@@ -772,26 +929,31 @@
             ],
             "output": [
               "text"
-            ]
+            ],
+            "tools": true
           },
-          "name": "GPT-5.6 Terra",
-          "options": {
+          "body": {
             "store": false
           },
-          "reasoning": true,
-          "temperature": true,
-          "tool_call": true,
-          "variants": {
-            "high": {},
-            "low": {},
-            "medium": {},
-            "xhigh": {}
-          }
+          "variants": [
+            {
+              "id": "high",
+              "settings": {}
+            },
+            {
+              "id": "low",
+              "settings": {}
+            },
+            {
+              "id": "medium",
+              "settings": {}
+            },
+            {
+              "id": "xhigh",
+              "settings": {}
+            }
+          ]
         }
-      },
-      "options": {
-        "apiKey": "{env:CPA_KEY}",
-        "baseURL": "http://127.0.0.1:8317/v1"
       }
     }
   }
