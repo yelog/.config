@@ -1,0 +1,10 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-plugin.json",
+  "name": "task-workflow",
+  "displayName": "Task Workflow",
+  "version": "0.1.0",
+  "description": "A resumable, worktree-isolated /task workflow for Claude Code",
+  "author": { "name": "local" },
+  "hooks": "./adapters/claude/hooks/hooks.json",
+  "skills": ["./adapters/claude/skills/"]
+}

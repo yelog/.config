@@ -1,0 +1,16 @@
+{
+  "name": "local-claude-task-workflow",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "bin": {
+    "task-workflow-core": "./dist/cli.js"
+  },
+  "scripts": {
+    "check": "tsc --noEmit --module nodenext --moduleResolution nodenext --target es2022 --skipLibCheck src/*.ts",
+    "build": "tsc --module nodenext --moduleResolution nodenext --target es2022 --skipLibCheck --outDir dist --rootDir src src/*.ts",
+    "test": "bun test ./tests/bun-suite.ts",
+    "validate:claude": "claude plugin validate . --strict",
+    "test:claude": "claude plugin test ."
+  }
+}

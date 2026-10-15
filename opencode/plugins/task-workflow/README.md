@@ -4,7 +4,7 @@
 
 - 插件：`~/.config/opencode/plugins/task-workflow/index.ts`
 - 启用配置：`~/.config/opencode/opencode.json` 的 `plugins`
-- 模型：分析/计划角色（兼容配置键 `astra`）= `xrouter/gpt-6.1-sol`，实施角色 `luna` = `xrouter/gpt-6-luna`
+- 模型：分析/计划角色（兼容配置键 `astra`）= `magpie/codex/gpt-6.1-sol`，实施角色 `luna` = `magpie/codex/gpt-6-luna`
 - 分工：仅 analyze/plan（含这两个阶段内的纠偏）使用 GPT-6.1 Sol；命名、实施、收尾审查、后期纠偏、提交合并均使用 Luna。已有任务的 reviewPending 不改变该分工，恢复审查也使用 Luna。
 - 当前适配：OpenCode 2.0.27
 
@@ -30,8 +30,8 @@
   "parent": "../my-api-worktree",
   "planDirectory": "docs/plans",
   "models": {
-    "astra": { "providerID": "xrouter", "id": "gpt-6.1-sol" },
-    "luna": { "providerID": "xrouter", "id": "gpt-6-luna" }
+    "astra": { "providerID": "magpie", "id": "codex/gpt-6.1-sol" },
+    "luna": { "providerID": "magpie", "id": "codex/gpt-6-luna" }
   }
 }
 ```

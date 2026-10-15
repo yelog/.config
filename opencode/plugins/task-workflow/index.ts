@@ -9,10 +9,16 @@ import { parseScope, dirtyPaths, changedPaths, untrackedPaths, workspaceCheck } 
 
 const models = {
   // Keep the legacy role key so existing project task-workflow overrides remain valid.
-  astra: { providerID: 'xrouter', id: 'gpt-6.1-sol' },
-  luna: { providerID: 'xrouter', id: 'gpt-6-luna' },
+  astra: { providerID: 'magpie', id: 'codex/gpt-6.1-sol' },
+  luna: { providerID: 'magpie', id: 'codex/gpt-6-luna' },
 }
-const previousDefaultLuna = { providerID: 'xrouter', id: 'gpt-5.6-luna' }
+// Legacy Luna defaults are allowed to follow the new magpie defaults on resume.
+// Match Luna independently because older tasks may carry a custom analysis
+// snapshot while still using the former built-in implementation model.
+const previousDefaultLuna = [
+  { providerID: 'xrouter', id: 'gpt-5.6-luna' },
+  { providerID: 'xrouter', id: 'gpt-6-luna' },
+] as const
 type ModelPolicy = 'follow' | 'pinned'
 type Settings = { models: typeof models; modelPolicy: ModelPolicy; prefix: string; parent: string; planDirectory: string; layout?: 'grouped' }
 export async function settingsFor(root: string): Promise<Settings> {
@@ -54,13 +60,13 @@ export function effectiveTaskModels(saved: typeof models, policy: ModelPolicy | 
   // older custom model choices remain intact instead of being silently replaced.
   if (policy === 'pinned') return saved
   if (policy === 'follow') return current
-  const isFormerDefault = saved.luna.providerID === previousDefaultLuna.providerID && saved.luna.id === previousDefaultLuna.id
+  const isFormerDefault = previousDefaultLuna.some(model => saved.luna.providerID === model.providerID && saved.luna.id === model.id)
   const currentIsDifferent = saved.luna.providerID !== current.luna.providerID || saved.luna.id !== current.luna.id
   return isFormerDefault && currentIsDifferent ? current : saved
 }
 export function effectiveModelPolicy(saved: typeof models, policy: ModelPolicy | undefined): ModelPolicy {
   if (policy) return policy
-  const isFormerDefault = saved.luna.providerID === previousDefaultLuna.providerID && saved.luna.id === previousDefaultLuna.id
+  const isFormerDefault = previousDefaultLuna.some(model => saved.luna.providerID === model.providerID && saved.luna.id === model.id)
   // Legacy tasks with a custom snapshot remain pinned; only the former built-in
   // default is migrated and made eligible to follow future config changes.
   return isFormerDefault ? 'follow' : 'pinned'

@@ -38,6 +38,9 @@
 !/fastfetch/
 !/claude-code/
 !/opencode/
+!/task-workflow/
+!/task-workflow/**
+/task-workflow/dist/
 !/opencode-v2/
 !/lazydb/
 /lazydb/sql/
