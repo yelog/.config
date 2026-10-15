@@ -23,7 +23,7 @@ return {
   opts = {
     executable = "lazydb",
     -- executable = "/Users/yelog/workspace/tui/lazydb/target/release/lazydb",
-    profile = "lssc-uat",
+    -- profile = "lssc-uat",
     window = { width = 0.92, height = 0.90, border = "rounded" },
     lsp = {
       enabled = true,
