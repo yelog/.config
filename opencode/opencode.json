@@ -3,521 +3,7 @@
   "provider": {
     "magpie": {
       "models": {
-        "claude/claude-fable-5": {
-          "attachment": true,
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Fable 5 · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        },
-        "claude/claude-fable-5-1": {
-          "attachment": true,
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Fable 5.1 · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        },
-        "claude/claude-haiku-4-5": {
-          "attachment": true,
-          "limit": {
-            "context": 200000,
-            "output": 64000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Haiku 4.5 (latest) · Claude Code",
-          "reasoning": true,
-          "variants": {}
-        },
-        "claude/claude-haiku-4-5-20251001": {
-          "attachment": true,
-          "limit": {
-            "context": 200000,
-            "output": 64000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Haiku 4.5 · Claude Code",
-          "reasoning": true,
-          "variants": {}
-        },
-        "claude/claude-haiku-5-5": {
-          "attachment": true,
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Haiku 5.5 · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        },
-        "claude/claude-opus-4-5": {
-          "attachment": true,
-          "limit": {
-            "context": 200000,
-            "output": 64000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Opus 4.5 (latest) · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            }
-          }
-        },
-        "claude/claude-opus-4-5-20251101": {
-          "attachment": true,
-          "limit": {
-            "context": 200000,
-            "output": 64000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Opus 4.5 · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            }
-          }
-        },
-        "claude/claude-opus-4-6": {
-          "attachment": true,
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Opus 4.6 · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        },
-        "claude/claude-opus-4-7": {
-          "attachment": true,
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Opus 4.7 · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        },
-        "claude/claude-opus-4-8": {
-          "attachment": true,
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Opus 4.8 · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        },
-        "claude/claude-opus-5": {
-          "attachment": true,
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Opus 5 · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        },
-        "claude/claude-opus-5-5": {
-          "attachment": true,
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Opus 5.5 · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        },
-        "claude/claude-sonnet-4-5": {
-          "attachment": true,
-          "limit": {
-            "context": 200000,
-            "output": 64000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Sonnet 4.5 (latest) · Claude Code",
-          "reasoning": true,
-          "variants": {}
-        },
-        "claude/claude-sonnet-4-5-20250929": {
-          "attachment": true,
-          "limit": {
-            "context": 200000,
-            "output": 64000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Sonnet 4.5 · Claude Code",
-          "reasoning": true,
-          "variants": {}
-        },
-        "claude/claude-sonnet-4-6": {
-          "attachment": true,
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Sonnet 4.6 · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        },
-        "claude/claude-sonnet-5": {
-          "attachment": true,
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Sonnet 5 · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        },
-        "claude/claude-sonnet-5-5": {
-          "attachment": true,
-          "limit": {
-            "context": 1000000,
-            "output": 128000
-          },
-          "modalities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ]
-          },
-          "name": "Claude Sonnet 5.5 · Claude Code",
-          "reasoning": true,
-          "variants": {
-            "low": {
-              "reasoningEffort": "low"
-            },
-            "medium": {
-              "reasoningEffort": "medium"
-            },
-            "high": {
-              "reasoningEffort": "high"
-            },
-            "xhigh": {
-              "reasoningEffort": "xhigh"
-            },
-            "max": {
-              "reasoningEffort": "max"
-            }
-          }
-        },
         "codex/gpt-5.6-luna": {
-          "attachment": true,
           "limit": {
             "context": 272000,
             "output": 128000
@@ -552,7 +38,6 @@
           }
         },
         "codex/gpt-5.6-sol": {
-          "attachment": true,
           "limit": {
             "context": 272000,
             "output": 128000
@@ -590,7 +75,6 @@
           }
         },
         "codex/gpt-5.6-terra": {
-          "attachment": true,
           "limit": {
             "context": 272000,
             "output": 128000
@@ -628,7 +112,6 @@
           }
         },
         "codex/gpt-6-astra": {
-          "attachment": true,
           "limit": {
             "context": 272000,
             "output": 128000
@@ -666,7 +149,6 @@
           }
         },
         "codex/gpt-6-luna": {
-          "attachment": true,
           "limit": {
             "context": 272000,
             "output": 128000
@@ -701,7 +183,6 @@
           }
         },
         "codex/gpt-6-sol": {
-          "attachment": true,
           "limit": {
             "context": 272000,
             "output": 128000
@@ -739,7 +220,6 @@
           }
         },
         "codex/gpt-6.1-sol": {
-          "attachment": true,
           "limit": {
             "context": 272000,
             "output": 128000
@@ -777,7 +257,6 @@
           }
         },
         "copilot/auto": {
-          "attachment": true,
           "limit": {
             "context": 128000,
             "output": 16384
@@ -809,7 +288,6 @@
           }
         },
         "copilot/gemini-3.7-flash": {
-          "attachment": true,
           "limit": {
             "context": 1048576,
             "output": 65536
@@ -838,7 +316,6 @@
           }
         },
         "copilot/gemini-3.8-flash": {
-          "attachment": true,
           "limit": {
             "context": 1048576,
             "output": 65536
@@ -867,7 +344,6 @@
           }
         },
         "copilot/gpt-4.1": {
-          "attachment": true,
           "limit": {
             "context": 1047576,
             "output": 32768
@@ -885,7 +361,6 @@
           "variants": {}
         },
         "copilot/gpt-5-mini": {
-          "attachment": true,
           "limit": {
             "context": 272000,
             "output": 128000
@@ -914,7 +389,6 @@
           }
         },
         "copilot/gpt-5.3-codex": {
-          "attachment": true,
           "limit": {
             "context": 272000,
             "output": 128000
@@ -946,7 +420,6 @@
           }
         },
         "copilot/gpt-5.4": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -981,7 +454,6 @@
           }
         },
         "copilot/gpt-5.4-mini": {
-          "attachment": true,
           "limit": {
             "context": 272000,
             "output": 128000
@@ -1016,7 +488,6 @@
           }
         },
         "copilot/gpt-5.5": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1051,7 +522,6 @@
           }
         },
         "copilot/gpt-5.6-luna": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1089,7 +559,6 @@
           }
         },
         "copilot/gpt-5.6-sol": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1130,7 +599,6 @@
           }
         },
         "copilot/gpt-5.6-terra": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1171,7 +639,6 @@
           }
         },
         "copilot/gpt-6-astra": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1209,7 +676,6 @@
           }
         },
         "copilot/gpt-6-luna": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1247,7 +713,6 @@
           }
         },
         "copilot/gpt-6-sol": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1288,7 +753,6 @@
           }
         },
         "copilot/gpt-6.1-sol": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1329,7 +793,6 @@
           }
         },
         "copilot/grok-4.5": {
-          "attachment": true,
           "limit": {
             "context": 500000,
             "output": 500000
@@ -1358,7 +821,6 @@
           }
         },
         "copilot/grok-4.6": {
-          "attachment": true,
           "limit": {
             "context": 500000,
             "output": 500000
@@ -1390,7 +852,6 @@
           }
         },
         "copilot/grok-4.7": {
-          "attachment": true,
           "limit": {
             "context": 500000,
             "output": 500000
@@ -1422,7 +883,6 @@
           }
         },
         "copilot/kimi-k3": {
-          "attachment": true,
           "limit": {
             "context": 1048576,
             "output": 131072
@@ -1450,7 +910,6 @@
           }
         },
         "copilot/mai-code-1.1-flash": {
-          "attachment": true,
           "limit": {
             "context": 128000,
             "output": 128000
@@ -1479,7 +938,6 @@
           }
         },
         "group/auto-gpt-5-6-luna": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1514,7 +972,6 @@
           }
         },
         "group/auto-gpt-5-6-sol": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1552,7 +1009,6 @@
           }
         },
         "group/auto-gpt-5-6-terra": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1590,7 +1046,6 @@
           }
         },
         "group/auto-gpt-6-1-sol": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1628,7 +1083,6 @@
           }
         },
         "group/auto-gpt-6-astra": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1666,7 +1120,6 @@
           }
         },
         "group/auto-gpt-6-luna": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1701,7 +1154,6 @@
           }
         },
         "group/auto-gpt-6-sol": {
-          "attachment": true,
           "limit": {
             "context": 922000,
             "output": 128000
@@ -1739,7 +1191,6 @@
           }
         },
         "opencode-zen-free/big-pickle": {
-          "attachment": true,
           "limit": {
             "context": 160000,
             "output": 32000
@@ -1757,11 +1208,10 @@
           "reasoning": true,
           "variants": {}
         },
-        "opencode-zen-free/ling-3.1-flash-free": {
-          "attachment": true,
+        "opencode-zen-free/cat-jam-free": {
           "limit": {
             "context": 262144,
-            "output": 32768
+            "output": 131072
           },
           "modalities": {
             "input": [
@@ -1772,12 +1222,54 @@
               "text"
             ]
           },
-          "name": "Ling 3.1 Flash Free · OpenCode Zen Free",
+          "name": "Cat Jam Free · OpenCode Zen Free",
           "reasoning": true,
-          "variants": {}
+          "variants": {
+            "low": {
+              "reasoningEffort": "low"
+            },
+            "medium": {
+              "reasoningEffort": "medium"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "xhigh": {
+              "reasoningEffort": "xhigh"
+            },
+            "max": {
+              "reasoningEffort": "max"
+            }
+          }
+        },
+        "opencode-zen-free/deepseek-v4.1-flash-free": {
+          "limit": {
+            "context": 200000,
+            "output": 32000
+          },
+          "modalities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ]
+          },
+          "name": "DeepSeek V4.1 Flash Free · OpenCode Zen Free",
+          "variants": {
+            "low": {
+              "reasoningEffort": "low"
+            },
+            "high": {
+              "reasoningEffort": "high"
+            },
+            "max": {
+              "reasoningEffort": "max"
+            }
+          }
         },
         "opencode-zen-free/longcat-2.5-preview-free": {
-          "attachment": true,
           "limit": {
             "context": 1000000,
             "output": 131072
@@ -1796,7 +1288,6 @@
           "variants": {}
         },
         "opencode-zen-free/mimo-v2.6-flash-free": {
-          "attachment": true,
           "limit": {
             "context": 200000,
             "output": 32000
@@ -1815,7 +1306,6 @@
           "variants": {}
         },
         "opencode-zen-free/muse-spark-1.3-contributor-free": {
-          "attachment": true,
           "limit": {
             "context": 1048576,
             "output": 131072
@@ -1850,7 +1340,6 @@
           }
         },
         "opencode-zen-free/nemotron-3.5-lightning-free": {
-          "attachment": true,
           "limit": {
             "context": 262144,
             "output": 262144
@@ -1869,7 +1358,6 @@
           "variants": {}
         },
         "opencode-zen-free/space-bunny-free": {
-          "attachment": true,
           "limit": {
             "context": 524288,
             "output": 524288
@@ -1904,7 +1392,6 @@
           }
         },
         "opencode-zen-free/step-5-preview-free": {
-          "attachment": true,
           "limit": {
             "context": 1000000,
             "output": 65536
