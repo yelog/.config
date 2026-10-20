@@ -14,8 +14,8 @@ import { stagePrompt } from './prompts.js'
 
 // Keep the canonical task configuration aligned with the OpenCode adapter.
 // The Claude hook maps these magpie model IDs to the local Claude gateway aliases.
-const defaultPlanner: ModelRef = { provider: 'magpie', model: 'codex/gpt-6.1-sol' }
-const defaultExecutor: ModelRef = { provider: 'magpie', model: 'codex/gpt-6-luna' }
+const defaultPlanner: ModelRef = { provider: 'magpie', model: 'group/gpt-6.1-sol' }
+const defaultExecutor: ModelRef = { provider: 'magpie', model: 'group/auto-gpt-6-luna' }
 
 function stateFile(state: TaskState): string { return path.join(taskDir(state), 'state.json') }
 function bindingsFile(commonDir: string): string { return path.join(commonDir, 'task-workflow', 'bindings.json') }

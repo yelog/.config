@@ -1,4 +1,5 @@
 import { Rpc } from '@opencode/plugin/rpc'
+import type { TaskPause } from './progress.js'
 
 export const Workflow = Rpc.define({
   id: 'local.task-workflow',
@@ -16,6 +17,7 @@ export const Workflow = Rpc.define({
 export type TaskView = {
   sessionID: string; name: string; step: number; status: string; running: boolean
   review: boolean; model: string; rounds: number; next: string; error?: string
+  pause?: TaskPause; resumeHint?: string
 }
 
 export function isTerminalTaskStatus(status: string): boolean {
@@ -26,7 +28,8 @@ export function terminalNotification(task: TaskView): { title: string; message: 
   if (task.status === 'done') {
     return { title: `/task · ${task.name}`, message: '任务已完成，代码已合并，worktree 和分支已清理。' }
   }
-  return { title: `/task · ${task.name}`, message: task.error ? `任务已暂停：${task.error}` : '任务已暂停或终止，请查看进度并使用 /task-resume。' }
+  const reason = task.pause?.message ?? task.error
+  return { title: `/task · ${task.name}`, message: reason ? `任务已暂停：${reason}${task.resumeHint ? `\n${task.resumeHint}` : ''}` : '任务已暂停或终止，请查看进度并使用 /task-resume。' }
 }
 
 export type StageKey = 'analyze' | 'plan' | 'implement' | 'integrate' | 'cleanup'
@@ -50,7 +53,19 @@ export function progressSegments(task: TaskView): ProgressSegment[] {
 export function progressState(task: TaskView, waiting?: string): string {
   if (task.status === 'done') return '已完成'
   if (waiting) return waiting
-  if (!task.running) return task.status === 'blocked' ? '已暂停' : '已中断，可恢复'
+  if (task.status === 'recovering') return '等待自动恢复'
+  if (!task.running) {
+    if (task.status !== 'blocked') return '已中断，可恢复'
+    switch (task.pause?.kind) {
+      case 'external': return '等待外部条件'
+      case 'no-progress': return '等待补充进展'
+      case 'budget': return '执行预算耗尽'
+      case 'quota': return '等待额度恢复'
+      case 'user': return '已停止'
+      case 'protocol': return '记录待修复'
+      default: return '已暂停'
+    }
+  }
   return task.review ? '收尾审查' : task.status === 'cleaning' ? '清理中' : '执行中'
 }
 

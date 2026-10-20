@@ -2,8 +2,8 @@ import { Plugin } from '@opencode/plugin/tui'
 import { createEffect, createSignal, onCleanup, Show } from 'solid-js'
 import { Workflow, isTerminalTaskStatus, progressSegments, progressState, terminalNotification, type TaskView, type StageKey } from './rpc.js'
 
-const stageHue: Record<StageKey, 'cyan' | 'purple' | 'blue' | 'orange' | 'green'> = {
-  analyze: 'cyan', plan: 'purple', implement: 'blue', integrate: 'orange', cleanup: 'green',
+const stageHue: Record<StageKey, number> = {
+  analyze: 0, plan: 1, implement: 2, integrate: 3, cleanup: 4,
 }
 
 export default Plugin.define({
@@ -73,20 +73,20 @@ export default Plugin.define({
             {progressSegments(value()).map((segment, index) => <>
               <span
                 style={{
-                  fg: segment.state === 'done' ? context.theme.hue.green[500] : segment.state === 'paused' ? context.theme.hue.orange[500] : segment.state === 'active' ? context.theme.hue[stageHue[segment.key]][500] : context.theme.text.subdued,
+                  fg: segment.state === 'done' ? context.theme.text.feedback.success.base : segment.state === 'paused' ? context.theme.text.feedback.warning.base : segment.state === 'active' ? (context.theme.categorical[stageHue[segment.key]] ?? context.theme.hue.accent)[500] : context.theme.text.muted,
                   bold: segment.state === 'active' || segment.state === 'paused',
                   dim: segment.state === 'pending',
                 }}
               >{segment.state === 'done' ? '✓' : segment.state === 'paused' ? '!' : segment.state === 'active' ? '●' : '○'} {segment.label}</span>
-              {index < 4 && <span style={{ fg: context.theme.text.subdued }}> → </span>}
+              {index < 4 && <span style={{ fg: context.theme.text.muted }}> → </span>}
             </>)}
           </text>
           <text wrapMode="none">
-            <span style={{ fg: context.theme.text.default }}>{value().name}</span>
-            <span style={{ fg: context.theme.text.subdued }}> · {value().model} · </span>
-            <span style={{ fg: value().status === 'done' ? context.theme.hue.green[500] : value().status === 'blocked' || !value().running ? context.theme.hue.orange[500] : value().review ? context.theme.hue.purple[500] : context.theme.hue.blue[500], bold: true }}>{progressState(value(), waiting())}</span>
-            <span style={{ fg: context.theme.text.subdued }}> · 第 {value().rounds} 轮</span>
-            <Show when={value().error || value().next}><span style={{ fg: context.theme.text.subdued }}> · {value().error ?? value().next}</span></Show>
+            <span style={{ fg: context.theme.text.base }}>{value().name}</span>
+            <span style={{ fg: context.theme.text.muted }}> · {value().model} · </span>
+            <span style={{ fg: value().status === 'done' ? context.theme.text.feedback.success.base : value().status === 'blocked' || !value().running ? context.theme.text.feedback.warning.base : value().review ? context.theme.hue.accent[500] : context.theme.hue.interactive[500], bold: true }}>{progressState(value(), waiting())}</span>
+            <span style={{ fg: context.theme.text.muted }}> · 第 {value().rounds} 轮</span>
+            <Show when={value().error || value().next}><span style={{ fg: context.theme.text.muted }}> · {value().error ?? value().next}</span></Show>
           </text>
         </box>}</Show>
       },
