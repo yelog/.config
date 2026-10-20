@@ -1,0 +1,9 @@
+#!/usr/bin/env -S nvim -ll
+
+local script = assert(arg[0])
+local root = script:match("^(.*)/scripts/[^/]+$") or "."
+local codec = dofile(root .. "/lua/custom/properties_codec.lua")
+local file = assert(io.open(assert(arg[1]), "rb"))
+local text = file:read("*a")
+file:close()
+io.stdout:write((codec.decode(text)))

@@ -1,5 +1,7 @@
 vim.api.nvim_command("source ~/.config/nvim/base.vim")
 
+require("custom.java_properties").setup()
+
 -- Create a predictable server socket for kitty remote control
 local server_dir = "/tmp/nvim-" .. (vim.env.USER or "nvim")
 vim.fn.mkdir(server_dir, "p")

@@ -2,6 +2,25 @@
 
 This configuration supports Java launch debugging for Maven multi-module Spring Cloud projects through the Overseer Services panel.
 
+## Chinese Java properties and project search
+
+Java `.properties` files containing printable Unicode escapes open as readable text. For example,
+`name=\u4e2d\u6587` appears as `name=中文`, and `/中文` uses Neovim's normal search.
+Saving retains the escaped file format, original spellings on unchanged lines, and existing line endings.
+Files that already contain UTF-8 Chinese retain their format.
+
+Cmd+Shift+F (or `<leader>fs`) searches decoded `.properties` contents through a ripgrep preprocessor.
+The result list, preview, match highlights, and file jumps use the same decoded text and byte positions.
+Literal/regex, case, whole-word, and file-mask controls continue to work. Other file types use normal ripgrep
+search. The preprocessor uses the installed Neovim 0.12 executable and adds one small process per properties file.
+
+Project search reads saved disk contents, so save edits before searching across files. Standalone `rg`
+commands and other applications still see the original escaped text. To inspect a properties file's raw bytes
+in Neovim, use `:edit! ++enc=utf-8` after saving any changes; reopen it normally to restore decoded editing.
+
+Gitsigns is disabled for decoded properties buffers because its index and staging operations expect the raw
+file representation. Use Lazygit or ordinary Git commands for those files.
+
 ## Prerequisites
 
 - JDK 21 to run jdtls. If the active `JAVA_HOME` is Java 17, the configuration automatically discovers a Java 21+ JDK installed by SDKMAN and uses it only for jdtls. Project runtimes and Maven/Spring Boot processes keep using the active Java 17.

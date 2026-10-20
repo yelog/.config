@@ -2,6 +2,7 @@ local M = {}
 
 local states = {}
 local nbsp = "\194\160"
+local config_root = vim.fs.dirname(vim.fs.dirname(vim.fs.dirname(debug.getinfo(1, "S").source:gsub("^@", ""))))
 
 local function project_key(cwd)
   return vim.fs.normalize(cwd or vim.uv.cwd() or ".")
@@ -150,6 +151,9 @@ end
 local function finder(opts, ctx)
   local effective = vim.deepcopy(opts)
   effective.args = M.build_args(opts, opts._project_search_base_args)
+  vim.list_extend(effective.args, {
+    "--pre", config_root .. "/scripts/properties-search", "--pre-glob=*.properties",
+  })
   return require("snacks.picker.source.grep").grep(effective, ctx)
 end
 
@@ -196,6 +200,20 @@ local function preview(ctx)
   end
 
   Snacks.picker.preview.file(ctx)
+  if file and file:match("%.properties$") then
+    local buf = ctx.preview.win.buf
+    -- File previews read raw bytes independently of Neovim's file converter.
+    -- Decode once per preview; an already-loaded real buffer is already decoded.
+    if ctx.item.buf ~= buf and vim.bo[buf].fileencoding ~= "java-properties"
+      and vim.b[buf].java_properties_preview_tick ~= vim.b[buf].changedtick then
+      local codec = require("custom.properties_codec")
+      local lines = vim.api.nvim_buf_get_lines(buf, 0, -1, false)
+      for index, line in ipairs(lines) do lines[index] = codec.decode(line) end
+      ctx.preview:set_lines(lines)
+      vim.b[buf].java_properties_preview_tick = vim.b[buf].changedtick
+      ctx.preview:loc()
+    end
+  end
 end
 
 local function format(item)

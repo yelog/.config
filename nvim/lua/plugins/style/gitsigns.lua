@@ -49,6 +49,9 @@ return {
         col = 1
       },
       on_attach                    = function(bufnr)
+        -- The index contains escaped bytes; staging decoded buffer text would
+        -- bypass the properties writer and create a different file format.
+        if vim.b[bufnr].java_properties_unicode then return false end
         local gs = package.loaded.gitsigns
 
         local function map(mode, l, r, opts)
