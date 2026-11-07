@@ -13,18 +13,18 @@ import { parseScope, dirtyPaths, changedPaths, untrackedPaths, workspaceCheck } 
 
 const models = {
   // Keep the legacy role key so existing project task-workflow overrides remain valid.
-  astra: { providerID: 'magpie', id: 'group/gpt-6.1-sol' },
-  luna: { providerID: 'magpie', id: 'group/auto-gpt-6-luna' },
+  astra: { providerID: 'magpie', id: 'auto/gpt-6.1-sol' },
+  luna: { providerID: 'magpie', id: 'auto/gpt-6-luna' },
 }
-// Legacy Luna defaults are allowed to follow the new magpie defaults on resume.
-// Match Luna independently because older tasks may carry a custom analysis
-// snapshot while still using the former built-in implementation model.
+// Recognize former built-in defaults when resuming tasks saved before modelPolicy.
 const previousDefaultLuna = [
+  { providerID: 'magpie', id: 'group/auto-gpt-6-luna' },
   { providerID: 'magpie', id: 'codex/gpt-6-luna' },
   { providerID: 'xrouter', id: 'gpt-5.6-luna' },
   { providerID: 'xrouter', id: 'gpt-6-luna' },
 ] as const
 const previousDefaultAstra = [
+  { providerID: 'magpie', id: 'group/gpt-6.1-sol' },
   { providerID: 'magpie', id: 'codex/gpt-6.1-sol' },
 ] as const
 type ModelPolicy = 'follow' | 'pinned'
@@ -64,7 +64,7 @@ const legacySettings = (root: string): Settings => ({ models, modelPolicy: 'foll
 
 export function effectiveTaskModels(saved: typeof models, policy: ModelPolicy | undefined, current: typeof models): typeof models {
   // Explicitly pinned tasks preserve their snapshot. Follow tasks use current config.
-  // For pre-policy states, only the known former built-in Luna default is migrated;
+  // For pre-policy states, only known former built-in defaults are migrated;
   // older custom model choices remain intact instead of being silently replaced.
   if (policy === 'pinned') return saved
   if (policy === 'follow') return current

@@ -73,14 +73,14 @@ test('notifications are terminal-only and use task-specific messages', () => {
 })
 
 test('following tasks use current model defaults while pinned and custom snapshots are preserved', () => {
-  const current: any = { astra: { providerID: 'magpie', id: 'group/gpt-6.1-sol' }, luna: { providerID: 'magpie', id: 'group/auto-gpt-6-luna' } }
+  const current: any = { astra: { providerID: 'magpie', id: 'auto/gpt-6.1-sol' }, luna: { providerID: 'magpie', id: 'auto/gpt-6-luna' } }
   const old: any = { ...current, luna: { providerID: 'xrouter', id: 'gpt-5.6-luna' } }
-  expect(effectiveTaskModels(old, undefined, current).luna.id).toBe('group/auto-gpt-6-luna')
+  expect(effectiveTaskModels(old, undefined, current).luna.id).toBe('auto/gpt-6-luna')
   expect(effectiveModelPolicy(old, undefined)).toBe('follow')
-  expect(effectiveTaskModels(old, 'follow', current).luna.id).toBe('group/auto-gpt-6-luna')
+  expect(effectiveTaskModels(old, 'follow', current).luna.id).toBe('auto/gpt-6-luna')
   expect(effectiveTaskModels(old, 'pinned', current).luna.id).toBe('gpt-5.6-luna')
   const oldAnalysisModel = { ...current, astra: { providerID: 'xrouter', id: 'gpt-6-astra' } }
-  expect(effectiveTaskModels(oldAnalysisModel, 'follow', current).astra.id).toBe('group/gpt-6.1-sol')
+  expect(effectiveTaskModels(oldAnalysisModel, 'follow', current).astra.id).toBe('auto/gpt-6.1-sol')
   expect(effectiveTaskModels(oldAnalysisModel, 'pinned', current).astra.id).toBe('gpt-6-astra')
   const custom = { ...old, luna: { providerID: 'custom', id: 'my-luna' } }
   expect(effectiveTaskModels(custom, undefined, current).luna).toEqual(custom.luna)
@@ -93,8 +93,8 @@ test('legacy xrouter built-in defaults follow the magpie defaults', () => {
     luna: { providerID: 'xrouter', id: 'gpt-6-luna' },
   }
   const current: any = {
-    astra: { providerID: 'magpie', id: 'group/gpt-6.1-sol' },
-    luna: { providerID: 'magpie', id: 'group/auto-gpt-6-luna' },
+    astra: { providerID: 'magpie', id: 'auto/gpt-6.1-sol' },
+    luna: { providerID: 'magpie', id: 'auto/gpt-6-luna' },
   }
   expect(effectiveModelPolicy(legacy, undefined)).toBe('follow')
   expect(effectiveTaskModels(legacy, undefined, current)).toEqual(current)
@@ -104,11 +104,11 @@ test('legacy xrouter built-in defaults follow the magpie defaults', () => {
 test('legacy magpie Codex Sol defaults migrate to the routing group', () => {
   const legacy: any = {
     astra: { providerID: 'magpie', id: 'codex/gpt-6.1-sol' },
-    luna: { providerID: 'magpie', id: 'group/auto-gpt-6-luna' },
+    luna: { providerID: 'magpie', id: 'auto/gpt-6-luna' },
   }
   const current: any = {
-    astra: { providerID: 'magpie', id: 'group/gpt-6.1-sol' },
-    luna: { providerID: 'magpie', id: 'group/auto-gpt-6-luna' },
+    astra: { providerID: 'magpie', id: 'auto/gpt-6.1-sol' },
+    luna: { providerID: 'magpie', id: 'auto/gpt-6-luna' },
   }
   expect(effectiveModelPolicy(legacy, undefined)).toBe('follow')
   expect(effectiveTaskModels(legacy, undefined, current)).toEqual(current)
@@ -120,11 +120,30 @@ test('legacy magpie Codex Luna defaults migrate to the routing group', () => {
     luna: { providerID: 'magpie', id: 'codex/gpt-6-luna' },
   }
   const current: any = {
-    astra: { providerID: 'magpie', id: 'codex/gpt-6.1-sol' },
-    luna: { providerID: 'magpie', id: 'group/auto-gpt-6-luna' },
+    astra: { providerID: 'magpie', id: 'auto/gpt-6.1-sol' },
+    luna: { providerID: 'magpie', id: 'auto/gpt-6-luna' },
   }
   expect(effectiveModelPolicy(legacy, undefined)).toBe('follow')
   expect(effectiveTaskModels(legacy, undefined, current)).toEqual(current)
+})
+
+test('retired magpie group defaults migrate to auto routes unless explicitly pinned', () => {
+  const legacy = {
+    astra: { providerID: 'magpie', id: 'group/gpt-6.1-sol' },
+    luna: { providerID: 'magpie', id: 'group/auto-gpt-6-luna' },
+  }
+  const current = {
+    astra: { providerID: 'magpie', id: 'auto/gpt-6.1-sol' },
+    luna: { providerID: 'magpie', id: 'auto/gpt-6-luna' },
+  }
+  expect(effectiveModelPolicy(legacy, undefined)).toBe('follow')
+  expect(effectiveTaskModels(legacy, undefined, current)).toEqual(current)
+  expect(effectiveTaskModels(legacy, 'follow', current)).toEqual(current)
+  expect(effectiveModelPolicy(legacy, 'pinned')).toBe('pinned')
+  expect(effectiveTaskModels(legacy, 'pinned', current)).toEqual(legacy)
+  // Each role can have been migrated by a different plugin version.
+  expect(effectiveModelPolicy({ ...current, astra: legacy.astra }, undefined)).toBe('follow')
+  expect(effectiveModelPolicy({ ...current, luna: legacy.luna }, undefined)).toBe('follow')
 })
 
 test('completion review triggers and evidence guard reject premature completion', () => {
@@ -199,12 +218,12 @@ test('automatic continuation, GPT-6.1 Sol correction, worktree integration and c
       } } }
     } },
     generate: { text: async ({ prompt, model }: any) => {
-        if (model.id === 'group/gpt-6.1-sol') {
+        if (model.id === 'auto/gpt-6.1-sol') {
         corrections++
         return { text: JSON.stringify({ needsUser: false, next: '完成当前分析并写入回执，不重复检查。' }) }
       }
       namingCalls++
-       expect(model.id).toBe('group/auto-gpt-6-luna')
+       expect(model.id).toBe('auto/gpt-6-luna')
       expect(prompt).toContain('test requirement')
       expect(prompt).toContain('# verified')
       return { text: namingCalls === 1 ? '需要先运行 /task-resume' : JSON.stringify({ name: stem }) }
@@ -232,7 +251,7 @@ test('automatic continuation, GPT-6.1 Sol correction, worktree integration and c
         if (receipt.stage === 'implement') {
           if (text.includes('本轮是 Luna 收尾审查')) {
             reviewCalls++
-              expect(selected.at(-1)).toBe('group/auto-gpt-6-luna')
+              expect(selected.at(-1)).toBe('auto/gpt-6-luna')
             Object.assign(receipt, { reviewed: true, requirements: [{ requirement: 'test requirement', status: 'passed', evidence: 'feature.txt + test verification' }], remainingRequired: [], deferredChecks: [{ check: 'manual TUI', required: false, reason: 'PTY unavailable, automated behavior tests passed' }] })
           } else if (implementationCalls++ === 0) {
             Object.assign(receipt, { status: 'progress', reviewRequested: true, next: 'Run manual TUI acceptance in an interactive terminal', completedItems: ['feature implemented'], checks: ['automated tests passed'] })
@@ -254,7 +273,7 @@ test('automatic continuation, GPT-6.1 Sol correction, worktree integration and c
     let done = notification()
     await commands.get('task').execute({ sessionID, prompt: { text: 'test requirement' } })
     expect(await done).toContain('已完成并合并')
-    expect(selected).toEqual(['group/gpt-6.1-sol', 'group/gpt-6.1-sol', 'group/gpt-6.1-sol', 'group/gpt-6.1-sol', 'group/auto-gpt-6-luna', 'group/auto-gpt-6-luna', 'group/auto-gpt-6-luna', 'group/auto-gpt-6-luna'])
+    expect(selected).toEqual(['auto/gpt-6.1-sol', 'auto/gpt-6.1-sol', 'auto/gpt-6.1-sol', 'auto/gpt-6.1-sol', 'auto/gpt-6-luna', 'auto/gpt-6-luna', 'auto/gpt-6-luna', 'auto/gpt-6-luna'])
     expect(reviewCalls).toBe(1)
     expect(JSON.parse(await readFile(path.join(folder, 'completion-decision.json'), 'utf8')).deferredChecks[0].check).toBe('manual TUI')
     expect(corrections).toBe(1)
@@ -540,14 +559,15 @@ test('project settings default to repository name and support validated override
     execFileSync('git', ['init', '-b', 'main'], { cwd: root, stdio: 'pipe' })
     expect((await settingsFor(root)).prefix).toBe(path.basename(root))
     expect((await settingsFor(root)).parent).toBe(path.join(path.dirname(root), `${path.basename(root)}-worktree`))
-    expect((await settingsFor(root)).models.astra).toEqual({ providerID: 'magpie', id: 'group/gpt-6.1-sol' })
+    expect((await settingsFor(root)).models.astra).toEqual({ providerID: 'magpie', id: 'auto/gpt-6.1-sol' })
+    expect((await settingsFor(root)).models.luna).toEqual({ providerID: 'magpie', id: 'auto/gpt-6-luna' })
     await mkdir(path.join(root, '.opencode'))
     const file = path.join(root, '.opencode/task-workflow.json')
     await writeFile(file, JSON.stringify({ prefix: 'api', parent: '../trees', planDirectory: 'design/plans', models: { luna: { providerID: 'custom', id: 'coder' } } }))
     const settings = await settingsFor(root)
     expect(settings.parent).toBe(path.resolve(root, '../trees'))
     expect(settings.models.luna.id).toBe('coder')
-    expect(settings.models.astra).toEqual({ providerID: 'magpie', id: 'group/gpt-6.1-sol' })
+    expect(settings.models.astra).toEqual({ providerID: 'magpie', id: 'auto/gpt-6.1-sol' })
     expect(settings.planDirectory).toBe('design/plans')
     expect(taskDirectory(settings, 'add-cache')).toBe(path.join(settings.parent, 'add-cache'))
     const { layout, ...legacy } = settings
@@ -610,7 +630,7 @@ test('legacy stalled task resumes into review; incomplete review cannot finish a
     } as any)
     await commands.get('task-resume').execute({ sessionID })
      expect(await finished).toContain('用户已中断')
-      expect(selected).toEqual(['group/auto-gpt-6-luna', 'group/auto-gpt-6-luna', 'group/auto-gpt-6-luna'])
+      expect(selected).toEqual(['auto/gpt-6-luna', 'auto/gpt-6-luna', 'auto/gpt-6-luna'])
     expect(calls).toBe(3)
     const state = JSON.parse(await readFile(path.join(folder, 'state.json'), 'utf8'))
     expect(state.step).toBe(2)

@@ -4,7 +4,7 @@
 
 - 插件：`~/.config/opencode/plugins/task-workflow/index.ts`
 - 启用配置：`~/.config/opencode/opencode.json` 的 `plugins`
-- 模型：分析/计划角色（兼容配置键 `astra`）= `magpie/group/gpt-6.1-sol`，实施角色 `luna` = `magpie/group/auto-gpt-6-luna`
+- 模型：分析/计划角色（兼容配置键 `astra`）= `magpie/auto/gpt-6.1-sol`，实施角色 `luna` = `magpie/auto/gpt-6-luna`
 - 分工：仅 analyze/plan（含这两个阶段内的纠偏）使用 GPT-6.1 Sol；命名、实施、收尾审查、后期纠偏、提交合并均使用 Luna。已有任务的 reviewPending 不改变该分工，恢复审查也使用 Luna。
 - 当前适配：OpenCode 2.0.30；本地 plugin、client 与主题类型固定为 2.0.30。
 
@@ -30,8 +30,8 @@
   "parent": "../my-api-worktree",
   "planDirectory": "docs/plans",
   "models": {
-    "astra": { "providerID": "magpie", "id": "group/gpt-6.1-sol" },
-    "luna": { "providerID": "magpie", "id": "group/auto-gpt-6-luna" }
+    "astra": { "providerID": "magpie", "id": "auto/gpt-6.1-sol" },
+    "luna": { "providerID": "magpie", "id": "auto/gpt-6-luna" }
   }
 }
 ```
@@ -231,6 +231,7 @@ redis-value-editing · gpt-6-luna · 收尾审查 · 第 3 轮 · 下一步…
 - **需要补充需求**：先在原会话说明补充内容，处理完后 resume。
 - **合并冲突或验证失败**：查看当前会话和报告，处理后 resume。插件不会把“模型停止输出”当作成功。
 - **要修改模型**：在项目 `.opencode/task-workflow.json` 中覆盖 models；新任务及 follow 任务下一次恢复时读取，pinned 任务保留快照。全局默认值仍位于 `index.ts` 顶部 models。
+- **`provider.no-route` / `Model unavailable: magpie/group/...`**：旧插件默认模型 ID 已退出当前模型目录，现已改用 `magpie/auto/gpt-6.1-sol` 与 `magpie/auto/gpt-6-luna`。保存更新后如仍使用旧插件，执行 `/reload`，再在报错的原会话运行 `/task-resume`。follow 任务及未设置 modelPolicy 的旧默认任务会采用新默认值，保留原回执和累计轮数；显式 pinned 任务或项目配置中显式写入的旧 ID 需先更新对应配置。不要手工清空 state.json 或重新创建任务。
 - **禁用**：从 V2 配置的 `plugins` 中移除本插件路径，重启 opencode。
 
 ## 验证与维护

@@ -1,0 +1,223 @@
+# include snazzy.conf
+
+# font_family      monospace
+font_family      family='JetBrainsMono Nerd Font Mono' style=Regular
+# font_family      family='JetBrainsMono Nerd Font' style=ExtraLight features='+zero +ss02 +cv04 +cv16 +cv18 +cv19 +cv20'
+# bold_font        family='JetBrainsMono Nerd Font' style=Bold features='+zero +ss02 +cv04 +cv16 +cv18 +cv19 +cv20'
+# italic_font      family='JetBrainsMono Nerd Font' style='Light Italic' features='+zero +ss02 +cv04 +cv16 +cv18 +cv19 +cv20'
+# bold_italic_font family='JetBrainsMono Nerd Font' style='Bold Italic' features='+zero +ss02 +cv04 +cv16 +cv18 +cv19 +cv20'
+italic_font      auto
+bold_font        auto
+bold_italic_font auto
+# set chinese font family
+symbol_map U+4E00-U+9FA5 Source Han Sans HW SC
+
+# Nerd Fonts v2.3.3
+# symbol_map U+e738,U+e256,U+db82,U+df37,U+2615,U+279c,U+2718,U+21e1,U+2638,U+25ac  Symbols Nerd Font Mono
+# Nerd Fonts v2.3.3
+# symbol_map U+23FB-U+23FE,U+2665,U+26A1,U+2B58,U+E000-U+E00A,U+E0A0-U+E0A3,U+E0B0-U+E0D4,U+E200-U+E2A9,U+E300-U+E3E3,U+E5FA-U+E6AA,U+E700-U+E7C5,U+EA60-U+EBEB,U+F000-U+F2E0,U+F300-U+F32F,U+F400-U+F4A9,U+F500-U+F8FF,U+F0001-U+F1AF0 Symbols Nerd Font Mono
+
+# Nerd Fonts v3.2.0 fit marklive.nvim icon
+symbol_map U+e000-U+e00a,U+ea60-U+ebeb,U+e0a0-U+e0c8,U+e0ca,U+e0cc-U+e0d7,U+e200-U+e2a9,U+e300-U+e3e3,U+e5fa-U+e6b1,U+e700-U+e7c5,U+ed00-U+efc1,U+f000-U+f2ff,U+f000-U+f2e0,U+f300-U+f372,U+f400-U+f533,U+f0001-U+f1af0 Hack Nerd Font
+
+font_size 14.0
+inactive_text_alpha 0.7
+
+# Other unix systems:
+allow_remote_control yes
+listen_on unix:/tmp/mykitty
+
+remember_window_size  yes
+
+hide_window_decorations yes
+tab_bar_style powerline
+editor /Users/yelog/software/neovim/nvim-macos-arm64/bin/nvim
+
+listen_on unix:/tmp/kitty
+shell_integration enabled
+
+# kitty mode
+kitty_mod cmd+ctrl
+
+# kitty-scrollback.nvim Kitten alias
+action_alias kitty_scrollback_nvim kitten /Users/yelog/.local/share/nvim/lazy/kitty-scrollback.nvim/python/kitty_scrollback_nvim.py
+
+# Confirm the paste if it is very large (larger than 16KB) as pasting large amounts of text into shells can be very slow
+paste_actions confirm-if-large
+
+# Browse scrollback buffer in nvim
+# map kitty_mod+; kitty_scrollback_nvim
+# Browse output of the last shell command in nvim
+# map kitty_mod+; kitty_scrollback_nvim --config ksb_builtin_last_cmd_output
+map kitty_mod+; kitty_scrollback_nvim --env NVIM_APPNAME=mynvim --config myconfig --nvim-args -n
+
+# Cursor
+cursor_trail 1
+
+copy_on_select yes
+# confirm_os_window_close 1
+
+# emoji from https://emojipedia.org/regional-indicator-symbol-letter-z/
+# title parse see https://github.com/kovidgoyal/kitty/blob/587f44ad4eb7fe545b0e580168cf0c32117b87c7/kitty/tab_bar.py#L175
+# tab_title_template "{fmt.fg.red}{bell_symbol}{activity_symbol}{fmt.fg.tab}{index}:{'🇿' if layout_name == 'stack' and num_windows > 1 else ''}{title}"
+tab_title_template "{index}: {title.split(':', 1)[-1]}"
+
+input_delay 1
+repaint_delay 10
+
+# -------- Key Bindings -------- #
+
+# Reload config
+map kitty_mod+r combine : load_config_file : launch --type=overlay sh -c 'echo "kitty config reloaded."; echo; read -r -p "Press Enter to exit"; echo ""'
+
+# # goto with panel
+map alt+l send_key alt+l
+map alt+h send_key alt+h
+map alt+j send_key alt+j
+map alt+k send_key alt+k
+map alt+[ send_key alt+[
+map alt+] send_key alt+]
+map alt+t send_key alt+t
+
+# Forward project-search shortcuts as Meta only while Neovim has focus.
+map --when-focus-on var:IS_NVIM alt+x send_key alt+x
+map --when-focus-on var:IS_NVIM alt+c send_key alt+c
+map --when-focus-on var:IS_NVIM alt+w send_key alt+w
+map --when-focus-on var:IS_NVIM alt+g send_key alt+g
+
+# map cmd+1 send_key cmd+1
+map cmd+2 send_key cmd+2
+map cmd+4 send_key cmd+3
+# neovim find content in all files
+map cmd+shift+f send_key cmd+shift+f
+# neovim find file
+map cmd+shift+o send_key cmd+shift+o
+# diff
+map cmd+shift+w send_key cmd+shift+w
+# neovim avante.nvim
+map cmd+k send_key cmd+k
+map cmd+shfit+k send_key cmd+shift+k
+# ----- 由于 tmux 不能正常映射 command, 所以均改为 alt ----- middle
+# map cmd+2 send_key alt+1
+# map cmd+2 send_key alt+2
+# map cmd+3 send_key alt+3
+# # neovim find content in all files
+# map cmd+shift+f send_key alt+shift+f
+# # neovim find file
+# map cmd+shift+o send_key alt+shift+o
+# # neovim avante.nvim
+# map cmd+k send_key alt+9
+# map cmd+shfit+k send_key alt+ctrl+9
+# 
+# # tmux full screen
+# map cmd+ctrl+1 send_key alt+5
+# map cmd+shift+m send_key alt+shift+m
+# -------------------------------------------##
+
+# ----- 由于 tmux 不能正常映射 command, 所以均改为 alt ------ end
+
+
+# -------- Tab ------- #
+map cmd+n next_tab
+map cmd+p previous_tab
+map cmd+shift+n move_tab_forward
+map cmd+shift+p move_tab_backward
+# kitty_mod + tab switch between last two tabs
+# map kitty_mod+tab goto_last_tab
+
+# windown
+# suppport split and stack
+enabled_layouts splits,stack
+map cmd+enter launch --location=vsplit --cwd=last_reported
+map cmd+shift+enter launch --location=hsplit --cwd=last_reported
+# Toggle kitty layout stack/splits + sync neovim zoom atomically
+map kitty_mod+f launch --type=background --allow-remote-control ~/.config/kitty/sync_zoom.sh
+
+map cmd+1 goto_tab 1
+map cmd+2 goto_tab 2
+map cmd+3 goto_tab 3
+map cmd+4 goto_tab 4
+map cmd+5 goto_tab 5
+map cmd+6 goto_tab 6
+map cmd+7 goto_tab 7
+map cmd+8 goto_tab 8
+map cmd+9 goto_tab 9
+
+# Switch focus
+map kitty_mod+h neighboring_window left
+map kitty_mod+l neighboring_window right
+map kitty_mod+k neighboring_window up
+map kitty_mod+j neighboring_window down
+
+# Unset the mapping to pass the keys to neovim
+map --when-focus-on var:IS_NVIM kitty_mod+h
+map --when-focus-on var:IS_NVIM kitty_mod+l
+map --when-focus-on var:IS_NVIM kitty_mod+k
+map --when-focus-on var:IS_NVIM kitty_mod+j
+
+# Forward smart pane focus shortcuts to LazyDB while LazyDB owns the window.
+# LazyDB focuses its own visible pane first and uses Kitty at its boundary.
+map --when-focus-on var:IS_LAZYDB kitty_mod+h
+map --when-focus-on var:IS_LAZYDB kitty_mod+l
+map --when-focus-on var:IS_LAZYDB kitty_mod+k
+map --when-focus-on var:IS_LAZYDB kitty_mod+j
+
+# Forward smart pane focus shortcuts to IGit, matching LazyDB and Neovim.
+map --when-focus-on var:IS_IGIT kitty_mod+h
+map --when-focus-on var:IS_IGIT kitty_mod+l
+map --when-focus-on var:IS_IGIT kitty_mod+k
+map --when-focus-on var:IS_IGIT kitty_mod+j
+
+# Synchronize Kitty's layout with LazyDB's focused pane maximize state.
+map --when-focus-on var:IS_LAZYDB cmd+shift+f send_key ctrl+alt+f12
+map --when-focus-on var:IS_LAZYDB kitty_mod+f send_key ctrl+alt+f12
+
+
+
+# the 3 here is the resize amount, adjust as needed
+map kitty_mod+Shift+j kitten relative_resize.py down  3
+map kitty_mod+Shift+k kitten relative_resize.py up    3
+map kitty_mod+Shift+h kitten relative_resize.py left  3
+map kitty_mod+Shift+l kitten relative_resize.py right 3
+
+# Forward smart pane resize shortcuts to LazyDB while LazyDB owns the window.
+# LazyDB resizes its own visible boundary first and falls back to Kitty.
+map --when-focus-on var:IS_LAZYDB kitty_mod+Shift+h
+map --when-focus-on var:IS_LAZYDB kitty_mod+Shift+j
+map --when-focus-on var:IS_LAZYDB kitty_mod+Shift+k
+map --when-focus-on var:IS_LAZYDB kitty_mod+Shift+l
+map cmd+e kitten toggle_yazi.py
+map cmd+g kitten toggle_lazygit.py
+map cmd+d kitten toggle_lazydb.py
+
+map --when-focus-on var:IS_NVIM kitty_mod+Shift+j
+map --when-focus-on var:IS_NVIM kitty_mod+Shift+k
+map --when-focus-on var:IS_NVIM kitty_mod+Shift+h
+map --when-focus-on var:IS_NVIM kitty_mod+Shift+l
+map --when-focus-on var:IS_NVIM cmd+e
+map --when-focus-on var:IS_NVIM cmd+g
+map --when-focus-on var:IS_NVIM cmd+d
+
+# Move pane
+map kitty_mod+alt+r layout_action rotate 180
+map kitty_mod+alt+h move_window left
+map kitty_mod+alt+l move_window right
+map kitty_mod+alt+k move_window up
+map kitty_mod+alt+j move_window down
+
+# Set title name
+map cmd+, set_tab_title
+# cancel cmd+shift+i
+map cmd+shift+i send_key cmd+shift+i
+
+# ------- Others ------- #
+
+# map kitty_mod+; pipe @screen window vim -Rmn
+
+shell /bin/zsh
+
+
+# BEGIN_KITTY_THEME
+# JetBrains Dark, matching jb.nvim.
+include jb-theme.conf
+# END_KITTY_THEME

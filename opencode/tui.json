@@ -1,0 +1,5 @@
+{
+  "plugin": [
+    "file:///Users/yelog/.config/opencode/plugins/orca-opencode-status-tui/tui.js"
+  ]
+}

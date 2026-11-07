@@ -371,6 +371,55 @@ test('manual resume re-admits a legacy quota-failed round from its persisted ses
   } finally { await cleanup?.(); await f.dispose() }
 }, 10000)
 
+test('manual resume retries a no-route analysis with current defaults and the original receipt', async () => {
+  const f = await fixture()
+  let cleanup: any
+  try {
+    const originalID = 'msg_legacy_no_route'
+    const originalText = 'Original analyze prompt with saved receipt token'
+    f.state.status = 'blocked'
+    f.state.step = 0
+    f.state.continuation = { step: 0, rounds: 3, stalled: 0, corrections: 0, failures: 0, next: 'Analyze the requirement' }
+    f.state.settings.models = {
+      astra: { providerID: 'magpie', id: 'group/gpt-6.1-sol' },
+      luna: { providerID: 'magpie', id: 'group/auto-gpt-6-luna' },
+    }
+    f.state.settings.modelPolicy = 'follow'
+    f.state.activeReceipt = { ...f.activeReceipt, stage: 'analyze', review: false, before: 'saved-analysis-fingerprint',
+      promptID: originalID, phase: 'delivered', terminal: {
+        outcome: 'failed', seq: 3, time: Date.now() - 1_000,
+        error: { type: 'provider.no-route', message: 'Model unavailable: magpie/group/gpt-6.1-sol' },
+      } }
+    f.state.executor = { version: 1, cursor: 3, authorizedThrough: 0, autoResume: false }
+    for (let i = 0; i < 3; i++) f.append('session.synthetic')
+    f.messages().push({ id: originalID, type: 'user', time: { created: Date.now() - 2_000 }, text: originalText })
+    const selected: any[] = []
+    f.ctx.session.get = async () => ({ location: { directory: f.root }, outcome: 'failed' })
+    f.ctx.session.switchModel = async ({ model }: any) => {
+      expect(model).toEqual({ providerID: 'magpie', id: 'auto/gpt-6.1-sol' })
+      selected.push(model)
+    }
+    await f.save()
+    cleanup = await createWorkflowPlugin(async () => f.reader).setup(f.ctx)
+    expect(f.calls()).toBe(0)
+    await f.commands.get('task-resume').execute({ sessionID: f.sessionID })
+    await f.finished()
+
+    const s = await f.read()
+    expect(selected).toHaveLength(1)
+    expect(f.calls()).toBe(1)
+    expect(f.prompts()[0].id).not.toBe(originalID)
+    expect(f.prompts()[0].text).toBe(originalText)
+    expect(s.activeReceipt.token).toBe(f.activeReceipt.token)
+    expect(s.activeReceipt.path).toBe(f.activeReceipt.path)
+    expect(s.settings.models.luna).toEqual({ providerID: 'magpie', id: 'auto/gpt-6-luna' })
+    expect(s.continuation.rounds).toBe(3)
+    expect(s.executor.manualResumeAttempts).toBe(1)
+    // The simulated user stop after admission still takes priority over recovery.
+    expect(s.pause.kind).toBe('user')
+  } finally { await cleanup?.(); await f.dispose() }
+}, 10000)
+
 test('manual resume reports missing original prompt and does not resubmit a guessed request', async () => {
   const f = await fixture()
   let cleanup: any
