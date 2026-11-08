@@ -31,7 +31,14 @@ return {
     },
   },
   opts = {
-    command = vim.fn.expand("~/.local/bin/ig"),
+    command = function()
+      local result = vim.system({ vim.fn.expand("~/.local/bin/ig-use"), "path" }, { text = true }):wait(1000)
+      if result.code ~= 0 then
+        local message = vim.trim(result.stderr or "")
+        error(message ~= "" and message or "Cannot resolve the selected IGit executable. Run ig-use status.", 0)
+      end
+      return vim.trim(result.stdout or "")
+    end,
     command_alias = true,
     window = {
       layout = "float", -- "float", "left", "right", "bottom", "tab"

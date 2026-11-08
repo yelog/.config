@@ -10,6 +10,20 @@ def main(args):
     pass
 
 
+def igit_executable():
+    response = subprocess.run(
+        [os.path.expanduser("~/.local/bin/ig-use"), "path"],
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=1,
+    )
+    executable = response.stdout.strip()
+    if not os.path.isabs(executable) or not os.path.isfile(executable) or not os.access(executable, os.X_OK):
+        raise ValueError("Selected IGit executable is unavailable. Run ig-use status.")
+    return executable
+
+
 def working_directory(window):
     foreground_cmd = window.child.foreground_cmdline or []
     if foreground_cmd and os.path.basename(foreground_cmd[0]) == "herdr":
@@ -69,10 +83,12 @@ def handle_result(args, result, target_window_id, boss):
 
     try:
         cwd = working_directory(window)
+        executable = igit_executable()
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError) as error:
+        detail = error.stderr.strip() if isinstance(error, subprocess.CalledProcessError) and error.stderr else str(error)
         boss.show_error(
-            "IGit: working directory unavailable",
-            f"Cannot determine the focused terminal's working directory.\n\n{error}",
+            "IGit: cannot open",
+            f"Cannot open IGit.\n\n{detail}",
         )
         return
 
@@ -82,7 +98,7 @@ def handle_result(args, result, target_window_id, boss):
         f"--next-to=id:{window.id}",
         "--cwd",
         cwd,
-        os.path.expanduser("~/.local/bin/ig"),
+        executable,
         "--",
         cwd,
     )

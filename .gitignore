@@ -45,6 +45,14 @@
 !/lazydb/
 /lazydb/sql/
 /lazydb/credential.key
+# Track the IGit launcher; keep local app settings and backups ignored.
+!/igit/
+/igit/*
+!/igit/launcher.py
+!/igit/README.md
+!/igit/tests/
+/igit/tests/*
+!/igit/tests/test_*.py
 !/rime/
 !/docs/
 !/skills/

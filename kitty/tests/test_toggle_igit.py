@@ -23,6 +23,10 @@ with patch.dict(sys.modules, {"kittens.tui.handler": handler}):
 
 class ToggleIGitTests(unittest.TestCase):
     def setUp(self):
+        self.binary = "/selected/build/ig"
+        executable = patch.object(toggle_igit, "igit_executable", return_value=self.binary, create=True)
+        self.executable = executable.start()
+        self.addCleanup(executable.stop)
         temporary = tempfile.TemporaryDirectory()
         self.addCleanup(temporary.cleanup)
         self.home = Path(temporary.name)
@@ -115,6 +119,30 @@ class ToggleIGitTests(unittest.TestCase):
         run.assert_not_called()
         self.assert_launch_directory(self.project)
 
+    def test_launch_uses_the_currently_selected_binary(self):
+        self.window.child.foreground_cmdline = ["/bin/zsh"]
+        self.window.cwd_of_child = str(self.project)
+        self.invoke()
+        self.assertEqual(self.boss.launch.call_args.args[-3], self.binary)
+
+    def test_unavailable_selection_does_not_launch_another_version(self):
+        self.window.child.foreground_cmdline = ["/bin/zsh"]
+        self.window.cwd_of_child = str(self.project)
+        self.executable.side_effect = ValueError("Selected debug build is unavailable")
+        self.invoke()
+        self.boss.launch.assert_not_called()
+        self.boss.show_error.assert_called_once()
+
+    def test_selector_error_shows_the_build_instruction(self):
+        self.window.child.foreground_cmdline = ["/bin/zsh"]
+        self.window.cwd_of_child = str(self.project)
+        self.executable.side_effect = subprocess.CalledProcessError(
+            1, ["ig-use", "path"], stderr="Selected debug build is unavailable. Run cargo build."
+        )
+        self.invoke()
+        self.boss.launch.assert_not_called()
+        self.assertIn("Run cargo build", self.boss.show_error.call_args.args[1])
+
     def test_unavailable_metadata_does_not_launch_in_home(self):
         failures = [
             self.response(),
@@ -182,6 +210,37 @@ class ToggleIGitTests(unittest.TestCase):
         self.invoke()
         self.boss.launch.assert_not_called()
         self.boss.show_error.assert_not_called()
+
+
+class IGitExecutableTests(unittest.TestCase):
+    def setUp(self):
+        temporary = tempfile.TemporaryDirectory(prefix="igit binary 中文 ")
+        self.addCleanup(temporary.cleanup)
+        self.directory = Path(temporary.name).resolve()
+        self.binary = self.directory / "ig"
+        self.binary.write_text("#!/bin/sh\nexit 0\n")
+        self.binary.chmod(0o700)
+
+    def test_selector_returns_a_canonical_executable_with_spaces(self):
+        response = subprocess.CompletedProcess([], 0, str(self.binary) + "\n", "")
+        with patch("subprocess.run", return_value=response) as run:
+            self.assertEqual(toggle_igit.igit_executable(), str(self.binary))
+        self.assertEqual(run.call_args.args[0], [os.path.expanduser("~/.local/bin/ig-use"), "path"])
+        self.assertEqual(run.call_args.kwargs["timeout"], 1)
+        self.assertTrue(run.call_args.kwargs["check"])
+
+    def test_selector_rejects_unavailable_or_invalid_output(self):
+        for output in ("", "relative/ig", str(self.directory), str(self.directory / "missing")):
+            with self.subTest(output=output):
+                response = subprocess.CompletedProcess([], 0, output + "\n", "")
+                with patch("subprocess.run", return_value=response):
+                    with self.assertRaises(ValueError):
+                        toggle_igit.igit_executable()
+        self.binary.chmod(0o600)
+        response = subprocess.CompletedProcess([], 0, str(self.binary) + "\n", "")
+        with patch("subprocess.run", return_value=response):
+            with self.assertRaises(ValueError):
+                toggle_igit.igit_executable()
 
 
 if __name__ == "__main__":
