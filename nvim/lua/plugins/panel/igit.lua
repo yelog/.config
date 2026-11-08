@@ -4,6 +4,17 @@ return {
   lazy = false, -- Register the interactive :igit abbreviation at startup.
   keys = {
     {
+      "<D-g>",
+      function()
+        local igit = require("igit")
+        if not igit.close() then
+          igit.open()
+        end
+      end,
+      mode = { "n", "t" },
+      desc = "Toggle IGit",
+    },
+    {
       "<leader>gi",
       function()
         require("igit").open()
@@ -11,15 +22,16 @@ return {
       desc = "IGit",
     },
     {
-      "<leader>gI",
+      "<D-S-H>",
       function()
         require("igit").open("log", { file = "%" })
       end,
+      mode = { "n", "i", "t" },
       desc = "IGit Current File History",
     },
   },
   opts = {
-    command = vim.fn.expand("~/.local/bin/igit"),
+    command = vim.fn.expand("~/.local/bin/ig"),
     command_alias = true,
     window = {
       layout = "float", -- "float", "left", "right", "bottom", "tab"
