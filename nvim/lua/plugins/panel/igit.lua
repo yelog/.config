@@ -37,7 +37,8 @@ return {
         local message = vim.trim(result.stderr or "")
         error(message ~= "" and message or "Cannot resolve the selected IGit executable. Run ig-use status.", 0)
       end
-      return vim.trim(result.stdout or "")
+      -- Keep pane navigation inside the embedded terminal at its edges.
+      return { "/usr/bin/env", "KITTY_LISTEN_ON=", vim.trim(result.stdout or "") }
     end,
     command_alias = true,
     window = {
