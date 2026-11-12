@@ -15,7 +15,7 @@ def binaries():
     home = Path.home()
     return {
         "stable": home / ".local/bin/ig",
-        "debug": home / "workspace/tui/igit/target/debug/ig",
+        "debug": home / "workspace/tui/igit/target-serial/debug/ig",
     }
 
 

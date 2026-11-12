@@ -14,7 +14,7 @@ return {
       require("custom.mybatis_treesitter").setup()
       treesitter.install({
         "java", "javascript", "typescript", "python", "go", "vue", "lua", "bash", "json", "yaml", "markdown", "markdown_inline",
-        "html", "css", "rust", "toml", "xml", "sql",
+        "html", "css", "scss", "rust", "toml", "xml", "sql",
       })
 
       vim.api.nvim_create_autocmd("FileType", {
