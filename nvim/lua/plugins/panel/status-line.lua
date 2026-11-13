@@ -185,28 +185,36 @@ return {
           diag_error = highlight_color("DiagnosticError", "fg", { "Normal" }),
           diag_hint = highlight_color("DiagnosticHint", "fg", { "Normal" }),
           diag_info = highlight_color("DiagnosticInfo", "fg", { "Normal" }),
-          git_del = highlight_color("diffDeleted", "fg", { "GitSignsDelete", "DiagnosticError" }),
-          git_add = highlight_color("diffAdded", "fg", { "GitSignsAdd", "String" }),
-          git_change = highlight_color("diffChanged", "fg", { "GitSignsChange", "Function" }),
+          git_del = highlight_color("diffDeleted", "fg", { "IgitHunkDelete", "DiagnosticError" }),
+          git_add = highlight_color("diffAdded", "fg", { "IgitHunkAdd", "String" }),
+          git_change = highlight_color("diffChanged", "fg", { "IgitHunkChange", "Function" }),
         }
       end
 
       local colors = setup_colors()
       local Git = {
-        condition = conditions.is_git_repo,
+        condition = function()
+          local loaded, igit = pcall(require, "igit")
+          return loaded and igit.status() ~= nil
+        end,
 
         init = function(self)
-          self.status_dict = vim.b.gitsigns_status_dict
-          self.has_changes = self.status_dict.added ~= 0 or self.status_dict.removed ~= 0 or
-              self.status_dict.changed ~= 0
+          local loaded, igit = pcall(require, "igit")
+          self.status_dict = loaded and igit.status(self.bufnr) or nil
+          local counts = self.status_dict and self.status_dict.unstaged or {}
+          self.has_changes = (counts.added or 0) ~= 0 or (counts.removed or 0) ~= 0 or
+              (counts.changed or 0) ~= 0
         end,
 
         hl = { fg = "#ef9020" },
+        update = {
+          "BufEnter", "BufWritePost", "TextChanged", "TextChangedI", "FocusGained", "User",
+        },
 
 
         { -- git branch name
           provider = function(self)
-            return " " .. self.status_dict.head
+            return " " .. (self.status_dict and self.status_dict.branch or "")
           end,
           hl = { bold = true, fg = "#ef9020" }
         },
@@ -219,24 +227,27 @@ return {
         },
         {
           provider = function(self)
-            local count = self.status_dict.added or 0
+            local counts = self.status_dict and self.status_dict.unstaged or {}
+            local count = counts.added or 0
             return count > 0 and ("+" .. count)
           end,
-          hl = "GitSignsAdd",
+          hl = "IgitHunkAdd",
         },
         {
           provider = function(self)
-            local count = self.status_dict.removed or 0
+            local counts = self.status_dict and self.status_dict.unstaged or {}
+            local count = counts.removed or 0
             return count > 0 and ("-" .. count)
           end,
-          hl = "GitSignsDelete",
+          hl = "IgitHunkDelete",
         },
         {
           provider = function(self)
-            local count = self.status_dict.changed or 0
+            local counts = self.status_dict and self.status_dict.unstaged or {}
+            local count = counts.changed or 0
             return count > 0 and ("~" .. count)
           end,
-          hl = "GitSignsChange",
+          hl = "IgitHunkChange",
         },
         {
           condition = function(self)
@@ -454,6 +465,26 @@ return {
         update = 'CursorMoved'
       }
 
+      local InlineBlame = {
+        condition = function()
+          local loaded, igit = pcall(require, "igit")
+          return loaded and igit.blame_statusline() ~= ""
+        end,
+        provider = function()
+          local loaded, igit = pcall(require, "igit")
+          return loaded and igit.blame_statusline() or ""
+        end,
+        hl = { fg = "gray" },
+        update = {
+          "CursorMoved",
+          "CursorMovedI",
+          "BufEnter",
+          "TextChanged",
+          "TextChangedI",
+          "User",
+        },
+      }
+
       local function service_summary()
           local runtime = require("services.runtime").instance()
           local lifecycle = require("services.lifecycle")
@@ -489,6 +520,8 @@ return {
         RelativePath,
         Space,
         Git,
+        Space,
+        InlineBlame,
         { provider = "%=" }, -- Center alignment
         ServiceStatus,
         Navic,
@@ -550,10 +583,12 @@ return {
           -- 获取当前 buf 文件在 git 中的状态（逐个 buffer）
           local underline = self.is_active and true or false
 
-          -- 使用每个 buffer 的 changedtick 做轻量缓存，避免重复执行外部命令
+          -- 状态查询只读取 IGit 的异步缓存，不在这里执行 Git 子进程。
           local tick = vim.api.nvim_buf_get_changedtick(self.bufnr)
-          -- 额外引入全局“git世代”计数，外部操作（如 lazygit 提交）时递增以失效缓存
-          local gen = vim.g._heirline_git_generation or 0
+          local loaded, igit = pcall(require, "igit")
+          local current = loaded and igit.status(self.bufnr) or nil
+          local gen = tostring(vim.g._heirline_git_generation or 0)
+            .. ":" .. tostring(current and current.generation or 0)
           local ok_cache, cache = pcall(vim.api.nvim_buf_get_var, self.bufnr, "_heirline_tab_git_cache")
           if ok_cache and type(cache) == "table"
               and cache.tick == tick
@@ -562,96 +597,12 @@ return {
             return { fg = cache.fg, bold = true, underline = underline }
           end
 
-          -- 如果你在此处调试想看触发频率，建议只在 changedtick 变化时提示：
-          local ok_tick, last_tick = pcall(vim.api.nvim_buf_get_var, self.bufnr, "_heirline_tab_dbg_tick")
-          if not ok_tick or last_tick ~= tick then
-            pcall(vim.api.nvim_buf_set_var, self.bufnr, "_heirline_tab_dbg_tick", tick)
-            -- 取消注释进行调试：
-            -- vim.notify("更新 TablineFileNameBlock", vim.log.levels.INFO, { title = "Heirline" })
-          end
-          -- vim.notify("计算 TablineFileNameBlock 高亮", vim.log.levels.DEBUG, { title = "Heirline" })
-
           local fg = nil
-
-          -- 先尝试从 gitsigns 获取行级改动统计
-          local dict
-          local ok, v = pcall(vim.api.nvim_buf_get_var, self.bufnr, "gitsigns_status_dict")
-          if ok and type(v) == "table" then
-            dict = v
-          else
-            -- 备用：有些情况下 get_var 不存在时用 getbufvar 兜底
-            local v2 = vim.fn.getbufvar(self.bufnr, "gitsigns_status_dict")
-            if type(v2) == "table" then
-              dict = v2
-            end
-          end
-
-          -- 计算 git 仓库根目录、相对路径，以及该文件是否存在于 HEAD
-          local filename = self.filename or ""
-          local in_head = nil
-          local toproot = nil
-          local relpath = nil
-          if filename ~= "" then
-            local filedir = vim.fn.fnamemodify(filename, ":h")
-            local root = vim.fn.systemlist('git -C ' .. vim.fn.shellescape(filedir) .. ' rev-parse --show-toplevel')[1]
-            if root and root ~= '' and not tostring(root):match('^fatal:') then
-              toproot = vim.fn.trim(root)
-              local root_prefix = toproot
-              if root_prefix:sub(-1) ~= '/' then root_prefix = root_prefix .. '/' end
-              relpath = filename
-              if relpath:sub(1, #root_prefix) == root_prefix then
-                relpath = relpath:sub(#root_prefix + 1)
-              end
-              local cmd = 'git -C ' ..
-                  vim.fn.shellescape(toproot) .. ' cat-file -e ' .. vim.fn.shellescape('HEAD:' .. relpath)
-              vim.fn.system(cmd)
-              in_head = (vim.v.shell_error == 0)
-            end
-          end
-
-          if toproot and relpath then
-            -- 新逻辑（以 git status 为准，避免缓存/异步延迟导致误判）：
-            -- - 不在 HEAD：
-            --     - 如果被 .gitignore 忽略，则不高亮（不应视为新增）
-            --     - 否则视为未跟踪/新增 => GitSignsAdd
-            -- - 在 HEAD：只要 git status 对该文件有记录（不包含 ?? 情况），就视为有改动 => GitSignsChange
-            -- - 其他 => 默认颜色
-            if in_head == false then
-              -- 可能是未跟踪或被忽略的文件，优先检查 ignore
-              local cmd_ignore = 'git -C '
-                  .. vim.fn.shellescape(toproot)
-                  .. ' check-ignore -q -- '
-                  .. vim.fn.shellescape(relpath)
-              vim.fn.system(cmd_ignore)
-              local is_ignored = (vim.v.shell_error == 0)
-              if not is_ignored then
-                fg = utils.get_highlight("GitSignsAdd").fg
-              end
-            elseif in_head == true then
-              -- 如果缓冲区有未保存修改，直接认为有改动（即时反馈）
-              local buf_modified = vim.api.nvim_get_option_value("modified", { buf = self.bufnr })
-              if buf_modified then
-                fg = utils.get_highlight("GitSignsChange").fg
-              else
-                -- 已保存状态：以 git status 为准
-                local out = vim.fn.systemlist('git -C ' ..
-                    vim.fn.shellescape(toproot) .. ' status --porcelain -- ' .. vim.fn.shellescape(relpath))
-                local has_changes = false
-                if type(out) == 'table' and #out > 0 then
-                  for _, line in ipairs(out) do
-                    -- 在 HEAD 时不会出现 ??（未跟踪），出现即忽略；其余任意状态视为有改动
-                    if not line:match('^%?%?') then
-                      has_changes = true
-                      break
-                    end
-                  end
-                end
-                if has_changes then
-                  fg = utils.get_highlight("GitSignsChange").fg
-                end
-              end
-            else
-              -- in_head == nil：无法确定（非 git 仓库或其他原因），保持默认颜色
+          if current and not current.ignored then
+            if current.file_state == "added" then
+              fg = colors.git_add
+            elseif current.modified then
+              fg = colors.git_change
             end
           end
 
