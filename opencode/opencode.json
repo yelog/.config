@@ -163,71 +163,6 @@
             }
           ]
         },
-        "auto/gpt-6.1-sol": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.1,
-                "write": 2.5
-              },
-              "input": 2,
-              "output": 10
-            }
-          ],
-          "limit": {
-            "context": 922000,
-            "output": 128000
-          },
-          "name": "GPT-6.1 Sol · routing group",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            },
-            {
-              "id": "ultra",
-              "settings": {
-                "reasoningEffort": "ultra"
-              }
-            }
-          ]
-        },
         "auto/gpt-6.1-terra": {
           "capabilities": {
             "input": [
@@ -319,6 +254,71 @@
             "output": 128000
           },
           "name": "GPT-6 Astra · routing group",
+          "variants": [
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            },
+            {
+              "id": "ultra",
+              "settings": {
+                "reasoningEffort": "ultra"
+              }
+            }
+          ]
+        },
+        "auto/gpt-6.1-sol": {
+          "capabilities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "cost": [
+            {
+              "cache": {
+                "read": 0.1,
+                "write": 2.5
+              },
+              "input": 2,
+              "output": 10
+            }
+          ],
+          "limit": {
+            "context": 922000,
+            "output": 128000
+          },
+          "name": "GPT-6.1 Sol · routing group",
           "variants": [
             {
               "id": "low",
@@ -663,136 +663,6 @@
             }
           ]
         },
-        "openai/gpt-6-luna": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.01,
-                "write": 0.125
-              },
-              "input": 0.1,
-              "output": 0.5
-            }
-          ],
-          "limit": {
-            "context": 922000,
-            "output": 128000
-          },
-          "name": "GPT-6 Luna · OpenAI",
-          "variants": [
-            {
-              "id": "none",
-              "settings": {
-                "reasoningEffort": "none"
-              }
-            },
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            }
-          ]
-        },
-        "openai/gpt-6.1-sol": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.1,
-                "write": 2.5
-              },
-              "input": 2,
-              "output": 10
-            }
-          ],
-          "limit": {
-            "context": 922000,
-            "output": 128000
-          },
-          "name": "GPT-6.1 Sol · OpenAI",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            },
-            {
-              "id": "ultra",
-              "settings": {
-                "reasoningEffort": "ultra"
-              }
-            }
-          ]
-        },
         "openai/gpt-6.1-terra": {
           "capabilities": {
             "input": [
@@ -890,6 +760,136 @@
             "output": 128000
           },
           "name": "GPT-6 Astra · OpenAI",
+          "variants": [
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            },
+            {
+              "id": "ultra",
+              "settings": {
+                "reasoningEffort": "ultra"
+              }
+            }
+          ]
+        },
+        "openai/gpt-6-luna": {
+          "capabilities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "cost": [
+            {
+              "cache": {
+                "read": 0.01,
+                "write": 0.125
+              },
+              "input": 0.1,
+              "output": 0.5
+            }
+          ],
+          "limit": {
+            "context": 922000,
+            "output": 128000
+          },
+          "name": "GPT-6 Luna · OpenAI",
+          "variants": [
+            {
+              "id": "none",
+              "settings": {
+                "reasoningEffort": "none"
+              }
+            },
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            }
+          ]
+        },
+        "openai/gpt-6.1-sol": {
+          "capabilities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "cost": [
+            {
+              "cache": {
+                "read": 0.1,
+                "write": 2.5
+              },
+              "input": 2,
+              "output": 10
+            }
+          ],
+          "limit": {
+            "context": 922000,
+            "output": 128000
+          },
+          "name": "GPT-6.1 Sol · OpenAI",
           "variants": [
             {
               "id": "low",
@@ -2953,35 +2953,7 @@
           "name": "Auto · Copilot",
           "variants": []
         },
-        "opencode-zen-free/mimo-v2.6-flash-free": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0,
-                "write": 0
-              },
-              "input": 0,
-              "output": 0
-            }
-          ],
-          "limit": {
-            "context": 200000,
-            "output": 32000
-          },
-          "name": "MiMo-V2.6-Flash Free · OpenCode Zen Free",
-          "variants": []
-        },
-        "opencode-zen-free/deepseek-v4.1-flash-free": {
+        "opencode-zen-free/deepseek-v4.1-flash": {
           "capabilities": {
             "input": [
               "text",
@@ -3006,7 +2978,7 @@
             "context": 258624,
             "output": 32000
           },
-          "name": "DeepSeek V4.1 Flash Free · OpenCode Zen Free",
+          "name": "Dleepseek V4.1 Flash · OpenCode Zen Free",
           "variants": [
             {
               "id": "low",
@@ -3029,49 +3001,6 @@
           ]
         },
         "trae-cn/deepseek-v4.1-flash": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "limit": {
-            "context": 116000,
-            "output": 16000
-          },
-          "name": "DeepSeek-V4.1-Flash · Trae CN",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            }
-          ]
-        },
-        "trae-cn/deepseek-v4.1-flash-max": {
           "capabilities": {
             "input": [
               "text",
