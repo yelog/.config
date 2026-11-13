@@ -9,6 +9,7 @@ if ok then
     { "<leader>j", group = "Java" },
     { "<leader>v", group = "Vue" },
     { "<leader>g", group = "Git" },
+    { "<leader>go", group = "Open in Browser" },
     { "<leader>l", group = "LSP" },
     { "<leader>f", group = "Find" },
     { "<leader>t", group = "Toggle" },
@@ -465,6 +466,10 @@ map("i", "<D-C-S-l>", function() require("smart-splits").resize_right() end, { d
 -- Called by kitty sync_zoom.sh via nvim --remote-send
 -- @param action string|nil: "zoom" | "unzoom" | nil (toggle)
 function SmartZoom(action)
+  if action == nil and require("custom.igit_terminal").toggle_maximize() then
+    return
+  end
+
   local win_count = #vim.api.nvim_list_wins()
   if win_count <= 1 and action ~= "unzoom" then
     return

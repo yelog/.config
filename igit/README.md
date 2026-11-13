@@ -54,11 +54,26 @@ ln -s "$HOME/.config/igit/launcher.py" "$HOME/.local/bin/ig-use"
 ig-use stable
 ```
 
-Run selector and Kitty tests from the configuration repository:
+## Pane maximize
+
+Cmd+Ctrl+F gives the focused embedded IGit terminal priority. Kitty's zoom script
+resolves its source window and asks that Neovim instance to forward the shortcut
+directly to the IGit job before changing any outer layout. IGit maximizes or
+restores its current pane; the Neovim float keeps its size, and other Kitty
+windows remain tiled. Tab still switches IGit panes. Log keeps its tiled layout.
+
+Outside an IGit terminal, the existing Kitty stack and Neovim SmartZoom
+synchronization remains available. Direct shortcuts and the script's RPC request
+share `nvim/lua/custom/igit_terminal.lua`. The script is read on every invocation;
+existing Neovim instances load the helper on demand. A stopped IGit job reports
+that it must be reopened instead of maximizing its parent window.
+
+Run selector, Kitty, and terminal-routing tests from the configuration repository:
 
 ```sh
 python3 -m unittest discover -s igit/tests -v
 python3 -m unittest discover -s kitty/tests -v
+nvim --headless -u NONE -l nvim/tests/igit_terminal_spec.lua
 ```
 
 The local plugin tests run from `~/workspace/vi/igit.nvim`:
