@@ -19,6 +19,7 @@ return {
         return {
           jdtls_path .. "/bin/jdtls",
           "--jvm-arg=-javaagent:" .. jdtls_path .. "/lombok.jar",
+          "--jvm-arg=-Xms256m",
           "--jvm-arg=-Xmx4G",
           "-data",
           workspace_dir,

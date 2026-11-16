@@ -109,6 +109,7 @@ function M.route_output(session, event)
   if not key or config.console ~= "internalConsole" or type(event) ~= "table" or type(event.output) ~= "string" then
     return false
   end
+  if event.category ~= "stdout" and event.category ~= "stderr" then return false end
   local stream = event.category == "stderr" and "stderr" or "stdout"
   return runtime():append_output(key, stream, event.output)
 end
@@ -392,6 +393,16 @@ function M.setup()
   dap.defaults.java.terminal_win_cmd = terminal_win_cmd
   dap.defaults.java_service.terminal_win_cmd = terminal_win_cmd
 
+  local previous_on_output = dap.defaults.java_service.on_output
+  dap.defaults.java_service.on_output = function(session, event)
+    if M.route_output(session, event) then return end
+    if previous_on_output then
+      previous_on_output(session, event)
+    elseif event.category ~= "telemetry" then
+      require("dap.repl").append(event.output, "$", { newline = false })
+    end
+  end
+
   local function belongs_to_service(session)
     return session and session == active_session
   end
@@ -421,10 +432,6 @@ function M.setup()
       launch_token = nil
       set_debugging(active_service_key, true)
     end
-  end
-  dap.listeners.after.event_output.spring_services = function(session, event)
-    if not belongs_to_service(session) then return end
-    M.route_output(session, event)
   end
 end
 

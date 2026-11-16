@@ -64,6 +64,41 @@ assert(has_extmark(semantic_marks, { row = 0, start_col = 56, end_col = 59, hl_g
   "plain Spring Boot logger line numbers should receive semantic highlights")
 highlighted:dispose()
 
+local original_undolevels = vim.go.undolevels
+local retained = require("services.output").new({
+  limit = 5,
+  name = "retained-output-test",
+  highlight_line = semantic.highlight_line,
+})
+for batch = 1, 30 do
+  local batch_lines = {}
+  for offset = 1, 7 do
+    local line = spring_line .. " " .. ((batch - 1) * 7 + offset)
+    table.insert(batch_lines, line)
+    retained:push("stdout", "\27[31m" .. line .. "\27[0m\n")
+  end
+  wait_for_last_line(retained, batch_lines[7])
+  assert_equal(vim.list_slice(batch_lines, 3), vim.api.nvim_buf_get_lines(retained.bufnr, 0, -1, false),
+    "retention should preserve the newest complete lines across repeated oversized batches")
+  local retained_marks = extmark_details(retained)
+  assert_equal(20, #retained_marks, "expired ANSI and semantic marks should be removed along with their lines")
+  for row = 0, 4 do
+    assert(has_extmark(retained_marks, {
+      row = row, start_col = 25, end_col = 29, hl_group = "ServicesLogWarn",
+    }), "retained semantic highlights should follow their lines after trimming")
+  end
+end
+assert_equal(-1, vim.bo[retained.bufnr].undolevels, "generated logs should not retain deleted text or mark undo history")
+assert_equal(original_undolevels, vim.go.undolevels, "log retention must not change undo settings for source files")
+assert_equal({}, vim.api.nvim_buf_call(retained.bufnr, vim.fn.undotree).entries,
+  "repeated log updates should not accumulate undo entries")
+retained:clear()
+assert_equal({}, extmark_details(retained), "clearing retained output should remove every highlight")
+retained:push("stdout", "\27[31m" .. spring_line .. "\27[0m\n")
+wait_for_last_line(retained, spring_line)
+assert_equal(4, #extmark_details(retained), "a fresh log after clearing should not inherit expired highlights")
+retained:dispose()
+
 output:push("stdout", "\27[31mred")
 output:push("stdout", " text\27[0m\n")
 wait_for_last_line(output, "red text")

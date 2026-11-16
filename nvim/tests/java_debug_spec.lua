@@ -272,11 +272,91 @@ assert_equal(false, java_debug.route_output({ config = { console = "internalCons
   category = "stdout",
   output = "unbound output\n",
 }), "DAP output without a service key should be ignored")
+for _, category in ipairs({ "console", "important", "telemetry" }) do
+  assert_equal(false, java_debug.route_output({
+    config = { __service_key = internal_output_service.key, console = "internalConsole" },
+  }, { category = category, output = "adapter message\n" }),
+    "adapter " .. category .. " output should not be copied into service logs")
+end
+assert_equal(false, java_debug.route_output({
+  config = { __service_key = internal_output_service.key, console = "internalConsole" },
+}, { output = "default console message\n" }), "an omitted category should retain DAP console semantics")
 assert(vim.wait(500, function()
   return vim.deep_equal({ "debug stdout", "debug stderr" }, vim.api.nvim_buf_get_lines(internal_output, 0, -1, false))
 end), "internal-console output should retain logical lines in the normal buffer")
 assert(#vim.api.nvim_buf_get_extmarks(internal_output, internal_output_service.output.namespace, 0, -1, {}) > 0,
   "internal-console ANSI output should retain style spans")
+
+local original_dap = package.loaded["dap"]
+local original_repl = package.loaded["dap.repl"]
+local repl_events = {}
+package.loaded["dap.repl"] = {
+  append = function(text, position, opts)
+    table.insert(repl_events, { text = text, position = position, newline = opts.newline })
+  end,
+}
+local function setup_output_handler(previous_handler)
+  local java_handler = function() end
+  local dap = {
+    defaults = {
+      java = { on_output = java_handler },
+      java_service = { on_output = previous_handler },
+    },
+    listeners = { on_session = {}, after = { event_initialized = {}, event_output = {} } },
+  }
+  package.loaded["dap"] = dap
+  local output_module = dofile(config_root .. "/lua/custom/java_debug.lua")
+  output_module.setup()
+  assert_equal("function", type(dap.defaults.java_service.on_output),
+    "service debugging should override default REPL output handling")
+  assert_equal(nil, dap.listeners.after.event_output.spring_services,
+    "service output should not also be copied by an after-event listener")
+  assert_equal(java_handler, dap.defaults.java.on_output, "other Java debug sessions should keep their output handling")
+  return dap.defaults.java_service.on_output
+end
+local output_handler = setup_output_handler()
+local internal_session = {
+  config = { __service_key = internal_output_service.key, console = "internalConsole" },
+}
+runtime:reset_output(internal_output_service.key)
+output_handler(internal_session, { category = "stdout", output = "routed stdout\n" })
+output_handler(internal_session, { category = "stderr", output = "routed stderr\n" })
+assert(vim.wait(500, function()
+  return vim.deep_equal({ "routed stdout", "routed stderr" }, vim.api.nvim_buf_get_lines(internal_output, 0, -1, false))
+end), "the output override should deliver each application line exactly once")
+assert_equal({}, repl_events, "service stdout and stderr should not also accumulate in the REPL")
+output_handler(internal_session, { category = "console", output = "debugger message\n" })
+output_handler(internal_session, { output = "default console message\n" })
+output_handler(internal_session, { category = "telemetry", output = "telemetry\n" })
+assert_equal({
+  { text = "debugger message\n", position = "$", newline = false },
+  { text = "default console message\n", position = "$", newline = false },
+}, repl_events, "console messages should remain in the REPL without displaying telemetry")
+output_handler({
+  config = { __service_key = internal_output_service.key, console = "integratedTerminal" },
+}, { category = "stdout", output = "terminal adapter message\n" })
+output_handler({
+  config = { __service_key = "springboot::missing", console = "internalConsole" },
+}, { category = "stderr", output = "unowned output\n" })
+assert_equal(4, #repl_events, "output not owned by a service renderer should retain the default fallback")
+assert_equal("unowned output\n", repl_events[4].text, "unknown service errors should remain visible")
+
+local previous_events = {}
+local custom_handler = setup_output_handler(function(session, event)
+  table.insert(previous_events, { session = session, event = event })
+end)
+custom_handler(internal_session, { category = "stdout", output = "still routed\n" })
+local console_event = { category = "console", output = "custom console\n" }
+local telemetry_event = { category = "telemetry", output = "custom telemetry\n" }
+custom_handler(internal_session, console_event)
+custom_handler(internal_session, telemetry_event)
+assert_equal({
+  { session = internal_session, event = console_event },
+  { session = internal_session, event = telemetry_event },
+}, previous_events, "configured output handlers should receive unowned events, but not duplicate application logs")
+assert_equal(4, #repl_events, "custom fallback handlers should not also invoke the default REPL handler")
+package.loaded["dap"] = original_dap
+package.loaded["dap.repl"] = original_repl
 
 local hidden_service = runtime:register({
   key = "springboot::hidden",

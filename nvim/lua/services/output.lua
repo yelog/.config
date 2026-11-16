@@ -330,6 +330,7 @@ function Output:_render_pending()
   local trimmed = math.max(0, self.line_count - self.limit)
   if trimmed > 0 then
     vim.bo[self.bufnr].modifiable = true
+    vim.api.nvim_buf_clear_namespace(self.bufnr, self.namespace, 0, trimmed)
     vim.api.nvim_buf_set_lines(self.bufnr, 0, trimmed, false, {})
     vim.bo[self.bufnr].modifiable = false
     self.line_count = self.line_count - trimmed
@@ -454,6 +455,7 @@ function M.new(opts)
   vim.bo[bufnr].bufhidden = "hide"
   vim.bo[bufnr].buflisted = false
   vim.bo[bufnr].swapfile = false
+  vim.bo[bufnr].undolevels = -1
   vim.bo[bufnr].modifiable = false
   vim.bo[bufnr].filetype = "ServicesLog"
   if opts.name then pcall(vim.api.nvim_buf_set_name, bufnr, "[service-log] " .. opts.name) end
