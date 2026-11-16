@@ -5,6 +5,24 @@ local M = {}
 local Panel = {}
 Panel.__index = Panel
 
+local function apply_status_highlights()
+  for group, source in pairs({
+    ServicesRunning = "DiagnosticOk",
+    ServicesReadyPort = "DiagnosticOk",
+    ServicesFailed = "DiagnosticError",
+    ServicesDebugging = "DiagnosticSignInfo",
+  }) do
+    local highlight = vim.api.nvim_get_hl(0, { name = source, link = false })
+    vim.api.nvim_set_hl(0, group, { fg = highlight.fg, ctermfg = highlight.ctermfg, bold = true })
+  end
+end
+
+apply_status_highlights()
+vim.api.nvim_create_autocmd("ColorScheme", {
+  group = vim.api.nvim_create_augroup("ServicesPanelHighlights", { clear = true }),
+  callback = apply_status_highlights,
+})
+
 local function find_project_root(source)
   local dir = source or vim.api.nvim_buf_get_name(0)
   if dir == "" then dir = vim.fn.getcwd() end
@@ -47,6 +65,7 @@ local function set_list_window_options(winid)
   vim.api.nvim_set_option_value("signcolumn", "no", { scope = "local", win = winid })
   vim.api.nvim_set_option_value("foldcolumn", "0", { scope = "local", win = winid })
   vim.api.nvim_set_option_value("wrap", false, { scope = "local", win = winid })
+  vim.api.nvim_set_option_value("list", false, { scope = "local", win = winid })
   vim.api.nvim_set_option_value("winfixheight", true, { scope = "local", win = winid })
 end
 
@@ -62,20 +81,65 @@ end
 
 local function status_visual(service)
   if service.status == "FAILED" then
-    return "x", "DiagnosticError", "failed", "DiagnosticError"
+    return "×", "ServicesFailed", "failed", "ServicesFailed"
   elseif service.status == "DEBUGGING" then
-    return "*", "DiagnosticInfo", "debugging", "DiagnosticInfo"
+    return "◆", "ServicesDebugging", "debugging", "ServicesDebugging"
   elseif service.status == "STOPPING" then
-    return "~", "DiagnosticWarn", "stopping", "DiagnosticWarn"
+    return "◒", "DiagnosticWarn", "stopping", "DiagnosticWarn"
   elseif service.status == "RESTART_PENDING" then
-    return "~", "DiagnosticWarn", "restarting", "DiagnosticWarn"
+    return "◒", "DiagnosticWarn", "restarting", "DiagnosticWarn"
   elseif service.status == "RUNNING" and service.metadata.ready then
     local detail = service.metadata.port and (":" .. service.metadata.port) or "ready"
-    return "o", "DiagnosticOk", detail, "DiagnosticInfo"
+    return "●", "ServicesRunning", detail, "ServicesReadyPort"
   elseif service.status == "RUNNING" or service.status == "STARTING" then
-    return "~", "DiagnosticWarn", "starting", "DiagnosticWarn"
+    return "◔", "DiagnosticWarn", "starting", "DiagnosticWarn"
   end
-  return "o", "Comment", "stopped", "Comment"
+  return "○", "Comment", "stopped", "Comment"
+end
+
+local function fit_name(name, width)
+  if vim.fn.strdisplaywidth(name) <= width then return name end
+  local ellipsis = "…"
+  if width < vim.fn.strdisplaywidth(ellipsis) then return "" end
+  local length = vim.fn.strchars(name)
+  repeat
+    length = length - 1
+    name = vim.fn.strcharpart(name, 0, length)
+  until vim.fn.strdisplaywidth(name .. ellipsis) <= width
+  return name .. ellipsis
+end
+
+local function service_row(service, width)
+  local status, status_hl, detail, detail_hl = status_visual(service)
+  local type_info = catalog.get_type(service.service_type)
+  local prefix = string.format(" %s %s ", status, type_info.icon)
+  local detail_width = vim.fn.strdisplaywidth(detail)
+  local show_icon = width >= vim.fn.strdisplaywidth(prefix) + detail_width + 4
+  if not show_icon then prefix = " " .. status .. " " end
+
+  if width < vim.fn.strdisplaywidth(prefix) + detail_width + 4 then
+    local compact = status .. " " .. detail
+    local highlights = { { 0, #status, status_hl } }
+    if vim.fn.strdisplaywidth(compact) <= width then
+      table.insert(highlights, { #status + 1, #compact, detail_hl })
+    else
+      compact = status
+    end
+    return compact .. string.rep(" ", math.max(0, width - vim.fn.strdisplaywidth(compact))), highlights
+  end
+
+  local name = fit_name(service.name, width - vim.fn.strdisplaywidth(prefix) - detail_width - 3)
+  local padding = width - vim.fn.strdisplaywidth(prefix .. name) - detail_width - 1
+  local line = prefix .. name .. string.rep(" ", padding) .. detail .. " "
+  local highlights = {
+    { 1, 1 + #status, status_hl },
+    { #line - #detail - 1, #line - 1, detail_hl },
+  }
+  if show_icon then
+    local icon_start = #status + 2
+    table.insert(highlights, { icon_start, icon_start + #type_info.icon, type_info.hl })
+  end
+  return line, highlights
 end
 
 local function sort_rank(service)
@@ -491,23 +555,23 @@ function Panel:render(panel)
   local services = sorted_services(self.runtime, panel.root)
   local selected = self.state.get_selected_services(panel.root)
   local profile = self.state.get_profile(panel.root)
+  local width = vim.api.nvim_win_get_width(panel.list_win)
   local lines = {}
   local highlights = {}
   panel.rows = {}
+  panel.list_width = width
   vim.api.nvim_buf_clear_namespace(panel.list_bufnr, panel.namespace, 0, -1)
 
   if #services == 0 then
     table.insert(lines, " No services selected. Press a to add services.")
   else
     for index, service in ipairs(services) do
-      local status, status_hl, detail, detail_hl = status_visual(service)
-      local type_info = catalog.get_type(service.service_type)
-      local line = string.format(" %s %s %s  %s", status, type_info.icon, service.name, detail)
+      local line, row_highlights = service_row(service, width)
       table.insert(lines, line)
       panel.rows[index] = service.key
-      table.insert(highlights, { index - 1, 1, 2, status_hl })
-      table.insert(highlights, { index - 1, 3, 3 + #type_info.icon, type_info.hl })
-      table.insert(highlights, { index - 1, #line - #detail, #line, detail_hl })
+      for _, highlight in ipairs(row_highlights) do
+        table.insert(highlights, { index - 1, highlight[1], highlight[2], highlight[3] })
+      end
     end
   end
 
@@ -625,6 +689,14 @@ function Panel:_create(root)
   self.panels[tab] = panel
   self:_configure_keymaps(panel)
 
+  vim.api.nvim_create_autocmd("WinResized", {
+    group = augroup,
+    callback = function()
+      if panel_valid(panel) and panel.list_width ~= vim.api.nvim_win_get_width(panel.list_win) then
+        self:render(panel)
+      end
+    end,
+  })
   vim.api.nvim_create_autocmd("CursorMoved", {
     group = augroup,
     buffer = list_bufnr,

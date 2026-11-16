@@ -52,6 +52,8 @@ local function press(winid, keys)
   vim.api.nvim_feedkeys(vim.keycode(keys), "mx", false)
 end
 
+vim.o.columns = 200
+
 local root = "/panel-project"
 local definitions = {
   {
