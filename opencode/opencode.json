@@ -126,7 +126,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 272000,
             "output": 128000
           },
           "name": "GPT-6 Luna · routing group",
@@ -163,7 +163,7 @@
             }
           ]
         },
-        "auto/gpt-6.1-terra": {
+        "auto/gpt-6-astra": {
           "capabilities": {
             "input": [
               "text",
@@ -177,18 +177,18 @@
           "cost": [
             {
               "cache": {
-                "read": 0.05,
-                "write": 1.25
+                "read": 1,
+                "write": 12.5
               },
-              "input": 1,
-              "output": 5
+              "input": 10,
+              "output": 50
             }
           ],
           "limit": {
             "context": 922000,
             "output": 128000
           },
-          "name": "GPT-6.1 Terra · routing group",
+          "name": "GPT-6 Astra · routing group",
           "variants": [
             {
               "id": "low",
@@ -228,7 +228,7 @@
             }
           ]
         },
-        "auto/gpt-6-astra": {
+        "auto/gpt-6.1-terra": {
           "capabilities": {
             "input": [
               "text",
@@ -242,18 +242,18 @@
           "cost": [
             {
               "cache": {
-                "read": 1,
-                "write": 12.5
+                "read": 0.05,
+                "write": 1.25
               },
-              "input": 10,
-              "output": 50
+              "input": 1,
+              "output": 5
             }
           ],
           "limit": {
             "context": 922000,
             "output": 128000
           },
-          "name": "GPT-6 Astra · routing group",
+          "name": "GPT-6.1 Terra · routing group",
           "variants": [
             {
               "id": "low",
@@ -380,7 +380,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 272000,
             "output": 128000
           },
           "name": "GPT-6 Sol · routing group",
@@ -445,7 +445,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 272000,
             "output": 128000
           },
           "name": "GPT-5.6 Sol · routing group",
@@ -510,7 +510,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 272000,
             "output": 128000
           },
           "name": "GPT-5.6 Terra · routing group",
@@ -575,7 +575,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 272000,
             "output": 128000
           },
           "name": "GPT-5.6 Luna · routing group",
@@ -637,6 +637,16 @@
             ],
             "tools": true
           },
+          "cost": [
+            {
+              "cache": {
+                "read": 0.003,
+                "write": 0
+              },
+              "input": 0.15,
+              "output": 0.6
+            }
+          ],
           "limit": {
             "context": 1000000,
             "output": 128000
@@ -659,6 +669,71 @@
               "id": "max",
               "settings": {
                 "reasoningEffort": "max"
+              }
+            }
+          ]
+        },
+        "openai/gpt-6-astra": {
+          "capabilities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "cost": [
+            {
+              "cache": {
+                "read": 1,
+                "write": 12.5
+              },
+              "input": 10,
+              "output": 50
+            }
+          ],
+          "limit": {
+            "context": 922000,
+            "output": 128000
+          },
+          "name": "GPT-6 Astra · OpenAI",
+          "variants": [
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            },
+            {
+              "id": "ultra",
+              "settings": {
+                "reasoningEffort": "ultra"
               }
             }
           ]
@@ -730,136 +805,6 @@
               "id": "ultra",
               "settings": {
                 "reasoningEffort": "ultra"
-              }
-            }
-          ]
-        },
-        "openai/gpt-6-astra": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 1,
-                "write": 12.5
-              },
-              "input": 10,
-              "output": 50
-            }
-          ],
-          "limit": {
-            "context": 922000,
-            "output": 128000
-          },
-          "name": "GPT-6 Astra · OpenAI",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            },
-            {
-              "id": "ultra",
-              "settings": {
-                "reasoningEffort": "ultra"
-              }
-            }
-          ]
-        },
-        "openai/gpt-6-luna": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.01,
-                "write": 0.125
-              },
-              "input": 0.1,
-              "output": 0.5
-            }
-          ],
-          "limit": {
-            "context": 922000,
-            "output": 128000
-          },
-          "name": "GPT-6 Luna · OpenAI",
-          "variants": [
-            {
-              "id": "none",
-              "settings": {
-                "reasoningEffort": "none"
-              }
-            },
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
               }
             }
           ]
@@ -2011,7 +1956,7 @@
             }
           ],
           "limit": {
-            "context": 1048576,
+            "context": 200000,
             "output": 65536
           },
           "name": "Gemini 3.8 Flash · Copilot",
@@ -2058,7 +2003,7 @@
             }
           ],
           "limit": {
-            "context": 1048576,
+            "context": 200000,
             "output": 65536
           },
           "name": "Gemini 4 Argon · Copilot",
@@ -2105,7 +2050,7 @@
             }
           ],
           "limit": {
-            "context": 1048576,
+            "context": 200000,
             "output": 65536
           },
           "name": "Gemini 4 Carbon · Copilot",
@@ -2126,6 +2071,59 @@
               "id": "high",
               "settings": {
                 "reasoningEffort": "high"
+              }
+            }
+          ]
+        },
+        "copilot/gemini-4-hydrogen": {
+          "capabilities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "cost": [
+            {
+              "cache": {
+                "read": 0.075,
+                "write": 0
+              },
+              "input": 1.5,
+              "output": 7.5
+            }
+          ],
+          "limit": {
+            "context": 983040,
+            "output": 65536
+          },
+          "name": "Gemini 4 Hydrogen · Copilot",
+          "variants": [
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
               }
             }
           ]
@@ -2205,7 +2203,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 200000,
             "output": 128000
           },
           "name": "GPT-5.6 Luna · Copilot",
@@ -2270,7 +2268,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 272000,
             "output": 128000
           },
           "name": "GPT-5.6 Sol · Copilot",
@@ -2341,7 +2339,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 272000,
             "output": 128000
           },
           "name": "GPT-5.6 Terra · Copilot",
@@ -2412,7 +2410,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 272000,
             "output": 128000
           },
           "name": "GPT-6.1 Sol · Copilot",
@@ -2477,7 +2475,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 272000,
             "output": 128000
           },
           "name": "GPT-6.1 Terra · Copilot",
@@ -2542,7 +2540,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 272000,
             "output": 128000
           },
           "name": "GPT-6 Astra · Copilot",
@@ -2607,7 +2605,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 272000,
             "output": 128000
           },
           "name": "GPT-6 Luna · Copilot",
@@ -2672,7 +2670,7 @@
             }
           ],
           "limit": {
-            "context": 922000,
+            "context": 272000,
             "output": 128000
           },
           "name": "GPT-6 Sol · Copilot",
@@ -2743,8 +2741,8 @@
             }
           ],
           "limit": {
-            "context": 500000,
-            "output": 500000
+            "context": 200000,
+            "output": 200000
           },
           "name": "Grok 4.6 · Copilot",
           "variants": [
@@ -2796,8 +2794,8 @@
             }
           ],
           "limit": {
-            "context": 500000,
-            "output": 500000
+            "context": 200000,
+            "output": 200000
           },
           "name": "Grok 4.7 · Copilot",
           "variants": [
@@ -2849,8 +2847,8 @@
             }
           ],
           "limit": {
-            "context": 1048576,
-            "output": 131072
+            "context": 917504,
+            "output": 917504
           },
           "name": "Kimi K3 · Copilot",
           "variants": [
@@ -2933,7 +2931,7 @@
             }
           ],
           "limit": {
-            "context": 1047576,
+            "context": 128000,
             "output": 32768
           },
           "name": "GPT-4.1 · Copilot",
@@ -3011,6 +3009,16 @@
             ],
             "tools": true
           },
+          "cost": [
+            {
+              "cache": {
+                "read": 0.003,
+                "write": 0
+              },
+              "input": 0.15,
+              "output": 0.6
+            }
+          ],
           "limit": {
             "context": 1000000,
             "output": 64000
