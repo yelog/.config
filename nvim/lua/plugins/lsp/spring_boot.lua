@@ -24,6 +24,7 @@ return {
         -- Spring Boot Tools follows JAVA_HOME by default. Keep it on the
         -- JDTLS-compatible JVM without changing the project's Java runtime.
         java_cmd = launcher_home and (launcher_home .. "/bin/java") or nil,
+        server = { exit_timeout = 10000 },
       }
     end,
   },

@@ -103,8 +103,8 @@ return {
           TypeParameter = "󰊄 ",
         },
         lsp = {
-          auto_attach = false,
-          preference = nil,
+          auto_attach = true,
+          preference = { "vue_ls", "vtsls" },
         },
         highlight = false,
         separator = " > ",
@@ -156,7 +156,7 @@ return {
   },
   {
     "mason-org/mason-lspconfig.nvim",
-    dependencies = { 'saghen/blink.cmp' },
+    dependencies = { 'saghen/blink.cmp', 'SmiteshP/nvim-navic' },
     config = function()
       require("mason-lspconfig").setup({
         -- https://github.com/neovim/nvim-lspconfig/blob/master/doc/configs.md
@@ -195,7 +195,6 @@ return {
         vim.diagnostic.jump({ count = 1, float = true })
       end, opts)
       vim.keymap.set("n", "<leader>q", vim.diagnostic.setloclist, opts)
-      local navic = require("nvim-navic")
 
       -- Use an on_attach function to only map the following keys
       -- after the language server attaches to the current buffer
@@ -232,9 +231,6 @@ return {
         -- vim.keymap.set("n", "gu", vim.lsp.buf.references, bufopts) --use telesscope instead
         -- vim.keymap.set('n', '<leader>f', function() vim.lsp.buf.format { async = true } end, bufopts)
 
-        if client.server_capabilities.documentSymbolProvider then
-          navic.attach(client, bufnr)
-        end
         -- folder
         if client and client:supports_method 'textDocument/foldingRange' then
           local win = vim.api.nvim_get_current_win()

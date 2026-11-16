@@ -5,22 +5,27 @@ return {
     dependencies = {
       "mfussenegger/nvim-dap",
       "JavaHello/spring-boot.nvim",
+      "SmiteshP/nvim-navic",
     },
     config = function()
       local jdtls = require("jdtls")
-      local navic = require("nvim-navic")
       local mybatis = require("custom.mybatis_diagnostics")
       mybatis.setup()
 
       local function get_jdtls_cmd(workspace_dir)
         local mason_path = vim.fn.stdpath("data") .. "/mason"
         local jdtls_path = mason_path .. "/packages/jdtls"
+        local configuration_dir = vim.fn.stdpath("cache") .. "/jdtls/config/" .. vim.fs.basename(workspace_dir)
 
         return {
           jdtls_path .. "/bin/jdtls",
           "--jvm-arg=-javaagent:" .. jdtls_path .. "/lombok.jar",
           "--jvm-arg=-Xms256m",
           "--jvm-arg=-Xmx4G",
+          "--jvm-arg=-DDetectVMInstallationsJob.disabled=true",
+          "--jvm-arg=-Dm2e.project.cache.size=128",
+          "-configuration",
+          configuration_dir,
           "-data",
           workspace_dir,
         }
@@ -74,10 +79,6 @@ return {
           vim.notify("Java Test debugging is disabled until java-test supports the jdtls ASM version", vim.log.levels.WARN)
         end, { desc = "Java: Test Class", buffer = bufnr })
 
-        if client.server_capabilities.documentSymbolProvider then
-          navic.attach(client, bufnr)
-        end
-
         if client and client:supports_method("textDocument/foldingRange") then
           local win = vim.api.nvim_get_current_win()
           vim.wo[win].foldexpr = "v:lua.vim.lsp.foldexpr()"
@@ -107,6 +108,7 @@ return {
       local base_config = {
         capabilities = capabilities,
         on_attach = on_attach,
+        exit_timeout = 10000,
         cmd_env = launcher_home and { JAVA_HOME = launcher_home } or nil,
         settings = {
           java = {
