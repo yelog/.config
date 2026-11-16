@@ -1,6 +1,13 @@
 local M = {}
 local cached_discovery
-local priorities = { explicit = 3, env21 = 2, sdkman = 1, env = 0 }
+local minimum_launcher_version = 25
+local priorities = { explicit = 3, env25 = 2, sdkman = 1, env = 0 }
+
+local function canonical_home(home)
+  if type(home) == "string" and home ~= "" then
+    return vim.uv.fs_realpath(home) or home
+  end
+end
 
 local function is_java_home(home)
   return type(home) == "string" and home ~= "" and vim.fn.executable(home .. "/bin/java") == 1
@@ -93,12 +100,14 @@ function M.discover(env, opts)
   local seen_paths = {}
   local candidates = {}
   local launcher_candidates = {}
+  local project_home = canonical_home(env.JAVA_HOME)
+  local explicit_home = canonical_home(env.NVIM_JAVA_HOME)
 
   local function add_home(home, source)
-    if type(home) ~= "string" or home == "" then
+    home = canonical_home(home)
+    if not home then
       return
     end
-    home = vim.uv.fs_realpath(home) or home
     local existing = seen_paths[home]
     if existing then
       if priorities[source] > priorities[existing.source] then
@@ -115,8 +124,8 @@ function M.discover(env, opts)
   end
 
   add_home(env.NVIM_JAVA_HOME, "explicit")
-  for _, key in ipairs({ "JAVA_HOME_8", "JAVA_HOME_11", "JAVA_HOME_17", "JAVA_HOME_21", "JAVA_HOME" }) do
-    add_home(env[key], key == "JAVA_HOME_21" and "env21" or "env")
+  for _, key in ipairs({ "JAVA_HOME_8", "JAVA_HOME_11", "JAVA_HOME_17", "JAVA_HOME_21", "JAVA_HOME_25", "JAVA_HOME" }) do
+    add_home(env[key], key == "JAVA_HOME_25" and "env25" or "env")
   end
   for _, home in ipairs(opts.sdkman_homes or sdkman_java_homes(env)) do
     add_home(home, "sdkman")
@@ -134,9 +143,16 @@ function M.discover(env, opts)
       })
     end
   end
-  local cache_key = cacheable and vim.json.encode(identities) or nil
+  local cache_key
+  if cacheable then
+    cache_key = vim.json.encode({
+      candidates = identities,
+      project_home = project_home,
+      explicit_home = explicit_home,
+    })
+  end
   if cacheable and cached_discovery and cached_discovery.key == cache_key then
-    return vim.deepcopy(cached_discovery.runtimes), cached_discovery.launcher
+    return vim.deepcopy(cached_discovery.runtimes), cached_discovery.launcher, cached_discovery.error
   end
 
   for _, candidate in ipairs(candidates) do
@@ -146,7 +162,7 @@ function M.discover(env, opts)
       if not by_version[version[1]] then
         by_version[version[1]] = candidate.home
       end
-      if version[1] >= 21 then
+      if version[1] >= minimum_launcher_version then
         table.insert(launcher_candidates, candidate)
       end
     else
@@ -156,12 +172,25 @@ function M.discover(env, opts)
 
   table.sort(launcher_candidates, prefer_launcher)
   local launcher = launcher_candidates[1]
+  local launcher_error
+  local explicit = explicit_home and seen_paths[explicit_home]
+  if explicit_home and (not explicit or not explicit.version or explicit.version[1] < minimum_launcher_version) then
+    launcher = nil
+    launcher_error = "NVIM_JAVA_HOME must point to JDK 25 or newer: " .. env.NVIM_JAVA_HOME
+  elseif not launcher then
+    launcher_error = "Java language servers require JDK 25 or newer; set NVIM_JAVA_HOME or JAVA_HOME_25"
+  end
   if launcher then
     by_version[launcher.version[1]] = launcher.home
+  end
+  local project = project_home and seen_paths[project_home]
+  if project and project.version then
+    by_version[project.version[1]] = project.home
   end
   local versions = vim.tbl_keys(by_version)
   table.sort(versions)
   local launcher_home = launcher and launcher.home or nil
+  local default_home = project and project.version and project.home or launcher_home
 
   local runtimes = {}
   for _, version in ipairs(versions) do
@@ -169,15 +198,20 @@ function M.discover(env, opts)
       name = runtime_name(version),
       path = by_version[version],
     }
-    if runtime.path == launcher_home then
+    if runtime.path == default_home then
       runtime.default = true
     end
     table.insert(runtimes, runtime)
   end
   if cacheable then
-    cached_discovery = { key = cache_key, runtimes = vim.deepcopy(runtimes), launcher = launcher_home }
+    cached_discovery = {
+      key = cache_key,
+      runtimes = vim.deepcopy(runtimes),
+      launcher = launcher_home,
+      error = launcher_error,
+    }
   end
-  return runtimes, launcher_home
+  return runtimes, launcher_home, launcher_error
 end
 
 return M

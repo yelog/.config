@@ -10,7 +10,14 @@ local function assert_equal(expected, actual, message)
 end
 
 local configs = {}
-local launcher = "/jdk21"
+local launcher = "/jdk25"
+local launcher_error
+local original_java_home = vim.env.JAVA_HOME
+local project_runtimes = {
+  { name = "JavaSE-17", path = "/jdk17", default = true },
+  { name = "JavaSE-21", path = "/jdk21" },
+  { name = "JavaSE-25", path = "/jdk25" },
+}
 local bundles = { "/spring.jar", "/debug.jar" }
 package.loaded["jdtls"] = {
   extendedClientCapabilities = { classFileContentsSupport = true },
@@ -29,7 +36,7 @@ package.loaded["blink.cmp"] = {
 }
 package.loaded["custom.java_runtime"] = {
   discover = function()
-    return { { name = "JavaSE-21", path = launcher, default = true } }, launcher
+    return vim.deepcopy(project_runtimes), launcher, launcher_error
   end,
 }
 package.loaded["spring_boot"] = {
@@ -50,6 +57,7 @@ package.loaded["custom.java_debug"] = {
 local spring_options = dofile(config_root .. "/lua/plugins/lsp/spring_boot.lua")[1].opts()
 assert_equal(launcher .. "/bin/java", spring_options.java_cmd, "Spring should use the validated language-server JDK")
 assert_equal(10000, spring_options.server.exit_timeout, "Spring should have time to finish graceful shutdown")
+assert_equal(true, spring_options.autocmd, "Spring should attach only with a compatible language-server JDK")
 
 local temp_dir = vim.fn.tempname()
 local first_root = temp_dir .. "/first/project"
@@ -91,6 +99,17 @@ assert_equal(
 )
 assert_equal(10000, first_config.exit_timeout, "JDTLS should have time to finish graceful shutdown")
 assert_equal(launcher, first_config.cmd_env.JAVA_HOME, "The launcher must receive the validated Java home")
+assert_equal(
+  project_runtimes,
+  first_config.settings.java.configuration.runtimes,
+  "JDTLS must retain the project's Java 17 default"
+)
+assert_equal(
+  first_config.settings,
+  first_config.init_options.settings,
+  "Project runtimes must be available before import and extension loading"
+)
+assert_equal(original_java_home, vim.env.JAVA_HOME, "Language-server setup must not change Maven's JAVA_HOME")
 assert_equal(first_root, first_config.root_dir, "Multi-module files should share the repository root")
 assert(
   vim.tbl_contains(first_config.cmd, "--jvm-arg=-DDetectVMInstallationsJob.disabled=true"),
@@ -125,6 +144,29 @@ assert(
   command_value(first_config, "-configuration") ~= command_value(second_config, "-configuration"),
   "Same-named repositories at different paths must have separate OSGi registries"
 )
+
+local original_notify = vim.notify
+local notifications = {}
+vim.notify = function(message, level)
+  notifications[#notifications + 1] = { message = message, level = level }
+end
+launcher = nil
+launcher_error = "NVIM_JAVA_HOME must point to JDK 25 or newer: /jdk21"
+local invalid_spring_options = dofile(config_root .. "/lua/plugins/lsp/spring_boot.lua")[1].opts()
+assert_equal(false, invalid_spring_options.autocmd, "Spring must not fall back to the project's incompatible JVM")
+assert_equal(nil, invalid_spring_options.java_cmd, "An incompatible override must not be passed to Spring")
+local started_count = #configs
+dofile(config_root .. "/lua/plugins/lsp/jdtls.lua")[1].config()
+vim.api.nvim_exec_autocmds("FileType", { pattern = "java" })
+assert_equal(started_count, #configs, "An incompatible override must prevent JDTLS from launching")
+assert_equal(1, #notifications, "Repeated Java and Spring setup should report the same JVM error only once")
+assert_equal(launcher_error, notifications[1].message, "The startup error must explain which override to fix")
+assert_equal(
+  vim.log.levels.ERROR,
+  notifications[1].level,
+  "An unusable language-server JVM must be reported as an error"
+)
+vim.notify = original_notify
 
 vim.fn.delete(temp_dir, "rf")
 print("jdtls-startup-tests: ok")

@@ -5,7 +5,7 @@ local M = {}
 local Panel = {}
 Panel.__index = Panel
 
-local function apply_status_highlights()
+local function apply_panel_highlights()
   for group, source in pairs({
     ServicesRunning = "DiagnosticOk",
     ServicesReadyPort = "DiagnosticOk",
@@ -15,12 +15,39 @@ local function apply_status_highlights()
     local highlight = vim.api.nvim_get_hl(0, { name = source, link = false })
     vim.api.nvim_set_hl(0, group, { fg = highlight.fg, ctermfg = highlight.ctermfg, bold = true })
   end
+
+  local normal = vim.api.nvim_get_hl(0, { name = "Normal", link = false })
+  local accent = vim.api.nvim_get_hl(0, { name = "DiagnosticSignInfo", link = false })
+  local selected = {}
+  for _, source in ipairs({ "TabLineSel", "PmenuSel", "Visual" }) do
+    local highlight = vim.api.nvim_get_hl(0, { name = source, link = false })
+    if highlight.bg and highlight.bg ~= normal.bg then
+      selected = highlight
+      break
+    end
+  end
+  local light = vim.o.background == "light"
+  local foreground = normal.fg or (light and 0x202020 or 0xDDE2EA)
+  local background = selected.bg or (light and 0xDCE5F5 or 0x263A55)
+  local terminal_background = selected.ctermbg or (light and 189 or 24)
+  local surface = { fg = foreground, bg = background, ctermfg = normal.ctermfg, ctermbg = terminal_background }
+  vim.api.nvim_set_hl(0, "ServicesSelected", { bg = background, ctermbg = terminal_background, bold = true })
+  vim.api.nvim_set_hl(0, "ServicesLogBar", surface)
+  vim.api.nvim_set_hl(0, "ServicesLogTitle", vim.tbl_extend("force", surface, { bold = true }))
+  vim.api.nvim_set_hl(0, "ServicesLogMeta", surface)
+  vim.api.nvim_set_hl(0, "ServicesSelectionMarker", {
+    fg = accent.fg or (light and 0x3574D6 or 0x7AA2F7),
+    bg = background,
+    ctermfg = accent.ctermfg or (light and 25 or 75),
+    ctermbg = terminal_background,
+    bold = true,
+  })
 end
 
-apply_status_highlights()
+apply_panel_highlights()
 vim.api.nvim_create_autocmd("ColorScheme", {
   group = vim.api.nvim_create_augroup("ServicesPanelHighlights", { clear = true }),
-  callback = apply_status_highlights,
+  callback = apply_panel_highlights,
 })
 
 local function find_project_root(source)
@@ -66,6 +93,7 @@ local function set_list_window_options(winid)
   vim.api.nvim_set_option_value("foldcolumn", "0", { scope = "local", win = winid })
   vim.api.nvim_set_option_value("wrap", false, { scope = "local", win = winid })
   vim.api.nvim_set_option_value("list", false, { scope = "local", win = winid })
+  vim.api.nvim_set_option_value("cursorline", false, { scope = "local", win = winid })
   vim.api.nvim_set_option_value("winfixheight", true, { scope = "local", win = winid })
 end
 
@@ -118,12 +146,13 @@ local function service_row(service, width)
   if not show_icon then prefix = " " .. status .. " " end
 
   if width < vim.fn.strdisplaywidth(prefix) + detail_width + 4 then
-    local compact = status .. " " .. detail
-    local highlights = { { 0, #status, status_hl } }
+    local margin = width > vim.fn.strdisplaywidth(status) and " " or ""
+    local compact = margin .. status .. " " .. detail
+    local highlights = { { #margin, #margin + #status, status_hl } }
     if vim.fn.strdisplaywidth(compact) <= width then
-      table.insert(highlights, { #status + 1, #compact, detail_hl })
+      table.insert(highlights, { #margin + #status + 1, #compact, detail_hl })
     else
-      compact = status
+      compact = margin .. status
     end
     return compact .. string.rep(" ", math.max(0, width - vim.fn.strdisplaywidth(compact))), highlights
   end
@@ -246,13 +275,44 @@ end
 
 function Panel:_set_output_winbar(panel, state)
   if not panel or not vim.api.nvim_win_is_valid(panel.output_win) then return end
-  if not state then
-    vim.wo[panel.output_win].winbar = ""
-  elseif state.following then
-    vim.wo[panel.output_win].winbar = "LOG [FOLLOW]"
-  else
-    vim.wo[panel.output_win].winbar = string.format("LOG [PAUSED - %d new - G tail]", state.unseen_lines)
+  local width = vim.api.nvim_win_get_width(panel.output_win)
+  panel.output_width = width
+  local service = panel.focused_key and self.runtime:get(panel.focused_key) or nil
+  if not service then
+    vim.wo[panel.output_win].winbar = "%#ServicesLogMeta#" .. fit_name(" LOG  No service selected", width)
+    return
   end
+
+  local status, _, detail, detail_hl = status_visual(service)
+  local status_text = status .. " " .. detail
+  local mode
+  if service.terminal_output then
+    mode = "[TERMINAL]"
+  elseif state and not state.following then
+    mode = string.format("[PAUSED - %d new - G tail]", state.unseen_lines)
+  else
+    mode = "[FOLLOW]"
+  end
+  local prefix = " ▸ LOG  "
+  local margin = width > 1 and " " or ""
+  local function name_width()
+    return width - vim.fn.strdisplaywidth(prefix .. margin)
+      - (status_text ~= "" and vim.fn.strdisplaywidth(status_text) + 2 or 0)
+      - (mode ~= "" and vim.fn.strdisplaywidth(mode) + 2 or 0)
+  end
+  local minimum_name_width = math.min(12, vim.fn.strdisplaywidth(service.name))
+  if name_width() < minimum_name_width and state and not state.following then mode = "[PAUSED]" end
+  if name_width() < minimum_name_width then status_text = "" end
+  if name_width() < minimum_name_width then prefix = " ▸ " end
+  if name_width() < minimum_name_width then mode = "" end
+  if name_width() < 1 then prefix = "" end
+  local name = fit_name(service.name, math.max(0, name_width())):gsub("%%", "%%%%")
+  local text = "%#ServicesSelectionMarker#" .. prefix .. "%#ServicesLogTitle#" .. name .. "%="
+  if status_text ~= "" then
+    text = text .. "%#" .. detail_hl .. "#  " .. status_text:gsub("%%", "%%%%")
+  end
+  if mode ~= "" then text = text .. "%#ServicesLogMeta#  " .. mode end
+  vim.wo[panel.output_win].winbar = text .. "%#ServicesLogMeta#" .. margin
 end
 
 function Panel:_tail_output(panel)
@@ -389,7 +449,25 @@ function Panel:focus(panel, key, opts)
       break
     end
   end
+  self:_highlight_selection(panel)
   return true
+end
+
+function Panel:_highlight_selection(panel)
+  vim.api.nvim_buf_clear_namespace(panel.list_bufnr, panel.selection_namespace, 0, -1)
+  for row, key in ipairs(panel.rows) do
+    if key == panel.focused_key then
+      local line = vim.api.nvim_buf_get_lines(panel.list_bufnr, row - 1, row, false)[1]
+      vim.api.nvim_buf_set_extmark(panel.list_bufnr, panel.selection_namespace, row - 1, 0, {
+        line_hl_group = "ServicesSelected",
+        priority = 90,
+        virt_text = line:sub(1, 1) == " " and { { "▸", "ServicesSelectionMarker" } } or nil,
+        virt_text_pos = "overlay",
+        hl_mode = "combine",
+      })
+      break
+    end
+  end
 end
 
 function Panel:_restore_focus(panel)
@@ -586,7 +664,12 @@ function Panel:render(panel)
   end
   vim.wo[panel.list_win].winbar = Panel.winbar_text({ selected = selected, services = services, profile = profile })
 
-  if panel.focused_key and self.runtime:get(panel.focused_key) then self:focus(panel, panel.focused_key) end
+  if panel.focused_key and self:focus(panel, panel.focused_key) then return true end
+  panel.focused_key = nil
+  vim.api.nvim_win_set_buf(panel.output_win, panel.empty_output)
+  set_empty_output_options(panel.output_win)
+  self:_set_output_winbar(panel)
+  self:_highlight_selection(panel)
   return true
 end
 
@@ -668,6 +751,7 @@ function Panel:_create(root)
   set_buffer_options(empty_output, "ServicesLog")
   vim.api.nvim_win_set_buf(output_win, empty_output)
   set_empty_output_options(output_win)
+  vim.wo[output_win].winhighlight = "WinBar:ServicesLogBar,WinBarNC:ServicesLogBar"
   vim.cmd("resize 16")
   local available_width = vim.api.nvim_win_get_width(list_win) + vim.api.nvim_win_get_width(output_win)
   vim.api.nvim_win_set_width(list_win, math.max(1, math.floor(available_width / 4)))
@@ -681,6 +765,7 @@ function Panel:_create(root)
     output_win = output_win,
     empty_output = empty_output,
     namespace = vim.api.nvim_create_namespace("services_panel_" .. list_bufnr),
+    selection_namespace = vim.api.nvim_create_namespace("services_selection_" .. list_bufnr),
     rows = {},
     focused_key = nil,
     output_states = {},
@@ -692,7 +777,8 @@ function Panel:_create(root)
   vim.api.nvim_create_autocmd("WinResized", {
     group = augroup,
     callback = function()
-      if panel_valid(panel) and panel.list_width ~= vim.api.nvim_win_get_width(panel.list_win) then
+      if panel_valid(panel) and (panel.list_width ~= vim.api.nvim_win_get_width(panel.list_win)
+        or panel.output_width ~= vim.api.nvim_win_get_width(panel.output_win)) then
         self:render(panel)
       end
     end,
@@ -764,7 +850,7 @@ function Panel:open(root)
   end
   panel.focused_key = nil
   self:render(panel)
-  self:_restore_focus(panel)
+  if not self:_restore_focus(panel) and panel.rows[1] then self:focus(panel, panel.rows[1]) end
   if vim.api.nvim_win_is_valid(panel.list_win) then vim.api.nvim_set_current_win(panel.list_win) end
   return panel
 end
@@ -944,11 +1030,6 @@ function Panel:_on_runtime_event(event)
         if event.type == "disposed" and panel.focused_key == service.key then
           panel.focused_key = nil
           panel.output_states[service.key] = nil
-          if vim.api.nvim_buf_is_valid(panel.empty_output) then
-            vim.api.nvim_win_set_buf(panel.output_win, panel.empty_output)
-            set_empty_output_options(panel.output_win)
-            self:_set_output_winbar(panel)
-          end
         end
         self:render(panel)
         if panel.focused_key == service.key then self:_show_output(panel, service) end

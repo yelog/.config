@@ -91,7 +91,7 @@ return {
       end
 
       local capabilities = require("blink.cmp").get_lsp_capabilities()
-      local runtimes, launcher_home = require("custom.java_runtime").discover()
+      local runtimes, launcher_home, launcher_error = require("custom.java_runtime").discover()
 
       local java_debug = require("custom.java_debug")
       local spring_bundles = require("spring_boot").java_extensions()
@@ -208,7 +208,10 @@ return {
 
       local function start_or_attach(bufnr)
         if not launcher_home then
-          vim.notify("jdtls: Java 21 or newer is required; set JAVA_HOME_21 or JAVA_HOME", vim.log.levels.ERROR)
+          vim.notify_once(
+            launcher_error or "jdtls: JDK 25 or newer is required; set NVIM_JAVA_HOME or JAVA_HOME_25",
+            vim.log.levels.ERROR
+          )
           return
         end
         local root_dir = find_root(bufnr)
@@ -221,6 +224,7 @@ return {
         local config = vim.deepcopy(base_config)
         config.cmd = get_jdtls_cmd(workspace_dir)
         config.root_dir = root_dir
+        config.init_options.settings = vim.deepcopy(config.settings)
         jdtls.start_or_attach(config, { dap = { hotcodereplace = "auto" } }, { bufnr = bufnr })
       end
 

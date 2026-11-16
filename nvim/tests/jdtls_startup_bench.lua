@@ -60,6 +60,7 @@ vim.cmd.cd(vim.fn.fnameescape(project_root))
 vim.cmd.edit(vim.fn.fnameescape(project_root .. "/src/main/java/example/Main.java"))
 
 local started = vim.uv.hrtime()
+local original_java_home = vim.env.JAVA_HOME
 local function elapsed()
   return math.floor((vim.uv.hrtime() - started) / 1e6)
 end
@@ -129,6 +130,10 @@ local client = assert(vim.lsp.get_clients({ name = "jdtls" })[1])
 local commands = client.server_capabilities.executeCommandProvider.commands
 assert(vim.tbl_contains(commands, "vscode.java.startDebugSession"), "The Java debug extension should be available")
 assert(vim.tbl_contains(commands, "sts.java.addClasspathListener"), "The Spring extension should be available")
+local launcher_release = table.concat(vim.fn.readfile(result.launcher .. "/release"), "\n")
+local launcher_version = tonumber(launcher_release:match('JAVA_VERSION="(%d+)'))
+assert(launcher_version and launcher_version >= 25, "JDTLS must run on Java 25 or newer")
+assert(vim.env.JAVA_HOME == original_java_home, "Language-server setup must preserve the parent's JAVA_HOME")
 local response = assert(client:request_sync("textDocument/definition", {
   textDocument = { uri = vim.uri_from_bufnr(0) },
   position = { line = 4, character = 36 },
@@ -159,6 +164,49 @@ assert(
   "Workspace symbol search should find the indexed Java class"
 )
 result.symbols_ms = elapsed()
+
+local semantic_response = assert(client:request_sync("textDocument/semanticTokens/full", {
+  textDocument = { uri = vim.uri_from_bufnr(0) },
+}, 15000, 0))
+assert(not semantic_response.err, vim.inspect(semantic_response.err))
+local semantic_data = semantic_response.result and semantic_response.result.data
+assert(semantic_data and #semantic_data > 0, "JDTLS must provide semantic tokens")
+local token_types = client.server_capabilities.semanticTokensProvider.legend.tokenTypes
+result.semantic_tokens = { count = #semantic_data / 5, types = {} }
+for index = 1, #semantic_data, 5 do
+  local token_type = token_types[semantic_data[index + 3] + 1]
+  result.semantic_tokens.types[token_type] = (result.semantic_tokens.types[token_type] or 0) + 1
+end
+for _, role in ipairs({ "variable", "parameter", "property", "class", "method" }) do
+  assert(result.semantic_tokens.types[role], "Semantic tokens must distinguish " .. role)
+end
+
+local settings_response = assert(client:request_sync("workspace/executeCommand", {
+  command = "java.project.getSettings",
+  arguments = {
+    vim.uri_from_bufnr(0),
+    {
+      "org.eclipse.jdt.core.compiler.compliance",
+      "org.eclipse.jdt.core.compiler.source",
+      "org.eclipse.jdt.core.compiler.codegen.targetPlatform",
+      "org.eclipse.jdt.ls.core.vm.location",
+    },
+  },
+}, 15000, 0))
+assert(not settings_response.err, vim.inspect(settings_response.err))
+local project_settings = assert(settings_response.result, "The imported project must have compiler settings")
+for _, setting in ipairs({
+  "org.eclipse.jdt.core.compiler.compliance",
+  "org.eclipse.jdt.core.compiler.source",
+  "org.eclipse.jdt.core.compiler.codegen.targetPlatform",
+}) do
+  assert(project_settings[setting] == "17", "The Maven project must retain Java 17 for " .. setting)
+end
+local project_home = assert(project_settings["org.eclipse.jdt.ls.core.vm.location"], "The project must have a JDK")
+local project_release = table.concat(vim.fn.readfile(project_home .. "/release"), "\n")
+assert(project_release:match('JAVA_VERSION="17%.'), "The imported project's JDK must remain Java 17")
+result.project_jdk = project_home
+result.compiler_compliance = project_settings["org.eclipse.jdt.core.compiler.compliance"]
 
 local shutdown_started = vim.uv.hrtime()
 for _, active in ipairs(vim.lsp.get_clients()) do

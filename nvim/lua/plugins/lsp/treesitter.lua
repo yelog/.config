@@ -12,20 +12,9 @@ return {
       local treesitter = require("nvim-treesitter")
       treesitter.setup({ install_dir = vim.fn.stdpath("data") .. "/site" })
       require("custom.mybatis_treesitter").setup()
-      treesitter.install({
+      require("custom.treesitter").setup({
         "java", "javascript", "typescript", "python", "go", "vue", "lua", "bash", "json", "yaml", "markdown", "markdown_inline",
         "html", "css", "scss", "rust", "toml", "xml", "sql",
-      })
-
-      vim.api.nvim_create_autocmd("FileType", {
-        pattern = { "java", "javascript", "typescript", "python", "go", "vue", "lua", "sh", "json", "yaml", "markdown", "html", "css", "rust", "toml", "xml", "sql" },
-        callback = function(args)
-          -- Startup/plugin loading can reorder runtimepath after setup().
-          local install_dir = vim.fn.stdpath("data") .. "/site"
-          vim.opt.runtimepath:remove(install_dir)
-          vim.opt.runtimepath:prepend(install_dir)
-          pcall(vim.treesitter.start, args.buf)
-        end,
       })
 
       require("nvim-treesitter-textobjects").setup({

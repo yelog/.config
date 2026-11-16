@@ -23,7 +23,8 @@ file representation. Use Lazygit or ordinary Git commands for those files.
 
 ## Prerequisites
 
-- JDK 21 or newer to run jdtls and the Spring language server. If the active `JAVA_HOME` is Java 17, the configuration automatically discovers a Java 21+ JDK installed by SDKMAN and uses it for both language servers. Project runtimes and Maven/Spring Boot processes keep using the active Java 17. Set `NVIM_JAVA_HOME` to override the language-server JDK.
+- JDK 25 or newer to run jdtls and the Spring language server. Discovery uses an installed SDKMAN JDK automatically, including `25.0.2-amzn` on this machine. Set `NVIM_JAVA_HOME` or `JAVA_HOME_25` to select another compatible language-server JDK. An incompatible `NVIM_JAVA_HOME` produces an explicit error and prevents either server from launching on the project's JVM.
+- Keep `JAVA_HOME` on the project's existing JDK. It remains the default project runtime in `java.configuration.runtimes`; Maven and Spring Boot service processes inherit the original environment. Maven/Gradle compiler settings and version-specific project runtimes remain independent of the language-server JVM.
 - Maven available as `mvn`.
 - A repository containing one or more classes annotated with `@SpringBootApplication`.
 - Mason packages `jdtls`, `vscode-spring-boot-tools`, `java-debug-adapter`, and `java-test`.
@@ -48,6 +49,12 @@ After the first installation, restart Neovim before opening the project so jdtls
    The service's DAP terminal replaces its existing output in the right-hand Services pane; no extra split is opened.
 8. Use `<leader>dc` to continue, `<leader>do` to step over, `<leader>di` to step into, and `<leader>dO` to step out.
 9. Press `S` on the service or `<leader>dt` anywhere to terminate debugging.
+
+The service whose log is displayed has a persistent highlighted row and a `▸` marker, including when
+keyboard focus moves into the log. The log header repeats its name and status/ready port, with
+`[FOLLOW]`, `[PAUSED - … new - G tail]`, or `[TERMINAL]` at the right. Narrow panes prioritize the service
+name over secondary details. Reopening the panel restores the previous service; the first opening
+displays the first available service.
 
 If the service is already running through Overseer, the debug action stops it and waits for process completion before launching DAP. Pressing `s` on a debugging service terminates DAP first and then starts the normal Maven service task.
 
@@ -108,11 +115,17 @@ The first startup after this configuration change initializes the new OSGi direc
 JDK discovery reads each installation's `release` file instead of starting a JVM for every version check. Java and
 Spring share a process-local cache that is invalidated when candidate paths, overrides, symlink targets, or JDK metadata
 change. Metadata-less installations use `java -version` with a three-second timeout. Launcher preference is
-`NVIM_JAVA_HOME`, then `JAVA_HOME_21`, then SDKMAN, then other Java environment variables; only Java 21+ is eligible.
+`NVIM_JAVA_HOME`, then `JAVA_HOME_25`, then SDKMAN, then other Java environment variables; only Java 25+ is eligible.
 Within one source, discovery prefers the lowest supported major version and its newest patch.
 
-The explicit runtime list disables jdtls's duplicate VM installation scan. The Maven project cache is increased to
-128, and both language servers receive a ten-second graceful shutdown timeout so they can save state before being
+The validated `JAVA_HOME` is the default project runtime, including its exact installation when the language server
+uses another patch of the same major version. When no valid `JAVA_HOME` is available, the launcher is the fallback
+default for projects without build-tool settings. Discovery never changes the editor's global `JAVA_HOME` or `PATH`.
+Java 8/11/17/21 installations remain available for version-specific project settings.
+
+Project settings are sent during JDTLS initialization so the server configures project VMs before importing projects
+and loading Java Debug/Spring extensions. The explicit runtime list disables jdtls's duplicate VM installation scan.
+The Maven project cache is increased to 128, and both language servers receive a ten-second graceful shutdown timeout so they can save state before being
 terminated. Automatic builds, dependency source downloads, Lombok, Spring support, and application debugging remain
 enabled.
 
@@ -136,10 +149,13 @@ for run in 1 2 3; do
 done
 ```
 
-The first run creates the benchmark's project, workspace, and OSGi configuration; subsequent runs reuse them.
+Install JDK 17 and JDK 25+ before running this Java 17 fixture. The first run creates the benchmark's project, workspace,
+and OSGi configuration; subsequent runs reuse them.
 `JDTLS_BENCH` reports milliseconds from setup to client attachment, `ServiceReady`, a successful cross-file definition
 response, and an indexed workspace-symbol search, plus shutdown duration and exit codes. It also checks that Spring
-and Java Debug extensions are available. Dependencies already present in the local Maven repository are shared.
+and Java Debug extensions are available, semantic tokens distinguish variables/parameters/fields/classes/methods,
+and the imported project retains Java 17 source/target/compliance and its JDK while the server runs on Java 25+.
+Dependencies already present in the local Maven repository are shared.
 This small fixture does not predict startup time for a large Spring multi-module repository, and `ServiceReady`
 alone does not prove navigation is responsive.
 
@@ -148,6 +164,39 @@ ranged from 3.42 to 11.97 seconds; restarts ranged from 2.73 to 3.80 seconds, wi
 0.48–1.06 seconds after indexed symbol search. These measurements include language-server setup, not a full editor
 startup, and vary with system load. In a separate comparison against the previous runtime-discovery implementation,
 two successive discovery calls took 846/490 ms before this change and 47/0.61 ms afterward.
+
+After the Java 25 launcher update on the same date, JDTLS 1.63.0 completed cold/warm definition checks in 4.71/2.49
+seconds, with clean Java/Spring shutdowns in 0.39/0.90 seconds. Both runs returned 17 semantic tokens, retained the
+Java 17 project JDK and compiler settings, and exposed Spring and Java Debug commands. The warm run also used
+Java 17 as the parent process's `JAVA_HOME`.
+
+## Java highlighting
+
+The JB theme distinguishes Java symbol roles in both dark and light backgrounds:
+
+| Role | Color |
+| --- | --- |
+| Local variables | Existing theme gray |
+| Parameters | Muted warm yellow |
+| Instance/static fields and constants | Existing theme purple |
+| Classes, interfaces, enums, type parameters | Teal |
+| Method declarations | Blue |
+| Method calls | Lighter blue |
+
+Java-specific Tree-sitter and semantic groups share these roles. Static/final modifier styling is retained, and
+switching back to JB reapplies the overrides. Global groups and other languages keep their theme colors.
+
+Tree-sitter supplies the initial syntax colors. JDTLS semantic tokens distinguish bare field references from local
+variables and apply parameter colors to usages after the language server attaches. A gray field usage together
+with a purple declaration can therefore indicate a missing JDTLS client rather than a terminal color issue.
+Use `:LspInfo` to check attachment and `:Inspect` on the symbol to inspect its captures and semantic groups.
+
+Tree-sitter checks already-loaded buffers, filetype detection, and buffer entry. Startup parser installation runs
+asynchronously and retries failed buffers when its task finishes. Missing parsers or invalid highlight/injection
+queries remain retryable; persistent failures report the language, original error, and `:TSUpdate <language>` /
+`:TSLog` commands once per distinct error. Re-entering a buffer retries activation without restarting a working
+highlighter. Terminal, prompt, and other special buffers are skipped. SCSS and mapped filetypes use the installed
+language list, and repeated setup replaces its autocmds.
 
 ## Useful commands
 
