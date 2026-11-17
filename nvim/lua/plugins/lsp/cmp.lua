@@ -99,6 +99,19 @@ return {
         menu = {
           auto_show = true, -- automatically show the menu when typing
           border = "rounded", -- border style for the menu
+          draw = {
+            components = {
+              kind_icon = {
+                text = function(ctx)
+                  local ok, completion = pcall(require, "lazydb.completion")
+                  if ok then
+                    return completion.blink_kind_icon(ctx)
+                  end
+                  return ctx.kind_icon .. ctx.icon_gap
+                end,
+              },
+            },
+          },
         },
       },
       snippets = { preset = "luasnip" },
