@@ -65,11 +65,11 @@
           "cost": [
             {
               "cache": {
-                "read": 0.1,
-                "write": 2.5
+                "read": 0.003,
+                "write": 0
               },
-              "input": 2,
-              "output": 10
+              "input": 0.15,
+              "output": 0.6
             }
           ],
           "limit": {
@@ -358,7 +358,7 @@
             }
           ]
         },
-        "auto/gpt-6-sol": {
+        "auto/gpt-6.2-sol": {
           "capabilities": {
             "input": [
               "text",
@@ -372,7 +372,7 @@
           "cost": [
             {
               "cache": {
-                "read": 0.2,
+                "read": 0.1,
                 "write": 2.5
               },
               "input": 2,
@@ -380,10 +380,10 @@
             }
           ],
           "limit": {
-            "context": 272000,
+            "context": 500000,
             "output": 128000
           },
-          "name": "GPT-6 Sol · routing group",
+          "name": "GPT-6.2 Sol · routing group",
           "variants": [
             {
               "id": "low",
@@ -423,7 +423,7 @@
             }
           ]
         },
-        "auto/gpt-5.6-sol": {
+        "auto/gpt-6.2-astra": {
           "capabilities": {
             "input": [
               "text",
@@ -438,17 +438,17 @@
             {
               "cache": {
                 "read": 0.4,
-                "write": 5
+                "write": 10
               },
-              "input": 4,
-              "output": 20
+              "input": 8,
+              "output": 40
             }
           ],
           "limit": {
             "context": 272000,
             "output": 128000
           },
-          "name": "GPT-5.6 Sol · routing group",
+          "name": "GPT-6.2 Astra · routing group",
           "variants": [
             {
               "id": "low",
@@ -487,144 +487,6 @@
               }
             }
           ]
-        },
-        "auto/gpt-5.6-terra": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.2,
-                "write": 2.5
-              },
-              "input": 2,
-              "output": 12
-            }
-          ],
-          "limit": {
-            "context": 272000,
-            "output": 128000
-          },
-          "name": "GPT-5.6 Terra · routing group",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            },
-            {
-              "id": "ultra",
-              "settings": {
-                "reasoningEffort": "ultra"
-              }
-            }
-          ]
-        },
-        "auto/gpt-5.6-luna": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.02,
-                "write": 0.25
-              },
-              "input": 0.2,
-              "output": 1.2
-            }
-          ],
-          "limit": {
-            "context": 272000,
-            "output": 128000
-          },
-          "name": "GPT-5.6 Luna · routing group",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            }
-          ]
-        },
-        "auto/auto": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "name": "Auto · routing group",
-          "variants": []
         },
         "auto/deepseek-v4.1-flash": {
           "capabilities": {
@@ -874,6 +736,417 @@
             }
           ]
         },
+        "codex/gpt-6.2-sol": {
+          "capabilities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "cost": [
+            {
+              "cache": {
+                "read": 0.1,
+                "write": 2.5
+              },
+              "input": 2,
+              "output": 10
+            }
+          ],
+          "limit": {
+            "context": 500000,
+            "output": 128000
+          },
+          "name": "GPT-6.2-Sol · Codex",
+          "variants": [
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            },
+            {
+              "id": "ultra",
+              "settings": {
+                "reasoningEffort": "ultra"
+              }
+            },
+            {
+              "id": "low-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "low"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "medium-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "medium"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "high-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "high"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "xhigh-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "xhigh"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "max-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "max"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "ultra-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "ultra"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            }
+          ]
+        },
+        "codex/gpt-6.2-astra": {
+          "capabilities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "cost": [
+            {
+              "cache": {
+                "read": 0.4,
+                "write": 10
+              },
+              "input": 8,
+              "output": 40
+            }
+          ],
+          "limit": {
+            "context": 272000,
+            "output": 128000
+          },
+          "name": "GPT-6.2-Astra · Codex",
+          "variants": [
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            },
+            {
+              "id": "ultra",
+              "settings": {
+                "reasoningEffort": "ultra"
+              }
+            },
+            {
+              "id": "low-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "low"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "medium-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "medium"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "high-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "high"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "xhigh-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "xhigh"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "max-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "max"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "ultra-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "ultra"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            }
+          ]
+        },
+        "codex/gpt-6.1-terra": {
+          "capabilities": {
+            "input": [
+              "text",
+              "image"
+            ],
+            "output": [
+              "text"
+            ],
+            "tools": true
+          },
+          "cost": [
+            {
+              "cache": {
+                "read": 0.05,
+                "write": 1.25
+              },
+              "input": 1,
+              "output": 5
+            }
+          ],
+          "limit": {
+            "context": 500000,
+            "output": 128000
+          },
+          "name": "GPT-6.1 Terra · Codex",
+          "variants": [
+            {
+              "id": "low",
+              "settings": {
+                "reasoningEffort": "low"
+              }
+            },
+            {
+              "id": "medium",
+              "settings": {
+                "reasoningEffort": "medium"
+              }
+            },
+            {
+              "id": "high",
+              "settings": {
+                "reasoningEffort": "high"
+              }
+            },
+            {
+              "id": "xhigh",
+              "settings": {
+                "reasoningEffort": "xhigh"
+              }
+            },
+            {
+              "id": "max",
+              "settings": {
+                "reasoningEffort": "max"
+              }
+            },
+            {
+              "id": "ultra",
+              "settings": {
+                "reasoningEffort": "ultra"
+              }
+            },
+            {
+              "id": "low-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "low"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "medium-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "medium"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "high-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "high"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "xhigh-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "xhigh"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "max-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "max"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            },
+            {
+              "id": "ultra-fast",
+              "settings": {
+                "extraBody": {
+                  "service_tier": "priority"
+                },
+                "reasoningEffort": "ultra"
+              },
+              "body": {
+                "service_tier": "priority"
+              }
+            }
+          ]
+        },
         "codex/gpt-6.1-sol": {
           "capabilities": {
             "input": [
@@ -1037,143 +1310,6 @@
             "output": 128000
           },
           "name": "GPT-6-Astra · Codex",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            },
-            {
-              "id": "ultra",
-              "settings": {
-                "reasoningEffort": "ultra"
-              }
-            },
-            {
-              "id": "low-fast",
-              "settings": {
-                "extraBody": {
-                  "service_tier": "priority"
-                },
-                "reasoningEffort": "low"
-              },
-              "body": {
-                "service_tier": "priority"
-              }
-            },
-            {
-              "id": "medium-fast",
-              "settings": {
-                "extraBody": {
-                  "service_tier": "priority"
-                },
-                "reasoningEffort": "medium"
-              },
-              "body": {
-                "service_tier": "priority"
-              }
-            },
-            {
-              "id": "high-fast",
-              "settings": {
-                "extraBody": {
-                  "service_tier": "priority"
-                },
-                "reasoningEffort": "high"
-              },
-              "body": {
-                "service_tier": "priority"
-              }
-            },
-            {
-              "id": "xhigh-fast",
-              "settings": {
-                "extraBody": {
-                  "service_tier": "priority"
-                },
-                "reasoningEffort": "xhigh"
-              },
-              "body": {
-                "service_tier": "priority"
-              }
-            },
-            {
-              "id": "max-fast",
-              "settings": {
-                "extraBody": {
-                  "service_tier": "priority"
-                },
-                "reasoningEffort": "max"
-              },
-              "body": {
-                "service_tier": "priority"
-              }
-            },
-            {
-              "id": "ultra-fast",
-              "settings": {
-                "extraBody": {
-                  "service_tier": "priority"
-                },
-                "reasoningEffort": "ultra"
-              },
-              "body": {
-                "service_tier": "priority"
-              }
-            }
-          ]
-        },
-        "codex/gpt-6.1-terra": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.05,
-                "write": 1.25
-              },
-              "input": 1,
-              "output": 5
-            }
-          ],
-          "limit": {
-            "context": 500000,
-            "output": 128000
-          },
-          "name": "GPT-6.1 Terra · Codex",
           "variants": [
             {
               "id": "low",
@@ -1934,319 +2070,7 @@
             }
           ]
         },
-        "copilot/gemini-3.8-flash": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.075,
-                "write": 0
-              },
-              "input": 0.75,
-              "output": 3.75
-            }
-          ],
-          "limit": {
-            "context": 200000,
-            "output": 65536
-          },
-          "name": "Gemini 3.8 Flash · Copilot",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            }
-          ]
-        },
-        "copilot/gemini-4-argon": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.1,
-                "write": 0
-              },
-              "input": 2,
-              "output": 10
-            }
-          ],
-          "limit": {
-            "context": 200000,
-            "output": 65536
-          },
-          "name": "Gemini 4 Argon · Copilot",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            }
-          ]
-        },
-        "copilot/gemini-4-carbon": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.1,
-                "write": 0
-              },
-              "input": 2,
-              "output": 10
-            }
-          ],
-          "limit": {
-            "context": 200000,
-            "output": 65536
-          },
-          "name": "Gemini 4 Carbon · Copilot",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            }
-          ]
-        },
-        "copilot/gemini-4-hydrogen": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.075,
-                "write": 0
-              },
-              "input": 1.5,
-              "output": 7.5
-            }
-          ],
-          "limit": {
-            "context": 983040,
-            "output": 65536
-          },
-          "name": "Gemini 4 Hydrogen · Copilot",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            }
-          ]
-        },
-        "copilot/gpt-5.3-codex": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.175,
-                "write": 0
-              },
-              "input": 1.75,
-              "output": 14
-            }
-          ],
-          "limit": {
-            "context": 272000,
-            "output": 128000
-          },
-          "name": "GPT-5.3-Codex · Copilot",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            }
-          ]
-        },
-        "copilot/gpt-5.6-luna": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.02,
-                "write": 0.25
-              },
-              "input": 0.2,
-              "output": 1.2
-            }
-          ],
-          "limit": {
-            "context": 200000,
-            "output": 128000
-          },
-          "name": "GPT-5.6 Luna · Copilot",
-          "variants": [
-            {
-              "id": "none",
-              "settings": {
-                "reasoningEffort": "none"
-              }
-            },
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            }
-          ]
-        },
-        "copilot/gpt-5.6-sol": {
+        "copilot/gpt-6.2-astra": {
           "capabilities": {
             "input": [
               "text",
@@ -2261,24 +2085,18 @@
             {
               "cache": {
                 "read": 0.4,
-                "write": 5
+                "write": 10
               },
-              "input": 4,
-              "output": 20
+              "input": 8,
+              "output": 40
             }
           ],
           "limit": {
             "context": 272000,
             "output": 128000
           },
-          "name": "GPT-5.6 Sol · Copilot",
+          "name": "GPT-6.2 Astra · Copilot",
           "variants": [
-            {
-              "id": "none",
-              "settings": {
-                "reasoningEffort": "none"
-              }
-            },
             {
               "id": "low",
               "settings": {
@@ -2308,87 +2126,10 @@
               "settings": {
                 "reasoningEffort": "max"
               }
-            },
-            {
-              "id": "ultra",
-              "settings": {
-                "reasoningEffort": "ultra"
-              }
             }
           ]
         },
-        "copilot/gpt-5.6-terra": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.2,
-                "write": 2.5
-              },
-              "input": 2,
-              "output": 12
-            }
-          ],
-          "limit": {
-            "context": 272000,
-            "output": 128000
-          },
-          "name": "GPT-5.6 Terra · Copilot",
-          "variants": [
-            {
-              "id": "none",
-              "settings": {
-                "reasoningEffort": "none"
-              }
-            },
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            },
-            {
-              "id": "ultra",
-              "settings": {
-                "reasoningEffort": "ultra"
-              }
-            }
-          ]
-        },
-        "copilot/gpt-6.1-sol": {
+        "copilot/gpt-6.2-sol": {
           "capabilities": {
             "input": [
               "text",
@@ -2413,7 +2154,7 @@
             "context": 272000,
             "output": 128000
           },
-          "name": "GPT-6.1 Sol · Copilot",
+          "name": "GPT-6.2 Sol · Copilot",
           "variants": [
             {
               "id": "low",
@@ -2443,142 +2184,6 @@
               "id": "max",
               "settings": {
                 "reasoningEffort": "max"
-              }
-            },
-            {
-              "id": "ultra",
-              "settings": {
-                "reasoningEffort": "ultra"
-              }
-            }
-          ]
-        },
-        "copilot/gpt-6.1-terra": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.05,
-                "write": 1.25
-              },
-              "input": 1,
-              "output": 5
-            }
-          ],
-          "limit": {
-            "context": 272000,
-            "output": 128000
-          },
-          "name": "GPT-6.1 Terra · Copilot",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            },
-            {
-              "id": "ultra",
-              "settings": {
-                "reasoningEffort": "ultra"
-              }
-            }
-          ]
-        },
-        "copilot/gpt-6-astra": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 1,
-                "write": 12.5
-              },
-              "input": 10,
-              "output": 50
-            }
-          ],
-          "limit": {
-            "context": 272000,
-            "output": 128000
-          },
-          "name": "GPT-6 Astra · Copilot",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            },
-            {
-              "id": "ultra",
-              "settings": {
-                "reasoningEffort": "ultra"
               }
             }
           ]
@@ -2647,309 +2252,6 @@
               }
             }
           ]
-        },
-        "copilot/gpt-6-sol": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.2,
-                "write": 2.5
-              },
-              "input": 2,
-              "output": 10
-            }
-          ],
-          "limit": {
-            "context": 272000,
-            "output": 128000
-          },
-          "name": "GPT-6 Sol · Copilot",
-          "variants": [
-            {
-              "id": "none",
-              "settings": {
-                "reasoningEffort": "none"
-              }
-            },
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            },
-            {
-              "id": "ultra",
-              "settings": {
-                "reasoningEffort": "ultra"
-              }
-            }
-          ]
-        },
-        "copilot/grok-4.6": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.5,
-                "write": 0
-              },
-              "input": 2,
-              "output": 6
-            }
-          ],
-          "limit": {
-            "context": 200000,
-            "output": 200000
-          },
-          "name": "Grok 4.6 · Copilot",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            }
-          ]
-        },
-        "copilot/grok-4.7": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.5,
-                "write": 0
-              },
-              "input": 2,
-              "output": 6
-            }
-          ],
-          "limit": {
-            "context": 200000,
-            "output": 200000
-          },
-          "name": "Grok 4.7 · Copilot",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "xhigh",
-              "settings": {
-                "reasoningEffort": "xhigh"
-              }
-            }
-          ]
-        },
-        "copilot/kimi-k3": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.3,
-                "write": 3
-              },
-              "input": 3,
-              "output": 15
-            }
-          ],
-          "limit": {
-            "context": 917504,
-            "output": 917504
-          },
-          "name": "Kimi K3 · Copilot",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            },
-            {
-              "id": "max",
-              "settings": {
-                "reasoningEffort": "max"
-              }
-            }
-          ]
-        },
-        "copilot/mai-code-1.1-flash": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "limit": {
-            "context": 128000,
-            "output": 128000
-          },
-          "name": "MAI-Code-1.1-Flash · Copilot",
-          "variants": [
-            {
-              "id": "low",
-              "settings": {
-                "reasoningEffort": "low"
-              }
-            },
-            {
-              "id": "medium",
-              "settings": {
-                "reasoningEffort": "medium"
-              }
-            },
-            {
-              "id": "high",
-              "settings": {
-                "reasoningEffort": "high"
-              }
-            }
-          ]
-        },
-        "copilot/gpt-4.1": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "cost": [
-            {
-              "cache": {
-                "read": 0.5,
-                "write": 0
-              },
-              "input": 2,
-              "output": 8
-            }
-          ],
-          "limit": {
-            "context": 128000,
-            "output": 32768
-          },
-          "name": "GPT-4.1 · Copilot",
-          "variants": []
-        },
-        "copilot/auto": {
-          "capabilities": {
-            "input": [
-              "text",
-              "image"
-            ],
-            "output": [
-              "text"
-            ],
-            "tools": true
-          },
-          "name": "Auto · Copilot",
-          "variants": []
         },
         "opencode-zen-free/deepseek-v4.1-flash": {
           "capabilities": {
