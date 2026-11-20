@@ -21,7 +21,12 @@ return {
             basic = true,
             extra = true,
           },
-          pre_hook = nil,
+          pre_hook = function()
+            local ok, parser = pcall(vim.treesitter.get_parser, 0)
+            if not ok or not parser then
+              return vim.bo.commentstring
+            end
+          end,
           post_hook = nil,
         }
       )
