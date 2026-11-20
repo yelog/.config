@@ -186,6 +186,10 @@ The JB theme distinguishes Java symbol roles in both dark and light backgrounds:
 Java-specific Tree-sitter and semantic groups share these roles. Static/final modifier styling is retained, and
 switching back to JB reapplies the overrides. Global groups and other languages keep their theme colors.
 
+JDTLS reference counts render at the end of the declaration line instead of above it. The counts refresh after
+leaving Insert mode, saving, switching buffers, and when the language server requests a CodeLens refresh. The
+built-in Neovim virtual-line renderer remains in use for other file types.
+
 Tree-sitter supplies the initial syntax colors. JDTLS semantic tokens distinguish bare field references from local
 variables and apply parameter colors to usages after the language server attaches. A gray field usage together
 with a purple declaration can therefore indicate a missing JDTLS client rather than a terminal color issue.

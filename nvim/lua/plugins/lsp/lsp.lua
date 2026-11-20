@@ -1,4 +1,5 @@
 local folding = require('custom.foldding')
+local codelens_eol = require("custom.codelens_eol")
 
 return {
   {
@@ -25,14 +26,19 @@ return {
         callback = function(args)
           local client = vim.lsp.get_client_by_id(args.data.client_id)
           if client and client:supports_method("textDocument/codeLens") then
-            vim.lsp.codelens.enable(true, { bufnr = args.buf })
-            vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
-              group = vim.api.nvim_create_augroup("lsp_codelens_" .. args.buf, { clear = true }),
-              buffer = args.buf,
-              callback = function(event)
-                vim.lsp.codelens.enable(true, { bufnr = event.buf })
-              end,
-            })
+            if vim.bo[args.buf].filetype == "java" then
+              vim.lsp.codelens.enable(false, { bufnr = args.buf, client_id = client.id })
+              codelens_eol.attach(args.buf, client)
+            else
+              vim.lsp.codelens.enable(true, { bufnr = args.buf })
+              vim.api.nvim_create_autocmd({ "BufWritePost", "InsertLeave" }, {
+                group = vim.api.nvim_create_augroup("lsp_codelens_" .. args.buf, { clear = true }),
+                buffer = args.buf,
+                callback = function(event)
+                  vim.lsp.codelens.enable(true, { bufnr = event.buf })
+                end,
+              })
+            end
           end
 
           -- Inlay Hints 支持

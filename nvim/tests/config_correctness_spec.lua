@@ -59,6 +59,16 @@ assert_contains(
   '{ desc = "i18n popup or signature help", buffer = bufnr }',
   "LSP signature help should be buffer-local"
 )
+assert_contains(
+  lsp,
+  "codelens_eol.attach(args.buf, client)",
+  "Java CodeLens should use the end-of-line renderer"
+)
+assert_contains(
+  lsp,
+  "vim.lsp.codelens.enable(false, { bufnr = args.buf, client_id = client.id })",
+  "Java CodeLens should disable the built-in virtual-line renderer"
+)
 assert_not_contains(lsp, '"copilot",', "Mason should not install a duplicate native Copilot LSP")
 assert_not_contains(lsp, "vim.lsp.enable('copilot')", "Neovim should not start a duplicate native Copilot LSP")
 assert_contains(lsp, '"yamlls",', "Mason should install the YAML language server")

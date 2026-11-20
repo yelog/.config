@@ -9,6 +9,7 @@ return {
     },
     config = function()
       local jdtls = require("jdtls")
+      local codelens_eol = require("custom.codelens_eol")
       local mybatis = require("custom.mybatis_diagnostics")
       mybatis.setup()
 
@@ -107,6 +108,9 @@ return {
 
       local base_config = {
         capabilities = capabilities,
+        handlers = {
+          ["workspace/codeLens/refresh"] = codelens_eol.on_refresh,
+        },
         on_attach = on_attach,
         exit_timeout = 10000,
         cmd_env = launcher_home and { JAVA_HOME = launcher_home } or nil,
