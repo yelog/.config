@@ -185,13 +185,30 @@ return {
           diag_error = highlight_color("DiagnosticError", "fg", { "Normal" }),
           diag_hint = highlight_color("DiagnosticHint", "fg", { "Normal" }),
           diag_info = highlight_color("DiagnosticInfo", "fg", { "Normal" }),
-          git_del = highlight_color("diffDeleted", "fg", { "IgitHunkDelete", "DiagnosticError" }),
-          git_add = highlight_color("diffAdded", "fg", { "IgitHunkAdd", "String" }),
-          git_change = highlight_color("diffChanged", "fg", { "IgitHunkChange", "Function" }),
         }
       end
 
       local colors = setup_colors()
+
+      local function igit_file_hl(bufnr)
+        local loaded, igit = pcall(require, "igit")
+        local current = loaded and igit.status(bufnr) or nil
+        if not current or current.ignored then
+          return nil
+        end
+        if current.file_state == "added" then
+          return "IgitHunkAdd"
+        end
+        if current.modified then
+          return "IgitHunkChange"
+        end
+      end
+
+      local function igit_file_fg(bufnr)
+        local group = igit_file_hl(bufnr)
+        return group and utils.get_highlight(group).fg or nil
+      end
+
       local Git = {
         condition = function()
           local loaded, igit = pcall(require, "igit")
@@ -382,16 +399,29 @@ return {
 
       -- Define a component to show the relative path
       local RelativePath = {
-        provider = function()
-          -- Get the current file's absolute path
+        init = function(self)
+          self.bufnr = vim.api.nvim_get_current_buf()
           local filepath = vim.api.nvim_buf_get_name(0)
-          -- Get the current working directory (project root)
-          local cwd = vim.fn.getcwd()
-          -- Return the relative path
-          return vim.fn.fnamemodify(filepath, ":~:.")
+          self.path = vim.fn.fnamemodify(filepath, ":~:.")
+          self.directory, self.filename = self.path:match("^(.*[/\\])([^/\\]+)$")
         end,
-        -- Optional: styling
-        hl = { fg = "blue", bold = true },
+        {
+          provider = function(self)
+            return self.directory or ""
+          end,
+          hl = { fg = "gray" },
+        },
+        {
+          provider = function(self)
+            return self.filename or self.path
+          end,
+          hl = function(self)
+            return {
+              fg = igit_file_fg(self.bufnr),
+              bold = true,
+            }
+          end,
+        },
       }
 
       -- Ensure you have nvim-web-devicons installed
@@ -580,41 +610,11 @@ return {
         -- 当 Git 状态变化或缓冲区切换/写入/返回焦点/终端关闭时刷新
         update = { "User", "BufEnter", "BufWritePost", "TextChanged", "TextChangedI", "FocusGained", "TermClose", "VimResume" },
         hl = function(self)
-          -- 获取当前 buf 文件在 git 中的状态（逐个 buffer）
-          local underline = self.is_active and true or false
-
-          -- 状态查询只读取 IGit 的异步缓存，不在这里执行 Git 子进程。
-          local tick = vim.api.nvim_buf_get_changedtick(self.bufnr)
-          local loaded, igit = pcall(require, "igit")
-          local current = loaded and igit.status(self.bufnr) or nil
-          local gen = tostring(vim.g._heirline_git_generation or 0)
-            .. ":" .. tostring(current and current.generation or 0)
-          local ok_cache, cache = pcall(vim.api.nvim_buf_get_var, self.bufnr, "_heirline_tab_git_cache")
-          if ok_cache and type(cache) == "table"
-              and cache.tick == tick
-              and cache.gen == gen
-              and cache.filename == self.filename then
-            return { fg = cache.fg, bold = true, underline = underline }
-          end
-
-          local fg = nil
-          if current and not current.ignored then
-            if current.file_state == "added" then
-              fg = colors.git_add
-            elseif current.modified then
-              fg = colors.git_change
-            end
-          end
-
-          -- 写入缓存
-          pcall(vim.api.nvim_buf_set_var, self.bufnr, "_heirline_tab_git_cache", {
-            tick = tick,
-            gen = gen,
-            filename = self.filename,
-            fg = fg,
-          })
-
-          return { fg = fg, bold = true, underline = underline }
+          return {
+            fg = igit_file_fg(self.bufnr),
+            bold = true,
+            underline = self.is_active,
+          }
         end,
         on_click = {
           callback = function(_, minwid, _, button)
@@ -784,25 +784,13 @@ return {
         }
       })
 
-      -- 失效缓存并刷新 Tabline 的辅助方法
-      local function _heirline_bump_git_generation()
-        vim.g._heirline_git_generation = (vim.g._heirline_git_generation or 0) + 1
-        -- 强制重绘以触发 hl 重新计算
-        pcall(vim.cmd.redrawtabline)
-      end
-
-      -- 当从外部工具返回或关闭终端（如 lazygit）时，认为 Git 状态可能变化，递增世代以失效缓存
       local group = vim.api.nvim_create_augroup("HeirlineGitRefresh", { clear = true })
-      vim.api.nvim_create_autocmd({ "FocusGained", "VimResume" }, {
+      vim.api.nvim_create_autocmd("User", {
         group = group,
+        pattern = "IgitUpdated",
         callback = function()
-          _heirline_bump_git_generation()
-        end,
-      })
-      vim.api.nvim_create_autocmd("TermClose", {
-        group = group,
-        callback = function()
-          _heirline_bump_git_generation()
+          pcall(vim.cmd.redrawtabline)
+          pcall(vim.cmd.redrawstatus)
         end,
       })
     end
