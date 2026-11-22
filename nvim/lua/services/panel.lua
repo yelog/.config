@@ -933,10 +933,7 @@ function Panel:manage(panel)
     end
   end
 
-  vim.ui.select(categories, {
-    prompt = "Service category",
-    format_item = function(item) return item.label end,
-  }, function(category)
+  local function open_service_picker(category)
     if not category then return end
     local items = {}
     for _, definition in ipairs(definitions) do
@@ -984,7 +981,16 @@ function Panel:manage(panel)
         end,
       },
     })
-  end)
+  end
+
+  if #categories == 1 then
+    open_service_picker(categories[1])
+  else
+    vim.ui.select(categories, {
+      prompt = "Service category",
+      format_item = function(item) return item.label end,
+    }, open_service_picker)
+  end
 end
 
 function Panel:_on_runtime_event(event)

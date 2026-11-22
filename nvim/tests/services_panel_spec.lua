@@ -123,6 +123,43 @@ local lines = vim.api.nvim_buf_get_lines(instance.list_bufnr, 0, -1, false)
 assert(lines[1]:find("web:dev", 1, true) or lines[2]:find("web:dev", 1, true),
   "panel list should render service names")
 
+do
+  local original_select, original_fzf = vim.ui.select, package.loaded["fzf-lua"]
+  local categories, choose_category, entries
+  vim.ui.select = function(items, _, on_choice)
+    categories, choose_category = items, on_choice
+  end
+  package.loaded["fzf-lua"] = { fzf_exec = function(items) entries = items end }
+
+  local mixed_definitions = definitions
+  definitions = {
+    mixed_definitions[1],
+    { key = "springboot::billing", name = "BillingApplication", service_type = "springboot" },
+  }
+  press(instance.list_win, "a")
+  assert_equal(nil, categories, "a single discovered category should skip the category picker")
+  assert_equal({
+    "springboot::orders\t* OrdersApplication",
+    "springboot::billing\to BillingApplication",
+    "__clear__\tx Clear this category",
+  }, entries, "the service picker should open directly with selected and available entries")
+
+  definitions = mixed_definitions
+  entries = nil
+  press(instance.list_win, "a")
+  assert_equal({ "springboot", "npm" }, vim.tbl_map(function(category) return category.service_type end, categories),
+    "mixed projects should offer all discovered categories")
+  assert_equal(nil, entries, "mixed projects should wait for a category choice")
+  choose_category(nil)
+  assert_equal(nil, entries, "cancelling the category picker should leave the service picker closed")
+  press(instance.list_win, "a")
+  choose_category(categories[2])
+  assert_equal({ "npm::web::dev\t* web:dev", "__clear__\tx Clear this category" }, entries,
+    "choosing npm should open only its services")
+
+  vim.ui.select, package.loaded["fzf-lua"] = original_select, original_fzf
+end
+
 local orders = runtime:get("springboot::orders")
 local web = runtime:get("npm::web::dev")
 orders.output:push("stdout", log_batch("orders log", 32))
