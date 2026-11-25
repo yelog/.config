@@ -18,9 +18,13 @@ equal([=[\uD83D \uDE00 \u12xz \u0020 \u000A \u005C]=],
   "retain malformed escapes, isolated surrogates, and syntax-sensitive ASCII escapes")
 
 require("custom.java_properties").setup()
+local git_text = require("plugins.panel.igit").opts.text_formatter
 local original_encodings = vim.o.fileencodings
 local dir = vim.fn.tempname()
 vim.fn.mkdir(dir, "p")
+vim.fn.writefile({ "root = true", "[*]", "charset = utf-8", "end_of_line = lf",
+  "insert_final_newline = true", "indent_size = 3" }, dir .. "/.editorconfig")
+vim.cmd("runtime plugin/editorconfig.lua")
 local path = dir .. "/messages_zh_CN.properties"
 local raw = {
   [=[ONE=\u6CA1\u6709]=],
@@ -33,18 +37,25 @@ vim.cmd.edit(vim.fn.fnameescape(path))
 equal({ "ONE=没有", "TWO=中文", raw[3], "EMOJI=😀" }, vim.api.nvim_buf_get_lines(0, 0, -1, false),
   "native file read should expose Chinese in the buffer")
 equal(false, vim.bo.modified, "opening a properties file must not mark it modified")
+equal("java-properties", vim.bo.fileencoding, "EditorConfig must preserve the properties writer")
+equal(3, vim.bo.shiftwidth, "project indentation should still apply to decoded buffers")
 equal(original_encodings, vim.o.fileencodings, "properties detection must restore global fileencodings")
 equal(1, vim.fn.search("没有", "nw"), "native slash search should find Chinese")
 equal(2, vim.fn.search("中文", "nw"), "native slash search should find lowercase Unicode escapes")
 equal(true, vim.b.java_properties_unicode, "decoded buffers should be identifiable by integrations")
 local initial_tick = vim.b.changedtick
+local properties_buf = vim.api.nvim_get_current_buf()
+local decoded = table.concat(vim.api.nvim_buf_get_lines(properties_buf, 0, -1, false), "\n") .. "\n"
+equal(table.concat(raw, "\n") .. "\n", git_text(decoded, properties_buf), "Git should see exact saved bytes")
 vim.cmd("silent write")
 equal(raw, vim.fn.readfile(path), "no-op save must preserve exact original escape spellings")
 equal(initial_tick, vim.b.changedtick, "saving must not mutate the buffer or its undo history")
 
 vim.cmd("normal! ggA中文")
+local unsaved = git_text(decoded:gsub("没有", "没有中文"), properties_buf)
 vim.cmd("silent write")
 local saved = vim.fn.readfile(path)
+equal(table.concat(saved, "\n") .. "\n", unsaved, "Git should see the same bytes as the next write")
 equal([=[ONE=\u6CA1\u6709\u4e2d\u6587]=], saved[1], "edited Chinese should be re-escaped")
 equal(raw[2], saved[2], "unmodified lines should preserve lowercase escapes")
 equal(false, vim.bo.modified, "successful writes should clear modified")
@@ -69,32 +80,48 @@ equal(raw, vim.fn.readfile(path), "failed writes must not touch the original fil
 vim.cmd("edit! ++enc=utf-8")
 equal(raw[1], vim.api.nvim_get_current_line(), "an explicit UTF-8 read should allow inspecting raw escapes")
 equal(nil, vim.b.java_properties_unicode, "raw inspection must clear the decoded-buffer marker")
+equal(nil, git_text(raw[1], properties_buf), "explicit UTF-8 reads should bypass the formatter")
 vim.cmd.edit()
 equal("ONE=没有", vim.api.nvim_get_current_line(), "normal reopening should re-enable decoded editing")
+local external = vim.deepcopy(raw)
+external[2] = [=[TWO=\u4E2D\u6587]=]
+vim.fn.writefile(external, path)
+equal(table.concat(raw, "\n") .. "\n", git_text(decoded, properties_buf),
+  "an external edit should not replace the open buffer's conversion snapshot")
+vim.cmd.edit()
+equal(table.concat(external, "\n") .. "\n", git_text(decoded, properties_buf),
+  "reloading should use the new escape spelling")
 
 local utf8_path = dir .. "/utf8.properties"
 vim.fn.writefile({ "ONE=中文" }, utf8_path)
 vim.cmd.edit(vim.fn.fnameescape(utf8_path))
 equal("utf-8", vim.bo.fileencoding, "native UTF-8 properties should keep their encoding")
+equal(nil, git_text("ONE=中文\n", vim.api.nvim_get_current_buf()), "native UTF-8 should bypass the formatter")
 vim.cmd("normal! A测试")
 vim.cmd("silent write")
 equal({ "ONE=中文测试" }, vim.fn.readfile(utf8_path), "native UTF-8 files must not be migrated to escapes")
 
 local crlf_path = dir .. "/crlf.properties"
-local crlf = "ONE=\\u4E2D\r\nTWO=\\u6587"
+local crlf = "ONE=中\\u4E2D\r\nTWO=\\u4e2d"
 vim.fn.writefile(vim.split(crlf, "\n", { plain = true }), crlf_path, "b")
 vim.cmd.edit(vim.fn.fnameescape(crlf_path))
 equal("dos", vim.bo.fileformat, "detect CRLF after Unicode decoding")
 equal(false, vim.bo.endofline, "preserve a missing final newline")
+equal(crlf, git_text("ONE=中中\r\nTWO=中", vim.api.nvim_get_current_buf()),
+  "CRLF, mixed spellings and a missing final newline should match the writer")
+vim.cmd("edit ++enc=utf-8")
+equal("unix", vim.bo.fileformat, "EditorConfig should apply normally to the raw view")
+vim.cmd.edit()
 vim.cmd("silent write")
 equal(vim.split(crlf, "\n", { plain = true }), vim.fn.readfile(crlf_path, "b"),
-  "save CRLF and missing final newline unchanged")
+  "reopening a raw view as decoded should also discard its pending EditorConfig newline edit")
 
 local plain_path = dir .. "/plain.txt"
 vim.fn.writefile({ [=[ONE=\u4E2D]=] }, plain_path)
 vim.cmd.edit(vim.fn.fnameescape(plain_path))
 equal([=[ONE=\u4E2D]=], vim.api.nvim_get_current_line(), "other file types must not be decoded")
 equal(original_encodings, vim.o.fileencodings, "normal files must retain the original encoding detection")
+
 vim.cmd("enew!")
 vim.fn.delete(dir, "rf")
 -- Flush the notification from the intentionally failed write without emitting

@@ -133,6 +133,7 @@ return {
     },
   },
   opts = {
+    text_formatter = require("custom.java_properties").git_text,
     command = function()
       local result = vim.system({ vim.fn.expand("~/.local/bin/ig-use"), "path" }, { text = true }):wait(1000)
       if result.code ~= 0 then

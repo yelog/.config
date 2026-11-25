@@ -7,6 +7,7 @@ This configuration supports Java launch debugging for Maven multi-module Spring 
 Java `.properties` files containing printable Unicode escapes open as readable text. For example,
 `name=\u4e2d\u6587` appears as `name=中文`, and `/中文` uses Neovim's normal search.
 Saving retains the escaped file format, original spellings on unchanged lines, and existing line endings.
+Decoded buffers use the detected encoding and line endings even in a project with EditorConfig defaults.
 Files that already contain UTF-8 Chinese retain their format.
 
 Cmd+Shift+F (or `<leader>fs`) searches decoded `.properties` contents through a ripgrep preprocessor.
@@ -18,8 +19,9 @@ Project search reads saved disk contents, so save edits before searching across 
 commands and other applications still see the original escaped text. To inspect a properties file's raw bytes
 in Neovim, use `:edit! ++enc=utf-8` after saving any changes; reopen it normally to restore decoded editing.
 
-Gitsigns is disabled for decoded properties buffers because its index and staging operations expect the raw
-file representation. Use Lazygit or ordinary Git commands for those files.
+IGit uses the same escaping as the properties writer for hunk signs, change counts and blame.
+Unsaved Chinese edits appear on the affected lines. To stage or restore a decoded file, use Git
+on its saved contents.
 
 ## Prerequisites
 
