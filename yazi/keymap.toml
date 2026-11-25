@@ -8,11 +8,11 @@ keymap = [
 	{ on = "!", run = 'shell "$SHELL" --block --confirm', desc = "Open shell here" },
 	{ on = "<Esc>", run = "escape",             desc = "Exit visual mode, clear selected, or cancel search" },
 	{ on = "<C-[>", run = "escape",             desc = "Exit visual mode, clear selected, or cancel search" },
-	{ on = "q",     run = "quit",               desc = "Quit the process" },
-	{ on = "Q",     run = "quit --no-cwd-file", desc = "Quit the process without outputting cwd-file" },
+	{ on = "q",     run = "app:quit",           desc = "Quit immediately without task confirmation" },
+	{ on = "Q",     run = "quit --no-cwd-file", desc = "Quit safely without outputting cwd-file" },
 	{ on = "<C-c>", run = "close",              desc = "Close the current tab, or quit if it's last" },
 	{ on = "<C-z>", run = "suspend",            desc = "Suspend the process" },
-	{ on = "<C-e>", run = "quit",               desc = "Quit the process" },
+	{ on = "<C-e>", run = "app:quit",           desc = "Quit immediately without task confirmation" },
 	{ on = "<C-g>", run = 'shell "lazygit" --block --confirm', desc = "Open lazygit" },
 
 	# Hopping

@@ -1,5 +1,6 @@
 import os
 
+from kitty.fast_data_types import add_timer
 from kittens.tui.handler import result_handler
 
 
@@ -15,7 +16,8 @@ def handle_result(args, result, target_window_id, boss):
 
     foreground_cmd = window.child.foreground_cmdline
     if foreground_cmd and 'yazi' in foreground_cmd[0]:
-        window.close()
+        window.write_to_child('q')
+        add_timer(lambda timer_id: window.close(), 0.1, False)
     else:
         cwd = window.cwd_of_child or boss.active_tab.cwd
         path = os.environ.get('PATH', '')
